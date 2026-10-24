@@ -288,6 +288,23 @@ body[data-right="lab"] .right .hardwarelab{display:block;max-height:none;overflo
 <p><b>Consola:</b> arrastra el separador horizontal hacia arriba; «⤢ Ampliar» maximiza/restaura. El campo IDE&gt; acepta comandos guiados, no PowerShell arbitrario.</p>
 <div class="dialogactions"><button id="quickBoardFocus" class="action">Elegir placa</button><button id="quickStartClose" class="action primary">Entendido</button></div>
 </dialog>
+<dialog id="agentConsentDialog" class="quick-dialog" aria-labelledby="agentConsentTitle" aria-describedby="agentConsentSummary">
+ <form method="dialog">
+  <h2 id="agentConsentTitle">Autorizar ejecución del agente</h2>
+  <p id="agentConsentSummary"></p>
+  <p>El agente recibirá una copia del sketch para esta tarea:</p>
+  <p id="agentConsentTask" class="boxinfo" style="white-space:pre-wrap;max-height:150px;overflow:auto;overflow-wrap:anywhere"></p>
+  <p id="agentConsentRisk" class="notice">Acceso total: esta tarea puede leer o modificar archivos del equipo, ejecutar comandos y usar la red sin aprobaciones de la CLI. Si la tarea pide grabar una placa, también puede sobrescribir su firmware.</p>
+  <div id="agentConsentGroup">
+   <label class="formlabel" for="agentConsentInput">Escribe exactamente ACCESO TOTAL</label>
+   <input id="agentConsentInput" class="input" type="text" autocomplete="off" spellcheck="false" placeholder="ACCESO TOTAL">
+  </div>
+  <div class="dialogactions">
+   <button id="agentConsentCancel" class="action" type="button">Cancelar</button>
+   <button id="agentConsentApprove" class="action primary" value="authorize">Autorizar e iniciar</button>
+  </div>
+ </form>
+</dialog>
 <script src="/simulator.js"></script>
 <script src="/activity.js"></script>
 <script src="/app.js"></script>

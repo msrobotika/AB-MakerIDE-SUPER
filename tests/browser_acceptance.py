@@ -178,7 +178,7 @@ try:
         page.route('**/api/agents/poll?**',lambda route:fulfill(route,agent))
         page.locator('#showAI').click();page.locator('#agentWorkbench').evaluate('(e)=>e.open=true')
         page.locator('#execTask').fill('CONTROLADO: solo revisión')
-        page.locator('#execRun').click();state(page,'success')
+        page.locator('#execRun').click();page.locator('#agentConsentApprove').click();state(page,'success')
         check('controlled agent completion explicitly limits scope','hardware sin comprobar' in page.locator('#robotText').inner_text())
         capture(page,'10-controlled-agent-success.png')
         # Concurrent task reducer, cancellation and network errors in rendered UI.
@@ -188,7 +188,7 @@ try:
         state(page,'unknown')
         check('cancelled agent exit zero neutral',page.locator('#robotStatus').get_attribute('data-state')=='unknown')
         page.route('**/api/agents/poll?**',lambda route:route.abort('failed'))
-        page.locator('#execRun').click();state(page,'failed')
+        page.locator('#execRun').click();page.locator('#agentConsentApprove').click();state(page,'failed')
         check('agent network failure red','desconocido' in page.locator('#robotText').inner_text())
         check('agent reference preserved after network failure',page.evaluate('localStorage.getItem("ab-makeride-last-agent-v094")')=='e'*32)
         capture(page,'11-controlled-network-error.png')

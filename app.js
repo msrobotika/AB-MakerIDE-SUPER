@@ -848,16 +848,39 @@ async function pollAgent(){
     $('#agentResumeMessage').textContent='Conexión interrumpida. Recupera la sesión antes de repetir la tarea.';
   }
 }
+const agentConsentDialog=$('#agentConsentDialog');
+$('#agentConsentCancel').onclick=()=>agentConsentDialog.close('cancel');
+$('#agentConsentInput').addEventListener('input',()=>{
+  $('#agentConsentApprove').disabled=$('#agentConsentInput').required&&$('#agentConsentInput').value!=='ACCESO TOTAL';
+});
+function authorizeAgent(provider,mode,task){
+  if(agentConsentDialog.open)return Promise.resolve(null);
+  const total=mode==='total',input=$('#agentConsentInput');
+  $('#agentConsentSummary').textContent=`${provider==='codex'?'Codex':'Claude Code'} · ${$('#execMode').selectedOptions[0].textContent}`;
+  $('#agentConsentTask').textContent=task;
+  $('#agentConsentGroup').classList.toggle('hidden',!total);
+  $('#agentConsentRisk').classList.toggle('hidden',!total);
+  input.value='';input.required=total;
+  $('#agentConsentApprove').disabled=total;
+  agentConsentDialog.returnValue='cancel';
+  return new Promise(resolve=>{
+    agentConsentDialog.addEventListener('close',()=>{
+      const consent=agentConsentDialog.returnValue==='authorize'?input.value:null;
+      input.value='';
+      resolve(consent);
+    },{once:true});
+    agentConsentDialog.showModal();
+    (total?input:$('#agentConsentCancel')).focus();
+  });
+}
 $('#execRun').onclick=async()=>{
+  if($('#execRun').disabled||agentConsentDialog.open)return;
   const task=$('#execTask').value.trim(),provider=$('#execProvider').value,mode=$('#execMode').value;
   if(task.length<3)return toast('Describe primero la tarea del agente');
   if(!state.apiReady)return toast('Conecta el servidor local antes de iniciar el agente');
-  if(!confirm(`Ejecutar ${provider} en modo ${mode}?\nSe proporcionará una copia del sketch al agente. Puede utilizar los recursos autorizados por su modo y configuración local.`))return;
-  let consent='';
-  if(mode==='total'){
-    consent=prompt('ATENCIÓN: esta ejecución puede acceder a TODO el equipo. Úsala preferentemente en una VM.\nPara autorizar esta tarea escribe exactamente: ACCESO TOTAL','')||'';
-    if(consent!=='ACCESO TOTAL')return toast('Acceso total no autorizado');
-  }
+  const consent=await authorizeAgent(provider,mode,task);
+  if(consent===null){$('#execStatus').textContent='Ejecución cancelada. El agente no se ha iniciado.';return;}
+  if(mode==='total'&&consent!=='ACCESO TOTAL')return toast('Acceso total no autorizado');
   state.files[state.lang]=$('#code').value;
   save(); // No perder los cambios pendientes si se cierra la pestaña durante Codex.
   agentSetWorking(true);resetAgentStages();switchPane('console');
