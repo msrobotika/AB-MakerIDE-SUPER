@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0a1019">
+<title>AB MakerIDE · MS Robotika</title>
+<style>
+:root{color-scheme:dark;--bg:#070b11;--rail:#0b111b;--side:#0e1621;--panel:#111c29;--line:#243244;--line2:#33465d;--txt:#e5eef8;--muted:#91a5b9;--subtle:#5f7790;--blue:#38bdf8;--violet:#9b86f9;--good:#44dbac;--bad:#fa8188;--amber:#f5c469;--mono:'Cascadia Code','JetBrains Mono',Consolas,monospace;--sans:Inter,'Segoe UI',system-ui,sans-serif}
+*{box-sizing:border-box}html,body{height:100%;margin:0}body{background:var(--bg);color:var(--txt);font:13px var(--sans);overflow:hidden}button,select,input,textarea{font:inherit}button{cursor:pointer}button:disabled{opacity:.42;cursor:not-allowed}button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.app{height:100vh;height:100dvh;display:flex;flex-direction:column;min-height:0}.top{height:61px;flex:0 0 61px;border-bottom:1px solid var(--line);background:linear-gradient(110deg,#101a29,#0a111a);display:flex;align-items:center;gap:12px;padding:0 18px;min-width:0}.brand{font-weight:830;letter-spacing:.1px;font-size:17px;white-space:nowrap;display:flex;align-items:center;gap:10px}.logo{height:32px;width:32px;border-radius:10px;background:linear-gradient(135deg,#3bc7f6,#8775e8);display:grid;place-items:center;color:#09111c;box-shadow:0 0 25px #28b4f32e}.brand b{color:var(--blue)}.by{font-size:9px;font-weight:650;letter-spacing:1.6px;color:var(--muted);text-transform:uppercase;margin-top:1px}.brandtext{line-height:1}.pill{font-size:11px;color:#b9d5e7;background:#12283b;border:1px solid #27465d;padding:5px 9px;border-radius:50px;white-space:nowrap}.realpill{background:#102d27;color:#8ee8c7;border-color:#216f56}.space{flex:1}.action{background:#172332;color:#d8e8f5;border:1px solid var(--line2);border-radius:9px;padding:8px 12px;display:inline-flex;align-items:center;gap:7px;justify-content:center;font-weight:650;white-space:nowrap;transition:.15s}.action:hover:not(:disabled){border-color:#5985ab;background:#213248}.action.primary{background:linear-gradient(115deg,#0284c7,#6553de);border-color:#386caa;color:white}.action.danger{background:#43242b;border-color:#7d3e48;color:#ffc9d0}.action.small{padding:6px 9px;font-size:11px}.action.ghost{background:transparent}.statuschip{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:11px;white-space:nowrap}.dot{width:8px;height:8px;border-radius:50%;background:var(--subtle);display:inline-block}.dot.good{background:var(--good);box-shadow:0 0 12px #44dbac60}.dot.bad{background:var(--bad)}.workspace{min-height:0;display:flex;flex:1}.rail{width:54px;flex:0 0 54px;background:var(--rail);border-right:1px solid var(--line);display:flex;align-items:center;flex-direction:column;gap:8px;padding:12px 4px}.rail button{border:0;background:none;color:#7189a3;height:42px;width:43px;border-radius:9px;font-size:19px}.rail button:hover{color:#e3f1fd;background:#172535}.rail button.on{background:#152e41;color:var(--blue);box-shadow:inset 3px 0 0 var(--blue)}.sidebar{width:245px;flex:0 0 245px;background:var(--side);border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0}.sectiontitle{min-height:40px;display:flex;align-items:center;justify-content:space-between;padding:0 13px;font-size:10px;letter-spacing:1.55px;color:#89a0b7;font-weight:800;border-bottom:1px solid var(--line)}.sidebody{padding:13px 11px;min-height:0;overflow:auto;flex:1}.formlabel{font-size:10px;letter-spacing:1px;color:var(--muted);font-weight:750;margin:0 0 7px;display:block}.selector,.input{width:100%;background:#0b131e;border:1px solid var(--line2);color:var(--txt);border-radius:8px;padding:9px;min-height:35px;outline:0}.selector option{background:#131e2c}.field{margin-bottom:16px}.boxinfo{background:#101c2a;border:1px solid var(--line);border-radius:10px;padding:12px;margin:10px 0 16px;line-height:1.7;color:var(--muted);font-size:12px}.boxinfo strong{color:#e4eef8}.hint{color:var(--subtle);font-size:11px;line-height:1.55}.fieldrow{display:flex;gap:7px}.fieldrow>*:first-child{flex:1;min-width:0}.treeitem{display:flex;align-items:center;gap:10px;width:100%;border:0;background:none;color:var(--muted);text-align:left;border-radius:8px;padding:10px;font-size:12px;margin:3px 0}.treeitem:hover{background:#162536;color:var(--txt)}.treeitem.on{background:#173047;color:#e1f5ff}.filetype{font-size:10px;font-weight:800;width:27px;color:#89b8f9;font-family:var(--mono)}.filetype.py{color:#f1c76a}.lib{background:#101b28;border:1px solid var(--line);border-radius:9px;padding:10px;margin-bottom:9px}.lib strong{font-size:12px;color:#dcecf9}.lib p{margin:5px 0 0;color:var(--subtle);font-size:10px;font-family:var(--mono)}.librow{display:flex;gap:8px;align-items:center;justify-content:space-between}.main{flex:1;min-width:0;display:flex;flex-direction:column;background:#080e16}.tabs{height:40px;flex:0 0 40px;display:flex;align-items:flex-end;gap:5px;padding:0 12px;background:#0c131d;border-bottom:1px solid var(--line)}.tab{border:0;border-top:2px solid transparent;color:#859ab0;background:transparent;padding:10px 17px 9px;height:36px;font-size:12px;font-weight:600}.tab:hover{color:var(--txt)}.tab.on{border-top-color:var(--blue);background:#080e16;color:#eaf4ff;border-radius:7px 7px 0 0;box-shadow:inset 1px 0 var(--line),inset -1px 0 var(--line)}.editorhead{display:flex;gap:7px;align-items:center;justify-content:space-between;padding:7px 14px;color:var(--subtle);font-size:11px;border-bottom:1px solid #182432}.editorwrap{position:relative;flex:1;min-height:130px;overflow:hidden}#code,#highlight{position:absolute;inset:0;margin:0;padding:16px 19px;font-family:var(--mono);font-size:13px;line-height:1.62;tab-size:2;letter-spacing:0;white-space:pre;word-wrap:normal}#code{color:transparent;-webkit-text-fill-color:transparent;caret-color:#c6f0ff;resize:none;border:0;outline:none;background:transparent;z-index:2;overflow:auto}#code::selection{background:#329de65e}#highlight{pointer-events:none;overflow:auto;scrollbar-width:none;color:#dce7f1}#highlight::-webkit-scrollbar{display:none}.tok-key{color:#bd9bf5}.tok-str{color:#bce98c}.tok-num{color:#ffc08d}.tok-com{color:#607e94;font-style:italic}.tok-fn{color:#84caff}.tok-pre{color:#89dcfa}.bottom{height:198px;flex:0 0 198px;min-height:0;border-top:1px solid var(--line);background:#0c141f;display:flex;flex-direction:column}.bottomnav{height:36px;flex:0 0 36px;display:flex;align-items:center;gap:4px;padding:0 11px;border-bottom:1px solid var(--line)}.bottomnav button{border:0;background:none;color:var(--subtle);border-radius:6px;padding:6px 10px;font-weight:650;font-size:11px}.bottomnav button.on{color:#daedff;background:#1a2a3d}.pane{flex:1;overflow:auto;min-height:0;padding:10px 13px;font-family:var(--mono);font-size:11.5px;line-height:1.65}.logline{white-space:pre-wrap;overflow-wrap:anywhere}.logline.good{color:var(--good)}.logline.bad{color:var(--bad)}.logline.note{color:var(--muted)}.logline.cmd{color:var(--blue)}.serialinput{padding:8px 11px;display:flex;gap:8px;border-top:1px solid var(--line)}.serialinput input{flex:1;min-width:0}.right{width:358px;flex:0 0 358px;background:#0e1621;border-left:1px solid var(--line);min-height:0;display:flex;flex-direction:column}.diag{padding:12px;border-bottom:1px solid var(--line)}.diaggrid{display:grid;grid-template-columns:1fr 1fr;gap:7px}.diagitem{border:1px solid var(--line);background:#111e2b;border-radius:9px;padding:9px}.diagitem .type{font-size:10px;letter-spacing:.6px;color:var(--muted);margin-bottom:5px}.diagitem .val{font-size:12px;font-weight:750}.val.good{color:var(--good)}.val.bad{color:var(--bad)}.virtual{border-bottom:1px solid var(--line);padding-bottom:11px}.virtualcanvas{height:163px;background:radial-gradient(circle at 33% 30%,#173048 0%,#0b121c 60%);display:flex;align-items:center;justify-content:space-around;gap:6px}.chipboard{height:116px;width:151px;border-radius:12px;border:2px solid #2d5065;background:repeating-linear-gradient(180deg,#152739,#152739 17px,#182c3d 18px);box-shadow:0 12px 25px #0008;display:flex;align-items:center;justify-content:center;flex-direction:column;position:relative}.chipboard:before,.chipboard:after{content:"";position:absolute;left:-8px;width:6px;height:92px;top:10px;background:repeating-linear-gradient(#9c895a 0px,#9c895a 5px,transparent 5px,transparent 11px)}.chipboard:after{left:auto;right:-8px}.chipinner{padding:10px 12px;background:#25394b;border:1px solid #456177;border-radius:6px;color:#d3e0ea;font:750 13px var(--mono)}.boardcaption{font:9px var(--mono);color:#89a9be;position:absolute;bottom:10px}.bulb{height:62px;width:62px;border-radius:50%;background:#173044;border:2px solid #375669;display:grid;place-items:center;color:#7194ad;position:relative;transition:background .12s,box-shadow .12s}.bulb.on{background:#4acaef;color:#09243c;border-color:#b4e9fb;box-shadow:0 0 30px 15px #38bdf83c}.simcontrols{display:flex;align-items:center;gap:7px;padding:9px 12px}.simlegend{font:10px var(--mono);color:#8298ac}.assistant{display:flex;flex-direction:column;flex:1;min-height:0}.chatlog{flex:1;min-height:0;overflow:auto;padding:13px;display:flex;flex-direction:column;gap:11px}.msg{font-size:12px;line-height:1.55;max-width:95%;padding:10px 11px;border-radius:10px;border:1px solid var(--line);background:#152130;color:#c4d9e8;white-space:pre-wrap;overflow-wrap:anywhere}.msg.user{align-self:flex-end;background:#173148;border-color:#225275;color:#dbedfc}.msg.bot{align-self:flex-start}.msg strong{color:#e7f8ff}.msg .action{margin-top:10px}.chatinput{display:flex;align-items:flex-end;gap:8px;padding:11px;border-top:1px solid var(--line)}.chatinput textarea{resize:none;max-height:100px;min-height:40px;height:40px;flex:1;min-width:0;background:#0a1420;border:1px solid var(--line2);color:var(--txt);border-radius:9px;padding:10px;outline:0}.footer{height:28px;flex:0 0 28px;background:linear-gradient(90deg,#0d293a,#122035);border-top:1px solid #304458;display:flex;align-items:center;gap:18px;padding:0 15px;color:#a1bbce;font:10px var(--mono)}.footer .space{flex:1}.goodtext{color:var(--good)}.badtext{color:var(--bad)}.hidden{display:none!important}.toast{position:fixed;bottom:47px;left:50%;transform:translate(-50%,12px);padding:12px 17px;background:#163348;color:white;border:1px solid #427da0;border-radius:10px;box-shadow:0 10px 40px #000a;opacity:0;transition:.2s;pointer-events:none;z-index:90;max-width:90vw}.toast.show{opacity:1;transform:translate(-50%,0)}.miniheading{font-size:12px;font-weight:750;color:#dbeaf6;margin:15px 0 9px}.settingscheck{display:flex;justify-content:space-between;gap:9px;padding:9px 0;border-bottom:1px solid #1b2b3b;color:var(--muted);font-size:12px}.settingscheck input{accent-color:#38bdf8}.notice{font-size:11px;line-height:1.55;color:var(--muted);padding:10px;border:1px dashed #416078;border-radius:9px;background:#102031}
+@media(max-width:1240px){.right{width:302px;flex-basis:302px}.sidebar{width:205px;flex-basis:205px}.top{gap:8px;padding:0 10px}}
+@media(max-width:980px){.right{display:none}.sidebar{width:225px;flex-basis:225px}.top .pill{display:none}}
+@media(max-width:640px){.rail{width:43px;flex-basis:43px}.rail button{width:37px}.sidebar{width:190px;flex-basis:190px}.top{height:55px;flex-basis:55px}.top .statuschip{display:none}.top .action{font-size:11px;padding:7px}.brand{font-size:14px}.by{display:none}.logo{width:27px;height:27px}.bottom{height:180px;flex-basis:180px}.footer span:nth-child(3){display:none}}
+@media(max-width:520px){.sidebar{position:fixed;z-index:20;left:43px;top:55px;bottom:28px;box-shadow:8px 0 20px #0009;width:min(78vw,280px)}.sidebar.mobileclosed{display:none}.main{min-width:0}.top .action:nth-last-child(2){display:none}.editorhead{font-size:10px}}
+
+/* v0.3: truthful live build progress and opt-in AI */
+.buildprogress{padding:9px 14px;background:#0e1e2d;border-bottom:1px solid var(--line);flex:0 0 auto}.buildrow{display:flex;align-items:center;gap:12px;font:11px var(--mono)}.buildrow strong{color:var(--blue);flex:1}.buildrow span{color:var(--muted)}.buildtrack{height:6px;margin-top:9px;border-radius:4px;overflow:hidden;background:#25364b}.buildfill{height:100%;width:0;background:linear-gradient(90deg,#38bdf8,#a78bfa);transition:width .2s}.buildfill.indeterminate{width:35%;animation:buildslide 1.6s linear infinite}.builddetail{font:10px var(--mono);color:var(--muted);padding-top:7px}.buildfill.success{width:100%;background:var(--good)}.buildfill.failed{width:100%;background:var(--bad)}@keyframes buildslide{0%{transform:translateX(-120%)}100%{transform:translateX(300%)}}.agentconfig{border-bottom:1px solid var(--line);font-size:11px}.agentconfig summary{cursor:pointer;color:#9bc6e0;padding:8px 12px;user-select:none}.agentfields{padding:10px 12px;max-height:290px;overflow-y:auto;display:flex;flex-direction:column;gap:10px}.agentfields label{display:block;color:var(--muted);line-height:1.6}.agentfields label>*:not(input[type=checkbox]){margin-top:4px}.agentactions{display:flex;gap:7px}.optincode{display:flex!important;align-items:start;gap:7px}.optincode input{margin:3px 0 0}.agentfields .notice{padding:8px;margin:0;font-size:10px;line-height:1.5;color:var(--muted)}.msg pre{background:#07111d;border:1px solid var(--line);border-radius:7px;padding:8px;max-height:230px;overflow:auto;white-space:pre;font:11px/1.5 var(--mono)}.msg .action{font-size:11px}@media(max-width:900px){.buildrow{gap:6px;flex-wrap:wrap}.buildrow strong{flex-basis:100%}}
+
+/* v0.4 - terminal guiado, velocidad real y simulador de patrones */
+.terminalinput{display:flex;gap:7px;padding:7px 10px;border-top:1px solid var(--line);background:#0b1724;align-items:center}
+.terminalinput .prompt{font:700 12px var(--mono);color:#4ddab3}.terminalinput .input{flex:1;min-width:0}
+.terminalinput.hidden{display:none}.simworkbench{padding:8px 12px 10px;border-bottom:1px solid var(--line)}
+#simCanvas{width:100%;height:auto;display:block;border:1px solid var(--line);border-radius:8px;background:#08111a}
+.simopts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}.simopts label{font:10px var(--mono);color:var(--muted)}.simopts select,.simopts input[type=range]{width:100%;margin-top:4px}.simsubtitle{font-size:10px;color:var(--muted);line-height:1.5;margin-top:8px}
+.simrow{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:7px}
+@media (max-height:750px){.simworkbench #simCanvas{max-height:180px;object-fit:contain}}
+
+.advisorstrip{display:flex;gap:9px;align-items:center;justify-content:space-between;background:#102538;border-bottom:1px solid #30536a;color:#bde7fd;padding:7px 13px;font-size:11px;min-height:32px}
+.advisorstrip .action{padding:4px 8px;font-size:11px}
+#advisorDetails{font-size:11px;color:#b7d8e9}
+.advisordetail{border:1px solid #2b455a;background:#102332;border-radius:8px;padding:10px;margin:7px 0;line-height:1.5}
+.advisordetail button{margin-top:7px}.wizard{padding:10px 12px;border-bottom:1px solid #26374b;background:#111f2b}
+.wizard summary{cursor:pointer;color:#aedaf2;font-size:12px;font-weight:750}
+.wizard label{display:block;color:#91b1c9;font-size:11px;margin-top:9px}
+.wizard textarea{min-height:64px;resize:vertical}.wizard .action{margin-top:9px}
+.auditlabel{font-size:10px;color:#8dbbd1}.wizard[open]{max-height:242px;overflow:auto}.agentconfig[open]{max-height:220px;overflow:auto}
+
+/* v0.6: scroll lateral sin solapar barra de estado */
+.right{width:405px;flex:0 0 405px;overflow-y:auto;overscroll-behavior:contain}
+@media(max-width:1200px){.right{width:330px;flex-basis:330px}}
+@media(max-width:850px){.right{display:none}}
+/* v0.6: laboratorio de conexiones y perfil físico verificable */
+.hardwarelab{border-bottom:1px solid var(--line);background:#0e1d2a;padding:0 11px}
+.hardwarelab summary{padding:12px 0;cursor:pointer;color:#a4def5;font-weight:750;font-size:12px}
+.hardwarelab label{display:block;font-size:11px;color:#a1bac9;margin:7px 0 4px}
+.hardwarelab .fieldrow{display:flex;gap:5px;align-items:center;margin:6px 0}
+.hardwarelab .fieldrow .selector{min-width:0;flex:1;width:0;padding:7px 4px}
+.hardwarelab .fieldrow .input{width:67px;min-width:48px;padding:7px 4px}
+.hardwarelab .result{max-height:200px;overflow:auto;padding:8px;border-radius:7px;background:#091520;border:1px solid #264154;margin:7px 0;font:11px/1.55 var(--mono);white-space:pre-wrap;overflow-wrap:anywhere}
+.hardwarelab .goodline{color:#60e4b4}.hardwarelab .badline{color:#ff8e91}.hardwarelab .warnline{color:#f5c469}
+.hardwarelab .labnote{color:#9ab5c9;line-height:1.5;font-size:10px;margin:5px 0 10px}
+.hardwarelab[open]{max-height:360px;overflow-y:auto}
+
+/* 0.9 LITE: editor y dispositivo primero; resto optativo. */
+.top{height:53px;flex-basis:53px;padding:0 12px;gap:9px}
+.brand{font-size:15px;gap:7px}.logo{width:27px;height:27px}.by{font-size:8px}
+.quick-selectors{display:flex;align-items:center;gap:7px;min-width:0}
+.quick-selectors .selector{width:auto;min-width:115px;max-width:235px;padding:6px 8px;min-height:30px;font-size:12px}
+.quick-selectors #quickPort{max-width:170px;min-width:90px}
+.quick-selectors .action{min-height:30px}
+.sr-only{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+.rail{width:44px;flex-basis:44px;padding:9px 2px}.rail button{width:36px;height:36px;font-size:17px}
+.sidebar{width:195px;flex-basis:195px}.sidebody{padding:9px}
+.sectiontitle{min-height:33px;letter-spacing:.75px}
+.editorhead{font-size:10px;padding:5px 13px}
+.advisorstrip{display:none}
+.bottom{height:151px;flex-basis:151px}
+.right{display:none;flex-direction:column;width:355px;flex-basis:355px;min-width:0}
+body[data-right="ai"] .right,body[data-right="sim"] .right,body[data-right="lab"] .right{display:flex}
+.right #rightClose{align-self:flex-end;margin:7px 8px}
+.right .diag{display:none}
+body[data-right="ai"] .right .simworkbench,body[data-right="ai"] .right .hardwarelab{display:none}
+body[data-right="sim"] .right .assistant,body[data-right="sim"] .right .hardwarelab{display:none}
+body[data-right="lab"] .right .assistant,body[data-right="lab"] .right .simworkbench{display:none}
+body[data-right="lab"] .right .hardwarelab{display:block;max-height:none;overflow:auto;flex:1}
+#showAI,#showSim,#showLab{font-size:11px}
+@media(max-width:1200px){#showLab{display:inline-flex}.sidebar{width:180px;flex-basis:180px}.quick-selectors .selector{max-width:175px}}
+@media(max-width:990px){#showSim{display:inline-flex}.sidebar{width:155px;flex-basis:155px}.right{width:310px;flex-basis:310px}}
+@media(max-width:730px){.brandtext .by{display:none}.quick-selectors{gap:3px}.quick-selectors .selector{min-width:78px;max-width:123px}.right{position:absolute;top:53px;right:0;bottom:25px;z-index:20;box-shadow:-15px 0 35px #0009}.sidebar{display:none}.action{padding:7px}#showAI{display:none}}
+
+/* Super 0.9.1: agentes bajo demanda, sin saturar la pantalla principal */
+#agentWorkbench .agent-guide{font-size:11px;line-height:1.5;color:var(--muted);padding:6px 0;overflow-wrap:anywhere}
+#agentWorkbench label{display:block;font-size:11px;color:var(--muted);margin:10px 0}
+#agentWorkbench label select,#agentWorkbench label textarea{width:100%;display:block;margin-top:6px}
+#agentWorkbench[open]{max-height:410px;overflow:auto}
+#execWarning.danger-warning{color:#ffc880;background:#351e19;border:1px solid #95503d;border-radius:8px;padding:10px}
+#execStatus{white-space:pre-wrap}
+.agent-diff{white-space:pre-wrap;max-height:250px;overflow:auto;background:#07111d;border:1px solid #274c61;border-radius:7px;padding:9px;margin-top:9px;font:11px/1.5 var(--mono);overflow-wrap:anywhere}
+
+/* v0.9.2: entorno sencillo, consola dimensionable y accesible */
+.main{min-height:0}
+.terminal-grip{height:12px;flex:0 0 12px;cursor:ns-resize;touch-action:none;position:relative;background:#101c2a;border-top:1px solid var(--line);border-bottom:1px solid var(--line);outline:0;user-select:none}
+.terminal-grip::after{content:"";position:absolute;top:4px;left:calc(50% - 26px);width:52px;height:3px;background:#536c82;border-radius:9px;transition:background .16s}
+.terminal-grip:hover::after,.terminal-grip:focus-visible::after,.terminal-grip.dragging::after{background:var(--blue)}
+.terminal-grip:focus-visible{outline:2px solid var(--blue);outline-offset:-2px}
+.bottom{height:165px;flex:0 0 165px;border-top:0;min-height:105px}
+.bottomnav{gap:3px;min-height:36px}
+.bottomnav .terminalaction{color:#b9d1e4;border:1px solid transparent;padding:4px 7px;font-size:12px}
+.bottomnav .terminalaction:hover{background:#1e3041;border-color:#38516a}
+.sidebar{width:210px;flex-basis:210px;transition:width .16s ease,flex-basis .16s ease}
+.sidebar.is-collapsed{width:0!important;flex-basis:0!important;overflow:hidden;border:0}
+.rail button{position:relative}
+.rail button.on::after{content:"";position:absolute;left:0;top:10px;bottom:10px;width:2px;border-radius:2px;background:var(--blue)}
+.quick-help{border-radius:50%;width:29px;height:29px;padding:0;font-weight:800}
+.terminal-guided{font-size:10px;color:var(--muted);letter-spacing:.2px;white-space:nowrap}
+.terminalinput .input{min-height:31px;padding:6px 9px}
+#terminalCommand{font-family:var(--mono);font-size:12px}
+.quick-dialog{max-width:min(460px,calc(100vw - 28px));width:100%;background:#111e2b;color:var(--txt);border:1px solid #416583;border-radius:13px;box-shadow:0 26px 100px #000c;padding:23px}
+.quick-dialog::backdrop{background:#030b13c9}
+.quick-dialog h2{margin:0 0 9px;font-size:18px}
+.quick-dialog p,.quick-dialog li{line-height:1.65;color:#b4c8d9}
+.quick-dialog ol{padding-left:22px}
+.quick-dialog .dialogactions{display:flex;gap:9px;justify-content:flex-end;margin-top:15px}
+#deviceHint{color:var(--muted);font-size:10.5px;max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:730px){.bottomnav .terminal-guided{display:none}.bottomnav button[data-pane]{font-size:10px;padding:5px}.quick-help{display:none}#deviceHint{display:none}}
+/* 0.9.6 - Presets only fill the task: no implicit agent actions. */
+.agent-templates{display:flex;gap:7px;flex-wrap:wrap;margin:7px 0}.agent-templates .action{font-size:10px}
+/* 0.9.6 - Agent activity overview. Keeps verbose tool output collapsed by default. */
+.agent-stages{border:1px solid #294056;background:#0c1925;border-radius:10px;padding:10px;margin:9px 0}
+.agent-stages.hidden{display:none}.agent-stage-head{font-weight:750;color:#d5eaff;display:flex;justify-content:space-between;margin-bottom:8px}
+.agent-stage-head span{font-size:10px;color:var(--muted);font-family:var(--mono)}
+.agent-stage{display:flex;align-items:center;gap:8px;padding:8px 5px;border-bottom:1px solid #1d3041;font-size:11px;color:#97aebf}
+.agent-stage .stage-icon{font-weight:900;color:#7189a0}.agent-stage span:nth-child(2){flex:1}
+.agent-stage small{font-size:10px;text-align:right;color:#8299ac}
+.agent-stage.observed{color:#def9e8}.agent-stage.observed .stage-icon{color:#44dbac}.agent-stage.observed small{color:#44dbac}
+.agent-stage-note{font-size:10px;line-height:1.5;color:#8ba1b3;margin:9px 0}
+.agent-raw summary{cursor:pointer;font-size:11px;color:#b9e7fc;padding:6px}
+#agentRawLog{max-height:230px;overflow:auto;background:#050d15;border:1px solid #233749;border-radius:6px;padding:8px;white-space:pre-wrap;overflow-wrap:anywhere;font:10px/1.5 var(--mono)}
+
+/* Selector completo, buscable y accesible sin saturar el editor */
+.board-picker{width:min(650px,94vw);max-height:min(740px,92vh);overflow:hidden;display:none;flex-direction:column;gap:12px;background:#101a25;color:var(--text);border:1px solid #395066;border-radius:15px;padding:19px;box-shadow:0 24px 80px #000b}
+.board-picker[open]{display:flex}.board-picker::backdrop{background:#000a;backdrop-filter:blur(3px)}
+.picker-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}.picker-head p{margin:4px 0 0}
+.picker-controls{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.picker-results{min-height:60px;overflow:auto;flex:1;border:1px solid var(--line);border-radius:10px;padding:5px;background:#0b131b}
+.picker-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px;border-radius:8px;border-bottom:1px solid #1e2d3b}
+.picker-item:last-child{border:0}.picker-item:hover{background:#192a3b}.picker-item .hint{display:block;word-break:break-all;margin-top:3px}
+.picker-item button{flex-shrink:0}.picker-empty{padding:18px;color:var(--dim)}
+@media(max-width:600px){.board-picker{padding:12px}.picker-item{gap:5px;flex-wrap:wrap}}
+
+.picker-pages{display:flex;align-items:center;justify-content:center;gap:12px;margin:12px 0 4px}.picker-pages button:disabled{opacity:.3}.quick-selectors #quickBoard{max-width:190px;text-overflow:ellipsis}.extra-tools{position:relative}.extra-tools>summary{list-style:none}.extra-tools>summary::-webkit-details-marker{display:none}.extra-menu{position:absolute;z-index:50;right:0;top:calc(100% + 7px);min-width:210px;padding:7px;background:var(--panel);border:1px solid var(--line2);border-radius:10px;box-shadow:0 12px 30px #0009;display:flex;flex-direction:column;gap:4px}.extra-menu .action{justify-content:flex-start}.target-notice{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:6px 13px;background:#362a19;color:#f4d497;border-bottom:1px solid #71512b;font-size:11px}.target-notice .action{border-color:#80643a;color:#fff0c5;background:#4f3a20}
+</style>
+</head>
+<body data-right="none">
+<div class="app">
+<header class="top">
+  <div class="brand"><span class="logo">◈</span><div class="brandtext">AB <b>MakerIDE</b><div class="by">by MS ROBOTIKA</div></div></div>
+  <div class="quick-selectors" aria-label="Placa y puerto físicos">
+    <label class="sr-only" for="quickBoard">Placa</label>
+    <select id="quickBoard" class="selector" title="Seleccionar modelo de placa"><option>Buscando placas…</option></select>
+    <label class="sr-only" for="quickPort">Puerto serie</label>
+    <select id="quickPort" class="selector" title="Puerto COM físico"><option value="">Buscando puertos…</option></select>
+    <button id="catalogOpen" class="action small ghost" title="Buscar placas por nombre o FQBN">⌕ Placas</button>
+    <button id="quickScan" class="action small" title="Actualizar puertos USB detectados">↻</button><button id="quickHelp" class="action small ghost quick-help" title="Guía rápida: elegir placa, compilar y grabar" aria-label="Abrir guía rápida">?</button>
+  </div>
+  <div class="space"></div><span class="statuschip"><i class="dot" id="backendDot"></i><span id="backendState">Comprobando...</span></span>
+  <button id="showAI" class="action small ghost" title="Abrir IA (opcional)">✦ IA</button>
+  <details class="extra-tools" id="extraTools"><summary class="action small ghost" title="Herramientas avanzadas">⋯ Herramientas</summary><div class="extra-menu">
+   <button id="showSim" class="action small ghost" title="Simulador lógico; NO ejecuta firmware">Simulación lógica</button>
+   <button id="showLab" class="action small ghost" title="Revisar conexiones y perfiles">Conexiones GPIO</button>
+  </div></details>
+  <button id="verifyBtn" class="action" title="Compilar código Arduino o verificar sintaxis Python (Ctrl+Enter)">⌕ Verificar</button>
+  <button id="uploadBtn" class="action primary" title="Compilar y grabar en la placa real">↑ Grabar placa</button>
+</header>
+<div class="workspace">
+<nav class="rail" aria-label="Menú">
+  <button data-panel="project" class="on" title="Proyecto">▤</button>
+  <button data-panel="boards" title="Placas y puertos">▦</button>
+  <button data-panel="libraries" title="Librerías Arduino">▥</button>
+  <button data-panel="settings" title="Configuración">⚙</button>
+</nav>
+<aside class="sidebar" id="sidebar"><div class="sectiontitle"><span id="sideTitle">PROYECTO</span></div><div class="sidebody" id="sideBody"></div></aside>
+<main class="main">
+<div class="tabs"><button class="tab on" data-lang="cpp">◈ sketch.ino</button><button class="tab" data-lang="py">◈ main.py</button></div>
+<div class="editorhead"><span id="fileLabel">sketch.ino · Arduino C++</span><span id="deviceHint">Conecta una placa, elige modelo y puerto</span></div>
+<div id="sketchTargetNotice" class="target-notice hidden" role="status"><span>Este ejemplo inicial es para Arduino Uno; has elegido otra placa.</span><button id="makeBlankSketch" class="action small">Preparar sketch básico</button></div><div class="advisorstrip"><span id="advisorBadge" role="status">🧩 Dependencias: analizando…</span><button class="action ghost" id="advisorOpen">Revisar librerías ↗</button></div>
+<section class="buildprogress hidden" id="buildProgress" aria-live="polite">
+  <div class="buildrow"><strong id="buildStage">Preparando…</strong><span id="buildClock">0.0 s</span><span id="buildPercent">Sin porcentaje verificable</span><button class="action small ghost" id="buildExplain" title="Solicitar una explicación del error a la IA con autorización">✦ Explicar fallo</button><button class="action small danger" id="buildCancel">■ Cancelar</button></div>
+  <div class="buildtrack" role="progressbar" id="buildMeter" aria-label="Progreso de operación"><div class="buildfill indeterminate" id="buildFill"></div></div>
+  <div class="builddetail" id="buildDetail">Se mostrarán mensajes reales de Arduino CLI.</div>
+</section>
+<div class="editorwrap"><pre id="highlight" aria-hidden="true"></pre><textarea id="code" spellcheck="false" wrap="off" aria-label="Editor de código" autocapitalize="off" autocomplete="off"></textarea></div>
+<div class="terminal-grip" id="terminalGrip" role="separator" aria-orientation="horizontal" aria-label="Arrastra hacia arriba para ampliar la consola. Flechas para ajustar; doble clic para maximizar" tabindex="0" aria-valuemin="105" aria-valuemax="600" aria-valuenow="165" title="Arrastra hacia arriba / doble clic para maximizar"></div>
+<div class="bottom" id="terminalPanel">
+<div class="bottomnav"><button data-pane="console" class="on">CONSOLA</button><button data-pane="serial">MONITOR SERIE</button><button data-pane="problems">DIAGNÓSTICOS</button><span class="space"></span><span class="terminal-guided" id="consoleTag">Arduino CLI · resultados reales</span><button class="terminalaction" id="terminalMax" title="Maximizar/restaurar consola (Ctrl+Alt+T)" aria-label="Maximizar o restaurar consola">⤢ Ampliar</button><button id="clearBtn" title="Vaciar panel actual">Limpiar</button></div>
+<div id="pane-console" class="pane" aria-live="polite"></div><div id="pane-serial" class="pane hidden" aria-live="polite"></div><div id="pane-problems" class="pane hidden" aria-live="polite"></div>
+<div class="terminalinput" id="terminalBar"><span class="prompt" title="Consola de comandos autorizados, no es un intérprete de PowerShell">IDE&gt;</span><input id="terminalCommand" class="input" placeholder="Comandos guiados: help, ports, cores, install avr" aria-label="Comando guiado de Arduino CLI"><button id="terminalRun" class="action small">Ejecutar</button></div><div class="serialinput hidden" id="serialBar"><input class="input" id="serialText" placeholder="Escribe texto para enviar al dispositivo..." aria-label="Datos a enviar al puerto serie"><button class="action small" id="serialSend">Enviar ↵</button></div>
+</div>
+</main>
+<aside class="right"><button id="rightClose" class="action small ghost" title="Cerrar panel" aria-label="Cerrar panel derecho">✕ Cerrar panel</button>
+<div class="sectiontitle"><span>ENTORNO Y DEPENDENCIAS</span><button class="action small ghost" id="refreshStatus">↻</button></div>
+<div class="diag"><div class="diaggrid" id="diagGrid"><div class="diagitem">Comprobando herramientas...</div></div></div>
+<section class="simworkbench" id="simulatorPanel">
+<div class="sectiontitle"><span>SIMULADOR DE CIRCUITOS · BETA</span><span class="simlegend">SUBCONJUNTO BLINK</span></div>
+<canvas id="simCanvas" width="460" height="285" aria-label="Simulador lógico con circuito y osciloscopio"></canvas>
+<div class="simopts"><label>GPIO conectado a LED<select id="simPin" class="selector"><option>2</option><option>4</option><option>5</option><option>13</option><option>16</option><option>17</option><option>18</option><option>19</option><option>21</option><option>22</option><option>23</option><option>25</option><option>26</option><option>27</option><option>32</option><option>33</option></select></label>
+<label>Entrada ADC virtual <span id="simAnalogValue">2048</span><input type="range" min="0" max="4095" value="2048" id="simAnalog"></label></div>
+<div class="simrow"><button class="action small" id="simBtn">▶ Simular lógica</button><label class="simlegend"><input type="checkbox" id="simButton"> Botón virtual pulsado</label></div>
+<div class="simsubtitle" id="simPeriod">Se analiza el código abierto; no se ejecuta firmware binario.</div>
+<div class="simsubtitle" id="simStatus">Listo para analizar</div>
+</section>
+<details class="hardwarelab" id="hardwareLab">
+<summary>▣ LAB DE HARDWARE · Perfil IdeaSpark y conexiones</summary>
+<label for="hwProfile">Perfil de placa</label><select id="hwProfile" class="selector" style="width:100%"><option value="ideaspark-19">IdeaSpark 1,9″ · probada</option><option value="ideaspark-114">IdeaSpark 1,14″ · revisar</option><option value="esp32-generic">ESP32 Dev Module genérico</option></select>
+<div class="labnote" id="hwProfileNote">GPIO de pantalla reservados: MOSI23, SCLK18, CS15, DC2, RST4, BL32.</div>
+<label for="hwRotation">Orientación TFT (solo actualiza tu código con confirmación)</label>
+<div class="fieldrow"><select id="hwRotation" class="selector"><option value="0">0 · vertical</option><option value="1">1 · horizontal</option><option value="2">2 · vertical invertida</option><option value="3">3 · horizontal invertida</option></select><button id="hwApplyRotation" class="action small">Aplicar orientación</button></div>
+<label>Componentes externos y GPIO (ninguno conectado por defecto)</label>
+<div id="hwConnections"></div>
+<div class="fieldrow"><button id="hwAdd" class="action small ghost">+ Componente</button><label class="simlegend"><input id="hwWifi" type="checkbox"> Wi-Fi activo</label></div>
+<div class="fieldrow"><button id="hwCheck" class="action small primary">▣ Auditar conexiones</button><button id="hwSketchCheck" class="action small ghost">Revisar GPIO del sketch</button></div>
+<div id="hwResult" class="result" role="status">Sin comprobación. Es un análisis lógico, no una medición eléctrica.</div>
+<div class="labnote">La auditoría puede detectar ciertos errores conocidos, pero no certifica continuidad, tensión, aislamiento ni seguridad eléctrica. No conecta ni acciona periféricos.</div>
+</details>
+<div class="assistant"><div class="sectiontitle"><span>AGENTE MAKER · IA OPCIONAL</span><span id="aiState" style="color:var(--amber)">PLANTILLAS</span></div>
+<details class="agentconfig" id="aiConfig"><summary>⚙ Proveedor y modelo IA · Configurar</summary>
+<div class="agentfields">
+ <label>Proveedor<select id="aiProvider" class="selector"><option value="local">Plantillas sin IA</option><option value="google">Google AI Studio · Gemma 4</option><option value="openrouter">OpenRouter · Gemma libre</option><option value="ollama">Ollama · modelo local</option><option value="codex">Codex CLI · cuenta vinculada</option><option value="claude_code">Claude Code CLI · cuenta vinculada</option></select></label>
+ <label>Modelo<select id="aiModel" class="selector"></select></label>
+ <label id="aiKeyGroup">Clave API (solo memoria del servidor)<input type="password" class="input" id="aiKey" autocomplete="off" placeholder="Pegar clave; no se guarda en disco"></label>
+ <div class="hint">Codex y Claude Code requieren sus CLI oficiales instaladas y sesión iniciada. Usa «Ejecutar tarea real» para permitirles consultar, editar o ejecutar según tu elección. No necesitan pegar claves en MakerIDE.</div><div class="agentactions"><button id="aiSave" class="action small">Guardar proveedor</button><button id="aiTest" class="action small ghost">Probar conexión</button><button id="aiReset" class="action small danger" title="Borrar claves API de la memoria del servidor">Borrar claves</button></div>
+ <label class="optincode"><input type="checkbox" id="aiSendCode"> Enviar código actual como contexto a la nube (posibles secretos redactados; revisa antes)</label>
+ <p class="notice">Los modelos de chat solo proponen código; los agentes CLI pueden ejecutar herramientas y grabar hardware si eliges permisos suficientes y lo solicitas. La finalización del agente NO demuestra que el programa funcione en la pantalla. Las claves de proveedores en la nube permanecen en memoria del servidor.</p>
+</div></details>
+<details class="wizard" id="agentWorkbench">
+<summary>⚡ Codex / Claude Code · Ejecutar tarea real</summary>
+<div class="agent-guide">Selecciona agente y permisos. La ejecución empieza en una copia del proyecto bajo Documentos/AB MakerIDE/AgentWorkspaces. El acceso a otras rutas depende de los permisos de la CLI; supervisado no equivale a sandbox de sistema. Los cambios al editor requieren revisión.</div>
+<label>Agente<select class="selector" id="execProvider"><option value="codex">OpenAI Codex CLI</option><option value="claude_code">Anthropic Claude Code CLI</option></select></label>
+<label>Permisos para esta ejecución<select class="selector" id="execMode">
+<option value="consultar">Consultar · lectura</option>
+<option value="supervisado" selected>Supervisado · editar código; aplicar tras revisar</option>
+<option value="autonomo">Autónomo · editar y ejecutar pruebas</option>
+<option value="total">Acceso total · sin sandbox ni aprobaciones CLI</option>
+</select></label>
+<label>Tarea<textarea class="input" id="execTask" maxlength="12000" placeholder="Ej.: revisa sketch.ino, corrige errores y mejora el programa sin cambiar los GPIO existentes"></textarea></label>
+<div class="agent-templates" aria-label="Tareas rápidas"><button class="action small ghost" id="agentTaskInspect" title="Solo prepara la solicitud">⌕ Diagnosticar placa</button><button class="action small ghost" id="agentTaskBlink" title="Prepara la prueba física; no ejecuta nada todavía">⚡ Probar Blink</button><button class="action small ghost" id="agentTaskPong" title="Preparar juego Pong para IdeaSpark; no lo ejecuta">▣ Pong IdeaSpark</button></div>
+<div class="agent-guide" id="execWarning">Cada ejecución requiere autorización. En acceso total, Codex puede compilar y grabar si tú se lo pides: se mostrará la evidencia disponible.</div>
+<div class="agentactions"><button class="action small primary" id="execRun">▶ Ejecutar agente</button><button class="action small danger" id="execStop" disabled>■ Detener</button></div>
+<div class="agentactions"><button class="action small ghost" id="agentRecover">↺ Recuperar última sesión</button><button class="action small ghost" id="agentContinue" disabled>➜ Continuar pendiente</button></div>
+<div id="agentResumeMessage" class="agent-guide" role="status"></div>
+<div id="execStatus" class="agent-guide" role="status">Agentes aún no comprobados.</div>
+<section id="agentStages" class="agent-stages hidden" aria-label="Etapas observadas de la tarea" aria-live="polite">
+  <div class="agent-stage-head">Actividad de Codex / Claude <span id="agentStageElapsed">0 s</span></div>
+  <div class="agent-stage" data-evidence="board_signature"><span class="stage-icon">○</span><span>Placa · firma comprobada</span><small>Sin evidencia todavía</small></div>
+  <div class="agent-stage" data-evidence="compiled"><span class="stage-icon">○</span><span>Compilación de firmware</span><small>Sin evidencia todavía</small></div>
+  <div class="agent-stage" data-evidence="flash_verified"><span class="stage-icon">○</span><span>Grabación y verificación</span><small>Sin evidencia todavía</small></div>
+  <p class="agent-stage-note">Estos indicadores se extraen del registro de herramientas; no sustituyen la observación del dispositivo.</p>
+  <details class="agent-raw"><summary>Ver registro técnico de la tarea <span id="agentEventCount">0 eventos</span></summary><pre id="agentRawLog" aria-label="Registro técnico completo de la sesión"></pre></details>
+</section>
+</details>
+<details class="wizard" id="projectWizard"><summary>✦ Crear proyecto con IA · asistente guiado</summary>
+<label>¿Qué quieres construir?<textarea class="input" id="wizardGoal" maxlength="2800" placeholder="Ej.: estación de temperatura ESP32 con pantalla ST7789, MQTT y registro de fallos"></textarea></label>
+<label>Componentes disponibles (solo los reales)<input class="input" id="wizardParts" maxlength="900" placeholder="ESP32, pantalla, DHT22, relé..."></label>
+<label>Restricciones y conexiones confirmadas<input class="input" id="wizardConstraints" maxlength="900" placeholder="GPIO y tensiones confirmadas, red, alimentación..."></label>
+<button class="action primary small" id="wizardBuild">✦ Generar propuesta con revisión técnica</button>
+<p class="auditlabel">Gemma propone planes y código. Codex y Claude pueden modificar una copia del proyecto si autorizas la ejecución.</p></details>
+<div class="chatlog" id="chatLog"></div><div class="chatinput"><textarea id="chatInput" placeholder="Ej.: LED parpadeando cada 200 ms"></textarea><button class="action primary" id="chatSend" title="Enviar">➤</button></div></div>
+</aside>
+</div>
+<footer class="footer"><span id="footBoard">Arduino Uno R3</span><span id="footPort">Puerto: sin seleccionar</span><span id="footLang">C++ · Arduino</span><span class="space"></span><span id="footSave">Sin cambios</span><span id="footCaret">Ln 1, Col 1</span><span>AB MakerIDE 0.9.7</span></footer>
+</div>
+<input type="file" id="projectFile" accept=".json,application/json" class="hidden">
+
+<dialog id="boardCatalog" class="board-picker" aria-labelledby="catalogTitle">
+ <div class="picker-head"><div><strong id="catalogTitle">Elegir placa</strong><p class="hint">Placas procedentes de Arduino CLI. El puerto físico se elige por separado.</p></div><button class="action small ghost" id="catalogClose" aria-label="Cerrar selector">✕</button></div>
+ <label class="formlabel" for="catalogQuery">Nombre, fabricante o FQBN</label>
+ <input type="search" id="catalogQuery" class="input" placeholder="Ej.: Uno, ESP32-S3, Seeed, STM32..." autocomplete="off" />
+ <div class="picker-controls"><span class="hint" id="catalogCount">Consultando catálogo...</span><button class="action small ghost" id="catalogRefresh" title="Actualizar catálogo instalado">↻ Actualizar</button><button id="catalogOnline" class="action small ghost">Buscar también en gestor de placas ↗</button></div>
+ <div id="catalogSource" class="hint" role="status" style="margin:8px 0" ></div><div id="catalogResults" role="list" class="picker-results" aria-live="polite"></div><div class="picker-pages"><button id="catalogPrev" class="action small" type="button">← Anteriores</button><span id="catalogPageLabel" class="hint">Página 1</span><button id="catalogNext" class="action small" type="button">Siguientes →</button></div>
+ <p class="hint">Si tu placa no aparece: busca su núcleo en el gestor e instálalo tras confirmar. Una placa con CH340 puede mostrar modelo desconocido; no se identifica automáticamente por el chip USB.</p>
+</dialog>
+
+<div class="toast" role="status" id="toast"></div>
+<dialog id="quickStart" class="quick-dialog" aria-labelledby="quickStartTitle">
+<h2 id="quickStartTitle">Primeros pasos · AB MakerIDE</h2>
+<p>Solo hacen falta tres acciones para programar tu placa:</p>
+<ol><li><b>Conecta</b> el USB de datos. Pulsa ↻ y selecciona su puerto COM.</li>
+<li><b>Selecciona la placa</b> por su modelo físico. Los clones CH340 pueden aparecer como «Unknown» y aun así funcionar.</li>
+<li><b>Compila</b> con «Compilar» y, si no hay errores, pulsa «Compilar y grabar».</li></ol>
+<p><b>Consola:</b> arrastra el separador horizontal hacia arriba; «⤢ Ampliar» maximiza/restaura. El campo IDE&gt; acepta comandos guiados, no PowerShell arbitrario.</p>
+<div class="dialogactions"><button id="quickBoardFocus" class="action">Elegir placa</button><button id="quickStartClose" class="action primary">Entendido</button></div>
+</dialog>
+<script src="/simulator.js"></script>
+<script src="/app.js"></script>
+</body>
+</html>

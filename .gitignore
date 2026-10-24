@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.idea/
+.vscode/
+.DS_Store
+*.log
+*.bin
+*.elf
+*.hex
+*.uf2
+*.pyc
+secrets.json
+.env
+.env.*
