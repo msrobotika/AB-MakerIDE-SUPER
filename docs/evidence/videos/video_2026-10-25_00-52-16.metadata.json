@@ -1,0 +1,17 @@
+{
+  "origin": "Aportado por el usuario en esta conversación, 25 de octubre de 2026",
+  "original_file": "video_2026-10-25_00-52-16.mp4",
+  "original_path": "C:\\Users\\abeli\\Videos\\video_2026-10-25_00-52-16.mp4",
+  "sha256": "d64e193912803be5691b960c2e3e2245dca10b5a957425a4d50059f1646e7423",
+  "bytes": 15074247,
+  "duration_seconds": 36.79,
+  "resolution": [
+    1280,
+    720
+  ],
+  "video_codec": "h264",
+  "audio_codec": "aac",
+  "original_modified": false,
+  "hardware_actions_by_agent": false,
+  "review_scope": "Muestreo visual de doce fotogramas y revisión ampliada de pantalla y dispositivo; no transcripción ni análisis del audio."
+}

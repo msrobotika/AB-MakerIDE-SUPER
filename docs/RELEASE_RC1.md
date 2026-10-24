@@ -50,3 +50,7 @@ La recuperación de `boards.txt` usa la versión local más reciente de cada arq
 3. Prueba de extremo a extremo de agentes con una cuenta real en un entorno apropiado y autorización acotada; aquí se validó el contrato local con stubs/mocks y ayuda CLI.
 4. Ejecutar los cuatro tests g++ omitidos en un entorno con compilador, y validar los launchers en Linux/macOS. Windows fue el entorno real de esta entrega.
 5. Revisar empaquetado, migración con copias representativas y retención antes de etiquetar estable. No se hizo push, PR, publicación ni despliegue.
+
+## Evidencia de campo posterior a esta entrega
+
+El usuario aportó un vídeo de 36,79 s que muestra MakerIDE en 8765, un juego en una pantalla física y una placa UNO con indicadores encendidos. Se conserva sin edición en [la ficha del vídeo](evidence/videos/README.md), con SHA-256 y observaciones temporales. La versión y el firmware exactos no quedan vinculados al commit RC1; se mantienen los pendientes de aceptación anteriores. Esta incorporación documental no ejecuta ninguna operación de hardware.
