@@ -1,42 +1,55 @@
-# AB MakerIDE SUPER v0.9.7 — MS Robotika
+# AB MakerIDE SUPER 1.0.0-rc.1 · MS Robotika
 
-**Objetivo:** un IDE open source para hardware real, claro para principiantes y útil para perfiles avanzados. **No se presenta como el mejor del mercado ni como versión estable**: esta entrega es una mejora incremental sobre v0.9.6 y sigue necesitando pruebas físicas en Windows.
+IDE local para Arduino C++ y MicroPython, sobre la base v0.9.7. **Candidato de lanzamiento; no versión estable.** Se han verificado el catálogo y la compilación real en Windows. Falta validar grabación y funcionamiento físico del hardware con autorización.
 
-## Novedades verificadas
+## Arranque en Windows
 
-1. **Buscador de placas paginado**: consulta los modelos instalados con `/api/board-catalog/installed?query=esp32&page=1&limit=40`. Hasta 50 resultados por petición, filtrado y paginado en el servidor. El desplegable superior presenta la placa elegida y las placas reconocidas relevantes, en lugar de miles de modelos.
-2. **Búsqueda separada en Boards Manager**: tras escribir al menos dos caracteres, pulsa «Buscar también en gestor de placas». Consulta `arduino-cli board search` con parámetros sin shell, devuelve como máximo 40 resultados por página y no instala nada sin autorización. La búsqueda en el equipo no depende de que Boards Manager funcione.
-3. **Arreglo del límite de 8 MB**: Arduino CLI puede responder con un JSON mayor; el umbral de seguridad de lectura se amplía a 48 MB y se añaden pruebas con una respuesta de más de 8 MB. Si el resultado excede 48 MB, se informa del límite y no se declara que existan cero placas. Se mantiene la recuperación `boards.txt` cuando falla la enumeración instalada.
-4. **Selección prudente del dispositivo**: la pantalla no confunde el conversor USB CH340 con una identificación inequívoca de Arduino Uno. El puerto COM y el modelo son dos selecciones independientes. Se conserva la asociación manual confirmada.
-5. **Interfaz más sencilla**: los accesos menos frecuentes «Simulación lógica» y «Conexiones GPIO» se agrupan en «⋯ Herramientas». Permanecen visibles «Compilar» y «Compilar y grabar».
-6. **Aviso de destino equivocado**: si el ejemplo inicial es para Arduino Uno y eliges otra placa, aparece un aviso contextual. «Preparar sketch básico» pide permiso, conserva copia del código anterior en el almacenamiento local y crea una plantilla neutra para el FQBN seleccionado; no asigna GPIO de forma imaginaria.
+1. Conserva la carpeta anterior. No sobrescribas v0.9.5 ni tus proyectos.
+2. Ejecuta `INICIAR_WINDOWS.bat` (Python 3.10+). Usa **http://127.0.0.1:8770**, dejando libre de cambios el servidor anterior de 8765.
+3. `/api/health` debe devolver `1.0.0-rc.1`. Arduino CLI se busca en PATH y en `C:\Program Files\Arduino CLI`. Para una ruta específica, define `AB_MAKERIDE_ARDUINO_CLI` antes de arrancar. El servidor no cambia PATH ni configuración global.
+4. Elige **modelo** y **puerto** por separado. «Placas» busca los modelos instalados, en páginas de 40. CH340 y CP210x identifican un conversor USB, nunca prueban el modelo de placa. Una sugerencia de la CLI no reemplaza tu modelo.
+5. Pulsa **Compilar** y revisa la consola. La grabación y el monitor serie son acciones independientes que requieren intervención explícita; no se han ejercitado contra hardware en esta entrega.
 
-El editor, la compilación y grabación reales mediante Arduino CLI, el monitor serie, los espacios de trabajo y la integración opcional con Codex/Claude se mantienen de v0.9.6. La herramienta de «Simulación lógica» **no ejecuta firmware real**, y una tarea Codex «finalizada» **no confirma** que el firmware haya sido grabado o que la pantalla funcione.
+Arranque directo: `python server.py --no-browser --port 8770`. Linux/macOS: `./iniciar_linux_mac.sh`. Las funciones serie/MicroPython usan las dependencias opcionales de `requirements.txt`; no hacen falta para abrir el editor ni para Arduino CLI.
 
-## Instalación desde v0.9.5/0.9.6
+## Robot y resultados
 
-1. **Exporta tu proyecto** en la versión actual (archivo `.abmaker.json`). Cierra el servidor anterior con `Ctrl+C`.
-2. Descomprime el ZIP **en otra carpeta**. No sobrescribas tu versión anterior.
-3. Ejecuta `INICIAR_WINDOWS.bat` en Windows 11. Requiere Python 3.10+ y Arduino CLI accesible mediante `PATH`. Las dependencias Python están en `requirements.txt`.
-4. Verifica `http://127.0.0.1:8765/api/health`: debe decir `0.9.7`. Si se ve otra versión, sigues ejecutando el servidor antiguo.
-5. Conecta la placa y revisa el puerto COM. Pulsa «⌕ Placas», busca `Uno` o `ESP32` y elige un modelo **de los núcleos instalados**. Si no aparece, consulta Boards Manager; revisa el núcleo antes de aceptar su instalación.
-6. Si pasas de Uno a ESP32 y el editor conserva el código de bienvenida de Uno, pulsa «Preparar sketch básico» **solo si quieres reemplazarlo**. Compila antes de grabar.
+El robot SVG local lleva antena, ojos, brazos y distintivo MS. También informa con texto accesible, sin depender del color. Respeta «reducir movimiento».
 
-### API del catálogo (para diagnósticos)
+| Estado | Significado |
+| --- | --- |
+| Neutro | Reposo, cancelación, interrupción o resultado sin verificar |
+| Ámbar pulsante | Hay tareas en curso; no se inventan porcentajes de compilación |
+| Verde | Resultado concreto verificado: compilador/grabador con salida 0, CLI de agente con salida 0 y registro, o comprobación de sintaxis Python |
+| Rojo | Fallo de herramienta o consulta de red; un resultado desconocido no se convierte en éxito |
 
-- `GET /api/boards`: puertos físicos, selección inicial **limitada a 60 opciones** y `catalog_count` total. Para solicitar que se incluya un FQBN instalado concreto en el resultado inicial: `/api/boards?selected=esp32:esp32:esp32`.
-- `GET /api/board-catalog/installed?query=ESP32&page=1&limit=40`: busca en los núcleos instalados, incluso si el catálogo es grande.
-- `GET /api/board-catalog/search?query=ESP32&page=1&limit=40`: consulta otros modelos en Arduino Boards Manager si el índice local está disponible.
-- `page` debe ser positivo; `limit` de 1 a 50. No hay instalación automática de núcleos.
+El éxito del agente **solo confirma la finalización de su CLI**. No prueba compilación, grabación ni funcionamiento físico. Una tarea pendiente impide el verde global; un fallo no desaparece por el éxito de otra tarea. Al editar o cambiar placa se invalida la compilación anterior. Los resultados incluyen FQBN y SHA-256 de la revisión compilada.
 
-## Estado de pruebas
+## Recuperación y compatibilidad
 
-- **171 pruebas automatizadas correctas** (incluidos cinco casos nuevos sobre paginación, respuesta JSON grande, selección segura y salida de frontend).
-- JavaScript: `node --check app.js` correcto; Python: `compileall` correcto.
-- Chromium aislado: se probaron 602 modelos **sintéticos**, 40 resultados por página, navegación, elección explícita de ESP32, conservación de COM4, aviso de sketch incorrecto y cambio a plantilla con respaldo. Sin errores JavaScript.
-- HTTP local: la versión `/api/health` fue consultada en servidor real. El navegador del entorno de pruebas bloquea la navegación directa a localhost; la prueba visual se realizó con HTML aislado y respuestas simuladas.
-- **No se ha probado** esta versión con tu Arduino CLI de Windows, Uno físico, IdeaSpark ni un dispositivo de cámara. No se ha validado un emulador ESP32 real.
+- Los dos archivos, nombre, FQBN y puerto conservan la clave compatible `ab-makeride-project-v2`. Se guarda al editar y al abandonar/recargar la página. Un puerto desconectado permanece como referencia sin confirmar su presencia.
+- Cada origen del navegador tiene su almacenamiento: **8770 no puede leer automáticamente los proyectos de 8765**. Exporta `.abmaker.json` en la versión anterior e impórtalo aquí. No se accede a perfiles de navegador existentes.
+- El launcher y el servidor usan `.makeride-data` dentro de esta carpeta. `AB_MAKERIDE_DATA_DIR` permite elegir otra carpeta. Para recuperar sesiones antiguas, copia primero su carpeta `AgentWorkspaces` a ese directorio de datos; no es necesario modificar el original.
+- `BuildSessions/<id>` conserva `sketch.ino`, destino y registro de compilación. La referencia se guarda antes del POST; repetir la misma referencia no ejecuta otra operación. «Recuperar compilación» consulta el resultado; nunca repite una grabación.
+- Tras reiniciar, una tarea que figuraba activa se presenta como interrumpida y con resultado desconocido. La lectura de sesiones antiguas no reescribe sus archivos. Los registros antiguos sin `exit_code` no encienden el verde del agente.
+- Si otra pestaña cambia el proyecto, se pausa el guardado para evitar sobrescribirla: exporta la copia que quieras conservar antes de recargar. Un almacenamiento dañado también pausa el guardado y conserva el valor original. No borres datos del navegador sin exportar.
 
-Consulta `docs/AUDITORIA_097.md` para el detalle, `docs/COMPARATIVA_IDES_2026.md` para la investigación y `docs/RUMBO_PRODUCTO.md` para principios y criterios de aceptación. No se ha publicado en GitHub.
+## Verificación reproducible
 
-Licencia del código de MakerIDE: MIT. Las marcas, bibliotecas, núcleos, herramientas externas y simuladores de otros fabricantes conservan sus propias condiciones de uso.
+`python tests/run_isolated.py` ejecuta toda la suite en datos temporales. `node --test tests/robot_status.test.cjs` verifica los estados del robot. No se necesita cuenta de IA ni placa para estas regresiones. Los uploads de tests están aislados con mocks.
+
+La aceptación visual utiliza Playwright/Chromium con un servidor HTTP real, un perfil propio y directorios temporales. Instalación opcional, siempre local:
+
+```powershell
+python -m venv C:\ruta\work\test-venv
+C:\ruta\work\test-venv\Scripts\python.exe -m pip install playwright==1.56.0
+$env:PLAYWRIGHT_BROWSERS_PATH='C:\ruta\work\browsers'
+C:\ruta\work\test-venv\Scripts\python.exe -m playwright install chromium
+C:\ruta\work\test-venv\Scripts\python.exe tests/browser_acceptance.py --work C:\ruta\work\acceptance-nueva --outputs C:\ruta\outputs --port 8770
+```
+
+Usa un directorio de aceptación nuevo y un puerto libre. Esta prueba compila con los núcleos instalados, bloquea operaciones reales de grabación/serie/agentes y distingue sus escenarios interceptados. Auditoría de solo lectura: `python tests/audit_real_arduino.py --output C:\ruta\outputs\arduino-audit.json`.
+
+Resultados, capturas, cambios y pendientes: [informe RC1](docs/RELEASE_RC1.md), [evidencias](docs/evidence/README.md). Los informes v0.9.x son históricos y no sustituyen esta verificación. No se ha hecho push, publicación ni PR.
+
+Licencia MIT para MakerIDE. Marcas, herramientas, núcleos y bibliotecas externas mantienen sus propias licencias.

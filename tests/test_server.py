@@ -56,7 +56,7 @@ class CoreTests(unittest.TestCase):
             ide.check_port("COM3; rm -rf /")
 
     def test_compile_no_cli_returns_not_ok(self):
-        with patch.object(ide.shutil, "which", return_value=None):
+        with patch.object(ide, "arduino_cli", return_value=None), patch.object(ide.shutil, "which", return_value=None):
             result = ide.compile_cpp("void setup(){}\nvoid loop(){}", "esp32:esp32:esp32")
             self.assertFalse(result["ok"])
             self.assertIn("no instalado", result["output"])
@@ -102,7 +102,7 @@ class CoreTests(unittest.TestCase):
         self.assertEqual(len(calls), 1)
 
     def test_micropython_missing_tool_is_failure(self):
-        with patch.object(ide, "scan_ports", return_value=[{"port": "COM5"}]), patch.object(ide.shutil, "which", return_value=None):
+        with patch.object(ide, "scan_ports", return_value=[{"port": "COM5"}]), patch.object(ide, "arduino_cli", return_value=None), patch.object(ide.shutil, "which", return_value=None):
             r = ide.micropython_action("print('ok')", "COM5", deploy=True)
         self.assertFalse(r["ok"])
         self.assertEqual(r["stage"], "dependencies")
@@ -147,7 +147,7 @@ class CoreTests(unittest.TestCase):
         self.assertEqual(r["messages"][0]["text"], "linea 2")
 
     def test_scan_empty_without_tools(self):
-        with patch.object(ide.shutil, "which", return_value=None):
+        with patch.object(ide, "arduino_cli", return_value=None), patch.object(ide.shutil, "which", return_value=None):
             r = ide.scan_ports()
             self.assertIsInstance(r, list)
 
@@ -195,7 +195,7 @@ class APITests(unittest.TestCase):
     def test_health(self):
         code, result = self.call("GET", "/api/health")
         self.assertEqual(code, 200)
-        self.assertEqual(result["version"], "0.9.7")
+        self.assertEqual(result["version"], "1.0.0-rc.1")
 
     def test_serves_html(self):
         code, result = self.call("GET", "/")

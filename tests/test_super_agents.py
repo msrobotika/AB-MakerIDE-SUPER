@@ -188,6 +188,11 @@ class AgentHTTPTests(unittest.TestCase):
 if __name__ == '__main__': unittest.main()
 
 class BoardScanJSONTests(unittest.TestCase):
+    def setUp(self):
+        from types import SimpleNamespace
+        self.enterContext(patch.dict("sys.modules", {"serial.tools": SimpleNamespace(list_ports=SimpleNamespace(comports=lambda: []))}))
+        self.enterContext(patch.object(server.sys, "platform", "linux"))
+
     def test_cli_v151_board_json_is_parsed(self):
         from unittest.mock import patch
         result={'ok':True,'output':json.dumps({'detected_ports':[

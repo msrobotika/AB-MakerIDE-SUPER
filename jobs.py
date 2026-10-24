@@ -10,6 +10,9 @@ import tempfile
 import threading
 import time
 import uuid
+import json
+import hashlib
+from toolchain import arduino_cli
 
 ANSI_RE = re.compile(r'\x1b\[[0-?]*[ -/]*[@-~]')
 PERCENT_RE = re.compile(r'(?<!\d)(\d{1,3})\s*%')
@@ -48,6 +51,25 @@ class Job:
     sequence: int = 0
     process: subprocess.Popen | None = None
     lock: threading.RLock = field(default_factory=threading.RLock)
+    journal: Path | None = None
+    finished_elapsed: float | None = None
+    source_sha256: str = ''
+    fqbn: str = ''
+    _saved_at: float = 0
+
+    def persist(self, force=False):
+        if not self.journal or (not force and time.monotonic() - self._saved_at < 2):
+            return
+        with self.lock:
+            data = self.snapshot()
+            data['schema'] = 1
+            tmp = self.journal.with_suffix('.tmp')
+            try:
+                tmp.write_text(json.dumps(data, ensure_ascii=False), encoding='utf-8')
+                os.replace(tmp, self.journal)
+                self._saved_at = time.monotonic()
+            except OSError as exc:
+                self.error = 'No se pudo guardar la sesión: ' + str(exc)[:200]
 
     def emit(self, message: str, *, from_tool: bool = False):
         with self.lock:
@@ -58,13 +80,15 @@ class Job:
                     p = extract_upload_percent(line)
                     if p is not None:
                         self.upload_progress = max(self.upload_progress or 0, p)
+            self.persist()
 
     def snapshot(self, since: int = 0) -> dict:
         with self.lock:
             return dict(ok=True, id=self.id, action=self.action, active=self.active,
+                        source_sha256=self.source_sha256, fqbn=self.fqbn,
                         success=self.ok, cancelled=self.cancelled, stage=self.stage,
                         progress=self.upload_progress if self.stage in ('grabación', 'reintento 115200', 'completado') else None,
-                        elapsed=round(time.monotonic()-self.started, 1),
+                        elapsed=self.finished_elapsed if self.finished_elapsed is not None else round(time.monotonic()-self.started, 1),
                         error=self.error, exit_code=self.exit_code,
                         upload_speed=self.upload_speed, attempted_speeds=list(self.attempted_speeds), diagnosis=self.diagnosis,
                         lines=[e for e in self.events if e['id'] > since][-500:],
@@ -72,12 +96,22 @@ class Job:
 
 
 class JobManager:
-    def __init__(self, hardware_lock: threading.Lock):
+    def __init__(self, hardware_lock: threading.Lock, session_root: Path | None = None):
         self._guard = threading.Lock()
         self._hardware_lock = hardware_lock
         self._current: Job | None = None
+        self.root = session_root
 
-    def start(self, code: str, fqbn: str, port: str | None = None, *, upload_speed: int = 115200, retry_slow: bool = False) -> dict:
+    def start(self, code: str, fqbn: str, port: str | None = None, *, upload_speed: int = 115200, retry_slow: bool = False, request_id: str | None = None) -> dict:
+        if request_id is not None and (not isinstance(request_id,str) or not re.fullmatch(r'[a-f0-9]{32}',request_id)):
+            raise ValueError('Referencia de operación inválida.')
+        # A repeated HTTP submission must never repeat an upload/compile.
+        if request_id:
+            with self._guard:
+                if self._current and self._current.id == request_id:
+                    return {'ok': True, 'job_id': request_id}
+                if self.root and (self.root / request_id / 'job.json').is_file():
+                    return {'ok': True, 'job_id': request_id}
         if isinstance(upload_speed, bool) or upload_speed not in ESP_SPEEDS:
             raise ValueError('Velocidad de grabación no permitida.')
         if not isinstance(retry_slow, bool):
@@ -90,7 +124,16 @@ class JobManager:
             with self._guard:
                 if self._current and self._current.active:
                     raise ValueError('Ya hay una operación en curso. Espera o cancela.')
-                job = Job(id=uuid.uuid4().hex, action='upload' if port else 'compile')
+                job = Job(id=request_id or uuid.uuid4().hex, action='upload' if port else 'compile')
+                job.source_sha256 = hashlib.sha256(code.encode('utf-8')).hexdigest()
+                job.fqbn = fqbn
+                if self.root:
+                    folder = self.root / job.id
+                    folder.mkdir(parents=True, exist_ok=False)
+                    (folder / 'sketch.ino').write_text(code, encoding='utf-8')
+                    (folder / 'target.json').write_text(json.dumps({'fqbn': fqbn, 'port': port}), encoding='utf-8')
+                    job.journal = folder / 'job.json'
+                    job.persist(force=True)
                 self._current = job
             threading.Thread(target=self._worker, args=(job, code, fqbn, port, upload_speed, retry_slow), daemon=True).start()
             return {'ok': True, 'job_id': job.id}
@@ -101,6 +144,15 @@ class JobManager:
     def status(self, job_id: str, since: int = 0) -> dict:
         with self._guard:
             if self._current is None or job_id != self._current.id:
+                if self.root and re.fullmatch(r'[a-f0-9]{32}', job_id):
+                    path = self.root / job_id / 'job.json'
+                    if path.is_file() and not path.is_symlink() and not path.parent.is_symlink():
+                        data = json.loads(path.read_text('utf-8'))
+                        if data.get('active'):
+                            data.update(active=False, success=False, stage='interrumpido', exit_code=None,
+                                        error='Servidor reiniciado durante la operación. Resultado desconocido; no se repite automáticamente.')
+                        data['lines'] = [x for x in data.get('lines', []) if x['id'] > since]
+                        return data
                 raise ValueError('Operación no encontrada.')
             return self._current.snapshot(since)
 
@@ -182,7 +234,8 @@ class JobManager:
                 job.emit('Compilación real iniciada · porcentaje no disponible')
                 is_esp = fqbn.startswith('esp32:esp32:')
                 opts = ['--board-options', f'UploadSpeed={upload_speed}'] if port and is_esp else []
-                rc = self._run(job, ['arduino-cli', 'compile', '--fqbn', fqbn,
+                executable = arduino_cli() or 'arduino-cli'
+                rc = self._run(job, [executable, 'compile', '--fqbn', fqbn,
                                      *opts, '--no-color', '--output-dir', str(build), str(sketch)], 480)
                 job.exit_code = rc
                 if job.cancelled or rc != 0:
@@ -196,7 +249,7 @@ class JobManager:
                     job.upload_speed = upload_speed if is_esp else None
                     if is_esp:
                         job.attempted_speeds.append(upload_speed)
-                    rc = self._run(job, ['arduino-cli', 'upload', '-p', port,
+                    rc = self._run(job, [executable, 'upload', '-p', port,
                                          '--fqbn', fqbn, *opts, '--no-color',
                                          '--input-dir', str(build), str(sketch)], 300)
                     job.exit_code = rc
@@ -213,7 +266,7 @@ class JobManager:
                             job.upload_progress = None
                             job.upload_speed = 115200
                             job.attempted_speeds.append(115200)
-                            rc = self._run(job, ['arduino-cli', 'upload', '-p', port,
+                            rc = self._run(job, [executable, 'upload', '-p', port,
                                                  '--fqbn', fqbn, '--board-options', 'UploadSpeed=115200',
                                                  '--no-color', '--input-dir', str(build), str(sketch)], 300)
                             job.exit_code = rc
@@ -224,7 +277,7 @@ class JobManager:
                             if not job.diagnosis:
                                 job.diagnosis = 'Diagnóstico inicial: bajar velocidad de grabación a 115200 baudios.'
                         return
-                job.ok = True
+                job.ok = not bool(job.error)
                 job.stage = 'completado'
                 job.emit('✓ Operación finalizada correctamente por Arduino CLI.')
         except FileNotFoundError:
@@ -243,4 +296,6 @@ class JobManager:
                 job.stage = 'error'
                 job.emit('✕ Operación fallida. No se confirma grabación.')
             job.active = False
+            job.finished_elapsed = round(time.monotonic() - job.started, 1)
+            job.persist(force=True)
             self._hardware_lock.release()

@@ -1,0 +1,344 @@
+{
+  "url": "http://127.0.0.1:8770",
+  "page_errors": [],
+  "console_errors": [],
+  "health": {
+    "ok": true,
+    "name": "AB MakerIDE · MS Robotika",
+    "version": "1.0.0-rc.1",
+    "mode": "local-real"
+  },
+  "boards": {
+    "ok": true,
+    "ports": [
+      {
+        "port": "COM4",
+        "name": "USB-SERIAL CH340 (COM4)",
+        "vid": "1A86",
+        "pid": "7523",
+        "boards": [],
+        "serial_number": ""
+      },
+      {
+        "port": "COM6",
+        "name": "USB-SERIAL CH340 (COM6)",
+        "vid": "1A86",
+        "pid": "7523",
+        "boards": [],
+        "serial_number": ""
+      }
+    ],
+    "scan_ok": true,
+    "scan_errors": [],
+    "choices": [
+      {
+        "fqbn": "esp32:esp32:esp32p4_4ds_mipi",
+        "name": "4D Systems ESP32-P4 MIPI Displays",
+        "platform": ""
+      },
+      {
+        "fqbn": "esp32:esp32:esp32p4_4ds_mipi_round",
+        "name": "4D Systems ESP32-P4 Round MIPI Displays",
+        "platform": ""
+      },
+      {
+        "fqbn": "esp32:esp32:gen4-ESP32-S3R8n16",
+        "name": "4D Systems gen4-ESP32 Modules (ESP32-S3)",
+        "platform": ""
+      },
+      {
+        "fqbn": "arduino:avr:circuitplay32u4cat",
+        "name": "Adafruit Circuit Playground",
+        "platform": ""
+      },
+      {
+        "fqbn": "esp32:esp32:featheresp32",
+        "name": "Adafruit ESP32 Feather",
+        "platform": ""
+      },
+      {
+        "fqbn": "esp32:esp32:adafruit_feather_esp32_v2",
+        "name": "Adafruit Feather ESP32 V2",
+        "platform": ""
+      },
+      {
+        "fqbn": "esp32:esp32:adafruit_feather_esp32c6",
+        "name": "Adafruit Feather ESP32-C6",
+        "platform": ""
+      },
+      {
+        "fqbn": "esp32:esp32:adafruit_feather_esp32s2",
+        "name": "Adafruit Feather ESP32-S2",
+        "platform": ""
+      },
+      {
+        "fqbn": "esp32:esp32:adafruit_feather_esp32s2_reversetft",
+        "name": "Adafruit Feather ESP32-S2 Reverse TFT",
+        "platform": ""
+      },
+      {
+        "fqbn": "esp32:esp32:adafruit_feather_esp32s2_tft",
+        "name": "Adafruit Feather ESP32-S2 TFT",
+        "platform": ""
+      },
+      {
+        "fqbn": "esp32:esp32:adafruit_feather_esp32s3",
+        "name": "Adafruit Feather ESP32-S3 2MB PSRAM",
+        "platform": ""
+      },
+      {
+        "fqbn": "esp32:esp32:adafruit_feather_esp32s3_nopsram",
+        "name": "Adafruit Feather ESP32-S3 No PSRAM",
+        "platform": ""
+      },
+      {
+        "fqbn": "esp32:esp32:adafruit_feather_esp32s3_reversetft",
+        "name": "Adafruit Feather ESP32-S3 Reverse TFT",
+        "platform": ""
+      },
+      {
+        "fqbn": "esp32:esp32:adafruit_feather_esp32s3_tft",
+        "name": "Adafruit Feather ESP32-S3 TFT",
+        "platform": ""
+      },
+      {
+        "fqbn": "esp32:esp32:adafruit_funhouse_esp32s2",
+        "name": "Adafruit FunHouse",
+        "platform": ""
+      },
+      {
+        "fqbn": "esp32:esp32:adafruit_itsybitsy_esp32",
+        "name": "Adafruit ItsyBitsy ESP32",
+        "platform": ""
+      },
+      {
+        "fqbn": "esp32:esp32:adafruit_magtag29_esp32s2",
+        "name": "Adafruit MagTag 2.9\"",
+        "platform": ""
+      },
+      {
+        "fqbn": "esp32:esp32:adafruit_matrixportal_esp32s3",
+        "name": "Adafruit MatrixPortal ESP32-S3",
+        "platform": ""
+      },
+      {
+        "fqbn": "esp32:esp32:adafruit_metro_esp32s2",
+        "name": "Adafruit Metro ESP32-S2",
+        "platform": ""
+      },
+      {
+        "fqbn": "esp32:esp32:adafruit_metro_esp32s3",
+        "name": "Adafruit Metro ESP32-S3",
+        "platform": ""
+      },
+      {
+        "fqbn": "esp32:esp32:adafruit_camera_esp32s3",
+        "name": "Adafruit pyCamera S3",
+        "platform": ""
+      },
+      {
+        "fqbn": "esp32:esp32:adafruit_qtpy_esp32_pico",
+        "name": "Adafruit QT Py ESP32",
+        "platform": ""
+      },
+      {
+        "fqbn": "esp32:esp32:adafruit_qtpy_esp32c3",
+        "name": "Adafruit QT Py ESP32-C3",
+        "platform": ""
+      },
+      {
+        "fqbn": "esp32:esp32:adafruit_qtpy_esp32s2",
+        "name": "Adafruit QT Py ESP32-S2",
+        "platform": ""
+      },
+      {
+        "fqbn": "esp32:esp32:adafruit_qtpy_esp32s3_n4r2",
+        "name": "Adafruit QT Py ESP32-S3 (4M Flash 2M PSRAM)",
+        "platform": ""
+      },
+      {
+        "fqbn": "esp32:esp32:adafruit_qtpy_esp32s3_nopsram",
+        "name": "Adafruit QT Py ESP32-S3 No PSRAM",
+        "platform": ""
+      },
+      {
+        "fqbn": "esp32:esp32:adafruit_qualia_s3_rgb666",
+        "name": "Adafruit Qualia ESP32-S3 RGB666",
+        "platform": ""
+      },
+      {
+        "fqbn": "esp32:esp32:sparklemotion",
+        "name": "Adafruit Sparkle Motion (ESP32)",
+        "platform": ""
+      },
+      {
+        "fqbn": "esp32:esp32:sparklemotionmini",
+        "name": "Adafruit Sparkle Motion Mini (ESP32)",
+        "platform": ""
+      },
+      {
+        "fqbn": "esp32:esp32:sparklemotionstick",
+        "name": "Adafruit Sparkle Motion Stick (ESP32)",
+        "platform": ""
+      },
+      {
+        "fqbn": "esp32:esp32:esp32cam",
+        "name": "AI Thinker ESP32-CAM",
+        "platform": ""
+      },
+      {
+        "fqbn": "esp32:esp32:AirM2M_CORE_ESP32C3",
+        "name": "AirM2M_CORE_ESP32C3",
+        "platform": ""
+      },
+      {
+        "fqbn": "esp32:esp32:alfredo-nou3",
+        "name": "Alfredo NoU3",
+        "platform": ""
+      },
+      {
+        "fqbn": "esp32:esp32:alksesp32",
+        "name": "ALKS ESP32",
+        "platform": ""
+      },
+      {
+        "fqbn": "esp32:esp32:amyboard",
+        "name": "AMYboard",
+        "platform": ""
+      },
+      {
+        "fqbn": "arduino:avr:bt",
+        "name": "Arduino BT",
+        "platform": ""
+      },
+      {
+        "fqbn": "arduino:avr:diecimila",
+        "name": "Arduino Duemilanove or Diecimila",
+        "platform": ""
+      },
+      {
+        "fqbn": "arduino:avr:esplora",
+        "name": "Arduino Esplora",
+        "platform": ""
+      },
+      {
+        "fqbn": "arduino:avr:ethernet",
+        "name": "Arduino Ethernet",
+        "platform": ""
+      },
+      {
+        "fqbn": "arduino:avr:fio",
+        "name": "Arduino Fio",
+        "platform": ""
+      },
+      {
+        "fqbn": "arduino:avr:gemma",
+        "name": "Arduino Gemma",
+        "platform": ""
+      },
+      {
+        "fqbn": "arduino:avr:chiwawa",
+        "name": "Arduino Industrial 101",
+        "platform": ""
+      },
+      {
+        "fqbn": "arduino:avr:leonardo",
+        "name": "Arduino Leonardo",
+        "platform": ""
+      },
+      {
+        "fqbn": "arduino:avr:leonardoeth",
+        "name": "Arduino Leonardo ETH",
+        "platform": ""
+      },
+      {
+        "fqbn": "arduino:avr:megaADK",
+        "name": "Arduino Mega ADK",
+        "platform": ""
+      },
+      {
+        "fqbn": "arduino:avr:mega",
+        "name": "Arduino Mega or Mega 2560",
+        "platform": ""
+      },
+      {
+        "fqbn": "arduino:avr:micro",
+        "name": "Arduino Micro",
+        "platform": ""
+      },
+      {
+        "fqbn": "arduino:avr:mini",
+        "name": "Arduino Mini",
+        "platform": ""
+      },
+      {
+        "fqbn": "arduino:avr:nano",
+        "name": "Arduino Nano",
+        "platform": ""
+      },
+      {
+        "fqbn": "esp32:esp32:nano_nora",
+        "name": "Arduino Nano ESP32",
+        "platform": ""
+      },
+      {
+        "fqbn": "esp32:esp32:arduino_nesso_n1",
+        "name": "Arduino Nesso N1",
+        "platform": ""
+      },
+      {
+        "fqbn": "arduino:avr:atmegang",
+        "name": "Arduino NG or older",
+        "platform": ""
+      },
+      {
+        "fqbn": "arduino:avr:pro",
+        "name": "Arduino Pro or Pro Mini",
+        "platform": ""
+      },
+      {
+        "fqbn": "arduino:avr:robotControl",
+        "name": "Arduino Robot Control",
+        "platform": ""
+      },
+      {
+        "fqbn": "arduino:avr:robotMotor",
+        "name": "Arduino Robot Motor",
+        "platform": ""
+      },
+      {
+        "fqbn": "arduino:avr:uno",
+        "name": "Arduino UNO",
+        "platform": ""
+      },
+      {
+        "fqbn": "arduino:avr:unomini",
+        "name": "Arduino UNO Mini",
+        "platform": ""
+      },
+      {
+        "fqbn": "arduino:avr:unowifi",
+        "name": "Arduino UNO WiFi",
+        "platform": ""
+      },
+      {
+        "fqbn": "arduino:avr:yun",
+        "name": "Arduino Yún",
+        "platform": ""
+      },
+      {
+        "fqbn": "arduino:avr:yunmini",
+        "name": "Arduino Yún Mini",
+        "platform": ""
+      }
+    ],
+    "catalog_ok": true,
+    "catalog_error": "",
+    "catalog_source": "arduino-cli board listall",
+    "catalog_warning": "",
+    "catalog_count": 433,
+    "catalog_paged": true
+  },
+  "mobile_no_horizontal_overflow": true,
+  "mobile_controls_visible": true
+}

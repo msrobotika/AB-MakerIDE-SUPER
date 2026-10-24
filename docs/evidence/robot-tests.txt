@@ -1,0 +1,22 @@
+✔ idle neutral (4.8776ms)
+✔ busy amber (2.0892ms)
+✔ success without exit code never green (1.3527ms)
+✔ exit zero compile green (1.0664ms)
+✔ cancel exit zero neutral (1.0583ms)
+✔ restart exit zero neutral (0.946ms)
+✔ nonzero red (1.0106ms)
+✔ agent requires evidence (0.9295ms)
+✔ agent scope explicitly excludes hardware (1.0053ms)
+✔ simultaneous task never prematurely green (12.8306ms)
+✔ failure survives another success (0.7586ms)
+✔ explicit retry replaces prior failure for same scope (0.6244ms)
+✔ edited source invalidates previous success (0.7131ms)
+✔ stale snapshot is never green (0.7273ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 206.5369

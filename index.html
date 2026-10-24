@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#0a1019">
-<title>AB MakerIDE · MS Robotika</title>
+<title>AB MakerIDE SUPER 1.0.0-rc.1 · MS Robotika</title>
 <style>
 :root{color-scheme:dark;--bg:#070b11;--rail:#0b111b;--side:#0e1621;--panel:#111c29;--line:#243244;--line2:#33465d;--txt:#e5eef8;--muted:#91a5b9;--subtle:#5f7790;--blue:#38bdf8;--violet:#9b86f9;--good:#44dbac;--bad:#fa8188;--amber:#f5c469;--mono:'Cascadia Code','JetBrains Mono',Consolas,monospace;--sans:Inter,'Segoe UI',system-ui,sans-serif}
 *{box-sizing:border-box}html,body{height:100%;margin:0}body{background:var(--bg);color:var(--txt);font:13px var(--sans);overflow:hidden}button,select,input,textarea{font:inherit}button{cursor:pointer}button:disabled{opacity:.42;cursor:not-allowed}button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
@@ -140,6 +140,8 @@ body[data-right="lab"] .right .hardwarelab{display:block;max-height:none;overflo
 @media(max-width:600px){.board-picker{padding:12px}.picker-item{gap:5px;flex-wrap:wrap}}
 
 .picker-pages{display:flex;align-items:center;justify-content:center;gap:12px;margin:12px 0 4px}.picker-pages button:disabled{opacity:.3}.quick-selectors #quickBoard{max-width:190px;text-overflow:ellipsis}.extra-tools{position:relative}.extra-tools>summary{list-style:none}.extra-tools>summary::-webkit-details-marker{display:none}.extra-menu{position:absolute;z-index:50;right:0;top:calc(100% + 7px);min-width:210px;padding:7px;background:var(--panel);border:1px solid var(--line2);border-radius:10px;box-shadow:0 12px 30px #0009;display:flex;flex-direction:column;gap:4px}.extra-menu .action{justify-content:flex-start}.target-notice{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:6px 13px;background:#362a19;color:#f4d497;border-bottom:1px solid #71512b;font-size:11px}.target-notice .action{border-color:#80643a;color:#fff0c5;background:#4f3a20}
+.robot-status{display:flex;align-items:center;gap:9px;padding:4px 15px;border-bottom:1px solid var(--line);background:#0e1925;color:#a7bacb;font-size:11px;min-height:37px;flex-shrink:0}.robot-status svg{width:33px;height:33px;flex-shrink:0;fill:none;stroke:currentColor;stroke-width:2;stroke-linejoin:round}.robot-status[data-state=working]{color:#ffd17a}.robot-status[data-state=working] svg{animation:robotPulse 1.3s ease-in-out infinite}.robot-status[data-state=success]{color:#74e2ac}.robot-status[data-state=failed]{color:#ff96a0}#robotText{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.robot-status button{margin-left:auto}:focus-visible{outline:2px solid #ffd17a!important;outline-offset:2px}#code:focus-visible{outline-offset:-3px}@keyframes robotPulse{50%{opacity:.45}}@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}@media(max-width:1100px){.top{height:auto;min-height:53px;flex-basis:auto;flex-wrap:wrap;padding:8px}.top>.statuschip{display:none}.quick-selectors{flex:1}.brandtext{display:none}}@media(max-width:600px){.top .space{display:none}.quick-selectors{min-width:calc(100% - 50px)}.top #verifyBtn,.top #uploadBtn{display:inline-flex}.top #showAI{display:inline-flex}.quick-selectors #quickBoard,.quick-selectors #quickPort{max-width:135px;min-width:75px;flex:1}.top .extra-tools{margin-left:auto}.robot-status{padding-left:8px}}
+@media(max-width:600px){.top #quickScan{display:inline-flex}.footer{gap:8px;font-size:9px}.footer #footLang,.footer #footCaret,.footer .space,.footer span:last-child{display:none}.footer #footBoard{max-width:90px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.footer #footPort{white-space:nowrap}.footer #footSave{max-width:125px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.bottomnav #terminalMax{font-size:0}.bottomnav #terminalMax::before{content:'⤢';font-size:14px}#recoverBuild{font-size:0}#recoverBuild::before{content:'Recuperar';font-size:11px}}
 </style>
 </head>
 <body data-right="none">
@@ -163,6 +165,11 @@ body[data-right="lab"] .right .hardwarelab{display:block;max-height:none;overflo
   <button id="verifyBtn" class="action" title="Compilar código Arduino o verificar sintaxis Python (Ctrl+Enter)">⌕ Verificar</button>
   <button id="uploadBtn" class="action primary" title="Compilar y grabar en la placa real">↑ Grabar placa</button>
 </header>
+<div id="robotStatus" class="robot-status" role="status" aria-live="polite" aria-atomic="true" data-state="idle">
+ <svg viewBox="0 0 48 52" aria-hidden="true"><path d="M24 9V4m-3 0h6M9 17h-4v12h4m30-12h4v12h-4"/><rect x="9" y="10" width="30" height="24" rx="7"/><path d="M15 20h5m8 0h5M17 27h14M16 34v12h16V34m-20 2-6 7m30-7 6 7M18 46v4m12-4v4"/><text x="24" y="43" text-anchor="middle" style="font:bold 7px sans-serif;fill:currentColor;stroke:none">MS</text></svg>
+ <span id="robotText">MS Robotika · En reposo</span><button id="recoverBuild" class="action small ghost">Recuperar compilación</button>
+</div>
+<div id="scanNotice" class="target-notice hidden" role="status"></div>
 <div class="workspace">
 <nav class="rail" aria-label="Menú">
   <button data-panel="project" class="on" title="Proyecto">▤</button>
@@ -258,7 +265,7 @@ body[data-right="lab"] .right .hardwarelab{display:block;max-height:none;overflo
 <div class="chatlog" id="chatLog"></div><div class="chatinput"><textarea id="chatInput" placeholder="Ej.: LED parpadeando cada 200 ms"></textarea><button class="action primary" id="chatSend" title="Enviar">➤</button></div></div>
 </aside>
 </div>
-<footer class="footer"><span id="footBoard">Arduino Uno R3</span><span id="footPort">Puerto: sin seleccionar</span><span id="footLang">C++ · Arduino</span><span class="space"></span><span id="footSave">Sin cambios</span><span id="footCaret">Ln 1, Col 1</span><span>AB MakerIDE 0.9.7</span></footer>
+<footer class="footer"><span id="footBoard">Arduino Uno R3</span><span id="footPort">Puerto: sin seleccionar</span><span id="footLang">C++ · Arduino</span><span class="space"></span><span id="footSave">Sin cambios</span><span id="footCaret">Ln 1, Col 1</span><span>AB MakerIDE 1.0.0-rc.1</span></footer>
 </div>
 <input type="file" id="projectFile" accept=".json,application/json" class="hidden">
 
@@ -282,6 +289,7 @@ body[data-right="lab"] .right .hardwarelab{display:block;max-height:none;overflo
 <div class="dialogactions"><button id="quickBoardFocus" class="action">Elegir placa</button><button id="quickStartClose" class="action primary">Entendido</button></div>
 </dialog>
 <script src="/simulator.js"></script>
+<script src="/activity.js"></script>
 <script src="/app.js"></script>
 </body>
 </html>

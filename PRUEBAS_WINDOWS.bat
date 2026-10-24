@@ -3,8 +3,8 @@ setlocal
 cd /d "%~dp0"
 where py >nul 2>nul
 if not errorlevel 1 (
- py -3 -m unittest discover -s tests -p "test*.py"
+ py -3 tests/run_isolated.py
 ) else (
- python -m unittest discover -s tests -p "test*.py"
+ python tests/run_isolated.py
 )
 pause

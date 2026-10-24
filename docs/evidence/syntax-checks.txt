@@ -1,0 +1,7 @@
+node --check app.js -> exit 0
+
+node --check activity.js -> exit 0
+
+node --check simulator.js -> exit 0
+
+python -m compileall -q server.py agent_runtime.py jobs.py toolchain.py tests -> exit 0

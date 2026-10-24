@@ -39,4 +39,5 @@ class UX092Tests(unittest.TestCase):
     def test_port_can_be_restored_after_scan_validation(self):
         self.assertIn('port:state.port',JS)
         self.assertIn("state.port=/^COM\\d+$/i.test(old.port||'')",JS)
-        self.assertIn("if(!state.ports.some(p=>p.port===state.port))state.port=''",JS)
+        self.assertIn("desconectado / sin verificar",JS)
+        self.assertNotIn("if(!state.ports.some(p=>p.port===state.port))state.port=''",JS)

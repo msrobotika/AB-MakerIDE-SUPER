@@ -37,7 +37,7 @@ class Upgrade08Tests(unittest.TestCase):
     def test_health_is_new_version(self):
         status, headers, data = self.get('/api/health')
         self.assertEqual(status, 200)
-        self.assertEqual(json.loads(data)['version'], '0.9.7')
+        self.assertEqual(json.loads(data)['version'], '1.0.0-rc.1')
         self.assertEqual(headers.get('Cache-Control'), 'no-store')
 
     def test_session_host_origin_restrictions(self):
@@ -60,8 +60,8 @@ class Upgrade08Tests(unittest.TestCase):
 
     def test_version_visible_frontend(self):
         self.assertIn('by MS ROBOTIKA', HTML)
-        self.assertIn('AB MakerIDE 0.9.7</span>', HTML)
-        self.assertIn('AB MakerIDE v0.9.7 SUPER · by MS Robotika', JS)
+        self.assertIn('AB MakerIDE 1.0.0-rc.1</span>', HTML)
+        self.assertIn('AB MakerIDE v1.0.0-rc.1 SUPER · by MS Robotika', JS)
 
     def test_migration_backup_preserves_prior_key(self):
         self.assertIn("const SAVEKEY='ab-makeride-project-v2'", JS)

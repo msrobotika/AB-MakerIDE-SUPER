@@ -15,3 +15,5 @@ venv/
 secrets.json
 .env
 .env.*
+
+.makeride-data/

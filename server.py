@@ -27,6 +27,7 @@ from cloud_agent import AgentService
 from hardware_lab import public_profiles, check as check_hardware, inspect_sketch
 from dependency_advisor import summarize, redact_secrets
 from agent_runtime import AgentJobManager
+from toolchain import arduino_cli
 
 ROOT = Path(__file__).resolve().parent
 MAX_BODY = 512 * 1024
@@ -42,10 +43,11 @@ CORE_ID_RE = re.compile(r"^[A-Za-z0-9_.-]+:[A-Za-z0-9_.-]+$")
 
 def _cli_json(arguments: list[str], timeout: int = 40) -> dict:
     """Consultas sin shell. Evita truncar el JSON: listall puede superar 100 KB."""
-    if not shutil.which('arduino-cli'):
+    executable = arduino_cli()
+    if not executable:
         return {"ok": False, "error": "Arduino CLI no está disponible", "data": None}
     try:
-        p = subprocess.run(['arduino-cli', *arguments], capture_output=True,
+        p = subprocess.run([executable, *arguments], capture_output=True,
                            text=True, encoding='utf-8', errors='replace', timeout=timeout,
                            creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0))
         if p.returncode:
@@ -60,6 +62,8 @@ def _cli_json(arguments: list[str], timeout: int = 40) -> dict:
 def _normalize_boards(payload) -> list[dict]:
     """Admite formatos Arduino CLI antiguos y actuales; sin inventar FQBN."""
     entries = payload if isinstance(payload, list) else (payload.get('boards', []) if isinstance(payload, dict) else [])
+    if not isinstance(entries, list):
+        return []
     choices = {}
     for b in entries:
         if not isinstance(b, dict):
@@ -91,12 +95,18 @@ def _boards_from_installed_cores(data_dir: Path | None = None) -> list[dict]:
         override = os.environ.get('ARDUINO_DIRECTORIES_DATA')
         if override:
             roots.append(Path(override))
-        local = os.environ.get('LOCALAPPDATA')
+        else:
+            configured = _cli_json(['config', 'get', 'directories.data', '--json'])
+            value = configured.get('data')
+            if isinstance(value, dict):
+                value = value.get('directories.data')
+            if isinstance(value, str) and value.strip():
+                roots.append(Path(value.strip()))
+        local = os.environ.get('LOCALAPPDATA') if not roots else None
         if local:
             roots.append(Path(local) / 'Arduino15')
-        roots.append(Path.home() / '.arduino15')
-        # Arduino CLI on macOS stores its user data under Library.
-        roots.append(Path.home() / 'Library' / 'Arduino15')
+        if not roots:
+            roots.append(Path.home() / 'Library' / 'Arduino15' if sys.platform == 'darwin' else Path.home() / '.arduino15')
     found = {}
     for base in roots:
         parent = base / 'packages'
@@ -112,23 +122,29 @@ def _boards_from_installed_cores(data_dir: Path | None = None) -> list[dict]:
             for architecture in list(hardware.iterdir())[:128]:
                 if not architecture.is_dir() or not re.fullmatch(r'[A-Za-z0-9_.-]+', architecture.name):
                     continue
-                for version in list(architecture.iterdir())[:64]:
+                versions = sorted(list(architecture.iterdir())[:64], key=lambda p: tuple((0, int(x)) if x.isdigit() else (1, x) for x in re.findall(r'\d+|\D+', p.name)), reverse=True)
+                for version in versions:
                     boardfile = version / 'boards.txt'
                     if not version.is_dir() or not boardfile.is_file():
                         continue
                     try:
                         if boardfile.stat().st_size > 4_000_000:
                             continue
-                        for line in boardfile.read_text('utf-8', errors='replace').splitlines():
-                            match = re.match(r'^\s*([A-Za-z0-9_.-]+)\.name\s*=\s*(.*?)\s*$', line)
+                        lines = boardfile.read_text('utf-8', errors='replace').splitlines()
+                        hidden = {m[1] for line in lines if (m := re.match(r'^\s*([A-Za-z0-9_-]+)\.hide\s*=', line))}
+                        for line in lines:
+                            match = re.match(r'^\s*([A-Za-z0-9_-]+)\.name\s*=\s*(.*?)\s*$', line)
                             if not match or not match[2] or match[2].startswith('#'):
                                 continue
                             board_id, name = match.groups()
+                            if board_id in hidden:
+                                continue
                             fqbn = f'{vendor.name}:{architecture.name}:{board_id}'
                             if not FQBN_RE.fullmatch(fqbn):
                                 continue
                             found[fqbn] = {'fqbn': fqbn, 'name': name[:180],
                                            'platform': f'{vendor.name}:{architecture.name} (núcleo local)'}
+                        break  # Do not mix retired definitions from older installed versions.
                     except (OSError, UnicodeError):
                         continue
     return sorted(found.values(), key=lambda row: (row['name'].casefold(), row['fqbn']))
@@ -189,6 +205,8 @@ def board_search(query: str, *, page: int = 1, limit: int = 40) -> dict:
     if not r['ok']:
         return {'ok': False, **_catalog_page([], page, limit), 'error': r['error']}
     entries = r['data'] if isinstance(r['data'], list) else (r['data'].get('boards', []) if isinstance(r['data'], dict) else [])
+    if not isinstance(entries, list):
+        return {'ok': False, **_catalog_page([], page, limit), 'error': 'Arduino CLI devolvió un catálogo inválido.'}
     installed = {b['fqbn'] for b in board_catalog()['boards']}
     result = {}
     for b in entries:
@@ -208,6 +226,8 @@ def board_search(query: str, *, page: int = 1, limit: int = 40) -> dict:
 
 def command_result(args: list[str], *, timeout: int = 150, cwd: str | None = None) -> dict:
     """Safe subprocess invocation: never uses shell=True."""
+    if args and args[0] == 'arduino-cli':
+        args = [arduino_cli() or 'arduino-cli', *args[1:]]
     try:
         process = subprocess.run(args, capture_output=True, text=True, encoding="utf-8",
                                  errors="replace", timeout=timeout, cwd=cwd,
@@ -232,13 +252,14 @@ def installed_tools() -> dict:
         pyserial = True
     except ImportError:
         pyserial = False
-    return {"arduino_cli": bool(shutil.which("arduino-cli")),
+    return {"arduino_cli": bool(arduino_cli()),
             "mpremote": bool(shutil.which("mpremote")), "pyserial": pyserial,
             "python": sys.version.split()[0]}
 
 
-def scan_ports() -> list[dict]:
+def scan_ports(*, diagnostics=False):
     found: dict[str, dict] = {}
+    errors = []
     try:
         from serial.tools import list_ports
         for p in list_ports.comports():
@@ -246,7 +267,8 @@ def scan_ports() -> list[dict]:
                                "vid": f"{p.vid:04X}" if p.vid is not None else None,
                                "pid": f"{p.pid:04X}" if p.pid is not None else None,
                                "boards": [], "serial_number": getattr(p, "serial_number", None)}
-    except ImportError:
+    except (ImportError, OSError) as exc:
+        if not isinstance(exc, ImportError): errors.append('Enumeración serie: ' + str(exc)[:300])
         pass
     # Puertos reales enumerados por Windows cuando pyserial/CLI no los muestran.
     # Registrar COM no implica reconocer la placa conectada.
@@ -266,7 +288,7 @@ def scan_ports() -> list[dict]:
                                                 "vid": None, "pid": None, "boards": [], "serial_number": None})
         except (ImportError, OSError):
             pass
-    if shutil.which("arduino-cli"):
+    if arduino_cli():
         result = command_result(["arduino-cli", "board", "list", "--json", "--discovery-timeout", "3s"], timeout=20)
         if result["ok"]:
             try:
@@ -275,7 +297,7 @@ def scan_ports() -> list[dict]:
                 for entry in entries:
                     obj = entry.get("port", {})
                     port = obj.get("address") or obj.get("port")
-                    if not port:
+                    if not isinstance(port, str) or not PORT_RE.fullmatch(port):
                         continue
                     boards = entry.get("matching_boards", entry.get("boards", [])) or []
                     item = found.setdefault(port, {"port": port, "name": obj.get("label", port),
@@ -288,9 +310,14 @@ def scan_ports() -> list[dict]:
                                         "fqbn": b.get("fqbn", "")} for b in boards if b.get("fqbn")]
                     if not item["name"] or item["name"] == item["port"]:
                         item["name"] = obj.get("label", port)
-            except (ValueError, AttributeError, TypeError):
-                pass
-    return sorted(found.values(), key=lambda v: v["port"])
+            except (ValueError, AttributeError, TypeError) as exc:
+                errors.append('Respuesta de detección inválida: ' + str(exc)[:300])
+        else:
+            errors.append('Arduino CLI: ' + result.get('output', 'Detección fallida')[-600:])
+    else:
+        errors.append('Arduino CLI no está disponible; detección parcial del sistema.')
+    ports = sorted(found.values(), key=lambda v: v["port"])
+    return {'ports': ports, 'scan_ok': not errors, 'scan_errors': errors} if diagnostics else ports
 
 
 def check_port(port: str) -> None:
@@ -327,7 +354,7 @@ def compile_cpp(code: str, fqbn: str, *, port: str | None = None) -> dict:
     check_fqbn(fqbn)
     if port:
         check_port(port)
-    if not shutil.which("arduino-cli"):
+    if not arduino_cli():
         return {"ok": False, "output": "Arduino CLI no instalado. Consulta README.md.",
                 "stage": "dependencies"}
     with tempfile.TemporaryDirectory(prefix="ab-makeride-") as workspace:
@@ -448,14 +475,15 @@ class SerialBridge:
 
 SERIAL = SerialBridge()
 HARDWARE_LOCK = threading.Lock()
-JOBS = JobManager(HARDWARE_LOCK)
+DATA_ROOT = Path(os.environ.get('AB_MAKERIDE_DATA_DIR', ROOT / '.makeride-data'))
+JOBS = JobManager(HARDWARE_LOCK, DATA_ROOT / 'BuildSessions')
 AGENT = AgentService()
-AGENT_JOBS = AgentJobManager()
+AGENT_JOBS = AgentJobManager(DATA_ROOT / 'AgentWorkspaces')
 SESSION_KEY = secrets.token_urlsafe(32)
 
 
 def libraries_list() -> dict:
-    if not shutil.which("arduino-cli"):
+    if not arduino_cli():
         return {"ok": False, "output": "Arduino CLI no instalado", "libraries": []}
     result = command_result(["arduino-cli", "lib", "list", "--format", "json"], timeout=40)
     if not result["ok"]:
@@ -470,7 +498,7 @@ def libraries_list() -> dict:
 
 
 class IDEHandler(BaseHTTPRequestHandler):
-    server_version = "ABMakerIDE/0.9.7"
+    server_version = "ABMakerIDE/1.0.0-rc.1"
 
     def log_message(self, fmt, *args):
         print("[MakerIDE] " + fmt % args)
@@ -506,7 +534,10 @@ class IDEHandler(BaseHTTPRequestHandler):
         self.send_header("Content-Security-Policy", "default-src 'none'")
         self.send_header("Content-Length", str(len(payload)))
         self.end_headers()
-        self.wfile.write(payload)
+        try:
+            self.wfile.write(payload)
+        except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError):
+            pass  # Browser reload/disconnect: never alter the underlying task.
 
     def _post_data(self):
         if "application/json" not in self.headers.get("Content-Type", ""):
@@ -527,7 +558,7 @@ class IDEHandler(BaseHTTPRequestHandler):
             return self._json(403, {"ok": False, "error": "Acceso restringido al equipo local"})
         parsed = urlsplit(self.path)
         if parsed.path == "/api/health":
-            return self._json(200, {"ok": True, "name": "AB MakerIDE · MS Robotika", "version": "0.9.7", "mode": "local-real"})
+            return self._json(200, {"ok": True, "name": "AB MakerIDE · MS Robotika", "version": "1.0.0-rc.1", "mode": "local-real"})
         if parsed.path == "/api/session":
             return self._json(200, {"ok": True, "csrf": SESSION_KEY})
         if parsed.path == "/api/diagnostics":
@@ -544,7 +575,7 @@ class IDEHandler(BaseHTTPRequestHandler):
             if selected and FQBN_RE.fullmatch(selected) and not any(b['fqbn']==selected for b in initial):
                 selected_board = next((b for b in catalog['boards'] if b['fqbn']==selected), None)
                 if selected_board: initial.append(selected_board)
-            return self._json(200, {"ok": True, "ports": scan_ports(), "choices": initial,
+            return self._json(200, {"ok": True, **scan_ports(diagnostics=True), "choices": initial,
                                     "catalog_ok": catalog['ok'], "catalog_error": catalog['error'],
                                     "catalog_source": catalog['source'], "catalog_warning": catalog.get('warning',''),
                                     "catalog_count": len(catalog['boards']), "catalog_paged": True})
@@ -601,7 +632,7 @@ class IDEHandler(BaseHTTPRequestHandler):
             self.send_header('Content-Length', str(len(source)))
             self.end_headers()
             return self.wfile.write(source)
-        if parsed.path in ('/simulator.js', '/app.js'):
+        if parsed.path in ('/simulator.js', '/app.js', '/activity.js'):
             raw = (ROOT / parsed.path.lstrip('/')).read_bytes()
             self.send_response(200)
             self.send_header('Content-Type', 'application/javascript; charset=utf-8')
@@ -687,9 +718,9 @@ class IDEHandler(BaseHTTPRequestHandler):
                         raise ValueError('La grabación requiere confirmación explícita.')
                     check_port(port)
                     SERIAL.close()
-                if not shutil.which('arduino-cli'):
+                if not arduino_cli():
                     raise ValueError('Arduino CLI no instalado o fuera de PATH.')
-                result = JOBS.start(code, fqbn, port, upload_speed=d.get('upload_speed', 115200), retry_slow=d.get('retry_slow', False))
+                result = JOBS.start(code, fqbn, port, upload_speed=d.get('upload_speed', 115200), retry_slow=d.get('retry_slow', False), request_id=d.get('request_id'))
             elif p == '/api/jobs/cancel':
                 result = JOBS.cancel(d.get('job_id', ''))
             elif p == '/api/libraries/search':
@@ -712,6 +743,8 @@ class IDEHandler(BaseHTTPRequestHandler):
                     result = command_result([*commands[action], '--no-color'], timeout=30)
             elif p == '/api/terminal/install-core':
                 core = d.get('core')
+                if d.get('confirm') is not True:
+                    raise ValueError('Instalar núcleos requiere confirmación explícita.')
                 if not isinstance(core, str) or not CORE_ID_RE.fullmatch(core):
                     raise ValueError('Identificador de núcleo no permitido.')
                 if core not in ('esp32:esp32', 'arduino:avr', 'esp8266:esp8266'):
@@ -776,7 +809,7 @@ class IDEHandler(BaseHTTPRequestHandler):
 
 def main():
     parser = argparse.ArgumentParser(description="AB MakerIDE · MS Robotika — puente local")
-    parser.add_argument("--port", type=int, default=8765)
+    parser.add_argument("--port", type=int, default=8770)
     parser.add_argument("--no-browser", action="store_true")
     args = parser.parse_args()
     try:
@@ -785,7 +818,7 @@ def main():
         print(f"No se ha podido abrir el puerto {args.port}: {exc}", file=sys.stderr, flush=True)
         print("Comprueba si hay otro MakerIDE abierto. Cierra el servidor anterior y reintenta.", file=sys.stderr, flush=True)
         raise SystemExit(2)
-    print(f"AB MakerIDE v0.9.7 SUPER (LOCAL) → http://127.0.0.1:{args.port}", flush=True)
+    print(f"AB MakerIDE v1.0.0-rc.1 SUPER (LOCAL) → http://127.0.0.1:{args.port}", flush=True)
     print("No se usan placas simuladas como si fueran reales.", flush=True)
     if not args.no_browser:
         threading.Timer(.6, lambda: webbrowser.open(f"http://127.0.0.1:{args.port}")).start()

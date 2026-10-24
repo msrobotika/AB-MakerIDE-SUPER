@@ -8,22 +8,26 @@ const MIGRATION_BACKUP='ab-makeride-backup-antes-v09';
 try{const project=localStorage.getItem(SAVEKEY);if(project&&!localStorage.getItem(MIGRATION_BACKUP))localStorage.setItem(MIGRATION_BACKUP,project)}catch(_e){/* La exportacion JSON sigue disponible */}
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const escapeHtml=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
+let recoveryStorageError=false;
 const state={lang:'cpp',files:{cpp:DEFAULT_CPP,py:DEFAULT_PY},name:'mi-proyecto',fqbn:'arduino:avr:uno',port:'',baud:9600,uploadSpeed:115200,retrySlow:false,panel:'project',pane:'console',ports:[],choices:[],catalogOk:false,catalogError:'',catalogWarning:'',catalogSource:'',catalogCount:0,tools:{},serialId:0,serialConnected:false,simRunning:false,simTimer:null,apiReady:false,busy:false,dirty:false,sidebarOpened:true};
-try{const old=JSON.parse(localStorage.getItem(SAVEKEY)||'null');if(old&&old.files&&typeof old.files.cpp==='string'&&typeof old.files.py==='string'){state.files={cpp:old.files.cpp,py:old.files.py};state.lang=old.lang==='py'?'py':'cpp';state.name=typeof old.name==='string'?old.name.slice(0,60):state.name;state.fqbn=typeof old.fqbn==='string'?old.fqbn:state.fqbn;state.port=/^COM\d+$/i.test(old.port||'')?old.port.toUpperCase():'';state.baud=Number(old.baud)||115200;state.uploadSpeed=[115200,230400,460800,921600].includes(Number(old.uploadSpeed))?Number(old.uploadSpeed):115200;state.retrySlow=old.retrySlow===true;}}catch(e){console.warn('No se pudo recuperar el proyecto',e)}
+try{const old=JSON.parse(localStorage.getItem(SAVEKEY)||'null');if(old&&old.files&&typeof old.files.cpp==='string'&&typeof old.files.py==='string'){state.files={cpp:old.files.cpp,py:old.files.py};state.lang=old.lang==='py'?'py':'cpp';state.name=typeof old.name==='string'?old.name.slice(0,60):state.name;state.fqbn=typeof old.fqbn==='string'?old.fqbn:state.fqbn;state.port=/^COM\d+$/i.test(old.port||'')?old.port.toUpperCase():'';state.baud=Number(old.baud)||115200;state.uploadSpeed=[115200,230400,460800,921600].includes(Number(old.uploadSpeed))?Number(old.uploadSpeed):115200;state.retrySlow=old.retrySlow===true;}else if(old){recoveryStorageError=true;}}catch(e){recoveryStorageError=true;console.warn('No se pudo recuperar el proyecto',e)}
 let toasts;
 function toast(msg){const e=$('#toast');e.textContent=msg;e.classList.add('show');clearTimeout(toasts);toasts=setTimeout(()=>e.classList.remove('show'),2700)}
-function save(){try{localStorage.setItem(SAVEKEY,JSON.stringify({files:state.files,lang:state.lang,name:state.name,fqbn:state.fqbn,port:state.port,baud:state.baud,uploadSpeed:state.uploadSpeed,retrySlow:state.retrySlow}));state.dirty=false;$('#footSave').textContent='✓ Guardado local';}catch(e){$('#footSave').textContent='Error al guardar';toast('No se pudo guardar en este navegador')}}
+let storageConflict=recoveryStorageError;
+function save(){if(storageConflict){$('#footSave').textContent='Guardado pausado: exporta tu copia antes de recargar';return;}try{localStorage.setItem(SAVEKEY,JSON.stringify({files:state.files,lang:state.lang,name:state.name,fqbn:state.fqbn,port:state.port,baud:state.baud,uploadSpeed:state.uploadSpeed,retrySlow:state.retrySlow}));state.dirty=false;$('#footSave').textContent='✓ Guardado local';}catch(e){$('#footSave').textContent='Error al guardar';toast('No se pudo guardar en este navegador')}}
+window.addEventListener('pagehide',()=>{clearTimeout(saveDelay);state.files[state.lang]=$('#code').value;save()});
+window.addEventListener('storage',e=>{if(e.key===SAVEKEY&&e.newValue){storageConflict=true;clearTimeout(saveDelay);$('#footSave').textContent='Otra pestaña cambió el proyecto: exporta esta copia antes de recargar';toast('Guardado pausado para evitar sobrescribir otra pestaña. Exporta tu copia.')}});
 let saveDelay;function scheduleSave(){state.dirty=true;$('#footSave').textContent='● Cambios pendientes';clearTimeout(saveDelay);saveDelay=setTimeout(save,550)}
 function showLog(p,t,type='note'){const panel=$('#pane-'+p);const el=document.createElement('div');el.className='logline '+type;el.textContent=t;panel.appendChild(el);while(panel.childNodes.length>1100)panel.removeChild(panel.firstChild);panel.scrollTop=panel.scrollHeight;return el;}
-function showOutput(p,t){String(t||'').split(/\r?\n/).forEach(x=>showLog(p,x,/error|failed|fallid|fatal|traceback/i.test(x)?'bad':/success|correct|writing|compilaci[oó]n real|carga real|done/i.test(x)?'good':'note'))}
+function showOutput(p,t){String(t||'').split(/\r?\n/).forEach(x=>showLog(p,x,/sin errores|no errors/i.test(x)?'good':/error|failed|fallid|fatal|traceback/i.test(x)?'bad':/success|correct|writing|compilaci[oó]n real|carga real|done/i.test(x)?'good':'note'))}
 function switchPane(name){state.pane=name;$$('[data-pane]').forEach(x=>x.classList.toggle('on',x.dataset.pane===name));['console','serial','problems'].forEach(p=>$('#pane-'+p).classList.toggle('hidden',p!==name));$('#serialBar').classList.toggle('hidden',name!=='serial');$('#terminalBar').classList.toggle('hidden',name!=='console');}
 function updateCaret(){const s=$('#code').value.slice(0,$('#code').selectionStart);const n=s.split('\n');$('#footCaret').textContent=`Ln ${n.length}, Col ${n.at(-1).length+1}`;}
 const keywordsCPP=/\b(?:void|const|int|float|double|char|bool|long|unsigned|while|if|else|for|return|true|false|HIGH|LOW|INPUT|OUTPUT|static|class|struct|break|continue)\b/g;
 const keywordsPY=/\b(?:from|import|as|def|class|while|True|False|None|if|elif|else|for|in|not|and|or|pass|return|global|break|continue|with|try|except|print)\b/g;
 function highlight(code,lang){const regex=lang==='cpp'?/(\/\/[^\n]*|\/\*[\s\S]*?\*\/)|("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')|(^\s*#[^\n]*)|(\b\d+(?:\.\d+)?\b)|([A-Za-z_]\w*)/gm:/(#[^\n]*)|("""[\s\S]*?"""|'''[\s\S]*?'''|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')|(\b\d+(?:\.\d+)?\b)|([A-Za-z_]\w*)/gm;let out='',last=0;for(const m of code.matchAll(regex)){out+=escapeHtml(code.slice(last,m.index));const t=m[0];last=m.index+t.length;const key=lang==='cpp'?keywordsCPP:keywordsPY;key.lastIndex=0;let cls=m[1]?'tok-com':m[2]?'tok-str':lang==='cpp'&&m[3]?'tok-pre':(lang==='cpp'&&m[4]||lang==='py'&&m[3])?'tok-num':null;if(!cls&&key.test(t))cls='tok-key';if(!cls&&/^\s*\(/.test(code.slice(last)))cls='tok-fn';out+=cls?`<span class="${cls}">${escapeHtml(t)}</span>`:escapeHtml(t);}return out+escapeHtml(code.slice(last))+'\n';}
 function updateHL(){$('#highlight').innerHTML=highlight($('#code').value,state.lang);$('#highlight').scrollTop=$('#code').scrollTop;$('#highlight').scrollLeft=$('#code').scrollLeft;}
-function setLang(lang,savePrevious=true){if(lang!=='py'&&lang!=='cpp')return;if(state.lang!==lang){if(savePrevious)state.files[state.lang]=$('#code').value;state.lang=lang;}$$('[data-lang]').forEach(x=>x.classList.toggle('on',x.dataset.lang===lang));$('#code').value=state.files[lang];$('#fileLabel').textContent=lang==='cpp'?'sketch.ino · Arduino C++':'main.py · MicroPython';$('#footLang').textContent=lang==='cpp'?'C++ · Arduino':'Python · MicroPython';$('#verifyBtn').textContent=lang==='cpp'?'⌕ Compilar':'⌕ Verificar sintaxis';$('#uploadBtn').textContent=lang==='cpp'?'↑ Compilar y grabar':'↑ Guardar main.py';renderSidebar();updateHL();updateCaret();scheduleSave();scheduleAdvisor();refreshSketchTargetNotice()}
-$('#code').addEventListener('input',()=>{state.files[state.lang]=$('#code').value;updateHL();updateCaret();scheduleSave();scheduleAdvisor();refreshSketchTargetNotice()});$('#code').addEventListener('scroll',updateHL);$('#code').addEventListener('click',updateCaret);$('#code').addEventListener('keyup',updateCaret);
+function setLang(lang,savePrevious=true){if(lang!=='py'&&lang!=='cpp')return;RobotActivity.invalidate('build');if(state.lang!==lang){if(savePrevious)state.files[state.lang]=$('#code').value;state.lang=lang;}$$('[data-lang]').forEach(x=>x.classList.toggle('on',x.dataset.lang===lang));$('#code').value=state.files[lang];$('#fileLabel').textContent=lang==='cpp'?'sketch.ino · Arduino C++':'main.py · MicroPython';$('#footLang').textContent=lang==='cpp'?'C++ · Arduino':'Python · MicroPython';$('#verifyBtn').textContent=lang==='cpp'?'⌕ Compilar':'⌕ Verificar sintaxis';$('#uploadBtn').textContent=lang==='cpp'?'↑ Compilar y grabar':'↑ Guardar main.py';renderSidebar();updateHL();updateCaret();scheduleSave();scheduleAdvisor();refreshSketchTargetNotice()}
+$('#code').addEventListener('input',()=>{RobotActivity.invalidate('build');state.files[state.lang]=$('#code').value;updateHL();updateCaret();scheduleSave();scheduleAdvisor();refreshSketchTargetNotice()});$('#code').addEventListener('scroll',updateHL);$('#code').addEventListener('click',updateCaret);$('#code').addEventListener('keyup',updateCaret);
 $('#code').addEventListener('keydown',e=>{if(e.key==='Tab'){e.preventDefault();const t=e.currentTarget,a=t.selectionStart,b=t.selectionEnd;t.setRangeText('  ',a,b,'end');t.dispatchEvent(new Event('input'))}if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='s'){e.preventDefault();save();toast('Proyecto guardado en el navegador')}if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();verify()}});
 $$('[data-lang]').forEach(x=>x.addEventListener('click',()=>setLang(x.dataset.lang)));
 $$('[data-pane]').forEach(x=>x.addEventListener('click',()=>switchPane(x.dataset.pane)));
@@ -41,7 +45,7 @@ async function sessionToken(){
   if(!csrfSession)throw Error('El servidor no devolvió token de sesión');
   return csrfSession;
 }
-async function request(path,payload){const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),360000);try{const res=await fetch(path,payload===undefined?{signal:controller.signal}:{method:'POST',headers:{'Content-Type':'application/json','X-AB-Session':await sessionToken()},body:JSON.stringify(payload),signal:controller.signal});const d=await res.json();if(!res.ok)throw Error(d.error||'Error '+res.status);return d}finally{clearTimeout(timeout)}}
+async function request(path,payload,retry=true){const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),payload===undefined?(/\/api\/boards/.test(path)?75000:/board-catalog/.test(path)?55000:20000):360000);try{const res=await fetch(path,payload===undefined?{signal:controller.signal}:{method:'POST',headers:{'Content-Type':'application/json','X-AB-Session':await sessionToken()},body:JSON.stringify(payload),signal:controller.signal});if(res.status===403&&payload!==undefined&&retry){csrfSession='';return request(path,payload,false)}const d=await res.json();if(!res.ok)throw Error(d.error||'Error '+res.status);return d}finally{clearTimeout(timeout)}}
 function busy(v){state.busy=v;$('#verifyBtn').disabled=v;$('#uploadBtn').disabled=v;}
 function hardwareLabAvailable(){return state.fqbn==='esp32:esp32:esp32'}
 function updateHardwareLabVisibility(){$('#hardwareLab').classList.toggle('hidden',!hardwareLabAvailable());}
@@ -84,7 +88,9 @@ function refreshDeviceHint(){
  const label=$('#deviceHint'),p=state.ports.find(x=>x.port===state.port);
  if(!p){label.textContent=state.ports.length?'Selecciona el puerto USB y el modelo de placa':'Conecta una placa y pulsa ↻';return}
  const ch340=/^(?:0x)?1a86$/i.test(String(p.vid||''))&&/^(?:0x)?7523$/i.test(String(p.pid||''));
+ const cp210=/^(?:0x)?10c4$/i.test(String(p.vid||''))&&/^(?:0x)?ea60$/i.test(String(p.pid||''));
  const detected=(p.boards||[]).filter(b=>state.choices.some(c=>c.fqbn===b.fqbn));
+ if((ch340||cp210)){label.textContent=`${p.port}: conversor ${ch340?'CH340':'CP210x'} · confirma el modelo manualmente`;return}
  if(detected.length===1){label.textContent=`${p.port}: Arduino CLI sugiere ${detected[0].name} (verifica modelo)`;return}
  label.textContent=ch340?`${p.port}: conversor CH340 · confirma el modelo manualmente`:`${p.port}: ${String(p.name||'Puerto USB').slice(0,35)}`;
 }
@@ -124,13 +130,12 @@ function rememberBoard(){
 function applyBoardChoice(fqbn,remember=true){
  if(!state.choices.some(b=>b.fqbn===fqbn))return toast('Instala primero el núcleo de esa placa');
  state.fqbn=fqbn;if(remember)rememberBoard();
+ RobotActivity.invalidate('build');
  $('#footBoard').textContent=state.choices.find(b=>b.fqbn===fqbn)?.name||fqbn;
  updateHardwareLabVisibility();refreshQuickSelectors();renderSidebar();refreshDeviceHint();save();
 }
 function applyPortChoice(port){
  state.port=port;
- const remembered=rememberedBoard(port);
- if(remembered)state.fqbn=remembered;
  $('#footPort').textContent='Puerto: '+(state.port||'sin seleccionar');
  refreshQuickSelectors();if(state.panel==='boards')renderSidebar();refreshDeviceHint();save();
 }
@@ -158,10 +163,12 @@ async function fetchInstalledCatalog(page=1){
   const r=await request('/api/board-catalog/installed?query='+encodeURIComponent(q)+'&page='+page+'&limit=40');
   if(generation!==catalogSearchGeneration||catalogQuery.value.trim()!==q)return;
   catalogLocal={query:q.toLocaleLowerCase('es'),page:r.page||1,limit:r.limit||40,pages:r.pages||0,total:r.total||0,boards:r.boards||[],loading:false};
-  if(!r.ok)state.catalogError=r.error||'Sin modelos instalados';
+  catalogLocal.error=r.ok?'':r.error||'No se pudo consultar el catálogo';
+  state.catalogError=catalogLocal.error;
+  state.catalogOk=r.ok===true;
   state.catalogSource=r.source||state.catalogSource;
   renderCatalog();
- }catch(e){if(generation===catalogSearchGeneration){catalogLocal.loading=false;state.catalogError=e.message;renderCatalog();}}
+ }catch(e){if(generation===catalogSearchGeneration){catalogLocal.loading=false;catalogLocal.error=e.message;state.catalogError=e.message;renderCatalog();}}
 }
 function renderCatalog(){
  const q=catalogQuery.value.trim().toLocaleLowerCase('es');
@@ -169,12 +176,12 @@ function renderCatalog(){
  const results=$('#catalogResults');results.replaceChildren();
  const current=active.query===q?active:{query:q,boards:[],page:1,pages:0,total:0,loading:true};
  $('#catalogSource').textContent=(catalogRemote&&catalogRemote.query===q?'Gestor de placas · ':'Instaladas · ')+(state.catalogWarning||state.catalogSource||'Arduino CLI');
- $('#catalogCount').textContent=current.loading?'Buscando modelos…':`${current.total} coincidencias · ${state.catalogCount||0} modelos instalados en total`;
+ $('#catalogCount').textContent=current.loading?'Buscando modelos…':current.error?'Error de consulta · total desconocido':`${current.total} coincidencias · ${state.catalogCount||0} modelos instalados en total`;
  $('#catalogPageLabel').textContent=current.pages?`Página ${current.page} de ${current.pages}`:'Página 1';
  $('#catalogPrev').disabled=current.loading||current.page<=1;
  $('#catalogNext').disabled=current.loading||current.page>=current.pages;
  if(current.loading){const n=document.createElement('div');n.className='picker-empty';n.textContent='Buscando en el catálogo local…';results.append(n);return}
- if(!current.boards.length){const n=document.createElement('div');n.className='picker-empty';n.textContent=state.catalogError&&!state.catalogOk?state.catalogError:'No hay coincidencias. Prueba otro término o usa «Buscar también en gestor de placas».';results.append(n);return}
+ if(!current.boards.length){const n=document.createElement('div');n.className='picker-empty';n.textContent=current.error||'No hay coincidencias. Prueba otro término o usa «Buscar también en gestor de placas».';results.append(n);return}
  for(const b of current.boards){
   const item=document.createElement('div');item.className='picker-item';item.setAttribute('role','listitem');
   const content=document.createElement('div'),name=document.createElement('strong'),desc=document.createElement('span'),button=document.createElement('button');
@@ -230,15 +237,23 @@ function refreshQuickSelectors(){
  port.add(new Option(state.ports.length?'Seleccionar puerto COM':'Sin puertos COM detectados',''));
  for(const p of state.ports){const isCH340=/^(?:0x)?1a86$/i.test(String(p.vid||''))&&/^(?:0x)?7523$/i.test(String(p.pid||''));const description=isCH340?'USB CH340 · modelo a elegir':String(p.name||'Dispositivo serie').slice(0,35);port.add(new Option(p.port+' · '+description,p.port))}
  port.value=state.port;
+ if(state.port&&!state.ports.some(p=>p.port===state.port)){port.add(new Option(state.port+' · desconectado / sin verificar',state.port));port.value=state.port;}
 }
 $('#quickBoard').addEventListener('change',e=>{if(e.target.value==='__search__'){refreshQuickSelectors();openCatalog()}else applyBoardChoice(e.target.value)});
 $('#quickPort').addEventListener('change',e=>applyPortChoice(e.target.value));
-$('#quickScan').addEventListener('click',async()=>{const btn=$('#quickScan');btn.disabled=true;try{await scan();if(!state.ports.length){showLog('console','No hay puertos COM detectados: comprueba cable USB de DATOS, controlador CH340/ATmega16U2 y Administrador de dispositivos. El IDE no inventa puertos.','bad');switchPane('console');toast('Sin puertos detectados. Revisa USB/driver.')}else toast(state.ports.length+' puerto(s) COM real(es) detectado(s)')}catch(e){showLog('console',e.message,'bad');toast('Error en detección: '+e.message)}finally{btn.disabled=false}});
+$('#quickScan').addEventListener('click',async()=>{const btn=$('#quickScan');btn.disabled=true;try{const scanned=await scan();if(scanned.scan_ok===false){toast('Detección incompleta: revisa el aviso');return;}if(!state.ports.length){showLog('console','No hay puertos COM detectados: comprueba cable USB de DATOS, controlador CH340/ATmega16U2 y Administrador de dispositivos. El IDE no inventa puertos.','bad');switchPane('console');toast('Sin puertos detectados. Revisa USB/driver.')}else toast(state.ports.length+' puerto(s) COM real(es) detectado(s)')}catch(e){showLog('console',e.message,'bad');toast('Error en detección: '+e.message)}finally{btn.disabled=false}});
 const openRight=(mode)=>{document.body.dataset.right=document.body.dataset.right===mode?'none':mode;if(mode==='lab')$('#hardwareLab').open=true;};
 $('#showAI').onclick=()=>openRight('ai');$('#showSim').onclick=()=>{openRight('sim');$('#extraTools').open=false};$('#showLab').onclick=()=>{openRight('lab');$('#extraTools').open=false};$('#rightClose').onclick=()=>{document.body.dataset.right='none'};
 function checkSelection(requirePort){if(!state.apiReady){toast('Servidor desconectado. Inicia server.py');return false}if(requirePort&&!state.port){toast('Selecciona el puerto USB en la barra superior');$('#quickPort').focus();return false}if(state.lang==='cpp'&&!state.fqbn){toast('Selecciona una placa/FQBN');return false}return true}
 let currentJobId=null, lastJobLine=0;
-function updateBuildVisual(d){
+async function updateBuildVisual(d){
+  d={...d,success:d.success===true&&d.exit_code===0&&!d.cancelled&&!d.interrupted&&!d.error};
+  if(!d.active&&d.success&&d.source_sha256){
+   const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode($('#code').value));
+   const sha=Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,'0')).join('');
+   d.stale=sha!==d.source_sha256||state.fqbn!==d.fqbn||state.lang!=='cpp';
+  }
+  RobotActivity.report('build',(d.action==='upload'?'Compilar y grabar':'Compilación')+(d.fqbn?' · '+d.fqbn:''),d);
   const panel=$('#buildProgress');panel.classList.remove('hidden');
   $('#buildStage').textContent=({'compilación':'Compilación Arduino CLI · en curso', 'grabación':'Grabando en el dispositivo real', 'reintento 115200':'Recuperación USB a 115200 baudios', 'completado':'Operación finalizada', 'error':'Operación fallida', 'cancelado':'Operación cancelada'})[d.stage]||'Preparando operación';
   $('#buildClock').textContent=(d.elapsed||0).toFixed(1)+' s';
@@ -249,29 +264,33 @@ function updateBuildVisual(d){
   else if(percent!==null&&d.active){bar.style.width=percent+'%';$('#buildMeter').setAttribute('aria-valuenow',String(percent))}
   else{bar.style.width=d.success?'100%':(percent!==null?percent+'%':'0%');bar.classList.add(d.success?'success':'failed');if(d.success)$('#buildMeter').setAttribute('aria-valuenow','100');else if(percent!==null)$('#buildMeter').setAttribute('aria-valuenow',String(percent));else $('#buildMeter').removeAttribute('aria-valuenow')}
   $('#buildCancel').disabled=!d.active;
-  $('#buildDetail').textContent=d.active?'Salida real en terminal · sin estimaciones de compilación':d.success?'Arduino CLI ha devuelto código de salida 0':(d.error||'Proceso interrumpido');
+  $('#buildDetail').textContent=d.stale?'Resultado de otra revisión o placa; vuelve a compilar.':d.active?'Salida real en terminal · sin estimaciones de compilación':d.success?'Arduino CLI ha devuelto código de salida 0 · revisión '+(d.source_sha256||'anterior').slice(0,8):(d.error||'Proceso interrumpido');
 }
 async function runCppJob(action){
   if(state.busy||!checkSelection(action==='upload'))return;
   if(action==='upload' && hardwareLabAvailable() && lab.connections.length){try{const r=await labCheck();if(r.errors){$('#hardwareLab').open=true;toast('Grabacion bloqueada: conflictos en conexiones declaradas');return;}if(r.warnings&&!confirm('Hay '+r.warnings+' advertencia(s) de hardware. ¿Revisadas antes de continuar?'))return;}catch(e){toast('No se pudo auditar el circuito: '+e.message);return}}
   if(action==='upload'&&!confirm(`GRABAR firmware REAL en ${state.port}\nPlaca: ${state.fqbn}\nVelocidad: ${state.uploadSpeed} baudios\nReintento 115200: ${state.retrySlow?'activado':'desactivado'}\nEsta acción sobrescribe el programa actual. ¿Confirmas?`))return;
-  state.files[state.lang]=$('#code').value;
+  state.files[state.lang]=$('#code').value;save();
+  RobotActivity.begin('build',action==='upload'?'Compilar y grabar':'Compilación');
   busy(true);switchPane('console');lastJobLine=0;currentJobId=null;
   $('#buildProgress').classList.remove('hidden');
   $('#buildStage').textContent='Preparando…';$('#buildFill').className='buildfill indeterminate';
   $('#buildCancel').disabled=true;
   showLog('console','──── '+(action==='upload'?'COMPILAR Y GRABAR REAL':'COMPILACIÓN REAL')+' · '+state.fqbn+' ────','cmd');
   try{
-    const started=await request('/api/jobs/start',{action,lang:'cpp',fqbn:state.fqbn,code:state.files.cpp,port:state.port,upload_speed:state.uploadSpeed,retry_slow:state.retrySlow,confirm:action==='upload'});
+    const requestId=crypto.randomUUID().replaceAll('-','');
+    localStorage.setItem('ab-makeride-last-build-v1',requestId);
+    const started=await request('/api/jobs/start',{request_id:requestId,action,lang:'cpp',fqbn:state.fqbn,code:state.files.cpp,port:state.port,upload_speed:state.uploadSpeed,retry_slow:state.retrySlow,confirm:action==='upload'});
     currentJobId=started.job_id;
+    localStorage.setItem('ab-makeride-last-build-v1',currentJobId);
     while(true){
       const d=await request('/api/jobs/status?id='+encodeURIComponent(currentJobId)+'&since='+lastJobLine);
-      updateBuildVisual(d);
+      await updateBuildVisual(d);
       for(const line of d.lines){showOutput('console',line.text);lastJobLine=line.id;if(/error:|fatal error:|Error during build/i.test(line.text))showLog('problems',line.text,'bad')}
       if(!d.active){if(!d.success){latestCompilerError=d.lines.map(x=>x.text).join('\n');scheduleAdvisor()}showLog('console',d.success?'✓ Herramienta real finalizó correctamente':'✕ Falló o se canceló. No se confirma grabación.',d.success?'good':'bad');toast(d.success?'✓ Operación real completada':'Error: revisa el terminal');break}
       await new Promise(resolve=>setTimeout(resolve,400));
     }
-  }catch(e){showLog('console','ERROR: '+e.message,'bad');$('#buildStage').textContent='Error al iniciar o consultar';$('#buildDetail').textContent=e.message;toast('Operación fallida: '+e.message)}
+  }catch(e){RobotActivity.lost('build','Compilación / grabación',e.message);updateBuildVisual({active:false,success:false,error:'Error de conexión: '+e.message});showLog('console','ERROR: '+e.message,'bad');$('#buildStage').textContent='Error al iniciar o consultar';$('#buildDetail').textContent=e.message;toast('Operación fallida: '+e.message)}
   finally{busy(false);refreshSerial()}
 }
 $('#buildExplain').onclick=()=>{
@@ -286,20 +305,24 @@ $('#buildCancel').onclick=async()=>{if(!currentJobId||!confirm('¿Cancelar la op
 async function verify(){
   if(state.lang==='cpp')return runCppJob('compile');
   if(state.busy||!checkSelection(false))return;
+  RobotActivity.begin('syntax','Sintaxis Python');
   busy(true);switchPane('console');
-  try{const d=await request('/api/verify',{lang:'py',code:state.files.py});showOutput('console',d.output);toast(d.ok?'Sintaxis correcta':'Error de sintaxis');if(!d.ok){switchPane('problems');showOutput('problems',d.output)}}catch(e){toast(e.message)}finally{busy(false)}
+  try{const d=await request('/api/verify',{lang:'py',code:state.files.py});RobotActivity.report('syntax','Sintaxis Python',{success:d.ok,verified:d.ok&&d.mode==='syntax_only'});showOutput('console',d.output);toast(d.ok?'Sintaxis correcta':'Error de sintaxis');if(!d.ok){switchPane('problems');showOutput('problems',d.output)}}catch(e){RobotActivity.lost('syntax','Sintaxis Python',e.message);toast(e.message)}finally{busy(false)}
 }
 async function upload(){
   if(state.lang==='cpp')return runCppJob('upload');
   if(state.busy||!checkSelection(true))return;
   if(!confirm(`SOBRESCRIBIR main.py REAL en ${state.port}. ¿Confirmas?`))return;
   busy(true);switchPane('console');
-  try{const d=await request('/api/upload',{confirm:true,port:state.port,fqbn:state.fqbn,code:state.files.py,lang:'py'});showOutput('console',d.output);toast(d.ok?'MicroPython desplegado':'No se confirmó el despliegue')}catch(e){showLog('console',e.message,'bad')}finally{busy(false);refreshSerial()}
+  RobotActivity.begin('micropython','Guardar MicroPython');
+  try{const d=await request('/api/upload',{confirm:true,port:state.port,fqbn:state.fqbn,code:state.files.py,lang:'py'});RobotActivity.report('micropython','Guardar MicroPython',{...d,success:d.ok});showOutput('console',d.output);toast(d.ok?'MicroPython desplegado':'No se confirmó el despliegue')}catch(e){RobotActivity.lost('micropython','Guardar MicroPython',e.message);showLog('console',e.message,'bad')}finally{busy(false);refreshSerial()}
 }
 $('#verifyBtn').addEventListener('click',verify);$('#uploadBtn').addEventListener('click',upload);
 async function scan({force=false,quiet=false}={}){
  /* Nunca sobreescribir automáticamente el FQBN elegido por el usuario sin un perfil previamente confirmado. */
- const d=await request('/api/boards?selected='+encodeURIComponent(state.fqbn)+(force?'&refresh=1':''));
+ let d;
+ try{d=await request('/api/boards?selected='+encodeURIComponent(state.fqbn)+(force?'&refresh=1':''));}
+ catch(e){$('#scanNotice').textContent='No se pudo detectar hardware: '+e.message+'. Se conserva la selección; presencia sin verificar.';$('#scanNotice').classList.remove('hidden');throw e;}
  const ports=d.ports||[],choices=d.choices||[];
  const oldSelected=state.choices.find(b=>b.fqbn===state.fqbn);
  if(oldSelected&&!choices.some(b=>b.fqbn===state.fqbn))choices.push(oldSelected);
@@ -307,16 +330,12 @@ async function scan({force=false,quiet=false}={}){
  const newFingerprint=JSON.stringify(ports.map(p=>[p.port,p.vid,p.pid,p.serial_number,p.boards]));
  const updated=force||oldFingerprint!==newFingerprint||state.choices.length!==choices.length;
  state.ports=ports;state.choices=choices;state.catalogOk=d.catalog_ok===true;state.catalogError=d.catalog_error||'';state.catalogWarning=d.catalog_warning||'';state.catalogSource=d.catalog_source||'';state.catalogCount=d.catalog_count||0;
- if(!state.ports.some(p=>p.port===state.port))state.port='';
+ // Keep a disconnected manual port as a reference, never as evidence of presence.
  if(!state.port&&ports.length===1){
   state.port=ports[0].port;
-  const fqbn=rememberedBoard(state.port);
-  if(fqbn)state.fqbn=fqbn;
-  else if(ports[0].boards?.length===1 && state.choices.some(b=>b.fqbn===ports[0].boards[0].fqbn)){
-    // Sugerencia de Arduino CLI solo al elegir el primer puerto, nunca prevalece sobre perfil explícito.
-    state.fqbn=ports[0].boards[0].fqbn;
-  }
 }
+ const errors=[...(d.scan_errors||[]),...(!d.catalog_ok?[d.catalog_error||'Catálogo no disponible; total desconocido']:[]),...(d.catalog_warning?[d.catalog_warning]:[])];
+ $('#scanNotice').textContent=errors.join(' · ');$('#scanNotice').classList.toggle('hidden',!errors.length);
  if(updated){
   updateHardwareLabVisibility();$('#footPort').textContent='Puerto: '+(state.port||'no detectado');
   $('#footBoard').textContent=state.choices.find(b=>b.fqbn===state.fqbn)?.name||state.fqbn;
@@ -326,6 +345,22 @@ async function scan({force=false,quiet=false}={}){
  }
  return d;
 }
+async function recoverBuild(){
+ if(state.busy)return;
+ const id=localStorage.getItem('ab-makeride-last-build-v1');if(!id)return;
+ currentJobId=id;lastJobLine=0;busy(true);
+ try{
+  while(true){
+   const d=await request('/api/jobs/status?id='+encodeURIComponent(id)+'&since='+lastJobLine);
+   await updateBuildVisual(d);
+   for(const line of d.lines||[]){showOutput('console',line.text);lastJobLine=line.id;}
+   if(!d.active)break;
+   await new Promise(resolve=>setTimeout(resolve,400));
+  }
+ }catch(e){RobotActivity.lost('build','Recuperación',e.message);$('#buildStage').textContent='Resultado desconocido';$('#buildDetail').textContent='No se pudo recuperar la operación. No se repetirá automáticamente.';}
+ finally{busy(false);}
+}
+$('#recoverBuild').onclick=recoverBuild;
 async function refreshAll(){try{const [d]=await Promise.all([request('/api/diagnostics'),scan()]);state.tools=d.tools||{};state.apiReady=true;$('#backendDot').className='dot good';$('#backendState').textContent='Servidor local activo';const toolNames=[['Arduino CLI','arduino_cli'],['mpremote','mpremote'],['pyserial','pyserial'],['Puertos detectados','ports']];$('#diagGrid').innerHTML=toolNames.map(([label,key])=>{const ok=key==='ports'?state.ports.length>0:Boolean(state.tools[key]);const val=key==='ports'?state.ports.length+' físicos':ok?'Disponible':'No instalado';return `<div class="diagitem"><div class="type">${label}</div><div class="val ${ok?'good':'bad'}">${val}</div></div>`}).join('');showLog('console',`Herramientas: Arduino CLI ${state.tools.arduino_cli?'OK':'NO'} · mpremote ${state.tools.mpremote?'OK':'NO'} · pyserial ${state.tools.pyserial?'OK':'NO'}`,'note');if(!state.ports.length)showLog('console','No se detectan placas. Comprueba el USB, drivers y pyserial/Arduino CLI.','note');}catch(e){state.apiReady=false;$('#backendDot').className='dot bad';$('#backendState').textContent='Servidor desconectado';$('#diagGrid').innerHTML='<div class="diagitem">Inicia python server.py</div>';showLog('console','ERROR: '+e.message,'bad')}}
 $('#refreshStatus').addEventListener('click',refreshAll);
 let scanInProgress=false;setInterval(async()=>{if(document.hidden||!state.apiReady||state.busy||scanInProgress)return;scanInProgress=true;try{await scan()}catch(_e){}finally{scanInProgress=false}},12000);
@@ -384,8 +419,8 @@ b.querySelectorAll('[data-open]').forEach(x=>x.addEventListener('click',()=>setL
 b.querySelector('#exportBtn').onclick=exportProject;b.querySelector('#importBtn').onclick=()=>$('#projectFile').click();
 b.querySelector('#newBtn').onclick=()=>{if(!confirm('¿Crear proyecto nuevo? Se reemplazará el código actual. Exporta primero si deseas conservarlo.'))return;state.files={cpp:DEFAULT_CPP,py:DEFAULT_PY};state.name='mi-proyecto';setLang('cpp',false);$('#code').value=state.files.cpp;updateHL();save();renderSidebar();toast('Proyecto nuevo. Selecciona la placa antes de compilar.')};}
 else if(panel==='boards'){
-b.innerHTML=`<button class="action" id="scanBtn" style="width:100%;margin-bottom:15px">↻ Buscar placas reales</button><button class="action" id="openBoardSearch" style="width:100%;margin-bottom:12px">⌕ Buscar entre ${state.catalogCount||state.choices.length} modelos instalados</button><div class="field"><label class="formlabel" for="boardSelect">TIPO DE PLACA / FQBN</label><select class="selector" id="boardSelect">${state.choices.map(p=>`<option value="${escapeHtml(p.fqbn)}" ${p.fqbn===state.fqbn?'selected':''}>${escapeHtml(p.name)}</option>`).join('')}</select></div><div class="field"><label class="formlabel" for="portSelect">PUERTO FÍSICO</label><select class="selector" id="portSelect"><option value="">— Ningún dispositivo seleccionado —</option>${state.ports.map(p=>`<option value="${escapeHtml(p.port)}" ${p.port===state.port?'selected':''}>${escapeHtml(p.port+' · '+p.name)}</option>`).join('')}</select></div><div class="field"><label class="formlabel" for="baudSelect">BAUDIOS DEL MONITOR SERIE</label><select class="selector" id="baudSelect">${[9600,19200,38400,57600,74880,115200,230400,460800,921600].map(v=>`<option value="${v}" ${v===state.baud?'selected':''}>${v}</option>`).join('')}</select></div><div class="field"><label class="formlabel" for="uploadSpeedSelect">VELOCIDAD DE GRABACIÓN ESP32</label><select class="selector" id="uploadSpeedSelect">${[115200,230400,460800,921600].map(v=>`<option value="${v}" ${v===state.uploadSpeed?'selected':''}>${v} baudios</option>`).join('')}</select></div><label class="settingscheck" style="margin:7px 0 14px"><span>Reintento USB automático a 115200 (si falla el enlace)</span><input type="checkbox" id="retrySlow" ${state.retrySlow?'checked':''}></label><button class="action" id="serialConnect" style="width:100%;margin:4px 0">${state.serialConnected?'■ Desconectar monitor':'↗ Conectar monitor serie'}</button>${state.lang==='py'?'<button class="action" id="pyRun" style="width:100%;margin-top:7px">▶ Ejecutar MicroPython desde RAM</button>':''}<div class="boxinfo">${state.ports.length?'Dispositivos detectados: <strong>'+state.ports.length+'</strong>':'No se detectan dispositivos. No se inventan puertos COM.'}<br><span class="hint">La selección FQBN es manual si el puerto no identifica por sí solo el modelo. Comprueba la serigrafía de tu placa.</span></div>`;
-b.querySelector('#openBoardSearch').onclick=openCatalog;b.querySelector('#scanBtn').onclick=async()=>{toast('Buscando hardware real...');try{await scan({force:true});toast(state.ports.length+' puerto(s) detectado(s)')}catch(e){toast(e.message)}};b.querySelector('#boardSelect').onchange=e=>applyBoardChoice(e.target.value);b.querySelector('#portSelect').onchange=e=>applyPortChoice(e.target.value);b.querySelector('#baudSelect').onchange=e=>{state.baud=+e.target.value;save()};b.querySelector('#uploadSpeedSelect').onchange=e=>{state.uploadSpeed=+e.target.value;save()};b.querySelector('#retrySlow').onchange=e=>{state.retrySlow=e.target.checked;save()};b.querySelector('#serialConnect').onclick=toggleSerial;const py=b.querySelector('#pyRun');if(py)py.onclick=runPython;}
+b.innerHTML=`<button class="action" id="scanBtn" style="width:100%;margin-bottom:15px">↻ Buscar placas reales</button><button class="action" id="openBoardSearch" style="width:100%;margin-bottom:12px">⌕ Buscar entre ${state.catalogOk?state.catalogCount:'total desconocido de'} modelos instalados</button><div class="field"><label class="formlabel" for="boardSelect">TIPO DE PLACA / FQBN</label><select class="selector" id="boardSelect">${state.choices.map(p=>`<option value="${escapeHtml(p.fqbn)}" ${p.fqbn===state.fqbn?'selected':''}>${escapeHtml(p.name)}</option>`).join('')}</select></div><div class="field"><label class="formlabel" for="portSelect">PUERTO FÍSICO</label><select class="selector" id="portSelect"><option value="">— Ningún dispositivo seleccionado —</option>${state.ports.map(p=>`<option value="${escapeHtml(p.port)}" ${p.port===state.port?'selected':''}>${escapeHtml(p.port+' · '+p.name)}</option>`).join('')}</select></div><div class="field"><label class="formlabel" for="baudSelect">BAUDIOS DEL MONITOR SERIE</label><select class="selector" id="baudSelect">${[9600,19200,38400,57600,74880,115200,230400,460800,921600].map(v=>`<option value="${v}" ${v===state.baud?'selected':''}>${v}</option>`).join('')}</select></div><div class="field"><label class="formlabel" for="uploadSpeedSelect">VELOCIDAD DE GRABACIÓN ESP32</label><select class="selector" id="uploadSpeedSelect">${[115200,230400,460800,921600].map(v=>`<option value="${v}" ${v===state.uploadSpeed?'selected':''}>${v} baudios</option>`).join('')}</select></div><label class="settingscheck" style="margin:7px 0 14px"><span>Reintento USB automático a 115200 (si falla el enlace)</span><input type="checkbox" id="retrySlow" ${state.retrySlow?'checked':''}></label><button class="action" id="serialConnect" style="width:100%;margin:4px 0">${state.serialConnected?'■ Desconectar monitor':'↗ Conectar monitor serie'}</button>${state.lang==='py'?'<button class="action" id="pyRun" style="width:100%;margin-top:7px">▶ Ejecutar MicroPython desde RAM</button>':''}<div class="boxinfo">${state.ports.length?'Dispositivos detectados: <strong>'+state.ports.length+'</strong>':'No se detectan dispositivos. No se inventan puertos COM.'}<br><span class="hint">La selección FQBN es manual si el puerto no identifica por sí solo el modelo. Comprueba la serigrafía de tu placa.</span></div>`;
+b.querySelector('#openBoardSearch').onclick=openCatalog;b.querySelector('#scanBtn').onclick=async()=>{toast('Buscando hardware real...');try{const result=await scan({force:true});toast(result.scan_ok===false?'Detección incompleta: revisa el aviso':state.ports.length+' puerto(s) detectado(s)')}catch(e){toast(e.message)}};b.querySelector('#boardSelect').onchange=e=>applyBoardChoice(e.target.value);b.querySelector('#portSelect').onchange=e=>applyPortChoice(e.target.value);b.querySelector('#baudSelect').onchange=e=>{state.baud=+e.target.value;save()};b.querySelector('#uploadSpeedSelect').onchange=e=>{state.uploadSpeed=+e.target.value;save()};b.querySelector('#retrySlow').onchange=e=>{state.retrySlow=e.target.checked;save()};b.querySelector('#serialConnect').onclick=toggleSerial;const py=b.querySelector('#pyRun');if(py)py.onclick=runPython;}
 else if(panel==='libraries'){
 b.innerHTML='<div class="notice">Se consultan e instalan librerías Arduino mediante Arduino CLI. Solo se mostrará éxito si la herramienta responde correctamente.</div><div class="miniheading">RECOMENDADAS PARA ESTE SKETCH</div><div id="advisorDetails" aria-live="polite"></div><button class="action small ghost" id="advisorRefresh" style="width:100%;margin-bottom:11px">Analizar el código actual</button><div class="miniheading">INSTALAR LIBRERÍA</div><input class="input" id="libName" placeholder="Ej.: DHT sensor library"><button class="action small" id="libInstall" style="width:100%;margin:9px 0 16px">Instalar con Arduino CLI</button><button class="action small ghost" id="libRefresh" style="width:100%">↻ Ver librerías instaladas</button><div class="miniheading">BUSCAR EN ARDUINO LIBRARY MANAGER</div><input class="input" id="libSearchQuery" placeholder="Nombre a buscar en el catálogo"><button class="action small ghost" style="width:100%;margin-top:7px" id="libSearch">Buscar con Arduino CLI</button><pre id="libSearchResult" class="notice" style="white-space:pre-wrap;max-height:175px;overflow:auto"></pre><div id="libList" style="margin-top:13px"></div>';b.querySelector('#libRefresh').onclick=loadLibraries;b.querySelector('#libInstall').onclick=installLibrary;b.querySelector('#libSearch').onclick=searchLibraries;b.querySelector('#advisorRefresh').onclick=()=>refreshAdvisor(false);renderAdvisorPanel();}
 else{b.innerHTML='<div class="miniheading">COMPORTAMIENTO</div><label class="settingscheck"><span>Guardado automático</span><input type="checkbox" checked disabled></label><label class="settingscheck"><span>Grabación con confirmación</span><input type="checkbox" checked disabled></label><label class="settingscheck"><span>Resultados de hardware reales</span><input type="checkbox" checked disabled></label><div class="miniheading">INTELIGENCIA ARTIFICIAL</div><div class="notice">Google Gemma 4 31B disponible por Google AI Studio u OpenRouter. Ollama se ejecuta localmente. Las claves quedan únicamente en memoria del servidor y las propuestas nunca se graban sin revisión.</div><div class="miniheading">SEGURIDAD</div><div class="boxinfo">Servidor limitado a <strong>127.0.0.1</strong>.<br>Sin telemetría. IA externa solo cuando el usuario la habilita.<br>Los proyectos se guardan en el navegador hasta exportarlos.</div><button class="action small" id="diagnosticBtn">Actualizar diagnósticos</button>';b.querySelector('#diagnosticBtn').onclick=refreshAll;}}
@@ -681,7 +716,7 @@ async function recoverAgentSession(silent=false){
   try{
     const list=await request('/api/agents/history');
     const recent=(list.recent||[]);
-    const picked=recent.find(x=>x.job_id===stored)||(!silent?recent[0]:null);
+    const picked=recent.find(x=>x.job_id===stored)||(stored?{job_id:stored}:null)||(!silent?recent[0]:null);
     if(!picked){if(!silent)toast('No hay sesiones guardadas en este servidor');return;}
     agentRunState.id=picked.job_id;agentRunState.last=0;
     agentRunState.lastLang=state.lang;
@@ -694,6 +729,7 @@ async function recoverAgentSession(silent=false){
     for(const e of r.events)appendAgentEvent(e);
     updateAgentStages(r);
     agentRunState.lastData=r;
+    RobotActivity.report('agent','Agente CLI',{...r,evidenceVerified:Boolean(r.response||r.events?.length||r.diff)});
     agentRunState.lastLang=r.file_name==='main.py'?'py':'cpp';
     agentSetWorking(r.active);
     $('#execStatus').textContent=`Sesión recuperada: ${r.provider} · ${r.mode} · ${r.elapsed}s`;
@@ -792,6 +828,7 @@ async function pollAgent(){
   if(!agentRunState.id)return;
   try{
     const r=await request('/api/agents/poll?id='+encodeURIComponent(agentRunState.id)+'&since='+agentRunState.last);
+    RobotActivity.report('agent','Agente CLI',{...r,evidenceVerified:Boolean(r.response||r.events?.length||r.diff)});
     agentRunState.last=r.last_id;
     for(const e of r.events)appendAgentEvent(e);
     updateAgentStages(r);
@@ -804,6 +841,7 @@ async function pollAgent(){
     showAgentResult(r);
     toast(reportAgentOutcome(r));
   }catch(e){
+    RobotActivity.lost('agent','Agente CLI',e.message);
     $('#execStatus').textContent='No se pudo consultar el agente: '+e.message;
     // A transient connection error must not erase the job ID: allow recovery.
     agentSetWorking(false);agentRunState.id=null;
@@ -823,6 +861,7 @@ $('#execRun').onclick=async()=>{
   state.files[state.lang]=$('#code').value;
   save(); // No perder los cambios pendientes si se cierra la pestaña durante Codex.
   agentSetWorking(true);resetAgentStages();switchPane('console');
+  RobotActivity.begin('agent','Agente CLI');
   $('#execStatus').textContent='Preparando copia de proyecto y arrancando CLI real…';
   try{
     const r=await request('/api/agents/start',{
@@ -833,7 +872,7 @@ $('#execRun').onclick=async()=>{
     rememberAgent(r.job_id);$('#agentResumeMessage').textContent='Trabajo iniciado. Puedes recuperar esta sesión si cierras la pestaña.';
     showLog('console',`[Agente] Iniciada sesión ${provider}; modo ${mode}; workspace ${r.workspace}`,'cmd');
     pollAgent();
-  }catch(e){agentSetWorking(false);$('#execStatus').textContent=e.message;toast(e.message)}
+  }catch(e){RobotActivity.lost('agent','Agente CLI',e.message);agentSetWorking(false);$('#execStatus').textContent=e.message;toast(e.message)}
 };
 $('#execStop').onclick=async()=>{
   if(!agentRunState.id)return;
@@ -843,5 +882,5 @@ $('#execStop').onclick=async()=>{
 // Prefill agent task from the project wizard or chat without starting actions.
 $('#execTask').addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){$('#execRun').click()}});
 
-function init(){setTimeout(()=>recoverAgentSession(true),1000);setLang(state.lang);updateHardwareLabVisibility();renderSidebar();showLog('console','AB MakerIDE v0.9.7 SUPER · by MS Robotika','good');showLog('console','Modo de prueba: compilación/subida reales cuando estén las herramientas y la placa.','note');showLog('console','La simulación no ejecuta firmware. Codex puede grabar con tu permiso: exige evidencia real.','note');refreshAll();save();scheduleAdvisor();if(innerWidth<=520){$('#sidebar').classList.add('mobileclosed');$$('.rail button').forEach(b=>b.addEventListener('click',()=>$('#sidebar').classList.toggle('mobileclosed')))}}init();initAi();
+function init(){setTimeout(()=>{recoverAgentSession(true);recoverBuild()},1000);setLang(state.lang);updateHardwareLabVisibility();renderSidebar();showLog('console','AB MakerIDE v1.0.0-rc.1 SUPER · by MS Robotika','good');showLog('console','Modo de prueba: compilación/subida reales cuando estén las herramientas y la placa.','note');showLog('console','La simulación no ejecuta firmware. Codex puede grabar con tu permiso: exige evidencia real.','note');refreshAll();save();scheduleAdvisor();if(innerWidth<=520){$('#sidebar').classList.add('mobileclosed');$$('.rail button').forEach(b=>b.addEventListener('click',()=>$('#sidebar').classList.toggle('mobileclosed')))}}init();initAi();
 })();

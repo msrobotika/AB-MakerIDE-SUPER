@@ -1,0 +1,750 @@
+{
+  "server": "http://127.0.0.1:8770",
+  "checks": [
+    {
+      "name": "real server version",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "robot idle neutral",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "real installed catalog available",
+      "passed": true,
+      "detail": 433
+    },
+    {
+      "name": "CH340 COM4 has no invented model",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "compile and board controls visible",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "editor is primary area",
+      "passed": true,
+      "detail": {
+        "x": 254,
+        "y": 160,
+        "width": 1186,
+        "height": 635
+      }
+    },
+    {
+      "name": "real catalog first page has 40 entries",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "real catalog pagination",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "real compile output zero",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "real backend compile evidence",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "real compile bound to source hash",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "success message is not styled as error",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "editing invalidates previous green",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "reload source preserved",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "reload same build recovered",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "restart refreshes expired CSRF token without losing project",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "server restart completed build recovered",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "real compile failure nonzero",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "controlled interrupted build never green",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "catalog failure never false zero",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "scan network failure visible and preserves model",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "model independent of USB suggestion",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manual model survives port choice",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "CP210x identified only as converter",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "controlled upload failure red",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "controlled agent completion explicitly limits scope",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "concurrent task remains amber",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "cancelled agent exit zero neutral",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "agent network failure red",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "agent reference preserved after network failure",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "pagehide preserves pending editor change",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobile controls visible",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "mobile no horizontal page overflow",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "reduced motion disables robot pulse",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "cross tab prevents overwrite",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "cross tab editor copy retained",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "browser process restart source recovered",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "damaged legacy storage never overwritten",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "damaged storage recovery pause visible",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "no uncaught browser errors",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "no unexpected console errors",
+      "passed": true,
+      "detail": []
+    }
+  ],
+  "console_errors": [
+    "Failed to load resource: the server responded with a status of 403 (Forbidden)",
+    "Failed to load resource: net::ERR_FAILED",
+    "Failed to load resource: net::ERR_FAILED"
+  ],
+  "page_errors": [],
+  "expected_network_errors": [
+    "Failed to load resource: the server responded with a status of 403 (Forbidden)",
+    "Failed to load resource: net::ERR_FAILED",
+    "Failed to load resource: net::ERR_FAILED"
+  ],
+  "requests": [
+    {
+      "path": "/api/advisor/check",
+      "action": null
+    },
+    {
+      "path": "/api/jobs/start",
+      "action": "compile"
+    },
+    {
+      "path": "/api/advisor/check",
+      "action": null
+    },
+    {
+      "path": "/api/advisor/check",
+      "action": null
+    },
+    {
+      "path": "/api/jobs/start",
+      "action": "compile"
+    },
+    {
+      "path": "/api/jobs/start",
+      "action": "compile"
+    },
+    {
+      "path": "/api/advisor/check",
+      "action": null
+    },
+    {
+      "path": "/api/jobs/start",
+      "action": "compile"
+    },
+    {
+      "path": "/api/advisor/check",
+      "action": null
+    },
+    {
+      "path": "/api/advisor/check",
+      "action": null
+    },
+    {
+      "path": "/api/advisor/check",
+      "action": null
+    },
+    {
+      "path": "/api/advisor/check",
+      "action": null
+    },
+    {
+      "path": "/api/advisor/check",
+      "action": null
+    },
+    {
+      "path": "/api/advisor/check",
+      "action": null
+    },
+    {
+      "path": "/api/advisor/check",
+      "action": null
+    },
+    {
+      "path": "/api/advisor/check",
+      "action": null
+    },
+    {
+      "path": "/api/advisor/check",
+      "action": null
+    }
+  ],
+  "real": {
+    "health": {
+      "ok": true,
+      "name": "AB MakerIDE · MS Robotika",
+      "version": "1.0.0-rc.1",
+      "mode": "local-real"
+    },
+    "boards": {
+      "ok": true,
+      "ports": [
+        {
+          "port": "COM4",
+          "name": "USB-SERIAL CH340 (COM4)",
+          "vid": "1A86",
+          "pid": "7523",
+          "boards": [],
+          "serial_number": ""
+        },
+        {
+          "port": "COM6",
+          "name": "USB-SERIAL CH340 (COM6)",
+          "vid": "1A86",
+          "pid": "7523",
+          "boards": [],
+          "serial_number": ""
+        }
+      ],
+      "scan_ok": true,
+      "scan_errors": [],
+      "choices": [
+        {
+          "fqbn": "esp32:esp32:esp32p4_4ds_mipi",
+          "name": "4D Systems ESP32-P4 MIPI Displays",
+          "platform": ""
+        },
+        {
+          "fqbn": "esp32:esp32:esp32p4_4ds_mipi_round",
+          "name": "4D Systems ESP32-P4 Round MIPI Displays",
+          "platform": ""
+        },
+        {
+          "fqbn": "esp32:esp32:gen4-ESP32-S3R8n16",
+          "name": "4D Systems gen4-ESP32 Modules (ESP32-S3)",
+          "platform": ""
+        },
+        {
+          "fqbn": "arduino:avr:circuitplay32u4cat",
+          "name": "Adafruit Circuit Playground",
+          "platform": ""
+        },
+        {
+          "fqbn": "esp32:esp32:featheresp32",
+          "name": "Adafruit ESP32 Feather",
+          "platform": ""
+        },
+        {
+          "fqbn": "esp32:esp32:adafruit_feather_esp32_v2",
+          "name": "Adafruit Feather ESP32 V2",
+          "platform": ""
+        },
+        {
+          "fqbn": "esp32:esp32:adafruit_feather_esp32c6",
+          "name": "Adafruit Feather ESP32-C6",
+          "platform": ""
+        },
+        {
+          "fqbn": "esp32:esp32:adafruit_feather_esp32s2",
+          "name": "Adafruit Feather ESP32-S2",
+          "platform": ""
+        },
+        {
+          "fqbn": "esp32:esp32:adafruit_feather_esp32s2_reversetft",
+          "name": "Adafruit Feather ESP32-S2 Reverse TFT",
+          "platform": ""
+        },
+        {
+          "fqbn": "esp32:esp32:adafruit_feather_esp32s2_tft",
+          "name": "Adafruit Feather ESP32-S2 TFT",
+          "platform": ""
+        },
+        {
+          "fqbn": "esp32:esp32:adafruit_feather_esp32s3",
+          "name": "Adafruit Feather ESP32-S3 2MB PSRAM",
+          "platform": ""
+        },
+        {
+          "fqbn": "esp32:esp32:adafruit_feather_esp32s3_nopsram",
+          "name": "Adafruit Feather ESP32-S3 No PSRAM",
+          "platform": ""
+        },
+        {
+          "fqbn": "esp32:esp32:adafruit_feather_esp32s3_reversetft",
+          "name": "Adafruit Feather ESP32-S3 Reverse TFT",
+          "platform": ""
+        },
+        {
+          "fqbn": "esp32:esp32:adafruit_feather_esp32s3_tft",
+          "name": "Adafruit Feather ESP32-S3 TFT",
+          "platform": ""
+        },
+        {
+          "fqbn": "esp32:esp32:adafruit_funhouse_esp32s2",
+          "name": "Adafruit FunHouse",
+          "platform": ""
+        },
+        {
+          "fqbn": "esp32:esp32:adafruit_itsybitsy_esp32",
+          "name": "Adafruit ItsyBitsy ESP32",
+          "platform": ""
+        },
+        {
+          "fqbn": "esp32:esp32:adafruit_magtag29_esp32s2",
+          "name": "Adafruit MagTag 2.9\"",
+          "platform": ""
+        },
+        {
+          "fqbn": "esp32:esp32:adafruit_matrixportal_esp32s3",
+          "name": "Adafruit MatrixPortal ESP32-S3",
+          "platform": ""
+        },
+        {
+          "fqbn": "esp32:esp32:adafruit_metro_esp32s2",
+          "name": "Adafruit Metro ESP32-S2",
+          "platform": ""
+        },
+        {
+          "fqbn": "esp32:esp32:adafruit_metro_esp32s3",
+          "name": "Adafruit Metro ESP32-S3",
+          "platform": ""
+        },
+        {
+          "fqbn": "esp32:esp32:adafruit_camera_esp32s3",
+          "name": "Adafruit pyCamera S3",
+          "platform": ""
+        },
+        {
+          "fqbn": "esp32:esp32:adafruit_qtpy_esp32_pico",
+          "name": "Adafruit QT Py ESP32",
+          "platform": ""
+        },
+        {
+          "fqbn": "esp32:esp32:adafruit_qtpy_esp32c3",
+          "name": "Adafruit QT Py ESP32-C3",
+          "platform": ""
+        },
+        {
+          "fqbn": "esp32:esp32:adafruit_qtpy_esp32s2",
+          "name": "Adafruit QT Py ESP32-S2",
+          "platform": ""
+        },
+        {
+          "fqbn": "esp32:esp32:adafruit_qtpy_esp32s3_n4r2",
+          "name": "Adafruit QT Py ESP32-S3 (4M Flash 2M PSRAM)",
+          "platform": ""
+        },
+        {
+          "fqbn": "esp32:esp32:adafruit_qtpy_esp32s3_nopsram",
+          "name": "Adafruit QT Py ESP32-S3 No PSRAM",
+          "platform": ""
+        },
+        {
+          "fqbn": "esp32:esp32:adafruit_qualia_s3_rgb666",
+          "name": "Adafruit Qualia ESP32-S3 RGB666",
+          "platform": ""
+        },
+        {
+          "fqbn": "esp32:esp32:sparklemotion",
+          "name": "Adafruit Sparkle Motion (ESP32)",
+          "platform": ""
+        },
+        {
+          "fqbn": "esp32:esp32:sparklemotionmini",
+          "name": "Adafruit Sparkle Motion Mini (ESP32)",
+          "platform": ""
+        },
+        {
+          "fqbn": "esp32:esp32:sparklemotionstick",
+          "name": "Adafruit Sparkle Motion Stick (ESP32)",
+          "platform": ""
+        },
+        {
+          "fqbn": "esp32:esp32:esp32cam",
+          "name": "AI Thinker ESP32-CAM",
+          "platform": ""
+        },
+        {
+          "fqbn": "esp32:esp32:AirM2M_CORE_ESP32C3",
+          "name": "AirM2M_CORE_ESP32C3",
+          "platform": ""
+        },
+        {
+          "fqbn": "esp32:esp32:alfredo-nou3",
+          "name": "Alfredo NoU3",
+          "platform": ""
+        },
+        {
+          "fqbn": "esp32:esp32:alksesp32",
+          "name": "ALKS ESP32",
+          "platform": ""
+        },
+        {
+          "fqbn": "esp32:esp32:amyboard",
+          "name": "AMYboard",
+          "platform": ""
+        },
+        {
+          "fqbn": "arduino:avr:bt",
+          "name": "Arduino BT",
+          "platform": ""
+        },
+        {
+          "fqbn": "arduino:avr:diecimila",
+          "name": "Arduino Duemilanove or Diecimila",
+          "platform": ""
+        },
+        {
+          "fqbn": "arduino:avr:esplora",
+          "name": "Arduino Esplora",
+          "platform": ""
+        },
+        {
+          "fqbn": "arduino:avr:ethernet",
+          "name": "Arduino Ethernet",
+          "platform": ""
+        },
+        {
+          "fqbn": "arduino:avr:fio",
+          "name": "Arduino Fio",
+          "platform": ""
+        },
+        {
+          "fqbn": "arduino:avr:gemma",
+          "name": "Arduino Gemma",
+          "platform": ""
+        },
+        {
+          "fqbn": "arduino:avr:chiwawa",
+          "name": "Arduino Industrial 101",
+          "platform": ""
+        },
+        {
+          "fqbn": "arduino:avr:leonardo",
+          "name": "Arduino Leonardo",
+          "platform": ""
+        },
+        {
+          "fqbn": "arduino:avr:leonardoeth",
+          "name": "Arduino Leonardo ETH",
+          "platform": ""
+        },
+        {
+          "fqbn": "arduino:avr:megaADK",
+          "name": "Arduino Mega ADK",
+          "platform": ""
+        },
+        {
+          "fqbn": "arduino:avr:mega",
+          "name": "Arduino Mega or Mega 2560",
+          "platform": ""
+        },
+        {
+          "fqbn": "arduino:avr:micro",
+          "name": "Arduino Micro",
+          "platform": ""
+        },
+        {
+          "fqbn": "arduino:avr:mini",
+          "name": "Arduino Mini",
+          "platform": ""
+        },
+        {
+          "fqbn": "arduino:avr:nano",
+          "name": "Arduino Nano",
+          "platform": ""
+        },
+        {
+          "fqbn": "esp32:esp32:nano_nora",
+          "name": "Arduino Nano ESP32",
+          "platform": ""
+        },
+        {
+          "fqbn": "esp32:esp32:arduino_nesso_n1",
+          "name": "Arduino Nesso N1",
+          "platform": ""
+        },
+        {
+          "fqbn": "arduino:avr:atmegang",
+          "name": "Arduino NG or older",
+          "platform": ""
+        },
+        {
+          "fqbn": "arduino:avr:pro",
+          "name": "Arduino Pro or Pro Mini",
+          "platform": ""
+        },
+        {
+          "fqbn": "arduino:avr:robotControl",
+          "name": "Arduino Robot Control",
+          "platform": ""
+        },
+        {
+          "fqbn": "arduino:avr:robotMotor",
+          "name": "Arduino Robot Motor",
+          "platform": ""
+        },
+        {
+          "fqbn": "arduino:avr:uno",
+          "name": "Arduino UNO",
+          "platform": ""
+        },
+        {
+          "fqbn": "arduino:avr:unomini",
+          "name": "Arduino UNO Mini",
+          "platform": ""
+        },
+        {
+          "fqbn": "arduino:avr:unowifi",
+          "name": "Arduino UNO WiFi",
+          "platform": ""
+        },
+        {
+          "fqbn": "arduino:avr:yun",
+          "name": "Arduino Yún",
+          "platform": ""
+        },
+        {
+          "fqbn": "arduino:avr:yunmini",
+          "name": "Arduino Yún Mini",
+          "platform": ""
+        }
+      ],
+      "catalog_ok": true,
+      "catalog_error": "",
+      "catalog_source": "arduino-cli board listall",
+      "catalog_warning": "",
+      "catalog_count": 433,
+      "catalog_paged": true
+    },
+    "compile_console": "AB MakerIDE v1.0.0-rc.1 SUPER · by MS Robotika\nModo de prueba: compilación/subida reales cuando estén las herramientas y la placa.\nLa simulación no ejecuta firmware. Codex puede grabar con tu permiso: exige evidencia real.\nHerramientas: Arduino CLI OK · mpremote OK · pyserial OK\n──── COMPILACIÓN REAL · arduino:avr:uno ────\nCompilación real iniciada · porcentaje no disponible\nEjecutando: C:\\Program Files\\Arduino CLI\\arduino-cli.exe compile --fqbn arduino:avr:uno …\nSketch uses 590 bytes (1%) of program storage space. Maximum is 32256 bytes.\nGlobal variables use 9 bytes (0%) of dynamic memory, leaving 2039 bytes for local variables. Maximum is 2048 bytes.\nCompilación finalizada sin errores.\n✓ Operación finalizada correctamente por Arduino CLI.\n✓ Herramienta real finalizó correctamente",
+    "compile_id": "3e67bf04d57d48e8b665f50f5dd3c08f",
+    "compile_result": {
+      "ok": true,
+      "id": "3e67bf04d57d48e8b665f50f5dd3c08f",
+      "action": "compile",
+      "active": false,
+      "source_sha256": "97153c39784c2f766edbcff7c9d9164ca076bdd53cc26aeaab34b1d2bd019ce2",
+      "fqbn": "arduino:avr:uno",
+      "success": true,
+      "cancelled": false,
+      "stage": "completado",
+      "progress": null,
+      "elapsed": 10.4,
+      "error": "",
+      "exit_code": 0,
+      "upload_speed": null,
+      "attempted_speeds": [],
+      "diagnosis": "",
+      "lines": [
+        {
+          "id": 1,
+          "text": "Compilación real iniciada · porcentaje no disponible"
+        },
+        {
+          "id": 2,
+          "text": "Ejecutando: C:\\Program Files\\Arduino CLI\\arduino-cli.exe compile --fqbn arduino:avr:uno …"
+        },
+        {
+          "id": 3,
+          "text": "Sketch uses 590 bytes (1%) of program storage space. Maximum is 32256 bytes."
+        },
+        {
+          "id": 4,
+          "text": "Global variables use 9 bytes (0%) of dynamic memory, leaving 2039 bytes for local variables. Maximum is 2048 bytes."
+        },
+        {
+          "id": 5,
+          "text": "Compilación finalizada sin errores."
+        },
+        {
+          "id": 6,
+          "text": "✓ Operación finalizada correctamente por Arduino CLI."
+        }
+      ],
+      "last_id": 6
+    },
+    "failed_compile_result": {
+      "ok": true,
+      "id": "988de81753a346b9b7f0c31d526aeb84",
+      "action": "compile",
+      "active": false,
+      "source_sha256": "1c2cca80a2410b00e92baaabc285862a6984f1a39bc46927d6cf92b9e8a2084b",
+      "fqbn": "arduino:avr:uno",
+      "success": false,
+      "cancelled": false,
+      "stage": "error",
+      "progress": null,
+      "elapsed": 9.3,
+      "error": "El compilador devolvió un error. Revisa la consola.",
+      "exit_code": 1,
+      "upload_speed": null,
+      "attempted_speeds": [],
+      "diagnosis": "",
+      "lines": [
+        {
+          "id": 1,
+          "text": "Compilación real iniciada · porcentaje no disponible"
+        },
+        {
+          "id": 2,
+          "text": "Ejecutando: C:\\Program Files\\Arduino CLI\\arduino-cli.exe compile --fqbn arduino:avr:uno …"
+        },
+        {
+          "id": 3,
+          "text": "C:\\Users\\abeli\\AppData\\Local\\Temp\\ab-makeride-iqrdpn69\\sketch\\sketch.ino: In function 'void setup()':"
+        },
+        {
+          "id": 4,
+          "text": "C:\\Users\\abeli\\AppData\\Local\\Temp\\ab-makeride-iqrdpn69\\sketch\\sketch.ino:1:15: error: 'deliberate_rc1_compile_error' was not declared in this scope"
+        },
+        {
+          "id": 5,
+          "text": " void setup(){ deliberate_rc1_compile_error; }"
+        },
+        {
+          "id": 6,
+          "text": "               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+        },
+        {
+          "id": 7,
+          "text": "Used platform Version Path"
+        },
+        {
+          "id": 8,
+          "text": "arduino:avr   1.8.8   C:\\Users\\abeli\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.8.8"
+        },
+        {
+          "id": 9,
+          "text": "Error during build: exit status 1"
+        },
+        {
+          "id": 10,
+          "text": "✕ Operación fallida. No se confirma grabación."
+        }
+      ],
+      "last_id": 10
+    }
+  },
+  "controlled": [
+    "Interrupted build journal inserted in isolated server data; no hardware operation interrupted.",
+    "Upload start/status intercepted entirely by Playwright; no server upload request.",
+    "Agent API fulfilled/aborted by Playwright. Concurrent and cancelled status reducer also exercised in DOM."
+  ],
+  "unexpected_console_errors": [],
+  "passed": true
+}

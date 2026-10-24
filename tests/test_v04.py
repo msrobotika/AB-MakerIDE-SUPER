@@ -96,6 +96,7 @@ class TerminalAPI(unittest.TestCase):
             st,d=self.call('/api/terminal/command',{'action':bad})
             self.assertEqual(st,400);self.assertFalse(d['ok'])
     def test_installer_requires_confirm_and_allowlist(self):
+        self.enterContext(patch.object(srv, '_cli_json', return_value={'ok':False,'data':None,'error':'controlled index unavailable'}))
         for data in ({'core':'esp32:esp32'}, {'core':'evil:evil','confirm':True}):
             st,d=self.call('/api/terminal/install-core',data)
             self.assertEqual(st,400)

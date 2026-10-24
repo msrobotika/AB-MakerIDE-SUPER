@@ -7,6 +7,11 @@ import server
 
 
 class CatalogTests(unittest.TestCase):
+    def setUp(self):
+        from types import SimpleNamespace
+        self.enterContext(patch.dict("sys.modules", {"serial.tools": SimpleNamespace(list_ports=SimpleNamespace(comports=lambda: []))}))
+        self.enterContext(patch.object(server.sys, "platform", "linux"))
+
     def tearDown(self):
         server.CATALOG_CACHE.update(until=0., result=None)
 
@@ -47,7 +52,7 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(cli.call_count,1)
 
     def test_no_static_fallback_on_missing_cli(self):
-        with patch.object(server,'_cli_json',return_value={'ok':False,'data':None,'error':'missing'}):
+        with patch.object(server,'_boards_from_installed_cores',return_value=[]), patch.object(server,'_cli_json',return_value={'ok':False,'data':None,'error':'missing'}):
             r=server.board_catalog(refresh=True)
         self.assertFalse(r['ok'])
         self.assertEqual(r['boards'],[])

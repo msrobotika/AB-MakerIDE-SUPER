@@ -81,13 +81,12 @@ def agent_command(provider: str, mode: str, executable: str, workspace: Path) ->
     if provider not in PROVIDERS or mode not in MODES:
         raise ValueError('Proveedor o nivel de acceso inválido.')
     if provider == 'codex':
-        base = [executable, 'exec', '--ephemeral', '--skip-git-repo-check',
+        base = [executable, *([] if mode == 'total' else ['--ask-for-approval', 'never']), 'exec', '--ephemeral', '--skip-git-repo-check',
                 '-C', str(workspace), '--color', 'never']
         if mode == 'total':
             base.append('--dangerously-bypass-approvals-and-sandbox')
         else:
-            base += ['--sandbox', 'read-only' if mode == 'consultar' else 'workspace-write',
-                     '--ask-for-approval', 'never']
+            base += ['--sandbox', 'read-only' if mode == 'consultar' else 'workspace-write']
         return [*base, '-']
     base = [executable, '-p', '--output-format', 'json', '--max-turns', '15']
     if mode == 'consultar':
@@ -142,6 +141,7 @@ class AgentJob:
     started: float = field(default_factory=time.monotonic)
     active: bool = True
     success: bool | None = None
+    exit_code: int | None = None
     cancelled: bool = False
     error: str = ''
     result: str = ''
@@ -185,6 +185,7 @@ class AgentJob:
                 'ok': True, 'job_id': self.id, 'provider': self.provider,
                 'mode': self.mode, 'active': self.active, 'success': self.success,
                 'cancelled': self.cancelled, 'error': self.error,
+                'exit_code': self.exit_code,
                 'elapsed': round(time.monotonic() - self.started, 1),
                 'response': self.result if not self.active else '',
                 'diff': self.diff if not self.active else '',
@@ -230,6 +231,7 @@ class AgentJob:
                 'elapsed': round(time.monotonic() - self.started, 1),
                 'finished_wall': self.finished_wall,
                 'active': self.active, 'success': self.success,
+                'exit_code': self.exit_code,
                 'cancelled': self.cancelled, 'interrupted': self.interrupted,
                 'error': redact_log(self.error)[:2000],
                 'result': redact_log(self.result)[:MAX_OUTPUT],
@@ -277,6 +279,7 @@ def restore_journal(workspace: Path) -> AgentJob | None:
                        workspace=workspace, file_name=name, before=before,
                        started=time.monotonic() - elapsed,
                        active=False, success=data.get('success') is True,
+                       exit_code=data.get('exit_code') if type(data.get('exit_code')) is int else None,
                        cancelled=data.get('cancelled') is True,
                        error=redact_log(str(data.get('error','')))[:2000],
                        result=redact_log(str(data.get('result','')))[:MAX_OUTPUT],
@@ -296,7 +299,7 @@ def restore_journal(workspace: Path) -> AgentJob | None:
             job.error = 'El servidor se cerró durante la tarea. Estado del hardware DESCONOCIDO: consulta la placa y el registro antes de repetir una grabación.'
             job.seq += 1
             job.events.append({'id':job.seq,'text':job.error,'kind':'warning'})
-            job.persist()
+            # Reading old sessions must never rewrite the user's original files.
         else:
             job.interrupted = data.get('interrupted') is True
         modified = _safe_workspace_file(workspace,name)
@@ -348,7 +351,7 @@ def recover_legacy_workspace(workspace: Path) -> AgentJob | None:
 
 class AgentJobManager:
     def __init__(self, workspace_root: Path | None = None):
-        self.root = workspace_root or (Path.home() / 'Documents' / 'AB MakerIDE' / 'AgentWorkspaces')
+        self.root = workspace_root or (Path(os.environ.get('AB_MAKERIDE_DATA_DIR', Path.home() / 'Documents' / 'AB MakerIDE')) / 'AgentWorkspaces')
         self._lock = threading.Lock()
         self._current: AgentJob | None = None
         self._recover_latest()
@@ -524,12 +527,13 @@ class AgentJobManager:
                     break
                 time.sleep(.12)
             process.wait(timeout=12)
+            job.exit_code = process.returncode
             for t in threads:
                 t.join(timeout=3)
             if job.cancelled:
                 job.error = 'Ejecución cancelada.'
                 return
-            if process.returncode:
+            if process.returncode or job.error:
                 job.error = f'La CLI {job.provider} terminó con código {process.returncode}. Revisa su sesión o permisos.'
                 job.emit(job.error)
                 return
