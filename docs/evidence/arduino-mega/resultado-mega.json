@@ -1,0 +1,46 @@
+{
+  "port": "COM8",
+  "profile": "arduino:avr:mega:cpu=atmega2560",
+  "signature": "0x1e,0x98,0x1",
+  "authorization": "Sí, cargar y probar el Mega en COM8; autorización directa del usuario.",
+  "source_sha256": "58729be6965bd41288e51595fe83bdc0cdb05a77e0a6ff05bb5366a1e0731965",
+  "hex_sha256": "4c661853e947d56451f1a907e097a86b2b9a9c3a79c952e2024215138c2d724a",
+  "upload_performed": true,
+  "verify_passed": true,
+  "runtime_test_passed": true,
+  "eeprom_unchanged_verified": true,
+  "steps": {
+    "01-identidad-y-contenido-previo": 0,
+    "02-grabacion": 0,
+    "03-verificacion-independiente": 0
+  },
+  "samples": [
+    {
+      "sample": 1,
+      "arithmetic_ok": true,
+      "millis": 1000
+    },
+    {
+      "sample": 2,
+      "arithmetic_ok": true,
+      "millis": 1500
+    },
+    {
+      "sample": 3,
+      "arithmetic_ok": true,
+      "millis": 2000
+    },
+    {
+      "sample": 4,
+      "arithmetic_ok": true,
+      "millis": 2501
+    },
+    {
+      "sample": 5,
+      "arithmetic_ok": true,
+      "millis": 3002
+    }
+  ],
+  "diagnostic_persisted_to_flash": true,
+  "scope": "Carga por AVRDUDE y prueba real por pyserial. Cinco muestras por serie; no valida GPIO, sensores ni todos los periféricos. El diagnóstico se repetirá al reiniciar."
+}

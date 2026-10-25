@@ -1,0 +1,12 @@
+
+Processing -U flash:v:MegaDiagnostico.ino.hex:i
+Verifying 2580 bytes of flash against input file MegaDiagnostico.ino.hex
+Reading | ################################################## | 100% 0.36s
+2580 bytes of flash verified
+
+Processing -U eeprom:v:Respaldo-previo-Mega/eeprom-antes.bin:r
+Verifying 4096 bytes of eeprom against input file eeprom-antes.bin
+Reading | ################################################## | 100% 4.20s
+4096 bytes of eeprom verified
+
+Avrdude done.  Thank you.

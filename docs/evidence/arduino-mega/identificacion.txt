@@ -1,0 +1,23 @@
+Avrdude version 8.0-arduino.1
+Copyright see https://github.com/avrdudes/avrdude/blob/main/AUTHORS
+
+System wide configuration file is <ARDUINO15>\packages\arduino\tools\avrdude\8.0.0-arduino1\etc\avrdude.conf
+
+Using port            : COM8
+Using programmer      : wiring
+Setting baud rate     : 115200
+AVR part              : ATmega2560
+Programming modes     : SPM, ISP, HVPP, JTAG
+Programmer type       : Wiring
+Description           : Wiring bootloader using STK500 v2 protocol
+Programmer model      : AVRISP
+HW version            : 15
+FW Version Controller : 2.10
+SCK period            : 0.1 us
+
+AVR device initialized and ready to accept instructions
+Device signature = 1E 98 01 (ATmega2560)
+Reading signature memory ...
+Writing 3 bytes to output file signature.txt
+
+Avrdude done.  Thank you.

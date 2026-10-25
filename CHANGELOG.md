@@ -1,5 +1,11 @@
 # Cambios
 
+## 1.0.0-rc.1 · Mega ATmega2560 · 25 octubre 2026
+
+- Mega reconocido en COM8 y firma ATmega2560 leída por el cargador wiring.
+- Copia previa de 256 KB de flash y 4 KB de EEPROM, carga autorizada y verificación independiente. EEPROM conservada.
+- Cinco muestras reales por serie correctas; ejemplo, proyecto importable, registros y matriz actualizados. Sin pruebas de GPIO externos ni otros periféricos.
+
 ## 1.0.0-rc.1 · Nano ATmega328P · 25 octubre 2026
 
 - Firma real por cargador serie y perfil Nano antiguo confirmado a 57600 baudios; CH340 no se interpreta como identificación del modelo.

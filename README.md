@@ -4,7 +4,7 @@
 
 AB MakerIDE reúne Arduino C++, MicroPython, herramientas de placa y agentes opcionales en una interfaz en español. Puedes ver el código que crea el agente, conservarlo, compilarlo y comprobar cada etapa de la tarea. Proyecto de **MS Robotika**, con [licencia MIT](LICENSE).
 
-**Estado: 1.0.0-rc.1, candidato de lanzamiento.** Validado localmente en Windows, con pruebas físicas de radar IdeaSpark, ESP32-CAM, WROOM con MicroPython y Nano documentadas en la [matriz de hardware](docs/MATRIZ_HARDWARE.md). Estas pruebas corresponden a esos dispositivos concretos; quedan por ampliar las placas, escenarios y sistemas operativos para declarar v1.0 estable.
+**Estado: 1.0.0-rc.1, candidato de lanzamiento.** Validado localmente en Windows, con pruebas físicas de radar IdeaSpark, ESP32-CAM, WROOM con MicroPython, Nano y Mega documentadas en la [matriz de hardware](docs/MATRIZ_HARDWARE.md). Estas pruebas corresponden a esos dispositivos concretos; quedan por ampliar las placas, escenarios y sistemas operativos para declarar v1.0 estable.
 
 [English overview](README.en.md) · [Guardar proyectos del agente](docs/PROYECTOS_DEL_AGENTE.md) · [Comparativa](docs/POSICIONAMIENTO_2026-10-25.md) · [Contribuir](CONTRIBUTING.md)
 
@@ -34,6 +34,9 @@ La **ESP32-CAM con sensor OV3660** pasó una prueba autorizada con respaldo prev
 La **ESP32-WROOM con MicroPython 1.29.0** pasó una prueba finita en RAM: cinco muestras de memoria, aritmética, JSON y temporización, además de lectura del sistema de archivos. Se resolvió antes un controlador CP2102 ausente y se instaló el firmware con autorización, respaldo completo y verificación. No se probaron GPIO ni red y no se guardó main.py. [Código y evidencias](docs/evidence/wroom-micropython/README.md).
 
 El **Arduino Nano ATmega328P con cargador antiguo** pasó una carga autorizada, con respaldo previo de flash y EEPROM y verificación independiente. Se observaron cinco muestras correctas por serie y la EEPROM siguió intacta. No se probaron GPIO ni periféricos externos. [Código y registros](docs/evidence/arduino-nano/README.md).
+
+El **Arduino Mega 2560** pasó una carga autorizada con copia previa de 256 KB de flash y 4 KB de EEPROM, verificación independiente y cinco muestras correctas por serie. La EEPROM se conservó. No se probaron GPIO externos ni otros periféricos. [Código y registros](docs/evidence/arduino-mega/README.md).
+
 
 
 La mejora de proyectos y cuaderno pasa **199 pruebas unitarias**, con otras 4 omitidas por falta de g++, y **37 comprobaciones de interfaz**. Las pruebas de interfaz del agente son controladas; no se presentan como ejecuciones de IA o grabaciones reales. [Resultados del cuaderno](docs/evidence/board-trials/README.md) y [pruebas previas de proyectos](docs/evidence/agent-projects/README.md).

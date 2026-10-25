@@ -29,3 +29,5 @@ Comandos de reproducción en el README principal. Usar siempre un nuevo director
 [ESP32-WROOM con MicroPython](wroom-micropython/README.md): controlador CP2102 reparado, firmware oficial instalado con autorización y respaldo, verificación independiente y diagnóstico finito en RAM terminado correctamente.
 
 [Arduino Nano ATmega328P](arduino-nano/README.md): cargador antiguo a 57600 baudios, copias previas, carga autorizada y verificada, EEPROM conservada y cinco muestras serie correctas.
+
+[Arduino Mega ATmega2560](arduino-mega/README.md): reconocido en COM8, copia previa, carga autorizada y verificada, EEPROM conservada y cinco muestras serie correctas.

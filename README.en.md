@@ -34,6 +34,9 @@ An ESP32-WROOM with a CP2102 bridge was backed up and flashed with official Micr
 
 An **ATmega328P Arduino Nano using the old-bootloader profile** passed an authorized upload with prior flash/EEPROM backup and independent verification. Five serial diagnostic samples passed and EEPROM contents remained unchanged. GPIO and external peripherals were not tested. [Exact code and logs](docs/evidence/arduino-nano/README.md).
 
+An **Arduino Mega 2560** passed an authorized upload with prior 256 KB flash and 4 KB EEPROM backups, independent verification and five successful serial diagnostic samples. EEPROM contents remained unchanged. External GPIO and other peripherals were not tested. [Exact code and logs](docs/evidence/arduino-mega/README.md).
+
+
 
 The latest local suite has 199 passing Python tests and 4 skipped due to missing g++; 37 targeted browser checks pass. Browser agent execution is stubbed and does not flash hardware. Cross-platform CI is prepared but has not run on GitHub. [Evidence](docs/evidence/board-trials/README.md).
 

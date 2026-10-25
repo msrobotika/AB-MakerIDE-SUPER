@@ -1,0 +1,12 @@
+{
+  "port": "COM8",
+  "reported_board": "Arduino Mega 2560",
+  "usb_vid_pid": "2341:0042",
+  "signature": "0x1e,0x98,0x1",
+  "chip": "ATmega2560",
+  "compatible_profile": "arduino:avr:mega:cpu=atmega2560",
+  "baud": 115200,
+  "protocol": "wiring",
+  "write_performed": false,
+  "scope": "USB reconocido por Arduino CLI y firma leída mediante el cargador. No acredita funcionamiento de GPIO o periféricos."
+}

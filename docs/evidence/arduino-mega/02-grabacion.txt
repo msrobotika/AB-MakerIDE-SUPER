@@ -1,0 +1,7 @@
+Reading 2580 bytes for flash from input file MegaDiagnostico.ino.hex
+Writing 2580 bytes to flash
+Writing | ################################################## | 100% 0.49s
+Reading | ################################################## | 100% 0.36s
+2580 bytes of flash verified
+
+Avrdude done.  Thank you.
