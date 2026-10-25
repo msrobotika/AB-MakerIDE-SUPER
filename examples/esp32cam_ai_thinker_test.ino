@@ -1,6 +1,7 @@
 /*
  * AB MakerIDE - MS Robotika
- * PRUEBA 03: ESP32-CAM AI-THINKER clasica (OV2640)
+ * PRUEBA 03: ESP32-CAM con pinout AI-THINKER clasico.
+ * El controlador identifica el sensor: probado con OV3660 (PID 0x3660).
  * Diagnostico de camara y capturas JPEG por monitor serie.
  * SIN Wi-Fi, SIN tarjeta SD, SIN activar LED flash.
  *
@@ -12,7 +13,7 @@
 #include <Arduino.h>
 #include "esp_camera.h"
 
-// Pinout AI-Thinker ESP32-CAM clasica, OV2640
+// Pinout AI-Thinker ESP32-CAM clasica; el sensor se detecta en ejecucion.
 #define CAM_PWDN   32
 #define CAM_RESET  -1
 #define CAM_XCLK    0
@@ -66,7 +67,7 @@ bool iniciarCamara() {
   esp_err_t resultado = esp_camera_init(&cfg);
   if (resultado != ESP_OK) {
     Serial.printf("ERROR CAMARA: esp_camera_init() = 0x%X\n", (unsigned)resultado);
-    Serial.println("Comprueba sensor OV2640, alimentacion y modelo exacto de placa.");
+    Serial.println("Comprueba sensor compatible, alimentacion y pinout AI-Thinker.");
     return false;
   }
   sensor_t *sensor = esp_camera_sensor_get();

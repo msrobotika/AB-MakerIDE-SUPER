@@ -1,7 +1,24 @@
-# ESP32-CAM: identificación y compilación reales
+# ESP32-CAM: prueba física autorizada
 
-El usuario conectó una ESP32-CAM y confirmó que es la clásica AI-Thinker, con cámara en cinta y microSD. En COM4 se leyó, con esptool 5.3.1 y --no-stub, ESP32-D0WD-V3 revisión 3.1, cristal de 40 MHz y 4 MB de flash. El conversor USB es CH340; por sí solo no identifica la placa. No se escribió firmware durante esa lectura. El log versionado omite la MAC.
+El usuario conectó la placa y confirmó el pinout clásico AI-Thinker. COM4 contiene un ESP32-D0WD-V3 revisión 3.1, cristal de 40 MHz y 4 MB de flash. El conversor CH340 no identifica por sí solo el modelo. La lectura inicial con esptool 5.3.1 --no-stub no escribió firmware.
 
-Se compiló [el diagnóstico de cámara](../../../examples/esp32cam_ai_thinker_test.ino) con el perfil esp32:esp32:esp32cam: salida 0, 372737 bytes de programa y 34108 bytes de RAM estática. Los pines se contrastaron con [el ejemplo oficial de Espressif](https://github.com/espressif/arduino-esp32/blob/master/libraries/ESP32/examples/Camera/CameraWebServer/camera_pins.h).
+## Respaldo, compilación y carga
 
-El diagnóstico está preparado para consultar sensor y PSRAM y obtener fotogramas JPEG en memoria, sin Wi-Fi, microSD ni LED flash. La compilación no comprueba el sensor ni la PSRAM física. En esta ficha inicial la grabación y la lectura del diagnóstico de cámara están pendientes de autorización expresa. estado.json recoge el alcance y hash exacto del sketch.
+Con la autorización «Sí, cargar y probar la cámara en COM4», se guardaron antes los 4194304 bytes de flash, comprobando que correspondían al dispositivo identificado. El hash del respaldo está en respaldo-metadata.json. El binario y el registro originales permanecen en la entrega privada del usuario y no se versionan.
+
+Se compiló con esp32:esp32:esp32cam: salida 0, 372737 bytes de programa y 34108 bytes de RAM estática. Se cargó a 115200 baudios con --verify: salida 0 y cuatro segmentos «Hash of data verified.». Después se leyó el diagnóstico durante 16 segundos a 115200 baudios, cerrando el puerto al terminar.
+
+## Resultado observado
+
+- PSRAM detectada por el firmware; esta prueba no mide su capacidad.
+- Sensor PID 0x3660, correspondiente a OV3660 según [sensor.h de Espressif](https://github.com/espressif/esp32-camera/blob/master/driver/include/sensor.h), también comprobado en los encabezados instalados del núcleo 3.3.12.
+- Cinco fotogramas reportados por el controlador JPEG, todos de 320x240: 2588, 3147, 3098, 3094 y 3093 bytes. Sin errores registrados; RAM libre declarada de 261 KB durante esas muestras.
+- Wi-Fi, microSD y LED flash no se utilizan. No se enviaron imágenes ni se visualizó o conservó el contenido de los JPEG. Esta prueba de inicialización y metadatos no evalúa enfoque, orientación ni calidad visual, ni sustituye una prueba prolongada.
+
+## Reproducción y alcance
+
+[ESP32CamDiagnostico-verificado.ino](ESP32CamDiagnostico-verificado.ino) conserva exactamente el código compilado y cargado, con SHA-256 en estado.json. El archivo .abmaker.json permite importarlo en el editor. Los logs versionados omiten la MAC y rutas del perfil local; estado.json conserva hashes de los registros originales completos.
+
+El ejemplo general del IDE conserva el mismo pinout y corrige la antigua suposición textual de OV2640: el controlador identifica el sensor en ejecución. El código exacto de esta prueba se conserva por separado para que esa corrección no cambie la evidencia. El [pinout oficial](https://github.com/espressif/arduino-esp32/blob/master/libraries/ESP32/examples/Camera/CameraWebServer/camera_pins.h) es la referencia del perfil.
+
+La carga se hizo directamente con Arduino CLI y la lectura con pyserial. No se presenta como una ejecución de los botones de la sesión del usuario ni como una nueva prueba de una cuenta de IA.

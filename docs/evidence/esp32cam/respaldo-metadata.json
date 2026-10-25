@@ -1,0 +1,9 @@
+{
+  "port": "COM4",
+  "chip": "ESP32-D0WD-V3 revision v3.1",
+  "flash_bytes": 4194304,
+  "backup_sha256": "6bfa027e83c3b5dcf897b6e4f76f6986389b9b269a0511acad74328d750435dc",
+  "read_exit_code": 0,
+  "same_device_as_identification": true,
+  "scope": "Copia local completa previa a la prueba autorizada. No publicar el binario ni su registro original."
+}

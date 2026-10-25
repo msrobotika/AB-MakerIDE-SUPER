@@ -510,7 +510,7 @@ $('#chatSend').onclick=()=>{const e=$('#chatInput'),s=e.value.trim();if(!s)retur
 async function loadDeviceExample(kind){
   const info={uno:{file:'uno_r3_diagnostico.ino',name:'Arduino Uno R3',fqbn:'arduino:avr:uno'},cam:{file:'esp32cam_ai_thinker_test.ino',name:'ESP32-CAM AI-Thinker (clásico)',fqbn:'esp32:esp32:esp32cam'},radar:{file:'ideaspark_114_radar.ino',name:'IdeaSpark ST7789 135×240 · radar',fqbn:'esp32:esp32:esp32'}}[kind];
   if(!info)return;
-  const advisory=kind==='cam'?'IMPORTANTE: el ejemplo exige AI-Thinker clásica OV2640; NO sirve para ESP32-S3-CAM ni otros pinouts. USB-C no identifica el chip.\n\n':'';
+  const advisory=kind==='cam'?'IMPORTANTE: el ejemplo exige el pinout AI-Thinker clásico; identifica el sensor al ejecutarse. Probado con OV3660. NO sirve para ESP32-S3-CAM ni otros pinouts. USB-C no identifica el chip.\n\n':'';
   if(!confirm(advisory+'¿Cargar '+info.name+'? Reemplazará sketch.ino y seleccionará su perfil de compilación. EXPORTA tu proyecto actual primero.'))return;
   try{
     const r=await fetch('/examples/'+info.file,{cache:'no-store'});

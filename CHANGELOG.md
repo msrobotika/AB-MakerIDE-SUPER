@@ -1,5 +1,12 @@
 # Cambios
 
+## 1.0.0-rc.1 · prueba física ESP32-CAM · 25 octubre 2026
+
+- Copia completa de 4 MB del firmware previo y carga autorizada con verificación de cuatro segmentos en COM4.
+- Diagnóstico real: ESP32-D0WD-V3 revisión 3.1, PSRAM detectada, sensor OV3660 PID 0x3660 y cinco buffers JPEG 320x240, sin errores durante 16 s de lectura.
+- Corrección del texto del ejemplo y aviso de cámara: el pinout AI-Thinker no determina que el sensor sea OV2640; se identifica en ejecución.
+- Código exacto probado, logs y hashes conservados; respaldo binario privado fuera del repositorio. Matriz de hardware con alcances y pendientes.
+
 ## 1.0.0-rc.1 · cuaderno de placas · 25 octubre 2026
 
 - Cuaderno local para guardar y exportar pruebas de varias placas, con resultados de herramienta y observaciones del usuario separados.

@@ -1,0 +1,49 @@
+{
+  "port": "COM4",
+  "baud": 115200,
+  "read_seconds": 16,
+  "sensor_pid_hex": "3660",
+  "psram_detected": true,
+  "jpeg_frames": [
+    {
+      "number": 1,
+      "width": 320,
+      "height": 240,
+      "bytes": 2588,
+      "free_heap_kb": 261
+    },
+    {
+      "number": 2,
+      "width": 320,
+      "height": 240,
+      "bytes": 3147,
+      "free_heap_kb": 261
+    },
+    {
+      "number": 3,
+      "width": 320,
+      "height": 240,
+      "bytes": 3098,
+      "free_heap_kb": 261
+    },
+    {
+      "number": 4,
+      "width": 320,
+      "height": 240,
+      "bytes": 3094,
+      "free_heap_kb": 261
+    },
+    {
+      "number": 5,
+      "width": 320,
+      "height": 240,
+      "bytes": 3093,
+      "free_heap_kb": 261
+    }
+  ],
+  "errors": [],
+  "camera_driver_produced_frames": true,
+  "image_visually_checked": false,
+  "images_transmitted": false,
+  "scope": "Diagnóstico serie y metadatos del controlador; no visualiza ni conserva el contenido de los JPEG."
+}

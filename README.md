@@ -4,7 +4,7 @@
 
 AB MakerIDE reúne Arduino C++, MicroPython, herramientas de placa y agentes opcionales en una interfaz en español. Puedes ver el código que crea el agente, conservarlo, compilarlo y comprobar cada etapa de la tarea. Proyecto de **MS Robotika**, con [licencia MIT](LICENSE).
 
-**Estado: 1.0.0-rc.1, candidato de lanzamiento.** Validado localmente en Windows. El radar IdeaSpark se compiló y grabó con verificación, y el usuario confirmó la imagen en su pantalla. Esta prueba corresponde a ese perfil concreto; sigue pendiente la matriz de hardware y sistemas operativos para declarar v1.0 estable.
+**Estado: 1.0.0-rc.1, candidato de lanzamiento.** Validado localmente en Windows, con pruebas físicas de radar IdeaSpark y cámara ESP32-CAM documentadas en la [matriz de hardware](docs/MATRIZ_HARDWARE.md). Estas pruebas corresponden a esos dispositivos concretos; quedan por ampliar las placas, escenarios y sistemas operativos para declarar v1.0 estable.
 
 [English overview](README.en.md) · [Guardar proyectos del agente](docs/PROYECTOS_DEL_AGENTE.md) · [Comparativa](docs/POSICIONAMIENTO_2026-10-25.md) · [Contribuir](CONTRIBUTING.md)
 
@@ -28,6 +28,8 @@ En **Herramientas → Pruebas de mis placas** puedes guardar el resultado de la 
 ## Demostración verificable
 
 El [radar IdeaSpark](examples/ideaspark_114_radar.ino) es un ejemplo de un solo archivo para ESP32 y pantalla ST7789. Se compiló y grabó en COM4 con autorización y verificación del grabador; el usuario confirmó que lo ve. Los cuatro ecos son **simulados**. [Registros y perfil exacto](docs/evidence/radar-ideaspark/README.md).
+
+La **ESP32-CAM con sensor OV3660** pasó una prueba autorizada con respaldo previo de 4 MB y grabación verificada. El diagnóstico detectó PSRAM y reportó cinco fotogramas JPEG de 320x240 sin errores durante 16 segundos. No se transmitieron imágenes ni se evaluó su aspecto visual. [Código exacto y registros](docs/evidence/esp32cam/README.md).
 
 La mejora de proyectos y cuaderno pasa **199 pruebas unitarias**, con otras 4 omitidas por falta de g++, y **37 comprobaciones de interfaz**. Las pruebas de interfaz del agente son controladas; no se presentan como ejecuciones de IA o grabaciones reales. [Resultados del cuaderno](docs/evidence/board-trials/README.md) y [pruebas previas de proyectos](docs/evidence/agent-projects/README.md).
 

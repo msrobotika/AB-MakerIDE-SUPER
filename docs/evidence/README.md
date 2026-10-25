@@ -24,4 +24,4 @@ Comandos de reproducción en el README principal. Usar siempre un nuevo director
 
 [Cuaderno de placas y cuentas propias](board-trials/README.md): 199 pruebas Python correctas, 4 omitidas y 37 comprobaciones de interfaz. Los casos de hardware son controlados.
 
-[ESP32-CAM](esp32cam/README.md): identificación real del chip y memoria, y compilación del diagnóstico. Grabación y prueba del sensor pendientes de autorización en esta ficha inicial.
+[ESP32-CAM](esp32cam/README.md): respaldo completo, grabación autorizada y verificada; diagnóstico serie con PSRAM, sensor OV3660 y cinco fotogramas JPEG reportados por el controlador, sin revisión visual de las imágenes. [Matriz de hardware](../MATRIZ_HARDWARE.md).
