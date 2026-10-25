@@ -1,0 +1,86 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "name": "provider and agent preference restored",
+      "passed": true
+    },
+    {
+      "name": "saved mode is a preference without execution",
+      "passed": true
+    },
+    {
+      "name": "opening IDE has neutral robot",
+      "passed": true
+    },
+    {
+      "name": "old tasks and results are not loaded",
+      "passed": true
+    },
+    {
+      "name": "editor starts empty despite legacy project",
+      "passed": true
+    },
+    {
+      "name": "legacy code remains recoverable without automatic loading",
+      "passed": true
+    },
+    {
+      "name": "old agent and build are not polled",
+      "passed": true
+    },
+    {
+      "name": "Codex chat routes to real task consent",
+      "passed": true
+    },
+    {
+      "name": "full access still requires explicit per-run consent",
+      "passed": true
+    },
+    {
+      "name": "chat does not invoke read-only cloud substitute",
+      "passed": true
+    },
+    {
+      "name": "task declares CYD profile to the agent",
+      "passed": true
+    },
+    {
+      "name": "Ctrl S explicitly downloads current code",
+      "passed": true
+    },
+    {
+      "name": "draft is not automatically stored in browser",
+      "passed": true
+    },
+    {
+      "name": "reopen clears unsaved code",
+      "passed": true
+    },
+    {
+      "name": "user can reopen explicitly saved code",
+      "passed": true
+    },
+    {
+      "name": "reopen clears task, chat and wizard",
+      "passed": true
+    },
+    {
+      "name": "reopen retains only AI preference from task controls",
+      "passed": true
+    },
+    {
+      "name": "AI preferences never contain prompts or API keys",
+      "passed": true
+    },
+    {
+      "name": "reopen does not grant PC companion permission",
+      "passed": true
+    },
+    {
+      "name": "no JavaScript errors",
+      "passed": true
+    }
+  ],
+  "scope": "Real HTTP and Chromium, controlled empty board catalog. No agent, cloud, serial or firmware execution."
+}

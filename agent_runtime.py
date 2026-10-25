@@ -20,14 +20,18 @@ import re
 import shutil
 import signal
 import subprocess
+import sys
 import tempfile
 import threading
 import time
 import uuid
+import unicodedata
 
 from dependency_advisor import redact_secrets
-from agent_projects import collect_project, project_archive, is_link_or_reparse, plain_directory
+from agent_projects import collect_project, project_archive, read_project_archive, is_link_or_reparse, plain_directory
 from hardware_lab import PROFILES
+from toolchain import arduino_cli
+from mcp_bridge import validate_config, prepare_run
 
 PROVIDERS = {'codex': 'codex', 'claude_code': 'claude'}
 MODES = ('consultar', 'supervisado', 'autonomo', 'total')
@@ -37,13 +41,29 @@ MAX_OUTPUT = 55_000
 MAX_SECONDS = 900
 # No invented percentages. These are hints derived from CLI output, not independent
 # proof of an external device state: a full-access agent can emit arbitrary text.
-DEVICE_SIGNATURE_RE = re.compile(r'(?i)\bdevice signature\s*=\s*(?:(?:0x)?[0-9a-f]{6,8}|[0-9a-f]{2}(?:[ :]+[0-9a-f]{2}){2,3})\b')
-BUILD_SUMMARY_RE = re.compile(r'(?i)\b(?:sketch uses|el sketch usa)\s+\d+\s+bytes')
-FLASH_VERIFIED_RE = re.compile(r'(?i)\b\d+\s+bytes of flash verified\b|\bhash of data verified\b')
+DEVICE_SIGNATURE_RE = re.compile(r'(?i)^\s*(?:(?:avrdude(?:\.exe)?):\s*)?device signature\s*=\s*(?:(?:0x)?[0-9a-f]{6,8}|[0-9a-f]{2}(?:[ :]+[0-9a-f]{2}){2,3})\b')
+BUILD_SUMMARY_RE = re.compile(r'(?i)^\s*(?:sketch uses|el sketch usa)\s+\d+\s+bytes')
+FLASH_VERIFIED_RE = re.compile(r'(?i)^\s*(?:(?:avrdude(?:\.exe)?):\s*\d+\s+bytes of flash verified|\d+\s+bytes of flash verified|hash of data verified)\.?\s*$')
 JOURNAL_FILENAME = '.makeride_session.json'
 ORIGINAL_FILENAME = '.makeride_original.txt'
 JOURNAL_SCHEMA = 1
 ANSI_RE = re.compile(r'\x1b\[[0-9;]*[A-Za-z]')
+
+
+def requests_upload(prompt: str) -> bool:
+    """Completion requirement only; never grants permissions to a CLI/tool."""
+    text = ''.join(c for c in unicodedata.normalize('NFKD', prompt.lower()) if not unicodedata.combining(c))
+    if re.search(r'\b(?:no|sin)\s+(?:(?:lo|la|el|que|se)\s+)*(?:sub(?:as|ir)|carg(?:ues|ar)|grab(?:es|ar)|flashe(?:es|ar))\b', text):
+        return False
+    return bool(re.search(r'\b(?:sube(?:lo|la)?|carga(?:lo|la)?|graba(?:lo|la)?|subir|cargar|grabar|upload|flashea(?:lo)?)\b', text))
+
+
+def physical_profile(profile: str, fqbn: str, prompt: str) -> str:
+    if profile != 'board-unspecified':
+        return profile
+    if fqbn == 'esp32:esp32:jczn_2432s028r' or re.search(r'\b(?:CYD|ESP32[- ]2432S028R)\b', prompt, re.I):
+        return 'esp32-cyd-28'
+    return profile
 
 
 def evidence_from_output(line: str) -> str | None:
@@ -85,7 +105,7 @@ def agent_command(provider: str, mode: str, executable: str, workspace: Path) ->
         raise ValueError('Proveedor o nivel de acceso inválido.')
     if provider == 'codex':
         base = [executable, *([] if mode == 'total' else ['--ask-for-approval', 'never']), 'exec', '--ephemeral', '--skip-git-repo-check',
-                '-C', str(workspace), '--color', 'never']
+                '-C', str(workspace), '--color', 'never', '--json']
         if mode == 'total':
             base.append('--dangerously-bypass-approvals-and-sandbox')
         else:
@@ -182,6 +202,10 @@ class AgentJob:
     task_summary: str = ''
     hardware_profile: str = 'board-unspecified'
     allow_pc_ui: bool = False
+    upload_requested: bool = False
+    imported: bool = False
+    mcp_config: dict = field(default_factory=dict, repr=False)
+    mcp_calls: dict = field(default_factory=dict)
     desktop_files: list[str] = field(default_factory=list)
     started_wall: float = field(default_factory=time.time)
     interrupted: bool = False
@@ -193,9 +217,10 @@ class AgentJob:
     process: subprocess.Popen | None = None
     lock: threading.RLock = field(default_factory=threading.RLock)
 
-    def emit(self, message: str) -> None:
+    def emit(self, message: str, *, from_tool: bool = True) -> None:
         with self.lock:
-            milestone = evidence_from_output(message)
+            message = self.redact_mcp(str(message))
+            milestone = evidence_from_output(message) if from_tool else None
             if milestone and not self.evidence[milestone]:
                 self.evidence[milestone] = True
                 self.seq += 1
@@ -210,6 +235,14 @@ class AgentJob:
             if time.monotonic() - self._journal_last > 2:
                 self.persist()
 
+    def redact_mcp(self, text: str) -> str:
+        for item in self.mcp_config.get('mcpServers', {}).values():
+            for field in ('env', 'headers'):
+                for secret in item.get(field, {}).values():
+                    if secret:
+                        text = text.replace(secret, '[MCP PRIVADO]')
+        return text
+
     def snapshot(self, since: int = 0) -> dict:
         with self.lock:
             return {
@@ -218,7 +251,7 @@ class AgentJob:
                 'cancelled': self.cancelled, 'error': self.error,
                 'exit_code': self.exit_code,
                 'elapsed': round(time.monotonic() - self.started, 1),
-                'response': self.result if not self.active else '',
+                'response': self.redact_mcp(self.result) if not self.active else '',
                 'diff': self.diff if not self.active else '',
                 'modified_code': self.modified_code if not self.active else None,
                 'changed_files': list(self.changed_files) if not self.active else [],
@@ -227,6 +260,10 @@ class AgentJob:
                 'before_sha256': hashlib.sha256(self.before.encode('utf-8')).hexdigest(),
                 'task_summary': self.task_summary,
                 'hardware_profile': self.hardware_profile, 'allow_pc_ui': self.allow_pc_ui,
+                'upload_requested': self.upload_requested,
+                'imported':self.imported,
+                'mcp_requested':list(self.mcp_config.get('mcpServers', {})),
+                'mcp_calls':dict(self.mcp_calls),
                 'desktop_ui_files': list(self.desktop_files),
                 'interrupted': self.interrupted, 'legacy': self.legacy,
                 'outcome': self.outcome(),
@@ -242,8 +279,12 @@ class AgentJob:
             return 'unknown_after_restart'
         if self.active:
             return 'running'
+        if self.imported:
+            return 'imported_project'
         if self.desktop_files and not self.allow_pc_ui:
             return 'target_mismatch'
+        if self.upload_requested and self.exit_code == 0 and not self.evidence.get('flash_verified'):
+            return 'upload_pending'
         if not self.success:
             return 'cancelled' if self.cancelled else 'failed'
         if self.evidence.get('flash_verified'):
@@ -265,6 +306,8 @@ class AgentJob:
                 'file_name': self.file_name, 'port': self.port, 'fqbn': self.fqbn,
                 'task_summary': redact_log(self.task_summary)[:220],
                 'hardware_profile': self.hardware_profile, 'allow_pc_ui': self.allow_pc_ui,
+                'upload_requested': self.upload_requested,
+                'imported':self.imported,
                 'desktop_ui_files': list(self.desktop_files),
                 'started_wall': self.started_wall,
                 'elapsed': round(time.monotonic() - self.started, 1),
@@ -273,7 +316,8 @@ class AgentJob:
                 'exit_code': self.exit_code,
                 'cancelled': self.cancelled, 'interrupted': self.interrupted,
                 'error': redact_log(self.error)[:2000],
-                'result': redact_log(self.result)[:MAX_OUTPUT],
+                'result': redact_log(self.redact_mcp(self.result))[:MAX_OUTPUT],
+                'mcp_calls':dict(self.mcp_calls),
                 'evidence': self.evidence.copy(),
                 'seq': self.seq, 'events': list(self.events)[-120:],
                 'changed_files': list(self.changed_files)[:30],
@@ -327,6 +371,8 @@ def restore_journal(workspace: Path) -> AgentJob | None:
                        task_summary=redact_log(str(data.get('task_summary','')))[:220],
                        hardware_profile=data.get('hardware_profile') if data.get('hardware_profile') in PROFILES else 'board-unspecified',
                        allow_pc_ui=data.get('allow_pc_ui') is True,
+                       upload_requested=data.get('upload_requested') is True if 'upload_requested' in data else requests_upload(str(data.get('task_summary', ''))),
+                       imported=data.get('imported') is True,
                        desktop_files=[str(name)[:240] for name in data.get('desktop_ui_files', []) if isinstance(name, str)][:128],
                        started_wall=float(data.get('started_wall',time.time())),
                        finished_wall=data.get('finished_wall'),
@@ -336,6 +382,10 @@ def restore_journal(workspace: Path) -> AgentJob | None:
                             if isinstance(x,dict) and isinstance(x.get('id'),int)
                             and isinstance(x.get('text'),str)), maxlen=400)
         job.changed_files = [str(x)[:100] for x in data.get('changed_files',[]) if isinstance(x,str)][:30]
+        calls=data.get('mcp_calls',{})
+        if isinstance(calls,dict):
+            job.mcp_calls={key:value for key,value in list(calls.items())[:256]
+                           if isinstance(key,str) and len(key)<=161 and value in ('completed','failed')}
         if data.get('active') is True:
             job.success = False
             job.interrupted = True
@@ -345,6 +395,10 @@ def restore_journal(workspace: Path) -> AgentJob | None:
             # Reading old sessions must never rewrite the user's original files.
         else:
             job.interrupted = data.get('interrupted') is True
+        if job.success and not job.interrupted and job.upload_requested and not job.evidence.get('flash_verified'):
+            job.success = False
+            job.error = 'Carga solicitada pendiente: el registro anterior no acredita grabación verificada. No se repite ninguna operación al recuperarlo.'
+        if job.imported:job.success=None
         modified = _safe_workspace_file(workspace,name)
         if modified and before_path:
             current = modified.read_text(encoding='utf-8',errors='replace')
@@ -441,7 +495,11 @@ class AgentJobManager:
     def start(self, *, provider: str, mode: str, prompt: str,
               code: str, lang: str, fqbn: str, confirmed: bool,
               full_consent: str = '', port: str = '', parent_job_id: str = '',
-              hardware_profile: str = 'board-unspecified', allow_pc_ui: bool = False) -> dict:
+              hardware_profile: str = 'board-unspecified', allow_pc_ui: bool = False,
+              mcp_config: dict | None = None) -> dict:
+        configured_mcp = validate_config(mcp_config) if mcp_config is not None else {'mcpServers': {}}
+        if configured_mcp['mcpServers'] and mode not in ('autonomo', 'total'):
+            raise ValueError('Los MCP explícitos requieren modo Autónomo o Acceso total y autorización por tarea.')
         if not isinstance(hardware_profile, str) or hardware_profile not in PROFILES or type(allow_pc_ui) is not bool:
             raise ValueError('Destino o perfil físico no válido.')
         if provider not in PROVIDERS or mode not in MODES:
@@ -465,6 +523,10 @@ class AgentJobManager:
         if not executable:
             raise ValueError(f'Instala e inicia sesión en {PROVIDERS[provider]} antes de usar el agente.')
         inherited = self.project_files(parent_job_id)[1] if parent_job_id else {}
+        if parent_job_id and hardware_profile == 'board-unspecified':
+            previous = self.get(parent_job_id)
+            hardware_profile = previous.get('hardware_profile', 'board-unspecified')
+        hardware_profile = physical_profile(hardware_profile, fqbn, prompt)
         for name, data in inherited.items():
             if Path(name).suffix.lower() in ('.ino', '.h', '.hpp', '.c', '.cpp', '.py', '.json', '.txt'):
                 text = data.decode('utf-8', errors='replace')
@@ -486,18 +548,33 @@ class AgentJobManager:
             (workspace / 'MAKERIDE_CONTEXT.txt').write_text(
                 'AB MakerIDE | placa FQBN: ' + fqbn + '\n'
                 'Archivo abierto: ' + filename + '\n'
-                'Puerto seleccionado manualmente: ' + (port or 'sin puerto confirmado') + '\n'
+                'Puerto de destino: ' + (port or 'sin puerto confirmado') + '\n'
                 'El FQBN es una selección del usuario, NO detección inequívoca de la placa.\n'
+                'Perfil fisico del proyecto: ' + hardware_profile + '\n'
+                'Arduino CLI: ' + (arduino_cli() or 'no encontrada; verificar instalacion') + '\n'
+                'Python de este servidor: ' + sys.executable + '\n'
                 'Los comandos de grabación requieren solicitud inequívoca del usuario y permisos CLI.\n',
                 encoding='utf-8'
             )
             job = AgentJob(uuid.uuid4().hex, provider, mode, workspace, filename, code, port=port,
-                           fqbn=fqbn, task_summary=prompt.strip()[:220], hardware_profile=hardware_profile, allow_pc_ui=allow_pc_ui)
+                           fqbn=fqbn, task_summary=prompt.strip()[:220], hardware_profile=hardware_profile, allow_pc_ui=allow_pc_ui,
+                           upload_requested=requests_upload(prompt))
+            job.mcp_config = configured_mcp
+            if hardware_profile == 'esp32-cyd-28':
+                reference = Path(__file__).resolve().parent / 'examples/cyd_28_bloques_tactil.ino'
+                if reference.is_file() and not is_link_or_reparse(reference):
+                    (workspace / 'MAKERIDE_HARDWARE_REFERENCE.txt').write_text(
+                        'Referencia de integracion LCD/tactil para el perfil CYD declarado. '
+                        'Reutiliza su inicializacion y calibracion; adapta el juego solicitado. '
+                        'No es necesario conservar el juego de bloques.\n'
+                        'Fuente de pines: https://github.com/witnessmenow/ESP32-Cheap-Yellow-Display/blob/main/PINS.md\n'
+                        + reference.read_text(encoding='utf-8'), encoding='utf-8')
             job.persist()
             self._current = job
         thread = threading.Thread(target=self._work, args=(job, executable, prompt.strip()), daemon=True)
         thread.start()
-        return {'ok': True, 'job_id': job.id, 'mode': mode, 'workspace': str(workspace)}
+        return {'ok': True, 'job_id': job.id, 'mode': mode, 'workspace': str(workspace),
+                'hardware_profile': hardware_profile, 'upload_requested': job.upload_requested}
 
     def get(self, job_id: str, since: int = 0) -> dict:
         with self._lock:
@@ -520,9 +597,39 @@ class AgentJobManager:
             raise ValueError('Espera a que el agente termine antes de guardar o continuar el proyecto.')
         return snapshot, collect_project(Path(snapshot['workspace']), self.root)
 
-    def export_project(self, job_id: str) -> bytes:
+    def export_project(self, job_id: str, code: str | None = None) -> bytes:
         snapshot, files = self.project_files(job_id)
+        if code is not None:
+            if not isinstance(code,str) or len(code)>MAX_SOURCE:
+                raise ValueError('Código de exportación inválido o demasiado grande.')
+            files[snapshot['file_name']]=code.encode('utf-8')
         return project_archive(snapshot, files)
+
+    def import_project(self, data: bytes) -> dict:
+        metadata,files=read_project_archive(data)
+        requested_name=metadata.get('file_name')
+        name=requested_name if requested_name in ('sketch.ino','main.py') and requested_name in files else 'sketch.ino' if 'sketch.ino' in files else 'main.py'
+        try:code=files[name].decode('utf-8').replace('\r\n','\n')
+        except UnicodeError as error:raise ValueError('El código debe ser UTF-8.') from error
+        if len(code)>MAX_SOURCE:raise ValueError('Código demasiado grande.')
+        fqbn=metadata.get('fqbn','')
+        if not isinstance(fqbn,str) or len(fqbn)>130 or (fqbn and not re.fullmatch(r'[A-Za-z0-9_.:-]+',fqbn)):
+            raise ValueError('FQBN del proyecto inválido.')
+        profile=metadata.get('hardware_profile','board-unspecified')
+        if not isinstance(profile,str) or profile not in PROFILES:profile='board-unspecified'
+        with self._lock:
+            if self._current and self._current.active:raise ValueError('Espera a que termine el agente antes de importar otro proyecto.')
+            plain_directory(self.root,create=True)
+            folder=Path(tempfile.mkdtemp(prefix='sesion-importado-',dir=str(self.root)))
+            for path,content in files.items():
+                target=folder/path;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(content)
+            (folder/ORIGINAL_FILENAME).write_text(code,encoding='utf-8')
+            job=AgentJob(uuid.uuid4().hex,'codex','consultar',folder,name,code,active=False,success=None,
+                         fqbn=fqbn,hardware_profile=profile,imported=True,task_summary='Proyecto importado por el usuario; sin ejecución de agente ni hardware.')
+            job.emit('Proyecto importado. No se ha ejecutado una CLI ni programado hardware.');job.persist()
+            self._current=job
+        return {'ok':True,'job_id':job.id,'code':code,'lang':'cpp' if name.endswith('.ino') else 'py',
+                'fqbn':fqbn,'hardware_profile':profile,'file_count':len(files)}
 
     def cancel(self, job_id: str) -> dict:
         with self._lock:
@@ -539,13 +646,29 @@ class AgentJobManager:
 
     def _work(self, job: AgentJob, executable: str, prompt: str) -> None:
         process = None
+        private_mcp = None
         try:
             args = agent_command(job.provider, job.mode, executable, job.workspace)
+            environment = cli_environment()
+            if job.mcp_config.get('mcpServers'):
+                private_mcp = tempfile.TemporaryDirectory(prefix='makeride-mcp-')
+                extra, secrets = prepare_run(job.provider, job.mcp_config, Path(private_mcp.name))
+                # Codex reads its prompt from the final '-', Claude has no positional prompt.
+                args = args[:-1] + extra + ['-'] if job.provider == 'codex' else args + extra
+                if job.provider == 'claude_code' and job.mode == 'autonomo':
+                    position = args.index('--allowedTools') + 1
+                    args[position] += ',' + ','.join('mcp__' + name + '__*' for name in job.mcp_config['mcpServers'])
+                environment.update(secrets)
+                job.emit('MCP solicitados: ' + ', '.join(job.mcp_config['mcpServers']) + '. Conexión y permisos pendientes de la CLI.', from_tool=False)
             instructions = (
                 'DESTINO DEL PROYECTO: firmware para la placa conectada. Python significa MicroPython en el dispositivo. '
                 'Un juego para una placa con pantalla debe dibujarse y controlarse en esa pantalla. '
                 'No sustituyas la pantalla por Tkinter, pygame, Qt, una web ni otra interfaz en el PC. '
-                'Si desconoces pantalla, controlador, revisión, táctil o GPIO, pregunta y deja esas fases pendientes; '
+                'Lee primero MAKERIDE_CONTEXT.txt y MAKERIDE_HARDWARE_REFERENCE.txt si existe. '
+                'Usa el perfil concreto declarado como configuracion solicitada, consulta sus referencias primarias y el ejemplo local; '
+                'no vuelvas a pedir datos que ya figuren ahi. Que USB diga Unknown no invalida el perfil de pantalla declarado. '
+                'Si faltan datos, busca informacion en documentacion del fabricante, bibliotecas y ejemplos antes de preguntar. '
+                'Solo si tras investigar falta un dato fisico indispensable o hay una contradiccion real, pregunta y explica el bloqueo; '
                 'no grabes un sustituto que solo envíe imágenes por USB. No cambies el objetivo sin autorización. '
                 + ('El usuario permite una ventana AUXILIAR en el PC, sin sustituir el objetivo físico solicitado. ' if job.allow_pc_ui else 'No está autorizado crear ni abrir una ventana auxiliar en el PC. ')
                 + 'Perfil físico DECLARADO, no detectado: ' + json.dumps(PROFILES[job.hardware_profile], ensure_ascii=False) + '\n'
@@ -561,6 +684,10 @@ class AgentJobManager:
                 'no interpretes solicitudes de análisis como permiso para grabar. '
                 'En modo total puedes trabajar sobre hardware si lo autorizó el usuario: no afirmes que el IDE lo impide. '
                 'Si grabas, pide al grabador verificación cuando sea compatible y comunica exactamente su resultado. '
+                'Si la tarea pide subir/cargar/grabar, debes completar el firmware entero, compilarlo y ejecutar la carga autorizada '
+                'en el puerto confirmado con verificacion; generar codigo o compilar solo el motor no cumple la tarea. '
+                'Conserva antes una copia verificable del firmware actual cuando la herramienta permita leerlo. '
+                'No cambies automaticamente de permisos CLI. No repitas una carga tras fallo de escritura o estado desconocido. '
                 'Devuelve un informe final breve: placa/puerto, cambios, compilación, grabación, problemas y acciones pendientes; '
                 'distingue resultados observados de los no comprobados. '
                 'No reproduzcas listados masivos ni secretos. Revisa pines y dependencias.\n'
@@ -571,7 +698,7 @@ class AgentJobManager:
             if os.name == 'nt':
                 flags |= getattr(subprocess, 'CREATE_NEW_PROCESS_GROUP', 0)
             process = subprocess.Popen(
-                args, cwd=str(job.workspace), env=cli_environment(),
+                args, cwd=str(job.workspace), env=environment,
                 stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                 text=True, encoding='utf-8', errors='replace',
                 creationflags=flags, start_new_session=os.name != 'nt',
@@ -584,12 +711,43 @@ class AgentJobManager:
             except (OSError, BrokenPipeError):
                 pass
             outputs: dict[str, str] = {}
+            codex_messages=[]
+            structured=job.provider=='codex' and '--json' in args
             def reader(stream, name):
                 chunks = []
                 for line in stream:
+                    if structured and name=='stdout':
+                        try:event=json.loads(line)
+                        except ValueError:
+                            job.emit('Salida CLI no estructurada: '+line.strip(),from_tool=False);continue
+                        if not isinstance(event,dict):continue
+                        item=event.get('item') or {}
+                        if not isinstance(item,dict):continue
+                        if event.get('type')=='item.completed':
+                            kind=item.get('type')
+                            if kind=='agent_message' and isinstance(item.get('text'),str):
+                                codex_messages.append(item['text'][-MAX_OUTPUT:])
+                                codex_messages[:]=codex_messages[-20:]
+                                job.emit(item['text'][:1200],from_tool=False)
+                            elif kind=='command_execution':
+                                completed=item.get('status')=='completed' and type(item.get('exit_code')) is int and item['exit_code']==0
+                                job.emit('Comando terminado · salida '+str(item.get('exit_code')),from_tool=False)
+                                output=item.get('aggregated_output','')
+                                if isinstance(output,str):
+                                    for result_line in output[-MAX_OUTPUT:].splitlines():job.emit(result_line,from_tool=completed)
+                            elif kind=='file_change':
+                                job.emit('Archivos del proyecto: '+str(item.get('status','sin estado')),from_tool=False)
+                            elif kind=='mcp_tool_call':
+                                tool_name=str(item.get('server',''))[:64]+'/'+str(item.get('tool',''))[:96]
+                                status='completed' if item.get('status')=='completed' and not item.get('error') else 'failed'
+                                job.mcp_calls[tool_name]=status
+                                job.emit('Herramienta MCP '+tool_name+' · '+status,from_tool=False)
+                        elif event.get('type') in ('turn.failed','error'):
+                            job.error='La CLI notificó un error de ejecución. Revisa el registro.'
+                            job.emit(str(event.get('error') or event.get('message') or job.error)[:1200],from_tool=False)
+                        continue
                     chunks.append(line)
-                    if name == 'stderr':
-                        job.emit(line.strip())
+                    if name == 'stderr':job.emit(line.strip(),from_tool=not structured)
                     if len(chunks) > 800 or sum(map(len, chunks[-100:])) > MAX_OUTPUT * 2:
                         chunks = [''.join(chunks)[-MAX_OUTPUT:]]
                 outputs[name] = ''.join(chunks)[-MAX_OUTPUT:]
@@ -609,14 +767,16 @@ class AgentJobManager:
             job.exit_code = process.returncode
             for t in threads:
                 t.join(timeout=3)
+            for stream, thread in zip((process.stdout,process.stderr),threads):
+                if not thread.is_alive():stream.close()
             if job.cancelled:
                 job.error = 'Ejecución cancelada.'
                 return
             if process.returncode or job.error:
-                job.error = f'La CLI {job.provider} terminó con código {process.returncode}. Revisa su sesión o permisos.'
+                job.error = job.error or f'La CLI {job.provider} terminó con código {process.returncode}. Revisa su sesión o permisos.'
                 job.emit(job.error)
                 return
-            raw = outputs.get('stdout', '').strip()
+            raw = ('\n\n'.join(codex_messages)[-MAX_OUTPUT:] if structured else outputs.get('stdout', '')).strip()
             if job.provider == 'claude_code':
                 try:
                     parsed = json.loads(raw)
@@ -628,6 +788,10 @@ class AgentJobManager:
                     return
             with job.lock:
                 job.result = redact_log(raw)[:MAX_OUTPUT]
+            if 'failed' in job.mcp_calls.values():
+                job.error='Hay herramientas MCP con error sin resolver; la tarea requiere revisión.'
+                job.emit(job.error,from_tool=False)
+                return
             modified = _safe_workspace_file(job.workspace, job.file_name)
             if modified:
                 code = modified.read_text(encoding='utf-8', errors='replace')
@@ -647,6 +811,11 @@ class AgentJobManager:
                 job.success = False
                 job.emit(job.error)
                 return
+            if job.upload_requested and not job.evidence.get('flash_verified'):
+                job.error = 'Carga solicitada pendiente: la CLI terminó, pero no consta verificación de grabación. La tarea no está completada.'
+                job.success = False
+                job.emit(job.error)
+                return
             job.success = True
             job.emit('Agente terminado. Revisa el código y las evidencias; puedes guardar el proyecto completo.')
         except (OSError, ValueError, subprocess.TimeoutExpired) as exc:
@@ -655,6 +824,8 @@ class AgentJobManager:
         finally:
             if process is not None and process.poll() is None:
                 _terminate(process)
+            if private_mcp is not None:
+                private_mcp.cleanup()
             with job.lock:
                 job.process = None
                 job.active = False

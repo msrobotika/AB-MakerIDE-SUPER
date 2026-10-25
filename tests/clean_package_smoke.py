@@ -106,7 +106,7 @@ def main():
                     break
                 except OSError:time.sleep(.1)
             else:raise RuntimeError('Extracted startup timed out')
-            check('real startup from private bare venv',health['version']=='1.0.0-rc.2')
+            check('real startup from private bare venv',health['version']=='1.0.0-rc.3')
             with urlopen(url) as response:html=response.read()
             check('editor and simulator delivered without dependencies',b'id="code"' in html and b'id="simCanvas"' in html)
             if args.browser:
@@ -125,9 +125,15 @@ def main():
                     page.wait_for_function('()=>document.querySelector("#backendState").textContent.includes("activo")')
                     check('empty discovery completes without endless loading labels','Buscando' not in page.locator('#quickBoard').inner_text() and 'Buscando' not in page.locator('#quickPort').inner_text())
                     page.locator('#code').fill('// PROYECTO CONSERVADO\nvoid setup(){}\nvoid loop(){}')
+                    with page.expect_download() as download:
+                        page.locator('#code').press('Control+s')
+                    saved=args.work/'proyecto-guardado.json';download.value.save_as(str(saved))
                     page.reload()
+                    page.wait_for_function('()=>document.querySelector("#backendState").textContent.includes("activo")')
+                    check('reopen starts empty in bare installation',page.locator('#code').input_value()=='')
+                    page.locator('#projectFile').set_input_files(str(saved))
                     page.wait_for_function('()=>document.querySelector("#code").value.startsWith("// PROYECTO CONSERVADO")')
-                    check('editor saves and reloads in bare installation',True)
+                    check('manually saved code reopens in bare installation',True)
                     page.locator('#code').fill('void setup(){pinMode(13,OUTPUT);}void loop(){digitalWrite(13,HIGH);delay(500);digitalWrite(13,LOW);delay(500);}')
                     page.locator('#extraTools').evaluate('(e)=>e.open=true');page.locator('#showSim').click();page.locator('#simNext').click()
                     check('simulator works offline without optional tools','500 ms' in page.locator('#simClock').inner_text())

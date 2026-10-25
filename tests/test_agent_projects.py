@@ -13,6 +13,38 @@ import jobs
 
 
 class AgentProjectTests(unittest.TestCase):
+    def test_export_current_editor_keeps_headers_without_mutating_workspace(self):
+        original=(self.folder/'sketch.ino').read_bytes()
+        with zipfile.ZipFile(io.BytesIO(self.manager.export_project(self.job.id,'// EDITADO\nvoid setup(){} void loop(){}'))) as archive:
+            self.assertIn(b'EDITADO',archive.read('sketch/sketch.ino'))
+            self.assertIn('sketch/radar_config.h',archive.namelist())
+        self.assertEqual((self.folder/'sketch.ino').read_bytes(),original)
+
+    def test_saved_zip_reopens_with_auxiliaries_without_running_cli_or_hardware(self):
+        archive=self.manager.export_project(self.job.id)
+        with patch.object(self.manager,'_work') as worker:
+            imported=self.manager.import_project(archive)
+            worker.assert_not_called()
+        self.assertEqual(imported['code'],self.job.before)
+        self.assertIn('radar_config.h',self.manager.project_files(imported['job_id'])[1])
+        result=self.manager.get(imported['job_id'])
+        self.assertEqual(result['outcome'],'imported_project');self.assertFalse(any(result['evidence'].values()))
+        recovered=ar.AgentJobManager(self.root).get(imported['job_id'])
+        self.assertEqual(recovered['outcome'],'imported_project');self.assertIsNone(recovered['success'])
+
+    def test_source_zip_rejects_paths_links_duplicates_and_oversized_content(self):
+        for kind in ('path','link','duplicate','size'):
+            with self.subTest(kind=kind):
+                data=io.BytesIO()
+                with zipfile.ZipFile(data,'w',compression=zipfile.ZIP_DEFLATED) as archive:
+                    archive.writestr('sketch/sketch.ino','void setup(){} void loop(){}')
+                    if kind=='path':archive.writestr('sketch/../escape.h','bad')
+                    elif kind=='link':
+                        info=zipfile.ZipInfo('sketch/link.h');info.create_system=3;info.external_attr=0o120777<<16;archive.writestr(info,'outside')
+                    elif kind=='duplicate':archive.writestr('sketch/SKETCH.INO','duplicate')
+                    else:archive.writestr('sketch/huge.h',b'x'*(projects.MAX_PROJECT_BYTES+1))
+                with self.assertRaises(ValueError):self.manager.import_project(data.getvalue())
+
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)

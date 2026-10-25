@@ -1,0 +1,4 @@
+MSR_SPACEINVADERS_BOOT build=CYD_SI_20261025_v1 lcd=ILI9341_320x240 touch=XPT2046 render=ram_dirty_rows state=CALIBRATION point=1 uptime_ms=2824
+MSR_SPACEINVADERS_BOOT build=CYD_SI_20261025_v1 lcd=ILI9341_320x240 touch=XPT2046 render=ram_dirty_rows state=CALIBRATION point=1 uptime_ms=4839
+MSR_SPACEINVADERS_BOOT build=CYD_SI_20261025_v1 lcd=ILI9341_320x240 touch=XPT2046 render=ram_dirty_rows state=CALIBRATION point=1 uptime_ms=6854
+MSR_SPACEINVADERS_BOOT build=CYD_SI_20261025_v1 lcd=ILI9341_320x240 touch=XPT2046 render=ram_dirty_rows state=CALIBRATION point=1 uptime_ms=8869

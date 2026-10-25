@@ -1,0 +1,178 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "name": "total opens in-page dialog with focus",
+      "passed": true
+    },
+    {
+      "name": "blank consent cannot start",
+      "passed": true
+    },
+    {
+      "name": "incorrect consent cannot start",
+      "passed": true
+    },
+    {
+      "name": "cancel starts nothing and explains outcome",
+      "passed": true
+    },
+    {
+      "name": "Escape starts nothing",
+      "passed": true
+    },
+    {
+      "name": "consent resets each task",
+      "passed": true
+    },
+    {
+      "name": "exact consent enables start",
+      "passed": true
+    },
+    {
+      "name": "one total request reaches real validation",
+      "passed": true
+    },
+    {
+      "name": "backend creates completed total job",
+      "passed": true
+    },
+    {
+      "name": "read-only hides full-access input",
+      "passed": true
+    },
+    {
+      "name": "read-only start accepted before checking completion",
+      "passed": true
+    },
+    {
+      "name": "read-only request keeps permission scope",
+      "passed": true
+    },
+    {
+      "name": "dialog usable on mobile",
+      "passed": true
+    },
+    {
+      "name": "generated code automatically opens in editor",
+      "passed": true
+    },
+    {
+      "name": "original editor code can be restored within session",
+      "passed": true
+    },
+    {
+      "name": "save and open controls visible beside agent actions",
+      "passed": true
+    },
+    {
+      "name": "project download includes header and sketch",
+      "passed": true
+    },
+    {
+      "name": "manual save includes latest editor edits and auxiliaries",
+      "passed": true
+    },
+    {
+      "name": "saved source ZIP reopens as editable project",
+      "passed": true
+    },
+    {
+      "name": "opening saved ZIP never starts an agent",
+      "passed": true
+    },
+    {
+      "name": "continued task carries parent project reference",
+      "passed": true
+    },
+    {
+      "name": "continued backend receives auxiliary header",
+      "passed": true
+    },
+    {
+      "name": "editing during task prevents automatic overwrite",
+      "passed": true
+    },
+    {
+      "name": "manual open preserves competing edit in session undo",
+      "passed": true
+    },
+    {
+      "name": "automatic open can be disabled without losing generated project",
+      "passed": true
+    },
+    {
+      "name": "saved ino can be reopened with Importar",
+      "passed": true
+    },
+    {
+      "name": "importing another sketch clears old agent project reference",
+      "passed": true
+    },
+    {
+      "name": "radar opens in code editor without hardware action",
+      "passed": true
+    },
+    {
+      "name": "radar selects ESP32 instead of Uno",
+      "passed": true
+    },
+    {
+      "name": "Codex requires own account without included AI balance",
+      "passed": true
+    },
+    {
+      "name": "Claude is explicitly unvalidated experimental integration",
+      "passed": true
+    },
+    {
+      "name": "trial without a build records no tool evidence",
+      "passed": true
+    },
+    {
+      "name": "trial notebook survives reload",
+      "passed": true
+    },
+    {
+      "name": "compile does not automatically confirm physical result",
+      "passed": true
+    },
+    {
+      "name": "upload on different port is not attributed to selected target",
+      "passed": true
+    },
+    {
+      "name": "notebook export preserves separate tool and user observations",
+      "passed": true
+    },
+    {
+      "name": "lost server job preserves manual observation without inventing tool evidence",
+      "passed": true
+    },
+    {
+      "name": "another tab cannot be overwritten by stale notebook",
+      "passed": true
+    },
+    {
+      "name": "damaged notebook prevents overwriting original",
+      "passed": true
+    },
+    {
+      "name": "trial dialog fits mobile without horizontal scrolling",
+      "passed": true
+    },
+    {
+      "name": "no native-popup exceptions",
+      "passed": true
+    },
+    {
+      "name": "requested upload without verification remains pending in UI",
+      "passed": true
+    },
+    {
+      "name": "missing requested upload never turns robot green",
+      "passed": true
+    }
+  ],
+  "scope": "Real HTTP handler/consent validation/workspace; stub CLI worker. No hardware."
+}

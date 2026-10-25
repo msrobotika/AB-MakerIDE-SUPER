@@ -1,0 +1,7 @@
+{
+  "total": 281,
+  "passed": 277,
+  "skipped": 4,
+  "failed": 0,
+  "scope": "Isolated unit data on Windows; no original project sessions or physical firmware writes. Skips: three g++ cases and privileged Windows symlink case."
+}

@@ -49,6 +49,10 @@ def main():
         job.result = 'CONTROLADO: tarea de prueba completada sin CLI ni hardware.'
         job.exit_code = 0
         job.success = True
+        if task.startswith('UPLOAD_PENDING:'):
+            job.upload_requested=True
+            job.success=False
+            job.error='Carga solicitada pendiente: no consta verificación de grabación.'
         job.active = False
         job.emit(job.result)
         job.persist()
@@ -89,7 +93,7 @@ def main():
                         if request.method == 'POST':
                             if '/api/agents/start' in request.url:
                                 report['starts'].append(request.post_data_json)
-                            elif '/api/advisor/check' not in request.url:
+                            elif not any(path in request.url for path in ('/api/advisor/check','/api/agents/project/export','/api/projects/import')):
                                 raise AssertionError('Unexpected POST ' + request.url)
                         route.continue_()
 
@@ -111,7 +115,7 @@ def main():
 
                     page.goto(f'http://127.0.0.1:{http.server_port}')
                     page.wait_for_function('()=>document.querySelector("#backendState").textContent.includes("activo")')
-                    page.locator('#showAI').click()
+                    if page.locator('body').get_attribute('data-right')!='ai':page.locator('#showAI').click()
                     page.locator('#agentWorkbench').evaluate('(e)=>e.open=true')
                     page.locator('#execTask').fill('CONTROLADO: comprobar autorización, sin hardware')
                     page.locator('#execMode').select_option('total')
@@ -154,18 +158,35 @@ def main():
                     original=page.locator('#code').input_value()
                     page.locator('#execMode').select_option('supervisado')
                     page.locator('#execTask').fill('PROJECT: generar código controlado')
-                    page.locator('#execRun').click();approve_agent()
+                    page.locator('#execRun').click();created=approve_agent()
                     page.wait_for_function('()=>document.querySelector("#code").value.includes("PROJECT_GENERATED")')
                     check('generated code automatically opens in editor', 'PROJECT_GENERATED' in page.locator('#code').input_value())
-                    backup=page.evaluate('JSON.parse(localStorage.getItem("ab-makeride-ai-backup-v1"))[0]')
-                    check('original editor code backed up before replacement', backup['code']==original)
-                    parent=page.evaluate('localStorage.getItem("ab-makeride-agent-project-v1")')
+                    if not page.locator('[data-panel=project]').evaluate('(e)=>e.classList.contains("on")') or page.locator('#sidebar').evaluate('(e)=>e.classList.contains("is-collapsed")'):page.locator('[data-panel=project]').click()
+                    page.locator('#sideBody details').evaluate('(e)=>e.open=true')
+                    page.evaluate('window.confirm=()=>true')
+                    page.locator('#restoreAiBackup').click()
+                    check('original editor code can be restored within session',page.locator('#code').input_value()==original)
+                    page.locator('#agentOpenCode').click()
+                    parent=created.json()['job_id']
                     check('save and open controls visible beside agent actions',page.locator('#agentOpenCode').is_enabled() and page.locator('#agentSaveProject').is_enabled())
                     with page.expect_download() as event:
                         page.locator('#agentSaveProject').click()
                     exported=event.value;exported.save_as(str(args.outputs/'controlled-agent-project.zip'))
                     with zipfile.ZipFile(args.outputs/'controlled-agent-project.zip') as archive:
                         check('project download includes header and sketch', 'sketch/radar_config.h' in archive.namelist() and 'sketch/sketch.ino' in archive.namelist())
+                    page.locator('#code').fill(page.locator('#code').input_value()+'\n// EDICION GUARDADA\n')
+                    with page.expect_download() as saved:
+                        page.locator('#exportBtn').click()
+                    edited_zip=args.outputs/'edited-project.zip';saved.value.save_as(str(edited_zip))
+                    with zipfile.ZipFile(edited_zip) as archive:
+                        check('manual save includes latest editor edits and auxiliaries',b'EDICION GUARDADA' in archive.read('sketch/sketch.ino') and 'sketch/radar_config.h' in archive.namelist())
+                    count_before=len(report['starts'])
+                    with page.expect_response(lambda r:r.url.endswith('/api/projects/import')) as imported:
+                        page.locator('#projectFile').set_input_files(str(edited_zip))
+                    parent=imported.value.json()['job_id']
+                    page.wait_for_function('()=>document.querySelector("#code").value.includes("EDICION GUARDADA")')
+                    check('saved source ZIP reopens as editable project','EDICION GUARDADA' in page.locator('#code').input_value())
+                    check('opening saved ZIP never starts an agent',len(report['starts'])==count_before)
                     page.screenshot(path=str(args.outputs/'agent-generated-editor-controlled.png'))
                     page.locator('#execTask').fill('PROJECT: continuar y conservar mis ediciones')
                     page.locator('#execRun').click();approve_agent()
@@ -178,7 +199,12 @@ def main():
                     page.evaluate('window.confirm=()=>true')
                     page.locator('#agentOpenCode').click()
                     page.wait_for_function('()=>document.querySelector("#code").value.includes("PROJECT_GENERATED")')
-                    check('manual open preserves competing edit in backup', page.evaluate('JSON.parse(localStorage.getItem("ab-makeride-ai-backup-v1"))[0].code')=='// edición del usuario durante la tarea')
+                    if not page.locator('[data-panel=project]').evaluate('(e)=>e.classList.contains("on")') or page.locator('#sidebar').evaluate('(e)=>e.classList.contains("is-collapsed")'):page.locator('[data-panel=project]').click()
+                    page.locator('#sideBody details').evaluate('(e)=>e.open=true')
+                    page.evaluate('window.confirm=()=>true')
+                    page.locator('#restoreAiBackup').click()
+                    check('manual open preserves competing edit in session undo',page.locator('#code').input_value()=='// edición del usuario durante la tarea')
+                    page.locator('#agentOpenCode').click()
                     manual_code=page.locator('#code').input_value()
                     page.locator('#agentAutoOpen').uncheck()
                     page.locator('#execTask').fill('PROJECT: conservar revisión manual')
@@ -216,7 +242,7 @@ def main():
                     page.locator('#showTrials').click()
                     check('trial notebook survives reload', '1 / 100' in page.locator('#trialCount').inner_text())
                     source=hashlib.sha256(page.locator('#code').input_value().encode('utf-8')).hexdigest()
-                    job={'id':'a'*32,'action':'compile','success':True,'active':False,'exit_code':0,'source_sha256':source,'fqbn':'esp32:esp32:esp32','port':'','agent_project_id':''}
+                    job={'id':'a'*32,'action':'compile','success':True,'active':False,'exit_code':0,'source_sha256':source,'fqbn':page.locator('#quickBoard').input_value(),'port':'','agent_project_id':''}
                     page.route('**/api/jobs/status?**',lambda route:route.fulfill(json=job))
                     page.evaluate('localStorage.setItem("ab-makeride-last-build-v1","a".repeat(32))')
                     page.locator('#trialName').fill('IdeaSpark · compilación controlada')
@@ -256,6 +282,16 @@ def main():
                     page.screenshot(path=str(args.outputs/'board-trials-mobile-controlled.png'))
                     page.locator('#trialClose').click()
                     check('no native-popup exceptions', not report['page_errors'])
+                    page.set_viewport_size({'width':1360,'height':950})
+                    if page.locator('body').get_attribute('data-right')!='ai':page.locator('#showAI').click()
+                    page.locator('#agentWorkbench').evaluate('(e)=>e.open=true')
+                    page.locator('#execMode').select_option('supervisado')
+                    page.locator('#execTask').fill('UPLOAD_PENDING: crea y sube el juego a la placa')
+                    page.locator('#execRun').click();approve_agent()
+                    page.wait_for_function('()=>document.querySelector("#agentResumeMessage").textContent.includes("Carga solicitada pendiente")')
+                    check('requested upload without verification remains pending in UI','incompleta' in page.locator('#agentResumeMessage').inner_text())
+                    check('missing requested upload never turns robot green',page.locator('#robotStatus').get_attribute('data-state')=='failed')
+                    page.screenshot(path=str(args.outputs/'upload-pending-controlled.png'))
                     browser.close()
             finally:
                 http.shutdown()

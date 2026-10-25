@@ -1,0 +1,13 @@
+{
+  "success": true,
+  "exit_code": 0,
+  "response": "MAKERIDE_CLI_OK",
+  "mode": "consultar",
+  "provider": "codex",
+  "evidence": {
+    "board_signature": false,
+    "compiled": false,
+    "flash_verified": false
+  },
+  "scope": "Real installed Codex CLI/account, read-only mode, marker response only. No hardware or project operation."
+}

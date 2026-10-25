@@ -46,6 +46,8 @@ def main():
                     page.locator('#extraTools').evaluate('(e)=>e.open=true');page.locator('#showSim').click()
                     check('simulator visible',page.locator('#simCanvas').is_visible())
                     check('inert ADC and button controls removed',page.locator('#simAnalog,#simButton').count()==0)
+                    check('new session starts with empty editor',page.locator('#code').input_value()=='')
+                    page.locator('#code').fill('void setup(){pinMode(LED_BUILTIN,OUTPUT);}\nvoid loop(){digitalWrite(LED_BUILTIN,HIGH);delay(500);digitalWrite(LED_BUILTIN,LOW);delay(500);}')
                     robot=page.locator('#robotStatus').get_attribute('data-state')
                     page.locator('#simBtn').click()
                     page.wait_for_function('()=>document.querySelector("#simClock").textContent.match(/\d+/)[0]>80')

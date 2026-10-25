@@ -1,0 +1,23 @@
+{
+  "active": false,
+  "success": true,
+  "exit_code": 0,
+  "response": "Ejecutaré una sola vez `makeride_http_probe` y después indicaré si funcionó, sin crear archivos ni actuar sobre el hardware.",
+  "error": "",
+  "evidence": {
+    "board_signature": false,
+    "compiled": false,
+    "flash_verified": false
+  },
+  "mcp_requested": [
+    "makeride_http_probe"
+  ],
+  "mcp_calls": {
+    "makeride_http_probe/makeride_http_probe": "completed"
+  },
+  "scope": "Actual installed Codex/account and controlled local Streamable HTTP MCP. No hardware, firmware or internet service called by the MCP fixture.",
+  "initialize_count": 1,
+  "tool_calls": 1,
+  "all_requests_authenticated": true,
+  "passed": true
+}

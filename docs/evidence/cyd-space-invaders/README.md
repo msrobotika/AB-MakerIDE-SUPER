@@ -1,0 +1,11 @@
+# Space Invaders en la CYD física
+
+25 octubre 2026. Misma CYD ESP32-2432S028R de la prueba de bloques, ESP32-D0WD-V3 revisión 3.0, 4 MB, COM4. El usuario pidió expresamente crear, compilar y cargar el juego. Se reutilizó el perfil LCD/táctil que ya había funcionado, sin volver a pedir su identificación.
+
+La tarea se ejecutó mediante el Codex CLI real lanzado por el IDE, con el permiso total ya autorizado. Se consultó el chip, se conservaron dos lecturas independientes coincidentes de los 4 MB de flash y se compiló el firmware completo: 318960 bytes de programa y 25324 bytes estáticos. Los dos búferes de dibujo ocupan otros 153600 bytes de heap. El motor dibuja en RAM y el LCD recibe filas modificadas, sin borrado completo visible por fotograma.
+
+Arduino CLI cargó con `--verify`, a 115200, con salida 0 y cuatro bloques verificados. El lector serie recibió el marcador propio `MSR_SPACEINVADERS_BOOT` mientras esperaba la primera cruz de calibración; no transmitió bytes ni ordenó otro reset. Después el usuario confirmó que ya tenía el juego. No se registró una evaluación independiente de todos los botones, parpadeo o estabilidad prolongada de este firmware.
+
+[Fuente exacta compilada](../../../examples/cyd_space_invaders/cyd_space_invaders.ino), con [motor](../../../examples/cyd_space_invaders/SpaceInvaders.h) y [dibujo](../../../examples/cyd_space_invaders/CYDFrame.h). Solo se adaptó el nombre del archivo principal al nombre de su carpeta Arduino; sus bytes y los auxiliares coinciden con la fuente compilada. No usa microSD, Wi-Fi, sonido ni ventana PC.
+
+[Resultado estructurado y hashes](resultado.json) · [Resumen del grabador sin identificadores privados](grabacion-resumen.txt) · [Serie](serie.txt). Las imágenes completas de flash y los registros privados permanecen fuera del repositorio y del ZIP público. Esta prueba no acredita compatibilidad con cualquier revisión CYD ni cualquier placa china.

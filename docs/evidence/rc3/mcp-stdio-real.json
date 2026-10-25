@@ -1,0 +1,22 @@
+{
+  "active": false,
+  "success": true,
+  "exit_code": 0,
+  "response": "Invocaré una sola vez la herramienta de prueba MCP, sin modificar archivos ni acceder al hardware.\n\n\nMSR_MCP_PROBE_OK",
+  "error": "",
+  "evidence": {
+    "board_signature": false,
+    "compiled": false,
+    "flash_verified": false
+  },
+  "mcp_requested": [
+    "makeride_probe"
+  ],
+  "mcp_calls": {
+    "makeride_probe/makeride_probe": "completed"
+  },
+  "scope": "Actual installed Codex/account plus local stdio JSON-RPC MCP fixture. Initialize/discovery observed; inspect tool_calls for execution evidence. No firmware or physical hardware operation. Does not validate HTTP or Claude.",
+  "initialize_count": 1,
+  "tool_calls": 1,
+  "passed": true
+}

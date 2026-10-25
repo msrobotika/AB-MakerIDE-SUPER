@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#0a1019">
-<title>AB MakerIDE SUPER 1.0.0-rc.2 · MS Robotika</title>
+<title>AB MakerIDE SUPER 1.0.0-rc.3 · MS Robotika</title>
 <style>
 :root{color-scheme:dark;--bg:#070b11;--rail:#0b111b;--side:#0e1621;--panel:#111c29;--line:#243244;--line2:#33465d;--txt:#e5eef8;--muted:#91a5b9;--subtle:#5f7790;--blue:#38bdf8;--violet:#9b86f9;--good:#44dbac;--bad:#fa8188;--amber:#f5c469;--mono:'Cascadia Code','JetBrains Mono',Consolas,monospace;--sans:Inter,'Segoe UI',system-ui,sans-serif}
 *{box-sizing:border-box}html,body{height:100%;margin:0}body{background:var(--bg);color:var(--txt);font:13px var(--sans);overflow:hidden}button,select,input,textarea{font:inherit}button{cursor:pointer}button:disabled{opacity:.42;cursor:not-allowed}button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
@@ -237,14 +237,24 @@ body[data-right="lab"] .right .hardwarelab{display:block;max-height:none;overflo
  <label class="optincode"><input type="checkbox" id="aiSendCode"> Enviar código actual como contexto a la nube (posibles secretos redactados; revisa antes)</label>
  <p class="notice">Los modelos de chat solo proponen código; los agentes CLI pueden ejecutar herramientas y grabar hardware si eliges permisos suficientes y lo solicitas. La finalización del agente NO demuestra que el programa funcione en la pantalla. Las claves de proveedores en la nube permanecen en memoria del servidor.</p>
 </div></details>
+<details class="wizard" id="mcpPanel">
+<summary>Conexiones MCP · herramientas del agente</summary>
+<p class="agent-guide">Conecta servidores Streamable HTTP o procesos locales stdio a Codex y Claude Code. Los proveedores de chat no ejecutan MCP. Cada agente usa tu propia cuenta.</p>
+<label>Configuración JSON · mcpServers<textarea id="mcpConfig" class="input" maxlength="64000" spellcheck="false" autocomplete="off" placeholder='{"mcpServers":{"documentacion":{"url":"https://servidor.example/mcp"}}}'></textarea></label>
+<p class="agent-guide">Guardar valida el formato sin iniciar procesos ni conectar servidores. Se guarda localmente como configuración de IA; puede contener credenciales. No se incluye en los proyectos exportados.</p>
+<div class="agentactions"><button id="mcpSave" class="action small">Guardar conexiones</button><button id="mcpRefresh" class="action small ghost">Ver configuración</button></div>
+<p id="mcpStatus" class="agent-guide" role="status">Sin comprobar. La conexión real la establece la CLI al ejecutar una tarea autorizada.</p>
+<p class="agent-guide">La configuración propia de tu CLI sigue aplicándose. OAuth, políticas de empresa y compatibilidad de cada servidor se gestionan en el agente.</p>
+</details>
 <details class="wizard" id="agentWorkbench">
 <summary>⚡ Codex / Claude Code · Ejecutar tarea real</summary>
 <div class="agent-guide">Selecciona agente y permisos. La ejecución empieza en una copia del proyecto en la carpeta local de sesiones. El código puede abrirse con copia del anterior; si estás editando, se conserva tu borrador. Revisa el resultado antes de compilar. Los permisos de la CLI determinan el acceso a otras rutas.</div>
 <label>Agente<select class="selector" id="execProvider"><option value="codex">OpenAI Codex CLI · probado por el autor</option><option value="claude_code">Claude Code CLI · experimental</option></select></label>
 <p class="agent-guide" id="execAccountNote" role="status"></p>
 <label>Pantalla y placa del proyecto<select class="selector" id="execHardware"><option value="board-unspecified">Sin pantalla identificada · preguntar si hace falta</option><option value="esp32-cyd-28">CYD ESP32-2432S028R · ILI9341 + táctil XPT2046 (declarado)</option><option value="ideaspark-114">IdeaSpark ST7789 1,14″ (declarado)</option><option value="ideaspark-19">IdeaSpark ST7789 1,9″ (declarado)</option></select></label>
-<div class="agent-guide">Destino: la placa. El chip y el puerto se consultan automáticamente; la pantalla y su revisión necesitan su perfil físico.</div>
+<div class="agent-guide">Destino: la placa. El perfil físico se guarda con el proyecto y acompaña al agente con su referencia de pantalla/táctil. Si pides cargar, la tarea queda incompleta hasta que conste grabación verificada. USB no identifica por sí solo la pantalla.</div>
 <label class="optincode"><input type="checkbox" id="execAllowPC"> Permitir también una ventana auxiliar en el ordenador</label>
+<label class="optincode"><input type="checkbox" id="execUseMCP"> Usar los MCP configurados aquí en esta tarea · Autónomo o Acceso total</label>
 <button class="action small ghost" id="agentTaskCYD" title="Abre el juego táctil CYD y guarda una copia del código anterior; no graba firmware">Abrir juego CYD · con copia</button>
 <label>Permisos para esta ejecución<select class="selector" id="execMode">
 <option value="consultar">Consultar · lectura</option>
@@ -276,12 +286,12 @@ body[data-right="lab"] .right .hardwarelab{display:block;max-height:none;overflo
 <label>Restricciones y conexiones confirmadas<input class="input" id="wizardConstraints" maxlength="900" placeholder="GPIO y tensiones confirmadas, red, alimentación..."></label>
 <button class="action primary small" id="wizardBuild">✦ Generar propuesta con revisión técnica</button>
 <p class="auditlabel">Gemma propone planes y código. Codex y Claude pueden modificar una copia del proyecto si autorizas la ejecución.</p></details>
-<div class="chatlog" id="chatLog"></div><div class="chatinput"><textarea id="chatInput" placeholder="Ej.: LED parpadeando cada 200 ms"></textarea><button class="action primary" id="chatSend" title="Enviar">➤</button></div></div>
+<div class="chatlog" id="chatLog"></div><div class="chatinput"><textarea id="chatInput" placeholder="Pide un proyecto para la placa conectada…"></textarea><button class="action primary" id="chatSend" title="Enviar">➤</button></div></div>
 </aside>
 </div>
-<footer class="footer"><span id="footBoard">Arduino Uno R3</span><span id="footPort">Puerto: sin seleccionar</span><span id="footLang">C++ · Arduino</span><span class="space"></span><span id="footSave">Sin cambios</span><span id="footCaret">Ln 1, Col 1</span><span>AB MakerIDE 1.0.0-rc.2</span></footer>
+<footer class="footer"><span id="footBoard">Arduino Uno R3</span><span id="footPort">Puerto: sin seleccionar</span><span id="footLang">C++ · Arduino</span><span class="space"></span><span id="footSave">Sin cambios</span><span id="footCaret">Ln 1, Col 1</span><span>AB MakerIDE 1.0.0-rc.3</span></footer>
 </div>
-<input type="file" id="projectFile" accept=".json,.ino,.py,application/json,text/plain" class="hidden">
+<input type="file" id="projectFile" accept=".json,.ino,.py,.zip,application/json,text/plain,application/zip" class="hidden">
 
 <dialog id="boardCatalog" class="board-picker" aria-labelledby="catalogTitle">
  <div class="picker-head"><div><strong id="catalogTitle">Elegir placa</strong><p class="hint">Placas procedentes de Arduino CLI. El puerto físico se elige por separado.</p></div><button class="action small ghost" id="catalogClose" aria-label="Cerrar selector">✕</button></div>

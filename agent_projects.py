@@ -112,10 +112,44 @@ def project_archive(snapshot: dict, files: dict[str, bytes]) -> bytes:
         raise ValueError('No se encuentra el archivo principal del proyecto.')
     buffer = io.BytesIO()
     folder = 'sketch' if main.endswith('.ino') else 'project'
-    metadata = {key: snapshot.get(key) for key in ('job_id', 'provider', 'mode', 'fqbn', 'port', 'outcome')}
+    metadata = {key: snapshot.get(key) for key in ('job_id', 'provider', 'mode', 'fqbn', 'port', 'outcome', 'hardware_profile', 'upload_requested', 'file_name')}
     metadata['target_note'] = 'FQBN y puerto declarados; no prueban identidad ni presencia del hardware.'
     with zipfile.ZipFile(buffer, 'w', zipfile.ZIP_DEFLATED) as archive:
         for name, data in files.items():
             archive.writestr(folder + '/' + name, data)
         archive.writestr(folder + '/MAKERIDE_EXPORT.json', json.dumps(metadata, ensure_ascii=False, indent=2))
     return buffer.getvalue()
+
+
+def read_project_archive(data: bytes) -> tuple[dict,dict[str,bytes]]:
+    """Read an explicitly opened source ZIP in memory; never extract paths."""
+    if not isinstance(data,bytes) or len(data)>8_100_000:
+        raise ValueError('El ZIP supera el límite de 8 MB de proyecto.')
+    files={};metadata={};seen=set()
+    try:
+        with zipfile.ZipFile(io.BytesIO(data)) as archive:
+            infos=[i for i in archive.infolist() if not i.is_dir()]
+            if len(infos)>MAX_PROJECT_FILES+1 or sum(i.file_size for i in infos)>MAX_PROJECT_BYTES+16_384:
+                raise ValueError('El proyecto supera los límites de archivos o tamaño.')
+            for info in infos:
+                name=info.filename
+                if name.startswith(('sketch/','project/')):name=name.split('/',1)[1]
+                if name.casefold() in seen or any(p.startswith('.') for p in name.split('/')):
+                    raise ValueError('Archivo oculto, duplicado o ruta no admitida.')
+                seen.add(name.casefold())
+                if stat.S_ISLNK(info.external_attr>>16) or info.flag_bits&1:
+                    raise ValueError('No se permiten enlaces ni ZIP cifrados.')
+                if name in files:raise ValueError('Archivos duplicados en el proyecto.')
+                content=archive.read(info)
+                if name=='MAKERIDE_EXPORT.json':
+                    if len(content)>16_384:raise ValueError('Metadatos de proyecto demasiado grandes.')
+                    metadata=json.loads(content.decode('utf-8'));continue
+                if Path(name).suffix.lower() not in EXTENSIONS:
+                    raise ValueError('Archivo no admitido en el proyecto: '+name)
+                files[name]=content
+    except (zipfile.BadZipFile,UnicodeError,KeyError,json.JSONDecodeError,RuntimeError,NotImplementedError) as error:
+        raise ValueError('ZIP de proyecto inválido.') from error
+    validate_project_files(files)
+    if not isinstance(metadata,dict) or not any(name in files for name in ('sketch.ino','main.py')):
+        raise ValueError('Falta sketch.ino o main.py en el proyecto.')
+    return metadata,files

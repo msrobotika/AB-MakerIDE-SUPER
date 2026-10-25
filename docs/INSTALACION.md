@@ -1,3 +1,9 @@
+# Sesiones nuevas en RC3
+
+RC3 abre el editor, el chat y la tarea vacíos. Guarda el código explícitamente con Guardar proyecto o Ctrl+S antes de cerrar si lo quieres conservar. Importar reabre JSON/INO/PY o ZIP con auxiliares. Solo se recuerdan automáticamente las preferencias de IA; los registros operativos pueden recuperarse mediante una acción explícita. Las credenciales CLI siguen en sus herramientas oficiales y las claves de chat permanecen en memoria del servidor.
+
+El arranque también configura UTF-8 para evitar que una consola/redirección cp1252 de Windows detenga el servidor al imprimir su dirección. Los fallos de instalación y puertos ocupados siguen explicándose sin detener procesos ajenos.
+
 # Instalación y recuperación en Windows
 
 ## Primer arranque
@@ -31,7 +37,7 @@ El monitor cierra su conexión si falla una lectura o un envío y vuelve a ofrec
 
 ## Datos y copias
 
-El proyecto abierto se conserva en el almacenamiento del navegador y se puede exportar. Las sesiones del servidor se guardan en `.makeride-data` o en la carpeta indicada por `AB_MAKERIDE_DATA_DIR`. No borres ni sustituyas esas carpetas sin conservar antes tus datos. Los orígenes 8765, 8770 y 8771 tienen almacenamientos distintos: exporta e importa el proyecto para migrar.
+El borrador abierto permanece en RAM hasta que el usuario lo descarga. Las copias antiguas no se eliminan ni se restauran automáticamente. Las sesiones del servidor se guardan en `.makeride-data` o en la carpeta indicada por `AB_MAKERIDE_DATA_DIR`. No borres ni sustituyas esas carpetas sin conservar antes tus datos. Los orígenes 8765, 8770 y 8771 tienen almacenamientos distintos: exporta e importa el proyecto para migrar.
 
 La preparación opcional y el diagnóstico no abren puertos serie, no graban placas ni configuran cuentas de IA. Las copias binarias de las cinco placas probadas se conservan fuera del repositorio y del ZIP público.
 

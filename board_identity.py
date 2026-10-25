@@ -5,6 +5,7 @@ import re
 import shutil
 import subprocess
 import sys
+import time
 
 from toolchain import arduino_cli
 
@@ -62,9 +63,37 @@ def parse_chip(output):
     return None
 
 
-def identify(ports, boards, requested_port=''):
+def firmware_profile(line):
+    if (re.match(r'^MSR_CYD_START profile=ESP32-2432S028R\b', line)
+            or (line.startswith('MSR_SPACEINVADERS_BOOT ') and 'lcd=ILI9341_320x240 touch=XPT2046' in line)):
+        return {'hardware_profile':'esp32-cyd-28','physical_profile_source':'firmware_marker',
+                'display_profile_reported':True}
+    return {}
+
+
+def read_firmware_identity(port, serial_factory=None):
+    """Bounded RX only; a known sketch may report its profile after chip reset."""
+    if not isinstance(port,str) or not PORT.fullmatch(port):return {}
+    try:
+        if serial_factory is None:
+            import serial
+            serial_factory=serial.Serial
+        conn=serial_factory(port=None,baudrate=115200,timeout=.12)
+        conn.dtr=False;conn.rts=False;conn.port=port
+        try:
+            conn.open();deadline=time.monotonic()+2.6;received=0
+            while time.monotonic()<deadline and received<4096:
+                data=conn.readline(256);received+=len(data)
+                found=firmware_profile(data.decode('utf-8',errors='replace').strip())
+                if found:return found
+        finally:conn.close()
+    except (OSError,ImportError):pass
+    return {}
+
+
+def identify(ports, boards, requested_port='', firmware_reader=None):
     available = {p['port']: p for p in ports if isinstance(p.get('port'), str) and PORT.fullmatch(p['port'])}
-    if requested_port and (not isinstance(requested_port, str) or requested_port not in available):
+    if not isinstance(requested_port, str) or (requested_port and requested_port not in available):
         raise ValueError('El puerto solicitado no está presente.')
     if not available:
         return {'ok': True, 'status': 'absent', 'message': 'No hay puertos USB presentes.'}
@@ -111,4 +140,9 @@ def identify(ports, boards, requested_port=''):
         return result
     result.update(status='identified', fqbn=fqbn,
                   message=chip_name + ': puerto y perfil seleccionados. La pantalla requiere su propio perfil físico.')
+    if firmware_reader is not None:
+        reported=firmware_reader(port)
+        if reported:
+            result.update(reported)
+            result['message']=chip_name + ': perfil CYD informado por el firmware; no es lectura independiente del controlador LCD.'
     return result

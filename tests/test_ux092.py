@@ -18,10 +18,11 @@ class UX092Tests(unittest.TestCase):
         self.assertIn("e.key==='Home'",JS)
         self.assertIn("e.key==='End'",JS)
         self.assertIn("e.ctrlKey&&e.altKey",JS)
-    def test_layout_persists_only_in_local_storage(self):
-        self.assertIn("const UI_STORAGE='ab-makeride-layout-v092'",JS)
-        self.assertIn('localStorage.setItem(UI_STORAGE',JS)
-        self.assertIn('resizeTerminal(normalTerminalHeight,false)',JS)
+    def test_clean_start_persists_ai_preferences_but_not_draft_or_layout(self):
+        self.assertNotIn('localStorage.setItem(UI_STORAGE',JS)
+        self.assertNotIn('localStorage.setItem(SAVEKEY',JS)
+        self.assertIn('localStorage.setItem(AI_PREFERENCES',JS)
+
     def test_unknown_ch340_not_asserted_as_uno(self):
         self.assertIn('USB CH340 · modelo a elegir',JS)
         self.assertIn('confirma el modelo manualmente',JS)
@@ -36,8 +37,8 @@ class UX092Tests(unittest.TestCase):
         self.assertIn("$('#quickHelp').onclick",JS)
     def test_auto_hide_deps_when_all_clear(self):
         self.assertIn("closest('.advisorstrip').classList.toggle('hidden'",JS)
-    def test_port_can_be_restored_after_scan_validation(self):
-        self.assertIn('port:state.port',JS)
-        self.assertIn("state.port=/^COM\\d+$/i.test(old.port||'')",JS)
+    def test_port_is_selected_from_scan_instead_of_restoring_old_session(self):
+        self.assertIn('state.port=ports[0].port',JS)
+        self.assertNotIn("state.port=/^COM\\d+$/i.test(old.port||'')",JS)
         self.assertIn("desconectado / sin verificar",JS)
         self.assertNotIn("if(!state.ports.some(p=>p.port===state.port))state.port=''",JS)

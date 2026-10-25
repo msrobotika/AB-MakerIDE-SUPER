@@ -55,3 +55,5 @@ jobs:
       - run: python tests/browser_simulator.py --outputs work/simulator-ci
       - run: python tests/browser_connection_recovery.py --outputs work/connection-ci
       - run: python tests/browser_auto_identity.py --outputs work/identity-ci
+      - run: python tests/browser_clean_start.py --outputs work/start-ci
+      - run: python tests/browser_mcp.py --outputs work/mcp-ci

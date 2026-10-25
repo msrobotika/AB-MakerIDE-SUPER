@@ -1,31 +1,26 @@
-# Guardar y reutilizar el código del agente
+# Trabajar con el agente y guardar el proyecto · RC3
 
-Al terminar una tarea correctamente, el código generado se abre en el editor si está activada la opción «Abrir código generado al terminar» y el código inicial sigue intacto. Primero se guarda una copia del código anterior. Si editaste mientras trabajaba el agente, el editor conserva tus cambios y puedes revisar las diferencias y usar «Abrir último código» cuando quieras. Si no se puede guardar el respaldo, la sustitución se detiene. Se conservan las siete últimas copias en el almacenamiento local del navegador.
+Cada apertura empieza con editor, chat y tareas vacíos. El código de un borrador se conserva si el usuario lo guarda; no se restaura automáticamente al volver. Se recuerdan proveedor/modelo, CLI elegida, modo de permisos y preferencia de apertura del código generado. No se almacenan prompts ni claves API en esas preferencias. Las cuentas de Codex/Claude pertenecen a sus herramientas oficiales y los conectores de chat mantienen sus claves en memoria del servidor.
 
-## Guardado
+## Pedir y ejecutar
 
-- **Guardar proyecto (.zip)** descarga el sketch y sus archivos auxiliares, por ejemplo radar_config.h. El ZIP usa una carpeta sketch/ con sketch.ino para Arduino y añade los datos declarados del destino; esos datos no prueban la identidad de la placa. Es la opción adecuada si el agente creó varios archivos.
-- **Guardar solo sketch** descarga el archivo .ino o .py que propuso el agente. Puedes volver a abrirlo con **Importar**. Un sketch que incluya cabeceras propias necesita también sus archivos auxiliares.
-- **Exportar**, en el panel de proyecto, conserva el formato .abmaker.json compatible con el IDE para los dos archivos del editor y la selección de placa. Los auxiliares se conservan mediante el ZIP del agente.
+Con Codex o Claude seleccionado, el chat prepara una tarea real y abre su autorización. La CLI recibe una copia del código actual y sus auxiliares, el puerto/FQBN declarados y el perfil físico disponible. El permiso elegido se conserva como preferencia, pero no autoriza silenciosamente una ejecución posterior. Acceso total mantiene su consentimiento textual por tarea.
 
-El importador abre .abmaker.json, .ino y .py. No importa ZIP: para usarlo en Arduino IDE, descomprímelo y abre sketch/sketch.ino. En MakerIDE, la sesión del agente conserva los auxiliares para continuar y compilar mientras su carpeta de datos siga disponible. La copia ZIP permite conservarlos fuera de esa carpeta.
+Un modelo CYD expresado en la petición o seleccionado como perfil concreto proporciona la referencia LCD/táctil local. La ausencia de nombre comercial en `board list` no borra esos datos. El agente debe consultar las referencias antes de volver a preguntar por información ya incluida. Si queda una incertidumbre física imprescindible, debe explicar qué falta; no debe sustituir el firmware por Tkinter u otra ventana PC.
 
-## Continuidad
+Cuando la petición incluye una carga autorizada, debe compilar el firmware completo y cargarlo con verificación. Una CLI que termina sin esa evidencia devuelve `upload_pending`. Los registros anteriores se interpretan con ese límite al recuperarlos, sin repetir ninguna operación. Las evidencias de Codex se extraen de eventos de comandos completados con salida 0. No equivalen a ver personalmente una pantalla ni son una garantía contra un agente con permisos totales que falsifique sus propias salidas.
 
-Las siguientes tareas del mismo proyecto copian los auxiliares a una nueva sesión, junto con la versión actual del archivo principal que tienes en el editor. Las sesiones originales se mantienen. «Compilar» y «Compilar y grabar» también reciben esos auxiliares, evitando perder una cabecera que creó el agente. Una importación, un proyecto nuevo o un ejemplo desvinculan los auxiliares del proyecto anterior.
+Durante una tarea activa se bloquean en la interfaz las compilaciones/cargas paralelas y el uso del monitor. Si el monitor del propio IDE ocupa el puerto de la nueva tarea, se cierra antes de arrancar la CLI; no se reconecta ni reenvía datos automáticamente. Los programas externos y las CLI con acceso total quedan fuera del aislamiento del IDE.
 
-La recuperación después de reiniciar necesita la misma carpeta de datos. Si una sesión ya no está disponible, se informa del error al guardar o compilar; no se reconstruyen sus auxiliares a partir del sketch. No borres .makeride-data sin guardar tus proyectos.
+## Código y archivos
 
-Se exportan hasta 128 archivos y 8 MB en un máximo de 64 carpetas. Se omiten carpetas ocultas, cachés y compilaciones, enlaces, binarios y nombres reservados para credenciales o copias internas. Si se supera un límite se muestra un error, sin entregar silenciosamente un proyecto incompleto. Antes de continuar mediante una CLI externa se comprueban posibles credenciales en los auxiliares de texto.
+El código generado puede abrirse automáticamente si no has cambiado el original. Una edición concurrente se conserva. Las copias para deshacer una sustitución viven en RAM durante esa apertura. Cerrar o volver a abrir el IDE inicia una sesión vacía.
 
-## Radar IdeaSpark
+- **Guardar proyecto / Ctrl+S:** descarga JSON para un borrador simple; si el código pertenece a un proyecto de agente/importado, descarga ZIP con la versión actual del editor y sus auxiliares.
+- **Guardar proyecto del agente:** permite descargar una sesión terminada con sus archivos. Si corresponde al editor actual, incluye sus últimas ediciones.
+- **Importar:** abre `.ino`, `.py`, JSON de MakerIDE o un ZIP guardado. El ZIP conserva cabeceras y archivos auxiliares, pero no ejecuta nada ni programa una placa.
+- **Continuar pendiente:** hereda código/auxiliares y perfil de la sesión elegida. Requiere una nueva tarea autorizada y no repite cargas desconocidas a ciegas.
 
-«Abrir radar IdeaSpark» coloca en el editor el ejemplo de archivo único y selecciona ESP32 Dev Module. La pantalla ST7789 usa MOSI 23, SCLK 18, CS 15, DC 2, RST 4 y retroiluminación 32; resolución 135x240 y rotación 1. Se recuperó del proyecto Salto Robot que el usuario confirmó para su placa.
+Los ZIP se leen sin extraer rutas arbitrarias. Se rechazan enlaces, rutas ascendentes/absolutas, duplicados, ficheros ocultos y contenidos cifrados; se limitan a 128 archivos y 8 MB de proyecto. No se importan afirmaciones de compilación o grabación como evidencia nueva.
 
-El radar se compiló y cargó en COM4 con autorización explícita y verificación del grabador. El usuario confirmó que lo ve en pantalla. Los cuatro ecos son simulados: no hay medición de distancias. [Evidencia de la grabación y confirmación](evidence/radar-ideaspark/README.md).
-
-## Verificación de esta mejora
-
-197 pruebas unitarias correctas y 4 omitidas por falta de g++; 26 comprobaciones de interfaz correctas. [Capturas y alcance de las pruebas](evidence/agent-projects/README.md). Se volvieron a comprobar los 711 archivos de proyectos originales: ninguno cambió ni falta.
-
-La copia ejecutada del servidor debe incluir las capacidades agent-project-export, agent-project-continuation y agent-editor-open en /api/health. Una pestaña abierta contra un servidor anterior necesita reiniciar el servidor desde esta carpeta y recargar la página para activar las nuevas funciones.
+Las sesiones operativas permanecen en `.makeride-data/AgentWorkspaces` para diagnóstico y descarga explícita; son un archivo de trabajo, no guardado automático del borrador del editor. Las copias de versiones anteriores se conservan y una migración no carga su código por sí sola. Las copias completas de flash siguen fuera de los proyectos públicos.

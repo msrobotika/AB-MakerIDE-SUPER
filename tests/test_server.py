@@ -195,7 +195,7 @@ class APITests(unittest.TestCase):
     def test_health(self):
         code, result = self.call("GET", "/api/health")
         self.assertEqual(code, 200)
-        self.assertEqual(result["version"], "1.0.0-rc.2")
+        self.assertEqual(result["version"], "1.0.0-rc.3")
 
     def test_serves_html(self):
         code, result = self.call("GET", "/")

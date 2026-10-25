@@ -1,0 +1,13 @@
+{
+  "provider": "codex",
+  "mode": "consultar",
+  "exit_code": 0,
+  "success": true,
+  "evidence": {
+    "board_signature": false,
+    "compiled": false,
+    "flash_verified": false
+  },
+  "response": "IDE_CHAT_OK",
+  "scope": "Real IDE chat to consent to installed Codex CLI, read-only diagnostic; no hardware."
+}

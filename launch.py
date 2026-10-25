@@ -64,6 +64,8 @@ def diagnose(root=ROOT, port=8770):
                 scope='Diagnóstico local; no abre puertos serie, no graba hardware ni configura cuentas de IA.')
 
 def main(argv=None):
+    for stream in (sys.stdout,sys.stderr):
+        if hasattr(stream,'reconfigure'):stream.reconfigure(encoding='utf-8',errors='backslashreplace')
     parser = argparse.ArgumentParser(description='Arranque local de AB MakerIDE')
     parser.add_argument('--port', type=int, default=8770)
     parser.add_argument('--no-browser', action='store_true')

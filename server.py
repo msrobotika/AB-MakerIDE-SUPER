@@ -14,6 +14,7 @@ import os
 from pathlib import Path
 import re
 import secrets
+import base64
 import hmac
 import shutil
 import subprocess
@@ -28,7 +29,8 @@ from hardware_lab import public_profiles, check as check_hardware, inspect_sketc
 from dependency_advisor import summarize, redact_secrets
 from agent_runtime import AgentJobManager
 from toolchain import arduino_cli
-from board_identity import identify as identify_board
+from board_identity import identify as identify_board, read_firmware_identity
+from mcp_bridge import MCPSettings
 
 ROOT = Path(__file__).resolve().parent
 MAX_BODY = 512 * 1024
@@ -519,6 +521,7 @@ DATA_ROOT = Path(os.environ.get('AB_MAKERIDE_DATA_DIR', ROOT / '.makeride-data')
 JOBS = JobManager(HARDWARE_LOCK, DATA_ROOT / 'BuildSessions')
 AGENT = AgentService()
 AGENT_JOBS = AgentJobManager(DATA_ROOT / 'AgentWorkspaces')
+MCP_SETTINGS = MCPSettings(DATA_ROOT / 'ai-settings' / 'mcp.json')
 SESSION_KEY = secrets.token_urlsafe(32)
 BOARD_IDENTIFICATION_ENABLED = True
 
@@ -539,7 +542,7 @@ def libraries_list() -> dict:
 
 
 class IDEHandler(BaseHTTPRequestHandler):
-    server_version = "ABMakerIDE/1.0.0-rc.2"
+    server_version = "ABMakerIDE/1.0.0-rc.3"
 
     def log_message(self, fmt, *args):
         print("[MakerIDE] " + fmt % args)
@@ -591,7 +594,7 @@ class IDEHandler(BaseHTTPRequestHandler):
         except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError):
             pass  # Browser reload/disconnect: never alter the underlying task.
 
-    def _post_data(self):
+    def _post_data(self, max_bytes=MAX_BODY):
         types = self.headers.get_all('Content-Type', [])
         if len(types) != 1 or types[0].split(';', 1)[0].strip().lower() != 'application/json':
             raise ValueError("Content-Type debe ser application/json")
@@ -601,7 +604,7 @@ class IDEHandler(BaseHTTPRequestHandler):
             n = int(self.headers.get("Content-Length", "0"))
         except ValueError as e:
             raise ValueError("Content-Length incorrecto") from e
-        if n <= 0 or n > MAX_BODY:
+        if n <= 0 or n > max_bytes:
             raise ValueError("Petición demasiado grande o vacía")
         data = json.loads(self.rfile.read(n))
         if not isinstance(data, dict):
@@ -613,7 +616,7 @@ class IDEHandler(BaseHTTPRequestHandler):
             return self._json(403, {"ok": False, "error": "Acceso restringido al equipo local"})
         parsed = urlsplit(self.path)
         if parsed.path == "/api/health":
-            return self._json(200, {"ok": True, "name": "AB MakerIDE · MS Robotika", "version": "1.0.0-rc.2", "mode": "local-real", "capabilities": ["agent-project-export", "agent-project-continuation", "agent-editor-open"]})
+            return self._json(200, {"ok": True, "name": "AB MakerIDE · MS Robotika", "version": "1.0.0-rc.3", "mode": "local-real", "capabilities": ["agent-project-export", "agent-project-continuation", "agent-editor-open"]})
         if parsed.path == "/api/session":
             return self._json(200, {"ok": True, "csrf": SESSION_KEY})
         if parsed.path == "/api/diagnostics":
@@ -653,6 +656,11 @@ class IDEHandler(BaseHTTPRequestHandler):
             return self._json(200, AGENT.status())
         if parsed.path == "/api/agents/status":
             return self._json(200, AGENT_JOBS.status_overview())
+        if parsed.path == '/api/mcp/status':
+            try:
+                return self._json(200, MCP_SETTINGS.status())
+            except (ValueError, OSError):
+                return self._json(400, {'ok': False, 'error': 'Configuración MCP no disponible; reemplázala desde el panel.'})
         if parsed.path == '/api/agents/history':
             return self._json(200, {'ok': True, 'recent': AGENT_JOBS.history(12)})
         if parsed.path == '/api/agents/project.zip':
@@ -738,19 +746,45 @@ class IDEHandler(BaseHTTPRequestHandler):
         if len(tokens) != 1 or not hmac.compare_digest(tokens[0].encode('utf-8'), SESSION_KEY.encode('ascii')):
             return self._json(403, {'ok': False, 'error': 'Sesión local no autorizada. Recarga MakerIDE.'})
         try:
-            d = self._post_data()
             p = urlsplit(self.path).path
-            if p == '/api/boards/identify':
+            d = self._post_data(max_bytes=11_000_000 if p=='/api/projects/import' else MAX_BODY)
+            if p == '/api/mcp/config':
+                if AGENT_JOBS._current and AGENT_JOBS._current.active:
+                    raise ValueError('Espera a que termine el agente para cambiar los MCP.')
+                result = MCP_SETTINGS.save(d)
+            elif p == '/api/projects/import':
+                encoded=d.get('archive')
+                if not isinstance(encoded,str) or len(encoded)>10_800_000:
+                    raise ValueError('ZIP de fuentes demasiado grande.')
+                try:archive=base64.b64decode(encoded,validate=True)
+                except ValueError as error:raise ValueError('ZIP codificado inválido.') from error
+                result=AGENT_JOBS.import_project(archive)
+            elif p == '/api/agents/project/export':
+                payload=AGENT_JOBS.export_project(d.get('job_id'),d.get('code'))
+                self.send_response(200)
+                self.send_header('Content-Type','application/zip')
+                self.send_header('Content-Disposition','attachment; filename="MakerIDE-proyecto.zip"')
+                self.send_header('Content-Length',str(len(payload)))
+                self.send_header('Cache-Control','no-store')
+                self.send_header('X-Content-Type-Options','nosniff')
+                self.end_headers();self.wfile.write(payload);return
+            elif p == '/api/boards/identify':
                 if not BOARD_IDENTIFICATION_ENABLED:
                     raise ValueError('Identificación no disponible en este servidor.')
                 current = AGENT_JOBS._current
                 if (current and current.active) or SERIAL.status()['connected'] or not HARDWARE_LOCK.acquire(blocking=False):
                     return self._json(200, {'ok': True, 'status': 'busy', 'message': 'Identificación aplazada: hay una tarea o monitor activo. No se interrumpe.'})
                 try:
-                    result = identify_board(scan_ports(), board_catalog()['boards'], d.get('port', ''))
+                    result = identify_board(scan_ports(), board_catalog()['boards'], d.get('port', ''), firmware_reader=read_firmware_identity)
                 finally:
                     HARDWARE_LOCK.release()
             elif p == "/api/agents/start":
+                use_mcp = d.get('use_mcp', False)
+                if type(use_mcp) is not bool:
+                    raise ValueError('Selección MCP inválida.')
+                configuration = MCP_SETTINGS.load() if use_mcp else None
+                if use_mcp and not configuration['mcpServers']:
+                    raise ValueError('Guarda al menos un servidor MCP antes de activarlo.')
                 result = AGENT_JOBS.start(
                     provider=d.get('provider'), mode=d.get('mode'),
                     prompt=d.get('prompt'), code=d.get('code'),
@@ -758,6 +792,7 @@ class IDEHandler(BaseHTTPRequestHandler):
                     confirmed=d.get('confirm'), full_consent=d.get('full_consent', ''), port=d.get('port', ''),
                     parent_job_id=d.get('parent_job_id', ''),
                     hardware_profile=d.get('hardware_profile', 'board-unspecified'), allow_pc_ui=d.get('allow_pc_ui', False),
+                    mcp_config=configuration,
                 )
             elif p == "/api/agents/cancel":
                 result = AGENT_JOBS.cancel(d.get('job_id'))
@@ -894,6 +929,8 @@ class IDEHandler(BaseHTTPRequestHandler):
 
 
 def main():
+    for stream in (sys.stdout,sys.stderr):
+        if hasattr(stream,'reconfigure'):stream.reconfigure(encoding='utf-8',errors='backslashreplace')
     parser = argparse.ArgumentParser(description="AB MakerIDE · MS Robotika — puente local")
     parser.add_argument("--port", type=int, default=8770)
     parser.add_argument("--no-browser", action="store_true")
@@ -904,7 +941,7 @@ def main():
         print(f"No se ha podido abrir el puerto {args.port}: {exc}", file=sys.stderr, flush=True)
         print("Comprueba si hay otro MakerIDE abierto. Cierra el servidor anterior y reintenta.", file=sys.stderr, flush=True)
         raise SystemExit(2)
-    print(f"AB MakerIDE v1.0.0-rc.2 SUPER (LOCAL) → http://127.0.0.1:{args.port}", flush=True)
+    print(f"AB MakerIDE v1.0.0-rc.3 SUPER (LOCAL) → http://127.0.0.1:{args.port}", flush=True)
     print("No se usan placas simuladas como si fueran reales.", flush=True)
     if not args.no_browser:
         threading.Timer(.6, lambda: webbrowser.open(f"http://127.0.0.1:{args.port}")).start()

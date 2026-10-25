@@ -15,6 +15,26 @@ import board_identity as identity
 from hardware_lab import PROFILES
 import server
 
+
+class FirmwareIdentityTests(unittest.TestCase):
+    def test_known_firmware_reports_profile_without_claiming_controller_detection(self):
+        line='MSR_SPACEINVADERS_BOOT build=v1 lcd=ILI9341_320x240 touch=XPT2046 state=CALIBRATION'
+        self.assertEqual(identity.firmware_profile(line)['hardware_profile'],'esp32-cyd-28')
+        self.assertEqual(identity.firmware_profile('USB CH340 ESP32'),{})
+
+    def test_firmware_reader_sends_no_data_and_closes_port(self):
+        class Connection:
+            def open(self):self.opened=True
+            def close(self):self.closed=True
+            def readline(self,limit):
+                self.limit=limit
+                return b'MSR_CYD_START profile=ESP32-2432S028R display=ILI9341\n'
+        connection=Connection()
+        result=identity.read_firmware_identity('COM999',lambda **options:connection)
+        self.assertTrue(result['display_profile_reported']);self.assertTrue(connection.closed)
+        self.assertFalse(connection.dtr);self.assertFalse(connection.rts)
+        self.assertEqual(connection.port,'COM999');self.assertEqual(connection.limit,256)
+
 PORTS = [{'port': 'COM4', 'name': 'CH340', 'vid': '1A86', 'pid': '7523', 'boards': []}]
 BOARDS = [{'fqbn': 'esp32:esp32:esp32', 'name': 'ESP32 Dev Module'}]
 
@@ -92,6 +112,96 @@ class IdentificationTests(unittest.TestCase):
 
 
 class FirmwareTargetTests(unittest.TestCase):
+    def test_structured_cli_counts_successful_tool_output_not_agent_claims(self):
+        for verified in (False,True):
+            with self.subTest(verified=verified),tempfile.TemporaryDirectory() as temp:
+                root=Path(temp);manager=ar.AgentJobManager(root/'sessions');script=root/'cli.py'
+                events=[{'type':'item.completed','item':{'type':'agent_message','text':'Hash of data verified.'}},
+                        {'type':'item.started','item':{'type':'command_execution','command':'upload','aggregated_output':'Hash of data verified.','status':'in_progress'}},
+                        {'type':'item.completed','item':{'type':'command_execution','aggregated_output':'Hash of data verified.','exit_code':0 if verified else 2,'status':'completed' if verified else 'failed'}},
+                        {'type':'item.completed','item':{'type':'agent_message','text':'Informe final'}}]
+                script.write_text('import sys,json\nsys.stdin.read()\nfor e in '+repr(events)+':print(json.dumps(e))\n')
+                with patch.object(ar.shutil,'which',return_value=sys.executable),patch.object(ar,'agent_command',return_value=[sys.executable,str(script),'--json']):
+                    entry=manager.start(provider='codex',mode='autonomo',prompt='Sube el juego a la CYD',code='',lang='cpp',fqbn='esp32:esp32:esp32',confirmed=True)
+                    for _ in range(250):
+                        result=manager.get(entry['job_id'])
+                        if not result['active']:break
+                        time.sleep(.02)
+                self.assertFalse(result['active']);self.assertEqual(result['evidence']['flash_verified'],verified)
+                self.assertEqual(result['success'],verified)
+                self.assertIn('Informe final',result['response']);self.assertNotIn('item.completed',result['response'])
+
+    def test_planned_commands_and_source_diffs_are_not_upload_evidence(self):
+        for text in ('+print("Hash of data verified.")', 'if "Hash of data verified" in log:', 'Busca Hash of data verified.', '"Hash of data verified."', '+Sketch uses 100 bytes', 'print("Device signature = 0x1E950F")'):
+            self.assertIsNone(ar.evidence_from_output(text),text)
+        self.assertEqual(ar.evidence_from_output('Hash of data verified.'),'flash_verified')
+        self.assertEqual(ar.evidence_from_output('avrdude: 1024 bytes of flash verified'),'flash_verified')
+
+    def test_upload_requirement_does_not_turn_reading_flash_into_permission(self):
+        for text in ('sube el juego a COM4', 'Crea y cárgalo en la placa', 'no programaste el juego; sube el nuevo'):
+            self.assertTrue(ar.requests_upload(text), text)
+        for text in ('Lee la flash para diagnosticar', 'Revisa sin grabar', 'Crea el juego, no lo subas', 'No grabes la placa'):
+            self.assertFalse(ar.requests_upload(text), text)
+
+    def test_profile_comes_from_specific_user_model_never_generic_bridge(self):
+        self.assertEqual(ar.physical_profile('board-unspecified', 'esp32:esp32:jczn_2432s028r', 'Crear juego'), 'esp32-cyd-28')
+        self.assertEqual(ar.physical_profile('board-unspecified', 'esp32:esp32:esp32', 'Crea juego en mi CYD'), 'esp32-cyd-28')
+        self.assertEqual(ar.physical_profile('board-unspecified', 'esp32:esp32:esp32', 'Crea juego en CH340 COM4'), 'board-unspecified')
+        self.assertEqual(ar.physical_profile('ideaspark-19', 'esp32:esp32:esp32', 'Crear juego'), 'ideaspark-19')
+
+    def run_required_upload(self, verified):
+        with tempfile.TemporaryDirectory() as temp:
+            root=Path(temp);manager=ar.AgentJobManager(root/'sessions')
+            script=root/'cli_stub.py'
+            script.write_text('from pathlib import Path\nimport sys\nprompt=sys.stdin.read()\nassert "firmware entero" in prompt\nassert "XPT2046" in Path("MAKERIDE_HARDWARE_REFERENCE.txt").read_text(encoding="utf-8")\nprint("Sketch uses 100 bytes",file=sys.stderr)\n'+('print("Hash of data verified.",file=sys.stderr)\n' if verified else '')+'print("CLI completed")\n')
+            with patch.object(ar.shutil,'which',return_value=sys.executable),patch.object(ar,'agent_command',return_value=[sys.executable,str(script)]):
+                entry=manager.start(provider='codex',mode='autonomo',prompt='Crea Space Invaders en CYD y sube el firmware',code='',lang='cpp',fqbn='esp32:esp32:esp32',port='COM999',confirmed=True)
+                for _ in range(250):
+                    result=manager.get(entry['job_id'])
+                    if not result['active']:break
+                    time.sleep(.02)
+            self.assertFalse(result['active']);self.assertEqual(result['exit_code'],0)
+            self.assertTrue(result['upload_requested']);self.assertEqual(result['hardware_profile'],'esp32-cyd-28')
+            self.assertEqual(result['success'],verified)
+            self.assertEqual(result['outcome'],'flash_reported_verified' if verified else 'upload_pending')
+            restored=ar.AgentJobManager(root/'sessions').get(entry['job_id'])
+            self.assertEqual(restored['outcome'],result['outcome']);self.assertTrue(restored['upload_requested'])
+
+    def test_cli_exit_zero_without_requested_upload_stays_incomplete(self):
+        self.run_required_upload(False)
+
+    def test_requested_upload_with_reported_verification_completes(self):
+        self.run_required_upload(True)
+
+    def test_continuation_preserves_physical_profile_and_reference(self):
+        def worker(manager,job,executable,prompt):
+            job.success=True;job.exit_code=0;job.active=False;job.persist()
+        with tempfile.TemporaryDirectory() as temp,patch.object(ar.shutil,'which',return_value=sys.executable),patch.object(ar.AgentJobManager,'_work',worker):
+            manager=ar.AgentJobManager(Path(temp)/'sessions')
+            first=manager.start(provider='codex',mode='supervisado',prompt='Crea un juego en mi CYD',code='',lang='cpp',fqbn='esp32:esp32:esp32',confirmed=True)
+            for _ in range(100):
+                if not manager.get(first['job_id'])['active']:break
+                time.sleep(.01)
+            second=manager.start(provider='codex',mode='supervisado',prompt='Continua el juego',code='',lang='cpp',fqbn='esp32:esp32:esp32',confirmed=True,parent_job_id=first['job_id'])
+            for _ in range(100):
+                if not manager.get(second['job_id'])['active']:break
+                time.sleep(.01)
+            self.assertFalse(manager.get(second['job_id'])['active'])
+            self.assertEqual(second['hardware_profile'],'esp32-cyd-28')
+            self.assertIn('XPT2046',(Path(second['workspace'])/'MAKERIDE_HARDWARE_REFERENCE.txt').read_text(encoding='utf-8'))
+
+    def test_old_completed_record_without_upload_is_recovered_as_pending_without_execution(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root=Path(temp);folder=root/'session';folder.mkdir()
+            job=ar.AgentJob('b'*32,'codex','total',folder,'sketch.ino','',active=False,success=True,exit_code=0,task_summary='Crea y sube el juego en COM4')
+            (folder/ar.ORIGINAL_FILENAME).write_text('')
+            (folder/'sketch.ino').write_text('void setup(){} void loop(){}')
+            job.persist();path=folder/ar.JOURNAL_FILENAME
+            data=json.loads(path.read_text(encoding='utf-8'));data.pop('upload_requested');path.write_text(json.dumps(data),encoding='utf-8')
+            before=path.read_bytes();restored=ar.restore_journal(folder)
+            self.assertFalse(restored.success);self.assertEqual(restored.outcome(),'upload_pending')
+            self.assertEqual(path.read_bytes(),before)
+
     def test_desktop_import_detection_ignores_comments_and_serial_helpers(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp); folder = root / 'sesion-test'; folder.mkdir()

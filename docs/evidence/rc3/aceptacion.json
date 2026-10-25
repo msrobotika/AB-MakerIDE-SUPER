@@ -1,0 +1,178 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "name": "real server version",
+      "passed": true
+    },
+    {
+      "name": "robot idle neutral",
+      "passed": true
+    },
+    {
+      "name": "real installed catalog available",
+      "passed": true
+    },
+    {
+      "name": "CH340 COM4 has no invented model",
+      "passed": true
+    },
+    {
+      "name": "compile and board controls visible",
+      "passed": true
+    },
+    {
+      "name": "editor is primary area",
+      "passed": true
+    },
+    {
+      "name": "real catalog first page has 40 entries",
+      "passed": true
+    },
+    {
+      "name": "real catalog pagination",
+      "passed": true
+    },
+    {
+      "name": "real compile output zero",
+      "passed": true
+    },
+    {
+      "name": "real backend compile evidence",
+      "passed": true
+    },
+    {
+      "name": "real compile bound to source hash",
+      "passed": true
+    },
+    {
+      "name": "success message is not styled as error",
+      "passed": true
+    },
+    {
+      "name": "editing invalidates previous green",
+      "passed": true
+    },
+    {
+      "name": "reload starts empty",
+      "passed": true
+    },
+    {
+      "name": "reload same build recovered",
+      "passed": true
+    },
+    {
+      "name": "restart refreshes expired CSRF token without losing project",
+      "passed": true
+    },
+    {
+      "name": "server restart does not populate old code",
+      "passed": true
+    },
+    {
+      "name": "real compile failure nonzero",
+      "passed": true
+    },
+    {
+      "name": "controlled interrupted build never green",
+      "passed": true
+    },
+    {
+      "name": "catalog failure never false zero",
+      "passed": true
+    },
+    {
+      "name": "scan network failure visible and preserves model",
+      "passed": true
+    },
+    {
+      "name": "model independent of USB suggestion",
+      "passed": true
+    },
+    {
+      "name": "manual model survives port choice",
+      "passed": true
+    },
+    {
+      "name": "CP210x identified only as converter",
+      "passed": true
+    },
+    {
+      "name": "controlled upload failure red",
+      "passed": true
+    },
+    {
+      "name": "controlled agent completion explicitly limits scope",
+      "passed": true
+    },
+    {
+      "name": "concurrent task remains amber",
+      "passed": true
+    },
+    {
+      "name": "cancelled agent exit zero neutral",
+      "passed": true
+    },
+    {
+      "name": "agent network failure red",
+      "passed": true
+    },
+    {
+      "name": "agent reference is not persisted as a startup instruction",
+      "passed": true
+    },
+    {
+      "name": "page reopen starts empty without restoring pending editor change",
+      "passed": true
+    },
+    {
+      "name": "mobile controls visible",
+      "passed": true
+    },
+    {
+      "name": "mobile no horizontal page overflow",
+      "passed": true
+    },
+    {
+      "name": "reduced motion disables robot pulse",
+      "passed": true
+    },
+    {
+      "name": "draft is never persisted across independent tabs",
+      "passed": true
+    },
+    {
+      "name": "cross tab editor copy retained",
+      "passed": true
+    },
+    {
+      "name": "browser process restart starts with empty editor",
+      "passed": true
+    },
+    {
+      "name": "damaged legacy storage never overwritten",
+      "passed": true
+    },
+    {
+      "name": "damaged legacy storage does not populate editor",
+      "passed": true
+    },
+    {
+      "name": "no uncaught browser errors",
+      "passed": true
+    },
+    {
+      "name": "no unexpected console errors",
+      "passed": true
+    }
+  ],
+  "scope": "Real catalog and Arduino Uno compile; controlled failure scenarios. No firmware upload or serial open.",
+  "compile": {
+    "action": "compile",
+    "fqbn": "arduino:avr:uno",
+    "exit_code": 0,
+    "success": true,
+    "source_sha256": "97153c39784c2f766edbcff7c9d9164ca076bdd53cc26aeaab34b1d2bd019ce2"
+  },
+  "deliberate_compile_error_exit_code": 1
+}

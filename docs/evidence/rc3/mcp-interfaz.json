@@ -1,0 +1,62 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "name": "MCP is opt-in on fresh startup",
+      "passed": true
+    },
+    {
+      "name": "saving clears credential-bearing text area",
+      "passed": true
+    },
+    {
+      "name": "saved status never claims a working connection",
+      "passed": true
+    },
+    {
+      "name": "credentials not echoed to page",
+      "passed": true
+    },
+    {
+      "name": "configuration saved outside project folders",
+      "passed": true
+    },
+    {
+      "name": "saving starts no session",
+      "passed": true
+    },
+    {
+      "name": "configuration persists but task permission resets",
+      "passed": true
+    },
+    {
+      "name": "read-only task does not activate external MCP",
+      "passed": true
+    },
+    {
+      "name": "consent explicitly names selected MCP",
+      "passed": true
+    },
+    {
+      "name": "consent is required before starting",
+      "passed": true
+    },
+    {
+      "name": "authorized request enables MCP explicitly",
+      "passed": true
+    },
+    {
+      "name": "task request never transports MCP credentials",
+      "passed": true
+    },
+    {
+      "name": "reopen clears task and MCP activation",
+      "passed": true
+    },
+    {
+      "name": "no JavaScript errors",
+      "passed": true
+    }
+  ],
+  "scope": "Real Chromium and HTTP. Controlled empty ports/catalog. MCP configuration only; no agent or MCP processes, cloud requests, or hardware."
+}

@@ -1,0 +1,10 @@
+Wrote 24992 bytes (15998 compressed) at 0x00001000 in 1.8 seconds (111.3 kbit/s).
+Hash of data verified.
+Wrote 3072 bytes (146 compressed) at 0x00008000 in 0.1 seconds (454.0 kbit/s).
+Hash of data verified.
+Wrote 8192 bytes (47 compressed) at 0x0000e000 in 0.1 seconds (616.7 kbit/s).
+Hash of data verified.
+Wrote 319104 bytes (187435 compressed) at 0x00010000 in 17.1 seconds (149.2 kbit/s).
+Hash of data verified.
+Hard resetting via RTS pin...
+New upload port: COM4 (serial)

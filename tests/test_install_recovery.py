@@ -1,6 +1,7 @@
 """Startup filesystem/socket and controlled serial failures. No physical device."""
 import contextlib
 import io
+import json
 import os
 from pathlib import Path
 import socket
@@ -12,6 +13,7 @@ import time
 import types
 import unittest
 from unittest.mock import patch
+from urllib.request import urlopen
 import launch
 import prepare_windows
 import server
@@ -105,6 +107,28 @@ class SerialRecovery(unittest.TestCase):
         self.assertTrue(self.bridge.status()['error'])
 
 class StartupChecks(unittest.TestCase):
+    def test_launcher_with_legacy_windows_output_encoding_starts_real_server(self):
+        with tempfile.TemporaryDirectory() as temp:
+            with socket.socket() as probe:
+                probe.bind(('127.0.0.1',0));port=probe.getsockname()[1]
+            env={**os.environ,'PYTHONIOENCODING':'cp1252','PYTHONUTF8':'0','AB_MAKERIDE_DATA_DIR':str(Path(temp)/'data')}
+            with (Path(temp)/'server.log').open('wb') as log:
+                process=subprocess.Popen([sys.executable,str(launch.ROOT/'launch.py'),'--no-browser','--port',str(port)],
+                                         env=env,stdout=log,stderr=log,creationflags=getattr(subprocess,'CREATE_NO_WINDOW',0))
+                try:
+                    health=None
+                    for _ in range(100):
+                        if process.poll() is not None:break
+                        try:
+                            with urlopen(f'http://127.0.0.1:{port}/api/health',timeout=.25) as response:health=json.load(response)
+                            break
+                        except OSError:time.sleep(.1)
+                    self.assertIsNotNone(health,(Path(temp)/'server.log').read_bytes().decode('utf-8',errors='replace'))
+                    self.assertTrue(health['ok'])
+                finally:
+                    if process.poll() is None:process.terminate();process.wait(10)
+            self.assertNotIn(b'UnicodeEncodeError',(Path(temp)/'server.log').read_bytes())
+
     def setUp(self):
         self.temp=self.enterContext(tempfile.TemporaryDirectory())
         self.enterContext(patch.dict(os.environ,AB_MAKERIDE_DATA_DIR=self.temp))

@@ -1,109 +1,50 @@
-# AB MakerIDE SUPER 1.0.0-rc.2 · MS Robotika
+# AB MakerIDE SUPER 1.0.0-rc.3 · MS Robotika
 
 [![Comprobaciones](https://github.com/msrobotika/AB-MakerIDE-SUPER/actions/workflows/checks.yml/badge.svg)](https://github.com/msrobotika/AB-MakerIDE-SUPER/actions/workflows/checks.yml) [![Licencia MIT](https://img.shields.io/badge/licencia-MIT-blue.svg)](LICENSE)
 
-**[Descargar RC2](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/tag/v1.0.0-rc.2)** · [Comunicar un fallo](https://github.com/msrobotika/AB-MakerIDE-SUPER/issues/new/choose) · [Compartir tus proyectos y pruebas](https://github.com/msrobotika/AB-MakerIDE-SUPER/discussions)
+**[Descargar RC3](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/tag/v1.0.0-rc.3)** · [Comunicar un fallo](https://github.com/msrobotika/AB-MakerIDE-SUPER/issues/new/choose) · [Proyectos y pruebas de placas](https://github.com/msrobotika/AB-MakerIDE-SUPER/discussions) · [English](README.en.md)
 
-**Nuevo en RC2:** selección automática de puerto/perfil cuando puede identificarse una única placa; perfil CYD, juego táctil que se ejecuta en su pantalla y destino del agente explícito para evitar sustituciones por Tkinter en el PC. [Funcionamiento y límites](docs/IDENTIFICACION_AUTOMATICA.md). La consulta del chip puede reiniciar la placa; no graba firmware. La suite local actual tiene 254 casos correctos y cuatro omitidos de 258.
+**Un editor con agente para crear firmware de Arduino, ESP32 y MicroPython.** Pide el proyecto desde el chat, trabaja con el código en el editor y distingue cada resultado: código, compilación, carga verificada y observación física.
 
-**De una idea a firmware verificable, en un IDE local y abierto.**
+La aplicación es open source, con [licencia MIT](LICENSE). **La IA es opcional y no es gratuita por incluir MakerIDE:** cada usuario vincula su propia cuenta y utiliza su cuota. Codex está probado en uso real por el autor. Claude Code, conectores de chat y Ollama siguen pendientes de validación equivalente.
 
-AB MakerIDE reúne Arduino C++, MicroPython, herramientas de placa y agentes opcionales en una interfaz en español. Puedes ver el código que crea el agente, conservarlo, compilarlo y comprobar cada etapa de la tarea. Proyecto de **MS Robotika**, con [licencia MIT](LICENSE).
+![Sesión nueva de MakerIDE RC3](docs/evidence/rc3/sesion-limpia-real.png)
 
-**Estado: 1.0.0-rc.2, candidato de lanzamiento.** Validado localmente en Windows, con pruebas físicas de radar IdeaSpark, ESP32-CAM, WROOM con MicroPython, Nano y Mega documentadas en la [matriz de hardware](docs/MATRIZ_HARDWARE.md). La RC2 añade la CYD con juego y táctil [documentados](docs/evidence/cyd/README.md). Estas pruebas corresponden a esos dispositivos concretos; quedan por ampliar las placas, escenarios y sistemas operativos para declarar v1.0 estable.
+## Nuevo en RC3
 
-[English overview](README.en.md) · [Guardar proyectos del agente](docs/PROYECTOS_DEL_AGENTE.md) · [Comparativa](docs/POSICIONAMIENTO_2026-10-25.md) · [Contribuir](CONTRIBUTING.md)
+- Cada apertura empieza con **editor, chat y tarea vacíos**. Se recuerdan las preferencias de IA; las tareas anteriores no se recuperan ni ejecutan automáticamente.
+- **Guardar proyecto o Ctrl+S** descarga el trabajo cuando tú lo decides. Un proyecto de agente se guarda como ZIP con el código actual y sus auxiliares; Importar vuelve a abrirlo sin ejecutar hardware. Los borradores y el deshacer de la sesión quedan en RAM.
+- El chat Codex/Claude abre una tarea real y su autorización, en lugar de sustituir la ejecución por una respuesta de consulta. El perfil físico y una referencia de pantalla/táctil acompañan al agente.
+- Codex utiliza eventos JSONL: las evidencias proceden de la salida de comandos completados con código 0. Citar una frase de verificación en código o en un mensaje no convierte la tarea en una grabación correcta.
+- Si pides cargar y no consta verificación, el resultado queda **pendiente**, aunque la CLI termine con salida 0. Una recuperación nunca repite una grabación.
+- La CYD puede informar de su perfil mediante un marcador conocido del firmware. No es una lectura independiente del controlador LCD ni identificación universal por CH340.
+- **Panel MCP:** configuración estándar de servidores stdio y Streamable HTTP para los agentes CLI, activación explícita por tarea y registro de llamadas de Codex. Ambos transportes se han probado con el Codex instalado y servidores locales controlados; Claude Code sigue pendiente de ejecución real. [Conectar herramientas MCP](docs/MCP.md).
 
-**Detección prudente:** MakerIDE sugiere modelos según la información disponible; confirma la placa, el perfil y el puerto antes de grabar. CH340/CP210x identifican un conversor USB. [Seguridad del servidor local](SECURITY.md).
+[Flujo del agente, guardado y límites](docs/PROYECTOS_DEL_AGENTE.md) · [Identificación](docs/IDENTIFICACION_AUTOMATICA.md) · [Cambios](CHANGELOG.md)
 
-![Editor de AB MakerIDE SUPER](docs/evidence/13-final-desktop.png)
+## Empezar en Windows
 
-Captura real del servidor local RC1. [Galería y alcance de las evidencias](docs/evidence/README.md).
+1. Extrae el ZIP en una carpeta nueva y conserva tus versiones y archivos anteriores.
+2. Con Python 3.10 o posterior, abre **INICIAR_WINDOWS.bat**. La dirección predeterminada es **http://127.0.0.1:8770**. El lanzador no cierra un proceso que ya ocupe el puerto.
+3. El editor y el simulador funcionan sin dependencias opcionales. **PREPARAR_WINDOWS.bat** prepara serie/MicroPython en la `.venv` de esta copia. Arduino necesita Arduino CLI y el núcleo de la placa.
+4. Conecta la placa. Cuando puede identificar una única conexión, el IDE selecciona puerto y perfil instalado. La elección manual prevalece. El modelo comercial, la pantalla y su revisión necesitan datos suficientes; no se adivinan por el conversor USB.
+5. Describe el proyecto en el chat y elige el permiso del agente. Una carga necesita una petición inequívoca y el puerto confirmado. El resultado de la herramienta y lo que observas en el dispositivo se registran por separado.
+6. Pulsa **Guardar proyecto** si quieres conservar el código. Una nueva apertura empieza vacía.
 
-## Qué ofrece
+[Instalación y recuperación](docs/INSTALACION.md). La consulta del chip puede reiniciar la placa; no escribe firmware. Los datos operativos del agente se guardan en `.makeride-data`, o en `AB_MAKERIDE_DATA_DIR`, para diagnóstico y recuperación explícita. No convierten el borrador del editor en un archivo guardado por el usuario. Las claves de los conectores de chat permanecen en memoria del servidor; las cuentas CLI se gestionan mediante sus herramientas oficiales.
 
-- Editor para Arduino C++ y MicroPython con guardado local, exportación y recuperación de sesiones.
-- Catálogo de placas desde las herramientas instaladas; selección de modelo separada del puerto USB.
-- Compilación, grabación, monitor serie y diagnóstico desde la interfaz.
-- Agentes opcionales Codex CLI y Claude Code, con permisos visibles y registro de actividad.
-- Apertura del código generado con copia del anterior, descarga del sketch y ZIP con auxiliares. Continuar y compilar conservan las cabeceras creadas por el agente.
-- Robot MS Robotika: ámbar durante el trabajo, verde para el resultado concreto acreditado y rojo con error, acompañado de texto.
-- [Simulador de secuencias digitales](docs/SIMULADOR.md) para hasta ocho salidas Arduino C++ o MicroPython, con trazas, pausa, pasos, reinicio y velocidad virtual. No conecta hardware ni emula firmware.
+## Herramientas y evidencia
 
-El editor y las herramientas locales pueden usarse sin una cuenta de IA. **MakerIDE no incluye saldo, suscripciones ni acceso gratuito a IA: cada usuario vincula su propia cuenta del proveedor y asume su consumo.** Los agentes externos pueden utilizar la red y recibir el código de la tarea. Codex ha sido probado en uso real por el autor. Claude Code, los conectores de chat y Ollama siguen pendientes de validación equivalente; su presencia en el menú no acredita una cuenta conectada ni una prueba correcta.
+Incluye editor Arduino C++/MicroPython, catálogo de modelos instalados, compilación, carga, monitor serie, diagnóstico, agente opcional, exportación/importación y un [simulador de secuencias digitales](docs/SIMULADOR.md). El simulador no emula firmware ni acredita funcionamiento físico. El [cuaderno de placas](docs/PRUEBAS_DE_PLACAS.md) guarda pruebas cuando el usuario lo solicita.
 
-En **Herramientas → Pruebas de mis placas** puedes guardar el resultado de la herramienta junto al modelo/puerto seleccionados y tu observación del dispositivo, y exportar el cuaderno. [Guía de pruebas](docs/PRUEBAS_DE_PLACAS.md).
+Hay pruebas físicas documentadas de **seis dispositivos concretos**: radar IdeaSpark, ESP32-CAM, WROOM con MicroPython, Nano con cargador antiguo, Mega 2560 y CYD con pantalla táctil. La CYD recibió primero bloques y después [Space Invaders](docs/evidence/cyd-space-invaders/README.md): dos respaldos de flash coincidentes, firmware completo compilado, cuatro bloques de grabación verificados y marcador serie. El usuario confirmó que tenía el juego. Esto no acredita cualquier revisión ni una prueba prolongada de todos sus periféricos.
 
-## Demostración verificable
+[Matriz de hardware](docs/MATRIZ_HARDWARE.md) · [Radar](docs/evidence/radar-ideaspark/README.md) · [Cámara](docs/evidence/esp32cam/README.md) · [MicroPython](docs/evidence/wroom-micropython/README.md) · [Nano](docs/evidence/arduino-nano/README.md) · [Mega](docs/evidence/arduino-mega/README.md) · [Bloques CYD](docs/evidence/cyd/README.md)
 
-La primera ronda de cinco placas está [registrada y cerrada](docs/CIERRE_PRUEBAS_2026-10-25.md). La RC2 añade una CYD ESP32-2432S028R con juego en su pantalla, respaldo y grabación verificada: el usuario confirma caída sin parpadeo y controles táctiles funcionales. [Alcance de esta prueba](docs/evidence/cyd/README.md). El simulador se valida por separado mediante regresiones y capturas de escritorio y móvil.
+La suite local RC3 pasa **277 pruebas unitarias de 281**, con cuatro omitidas por g++/privilegios de enlaces simbólicos. Los seis flujos de interfaz suman **148 comprobaciones**. También se ha probado el Codex CLI instalado, el recorrido del chat real en modo de lectura y herramientas MCP locales, sin hardware. Las pruebas controladas de navegador no se presentan como cargas físicas. [Resultados y alcance](docs/evidence/rc3/README.md).
 
-El [radar IdeaSpark](examples/ideaspark_114_radar.ino) es un ejemplo de un solo archivo para ESP32 y pantalla ST7789. Se compiló y grabó en COM4 con autorización y verificación del grabador; el usuario confirmó que lo ve. Los cuatro ecos son **simulados**. [Registros y perfil exacto](docs/evidence/radar-ideaspark/README.md).
+**Estado: candidato de lanzamiento, validado físicamente en Windows.** CI ejecuta unidades en Windows y Linux y navegador en Chromium; no acredita por sí sola instalación interactiva, controladores USB ni hardware de Linux/macOS.
 
-La **ESP32-CAM con sensor OV3660** pasó una prueba autorizada con respaldo previo de 4 MB y grabación verificada. El diagnóstico detectó PSRAM y reportó cinco fotogramas JPEG de 320x240 sin errores durante 16 segundos. No se transmitieron imágenes ni se evaluó su aspecto visual. [Código exacto y registros](docs/evidence/esp32cam/README.md).
+[Seguridad local](SECURITY.md): loopback, Host/Origin exactos, token por proceso y límites de rutas/archivos. Los permisos del agente son los de su CLI; el modo supervisado no constituye un sandbox del sistema operativo.
 
-La **ESP32-WROOM con MicroPython 1.29.0** pasó una prueba finita en RAM: cinco muestras de memoria, aritmética, JSON y temporización, además de lectura del sistema de archivos. Se resolvió antes un controlador CP2102 ausente y se instaló el firmware con autorización, respaldo completo y verificación. No se probaron GPIO ni red y no se guardó main.py. [Código y evidencias](docs/evidence/wroom-micropython/README.md).
-
-El **Arduino Nano ATmega328P con cargador antiguo** pasó una carga autorizada, con respaldo previo de flash y EEPROM y verificación independiente. Se observaron cinco muestras correctas por serie y la EEPROM siguió intacta. No se probaron GPIO ni periféricos externos. [Código y registros](docs/evidence/arduino-nano/README.md).
-
-El **Arduino Mega 2560** pasó una carga autorizada con copia previa de 256 KB de flash y 4 KB de EEPROM, verificación independiente y cinco muestras correctas por serie. La EEPROM se conservó. No se probaron GPIO externos ni otros periféricos. [Código y registros](docs/evidence/arduino-mega/README.md).
-
-
-
-La suite RC2 pasa **254 pruebas unitarias de 258**, con otras cuatro omitidas (tres por g++ y una por privilegios de enlaces simbólicos en Windows). Incluye Host/Origin/token y rutas/uniones de Windows. Las comprobaciones de interfaz del agente y de fallos de transporte son controladas; no se presentan como ejecuciones de IA o grabaciones reales. [Validación de seguridad](docs/evidence/local-security/README.md), [instalación y recuperación](docs/evidence/install-recovery/README.md) y [resultados anteriores del cuaderno](docs/evidence/board-trials/README.md).
-
-## Arranque en Windows
-
-1. Conserva la carpeta anterior. No sobrescribas v0.9.5 ni tus proyectos.
-2. Ejecuta `INICIAR_WINDOWS.bat` (Python 3.10+). Comprueba la instalación y usa **http://127.0.0.1:8770**, conservando cualquier instancia anterior. El editor y el simulador no necesitan dependencias opcionales. Para serie/MicroPython, `PREPARAR_WINDOWS.bat` prepara una `.venv` propia; vuelve a abrir el lanzador después.
-3. Si 8770 está ocupado, `INICIAR_WINDOWS_8771.bat` abre esta copia en **http://127.0.0.1:8771**, con otro almacenamiento de navegador. `/api/health` debe devolver `1.0.0-rc.2`. Arduino CLI se busca en PATH y en `C:\Program Files\Arduino CLI`. Para una ruta específica, define `AB_MAKERIDE_ARDUINO_CLI` antes de arrancar. El lanzador ajusta únicamente el entorno de su proceso y no modifica el Python global. [Instalación y recuperación](docs/INSTALACION.md).
-4. Con una sola placa, la consulta intenta seleccionar **puerto** y **perfil instalado**. Puedes elegirlos manualmente: tu selección prevalece hasta que cambien las conexiones o pulses actualizar. «Placas» busca los modelos instalados, en páginas de 40. CH340 y CP210x no identifican el modelo comercial ni la pantalla.
-5. Pulsa **Compilar** y revisa la consola. La grabación y el monitor serie son acciones independientes. El ejemplo radar se grabó con autorización; otras placas, periféricos y escenarios requieren su propia validación.
-
-Las comprobaciones RC2 de interfaz suman **104 casos**: agente 38, recuperación 21, simulador 26 e identificación/selección 19. [Resultados y alcance](docs/evidence/rc2/README.md).
-
-Arranque directo: `python server.py --no-browser --port 8770`. Linux/macOS: `./iniciar_linux_mac.sh`. Las funciones serie/MicroPython usan las dependencias opcionales de `requirements.txt`; no hacen falta para abrir el editor ni para Arduino CLI.
-
-## Robot y resultados
-
-El robot SVG local lleva antena, ojos, brazos y distintivo MS. También informa con texto accesible, sin depender del color. Respeta «reducir movimiento».
-
-| Estado | Significado |
-| --- | --- |
-| Neutro | Reposo, cancelación, interrupción o resultado sin verificar |
-| Ámbar pulsante | Hay tareas en curso; no se inventan porcentajes de compilación |
-| Verde | Resultado concreto verificado: compilador/grabador con salida 0, CLI de agente con salida 0 y registro, o comprobación de sintaxis Python |
-| Rojo | Fallo de herramienta o consulta de red; un resultado desconocido no se convierte en éxito |
-
-El éxito del agente **solo confirma la finalización de su CLI**. No prueba compilación, grabación ni funcionamiento físico. Una tarea pendiente impide el verde global; un fallo no desaparece por el éxito de otra tarea. Al editar o cambiar placa se invalida la compilación anterior. Los resultados incluyen FQBN y SHA-256 de la revisión compilada.
-
-## Recuperación y compatibilidad
-
-El código creado por el agente se puede abrir en el editor con copia del anterior, guardar como sketch o descargar con sus archivos auxiliares en ZIP. Los auxiliares se conservan al continuar y compilar el proyecto. [Guía de guardado, reapertura y radar IdeaSpark](docs/PROYECTOS_DEL_AGENTE.md).
-
-- Los dos archivos, nombre, FQBN y puerto conservan la clave compatible `ab-makeride-project-v2`. Se guarda al editar y al abandonar/recargar la página. Un puerto desconectado permanece como referencia sin confirmar su presencia.
-- Cada origen del navegador tiene su almacenamiento: **8770 no puede leer automáticamente los proyectos de 8765**. Exporta `.abmaker.json` en la versión anterior e impórtalo aquí. No se accede a perfiles de navegador existentes.
-- El launcher y el servidor usan `.makeride-data` dentro de esta carpeta. `AB_MAKERIDE_DATA_DIR` permite elegir otra carpeta. Para recuperar sesiones antiguas, copia primero su carpeta `AgentWorkspaces` a ese directorio de datos; no es necesario modificar el original.
-- `BuildSessions/<id>` conserva `sketch.ino`, destino y registro de compilación. La referencia se guarda antes del POST; repetir la misma referencia no ejecuta otra operación. «Recuperar compilación» consulta el resultado; nunca repite una grabación.
-- Tras reiniciar, una tarea que figuraba activa se presenta como interrumpida y con resultado desconocido. La lectura de sesiones antiguas no reescribe sus archivos. Los registros antiguos sin `exit_code` no encienden el verde del agente.
-- Si otra pestaña cambia el proyecto, se pausa el guardado para evitar sobrescribirla: exporta la copia que quieras conservar antes de recargar. Un almacenamiento dañado también pausa el guardado y conserva el valor original. No borres datos del navegador sin exportar.
-
-## Verificación reproducible
-
-`python tests/run_isolated.py` ejecuta toda la suite en datos temporales. `node --test tests/robot_status.test.cjs` verifica los estados del robot. No se necesita cuenta de IA ni placa para estas regresiones. Los uploads de tests están aislados con mocks.
-
-La aceptación visual utiliza Playwright/Chromium con un servidor HTTP real, un perfil propio y directorios temporales. Instalación opcional, siempre local:
-
-```powershell
-python -m venv C:\ruta\work\test-venv
-C:\ruta\work\test-venv\Scripts\python.exe -m pip install playwright==1.56.0
-$env:PLAYWRIGHT_BROWSERS_PATH='C:\ruta\work\browsers'
-C:\ruta\work\test-venv\Scripts\python.exe -m playwright install chromium
-C:\ruta\work\test-venv\Scripts\python.exe tests/browser_acceptance.py --work C:\ruta\work\acceptance-nueva --outputs C:\ruta\outputs --port 8770
-```
-
-Usa un directorio de aceptación nuevo y un puerto libre. Esta prueba compila con los núcleos instalados, bloquea operaciones reales de grabación/serie/agentes y distingue sus escenarios interceptados. Auditoría de solo lectura: `python tests/audit_real_arduino.py --output C:\ruta\outputs\arduino-audit.json`.
-
-Resultados, capturas, cambios y pendientes: [informe RC1](docs/RELEASE_RC1.md), [evidencias](docs/evidence/README.md). Los informes v0.9.x y las entregas locales anteriores son históricos. El repositorio público y sus [comprobaciones en GitHub](https://github.com/msrobotika/AB-MakerIDE-SUPER/actions/workflows/checks.yml) permiten seguir la evolución de la RC.
-
-Licencia MIT para MakerIDE. Marcas, herramientas, núcleos y bibliotecas externas mantienen sus propias licencias.
+[Contribuir](CONTRIBUTING.md) · [Licencia MIT](LICENSE) · [Compartir pruebas de Linux y macOS](https://github.com/msrobotika/AB-MakerIDE-SUPER/discussions)

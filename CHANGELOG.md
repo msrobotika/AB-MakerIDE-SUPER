@@ -1,5 +1,17 @@
 # Cambios
 
+## 1.0.0-rc.3 · agente, sesión limpia y guardado manual · 25 octubre 2026
+
+- Cada apertura comienza con editor, chat y tarea vacíos; no recupera automáticamente sesiones o compilaciones. Se recuerdan las preferencias de IA por navegador. Los archivos operativos del agente siguen disponibles para recuperación explícita.
+- Guardado manual con Guardar proyecto o Ctrl+S. ZIP del agente con el código actual del editor y auxiliares, e importación del ZIP sin ejecutar CLI ni hardware. Las copias de deshacer durante la edición quedan en RAM.
+- El chat Codex/Claude prepara una tarea real y su consentimiento de ejecución; el asistente guiado respeta las fases solicitadas en lugar de prohibir siempre el hardware. No se cambian silenciosamente los permisos elegidos.
+- Contexto físico, referencia LCD/táctil y herramientas locales acompañan al agente. Un modelo CYD declarado o un marcador conocido del firmware permite usar su perfil; CH340 sigue sin identificar la pantalla.
+- Codex usa eventos JSONL. Las evidencias se extraen de salidas de comandos completados con salida 0, no de mensajes de la IA, código citado o comandos fallidos. Pedir una carga sin verificación termina como pendiente, incluyendo registros antiguos recuperados, sin repetir escrituras.
+- Space Invaders compilado y cargado en la CYD con dos respaldos coincidentes, cuatro bloques verificados y marcador serie; el usuario confirmó el juego.
+- Arranque UTF-8 corregido para Windows con salida redirigida/cp1252 y regresión con servidor real.
+- Panel MCP con configuración stdio/Streamable HTTP para Codex y Claude Code, autorización por tarea y credenciales fuera de los proyectos. Codex registra llamadas estructuradas y no declara éxito si queda un error MCP sin resolver. Ambos transportes comprobados con Codex real y servidores de prueba locales; Claude permanece experimental.
+- El análisis de dependencias no consulta sketches vacíos ni aplica una respuesta de una revisión anterior al código nuevo.
+
 ## 1.0.0-rc.2 · identificación y pantalla física · 25 octubre 2026
 
 - Consulta acotada del chip y selección de un único puerto/perfil instalado. Corrige referencias antiguas de Uno/COM sin reemplazar código. No identifica pantallas por CH340/CP210x ni elige al azar con varias placas.

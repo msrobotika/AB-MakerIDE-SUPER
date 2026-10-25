@@ -1,0 +1,100 @@
+{
+  "date": "2026-10-25",
+  "project": "Space Invaders CYD",
+  "hardware": {
+    "board_profile": "ESP32-2432S028R original, confirmed by user with prior blocks firmware",
+    "port": "COM4",
+    "chip_observed": "ESP32-D0WD-V3",
+    "revision_observed": "3.0",
+    "flash_bytes_observed": 4194304,
+    "query_exit_code": 0,
+    "display_currently_observed_by_agent": false
+  },
+  "backup": {
+    "independent_reads": 2,
+    "matching": true,
+    "private": true,
+    "directory": "respaldo-flash-privado",
+    "copies": [
+      {
+        "file": "flash-lectura-1.bin",
+        "bytes": 4194304,
+        "sha256": "40bedf2c74a2a36c3dc80e0d1f8e1551167235c58a247e7e136e27b3d9566194"
+      },
+      {
+        "file": "flash-lectura-2.bin",
+        "bytes": 4194304,
+        "sha256": "40bedf2c74a2a36c3dc80e0d1f8e1551167235c58a247e7e136e27b3d9566194"
+      }
+    ]
+  },
+  "build": {
+    "exit_code": 0,
+    "complete_firmware": true,
+    "fqbn": "esp32:esp32:esp32",
+    "board_options": "UploadSpeed=115200,FlashSize=4M,PartitionScheme=default,PSRAM=disabled",
+    "program_bytes": 318960,
+    "static_ram_bytes": 25324,
+    "framebuffer_heap_bytes": 153600
+  },
+  "upload": {
+    "exit_code": 0,
+    "verify_requested": true,
+    "verified_blocks_observed": 4,
+    "verification_message": "Hash of data verified.",
+    "port": "COM4",
+    "speed": 115200,
+    "attempts": 1,
+    "automatic_retry": false,
+    "hardware_state": "upload_reported_success",
+    "authorized": true,
+    "status": "complete"
+  },
+  "serial": {
+    "port": "COM4",
+    "baud": 115200,
+    "duration_seconds": 8,
+    "tx_bytes": 0,
+    "explicit_reset": false,
+    "boot_marker_observed": true,
+    "error": null,
+    "start_marker_observed": false,
+    "hardware_init_observed": false,
+    "calibration_ok_observed": false,
+    "game_ready_observed": false,
+    "firmware_error_observed": false,
+    "rx_bytes": 580,
+    "status": "boot_marker_received_waiting_calibration"
+  },
+  "physical_validation": {
+    "status": "user_confirmed_game_running",
+    "source": "Explicit user reply: ok ya lo tengo",
+    "new_game_screen_confirmed": true,
+    "new_game_touch_independently_checked": false,
+    "flicker_independently_checked": false,
+    "calibration": "three points in RAM after reset"
+  },
+  "source_manifest": "fuente-sha256.json",
+  "logs": [
+    "01-consulta-chip.log",
+    "02-respaldo-1.log",
+    "03-respaldo-2.log",
+    "04-compilacion.log",
+    "05-carga.log",
+    "06-serie.log"
+  ],
+  "scope": {
+    "sd_mounted": false,
+    "sd_written": false,
+    "wifi_used": false,
+    "pc_window_created": false,
+    "ide_modified": false,
+    "other_session_modified": false
+  },
+  "completed_at": "2026-10-25T18:35:55.9790873+01:00",
+  "source_files": {
+    "CYDFrame.h": "07c06008c4a4963377ffc23ae0fd188ac67f67982b9d7749efe3fd7142734b5d",
+    "cyd_space_invaders.ino": "c9a00122186016c6db172939772b8c1f01d0ff1a799ca6ec2f8189bee216f0ae",
+    "SpaceInvaders.h": "e12a24641216a19bfcd92574ea53db527e0d2373f24e82d19cd0c1ea88d2a9cb"
+  }
+}

@@ -10,6 +10,12 @@ El desplegable permite elegir o dejar sin seleccionar el puerto. La elección ma
 
 El botón de actualizar permite volver a consultar explícitamente; con varias placas consulta únicamente el puerto elegido. La selección automática se aplica a una respuesta vigente: si cambias de puerto o modelo durante la consulta, incluso si luego vuelves al mismo puerto, o desconectas el dispositivo, se descarta la respuesta anterior. Una referencia COM guardada tampoco acredita que siga presente.
 
+## RC3: perfil comunicado por firmware
+
+Tras consultar un chip ESP y cuando el puerto está disponible, una lectura RX acotada a 2,6 segundos/4096 bytes busca marcadores conocidos de los ejemplos CYD. No transmite órdenes ni escribe memoria. Un marcador puede proporcionar el perfil de pantalla del proyecto, con procedencia `firmware_marker`; no se presenta como lectura independiente del controlador ni modelo deducido del USB. El firmware puede informar datos incorrectos: no convierte cualquier ESP32 en una CYD.
+
+Cada apertura vuelve a empezar sin el código/perfil de una sesión anterior. Un perfil puede proceder de la petición del usuario, de un archivo importado o de esa lectura informada. El ejemplo del perfil acompaña a la CLI para evitar perder datos de LCD/táctil al crear un proyecto nuevo.
+
 ## Pantallas y agentes
 
 En el panel del agente elige **Pantalla y placa del proyecto**. Este dato es declarado por el usuario, separado del chip consultado. El perfil CYD ESP32-2432S028R es documental y requiere confirmar revisión, controlador y serigrafía; no se asigna automáticamente al encontrar cualquier ESP32.

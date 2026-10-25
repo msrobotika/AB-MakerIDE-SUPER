@@ -28,3 +28,5 @@ Las pruebas físicas de Uno, otras familias ESP32, MicroPython en otras placas, 
 [Registros y código del Mega ATmega2560](evidence/arduino-mega/README.md): carga por AVRDUDE, verificación independiente y diagnóstico serie real por pyserial.
 
 [Registros y alcance de la CYD](evidence/cyd/README.md).
+
+RC3 añade [Space Invaders en la misma CYD](evidence/cyd-space-invaders/README.md): firmware completo, respaldo doble coincidente, carga con cuatro bloques verificados y marcador serie. El usuario confirmó que tenía el juego. No se añade otro dispositivo a la cuenta de seis ni se atribuyen pruebas independientes de todos sus controles o duración.

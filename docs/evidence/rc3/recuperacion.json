@@ -1,0 +1,98 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "name": "busy port visible and reconnect remains available",
+      "passed": true
+    },
+    {
+      "name": "busy open never retries automatically",
+      "passed": true
+    },
+    {
+      "name": "explicit connect reaches connected state",
+      "passed": true
+    },
+    {
+      "name": "USB read failure clears connected state",
+      "passed": true
+    },
+    {
+      "name": "disconnected send button is disabled",
+      "passed": true
+    },
+    {
+      "name": "read failure is shown as error",
+      "passed": true
+    },
+    {
+      "name": "selection and editor survive disconnect",
+      "passed": true
+    },
+    {
+      "name": "disconnect does not automatically open another transport",
+      "passed": true
+    },
+    {
+      "name": "failed write disconnects and transmits once",
+      "passed": true
+    },
+    {
+      "name": "failed send remains available for review",
+      "passed": true
+    },
+    {
+      "name": "new connection does not replay prior send",
+      "passed": true
+    },
+    {
+      "name": "explicit reconnection enables send",
+      "passed": true
+    },
+    {
+      "name": "new explicit send succeeds",
+      "passed": true
+    },
+    {
+      "name": "manual disconnect remains neutral",
+      "passed": true
+    },
+    {
+      "name": "opening IDE does not recover previous operation automatically",
+      "passed": true
+    },
+    {
+      "name": "opening IDE clears previous task inputs",
+      "passed": true
+    },
+    {
+      "name": "restart journal never turns successful",
+      "passed": true
+    },
+    {
+      "name": "interrupted operation is not labelled preparing",
+      "passed": true
+    },
+    {
+      "name": "restart preserves pending journal bytes",
+      "passed": true
+    },
+    {
+      "name": "reload clears draft and detects the present port",
+      "passed": true
+    },
+    {
+      "name": "reload does not reconnect",
+      "passed": true
+    },
+    {
+      "name": "no JavaScript errors",
+      "passed": true
+    },
+    {
+      "name": "no upload or agent request",
+      "passed": true
+    }
+  ],
+  "scope": "Real HTTP and Chromium; controlled COM999 transport and interrupted journal. No physical port, firmware upload or AI execution."
+}

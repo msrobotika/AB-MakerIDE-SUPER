@@ -23,7 +23,7 @@ def main():
     calls=[]
     query_started=threading.Event();query_release=threading.Event();delay_query=False
     def scan(*,diagnostics=False):return {'ports':list(ports),'scan_ok':True,'scan_errors':[]} if diagnostics else list(ports)
-    def identify(current,catalog,port):
+    def identify(current,catalog,port,**kwargs):
         calls.append(port)
         if delay_query:
             query_started.set()
@@ -41,7 +41,7 @@ def main():
                     browser=pw.chromium.launch(headless=True)
                     page=browser.new_page(viewport={'width':1440,'height':1000})
                     page.on('pageerror',lambda error:report['page_errors'].append(str(error)))
-                    page.add_init_script('localStorage.setItem("ab-makeride-project-v2",JSON.stringify({name:"Mi proyecto",lang:"cpp",fqbn:"arduino:avr:uno",port:"COM99",files:{cpp:"// CODIGO DEL USUARIO\\nvoid setup(){} void loop(){}",py:"# sin cambios"}}))')
+                    page.add_init_script('if(!localStorage.getItem("ab-makeride-project-v2"))localStorage.setItem("ab-makeride-project-v2",JSON.stringify({name:"Mi proyecto",lang:"cpp",fqbn:"arduino:avr:uno",port:"COM99",files:{cpp:"// CODIGO DEL USUARIO\\nvoid setup(){} void loop(){}",py:"# sin cambios"}}))')
                     def guard(route):
                         if route.request.method=='POST' and not any(route.request.url.endswith(path) for path in ('/api/boards/identify','/api/advisor/check')):
                             route.abort();raise AssertionError('Unexpected action '+route.request.url)
@@ -51,14 +51,17 @@ def main():
                     page.wait_for_function('()=>document.querySelector("#quickBoard").value==="esp32:esp32:esp32"')
                     check('one connected board replaces stale Uno profile',page.locator('#quickBoard').input_value()=='esp32:esp32:esp32')
                     check('one connected port replaces stale COM99',page.locator('#quickPort').input_value()=='COM14')
-                    check('code is preserved when profile changes',page.locator('#code').input_value().startswith('// CODIGO DEL USUARIO'))
+                    check('startup ignores legacy draft code',page.locator('#code').input_value()=='')
+                    page.locator('#code').fill('// CODIGO DEL USUARIO\nvoid setup(){} void loop(){}')
                     check('bridge is queried instead of treated as model',calls==['COM14'])
                     check('display is still explicitly unknown','pantalla sin identificar' in page.locator('#deviceHint').inner_text())
                     page.locator('#quickPort').select_option('')
                     page.wait_for_timeout(13000)
                     check('manual deselection survives background discovery',page.locator('#quickPort').input_value()=='' and calls==['COM14'])
                     page.locator('#quickPort').select_option('COM14')
-                    page.locator('#showAI').click();page.locator('#agentWorkbench').evaluate('(e)=>e.open=true')
+
+                    if page.locator('body').get_attribute('data-right')!='ai':page.locator('#showAI').click()
+                    page.locator('#agentWorkbench').evaluate('(e)=>e.open=true')
                     check('PC companion is opt-in',not page.locator('#execAllowPC').is_checked())
                     check('screen profile does not come from USB',page.locator('#execHardware').input_value()=='board-unspecified')
                     page.locator('#execHardware').select_option('esp32-cyd-28')
@@ -96,6 +99,10 @@ def main():
                     page.wait_for_function('()=>document.querySelector("#code").value.includes("MSR_CYD_GAME_READY")')
                     check('CYD game opens as firmware in code editor',page.locator('#code').input_value().startswith('/*') and 'Adafruit_ILI9341' in page.locator('#code').input_value())
                     check('CYD loader selects its profile without PC companion',page.locator('#execHardware').input_value()=='esp32-cyd-28' and not page.locator('#execAllowPC').is_checked())
+                    page.reload()
+                    page.wait_for_function('()=>document.querySelector("#backendState").textContent.includes("activo")')
+                    check('reload starts empty with no stale physical profile',page.locator('#execHardware').input_value()=='board-unspecified' and page.locator('#code').input_value()=='')
+                    check('reload never grants a PC companion permission',not page.locator('#execAllowPC').is_checked())
                     check('no uncaught JS errors',not report['page_errors'])
                     page.screenshot(path=str(args.outputs/'auto-identity-controlled.png'))
                     browser.close()

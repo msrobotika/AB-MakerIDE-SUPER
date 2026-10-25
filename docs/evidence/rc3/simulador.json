@@ -1,0 +1,114 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "name": "startup without JavaScript errors",
+      "passed": true
+    },
+    {
+      "name": "simulator visible",
+      "passed": true
+    },
+    {
+      "name": "inert ADC and button controls removed",
+      "passed": true
+    },
+    {
+      "name": "new session starts with empty editor",
+      "passed": true
+    },
+    {
+      "name": "default Uno LED_BUILTIN recognized",
+      "passed": true
+    },
+    {
+      "name": "pause freezes virtual clock",
+      "passed": true
+    },
+    {
+      "name": "resume advances clock",
+      "passed": true
+    },
+    {
+      "name": "reset pauses at zero",
+      "passed": true
+    },
+    {
+      "name": "simulator never claims hardware success",
+      "passed": true
+    },
+    {
+      "name": "closing panel pauses simulation",
+      "passed": true
+    },
+    {
+      "name": "editing discards model immediately",
+      "passed": true
+    },
+    {
+      "name": "step moves exactly to next wait boundary",
+      "passed": true
+    },
+    {
+      "name": "LOW-first starts LOW",
+      "passed": true
+    },
+    {
+      "name": "virtual speed multiplier advances time",
+      "passed": true
+    },
+    {
+      "name": "step wraps to next cycle correctly",
+      "passed": true
+    },
+    {
+      "name": "three outputs represented together",
+      "passed": true
+    },
+    {
+      "name": "traffic sequence yellow at 1000ms",
+      "passed": true
+    },
+    {
+      "name": "board change discards stale model",
+      "passed": true
+    },
+    {
+      "name": "canvas profile follows Mega selection",
+      "passed": true
+    },
+    {
+      "name": "language change discards stale model",
+      "passed": true
+    },
+    {
+      "name": "MicroPython three-output sequence",
+      "passed": true
+    },
+    {
+      "name": "mobile panel fits viewport",
+      "passed": true
+    },
+    {
+      "name": "mobile step control usable",
+      "passed": true
+    },
+    {
+      "name": "unsupported code explains refusal and clears outputs",
+      "passed": true
+    },
+    {
+      "name": "unknown built-in LED is not inferred for ESP32",
+      "passed": true
+    },
+    {
+      "name": "no JavaScript errors",
+      "passed": true
+    },
+    {
+      "name": "no hardware or agent operations",
+      "passed": true
+    }
+  ],
+  "scope": "Real local HTTP and Chromium, isolated profile, controlled board catalog. No upload, serial connection or AI calls."
+}
