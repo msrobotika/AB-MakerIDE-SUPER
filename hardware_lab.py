@@ -16,6 +16,17 @@ ESP_PROFILE = {
     'adc2': [0, 2, 4, 12, 13, 14, 15, 25, 26, 27],
 }
 PROFILES = {
+    'board-unspecified': {
+        'title': 'Placa/pantalla sin perfil físico confirmado', 'pins': {}, 'resolution': None, 'verified': False,
+        'notes': 'El FQBN es el perfil de compilación seleccionado. No presupone un ESP32 ni identifica pantalla, táctil o conexiones. Preguntar por los datos físicos que necesite el proyecto.'},
+    'esp32-cyd-28': {
+        'title': 'CYD ESP32-2432S028R · 2,8″ ILI9341 + XPT2046',
+        'pins': {'MISO': 12, 'MOSI': 13, 'SCLK': 14, 'CS': 15, 'DC': 2, 'BL': 21,
+                 'TOUCH_CLK': 25, 'TOUCH_MOSI': 32, 'TOUCH_MISO': 39, 'TOUCH_CS': 33, 'TOUCH_IRQ': 36,
+                 'SD_CS': 5, 'SD_CLK': 18, 'SD_MISO': 19, 'SD_MOSI': 23},
+        'resolution': [240, 320], 'verified': False,
+        'notes': 'Perfil documental para ESP32-2432S028R original. Confirmar serigrafía/revisión. No detectado por CH340 ni por firma ESP32. Pantalla y táctil usan buses separados; TFT RST ligado a reset (-1). SD no inicializada por defecto.',
+        'source': 'https://github.com/witnessmenow/ESP32-Cheap-Yellow-Display/blob/main/PINS.md'},
     'esp32-generic': {
         'title': 'ESP32 clásico — Dev Module',
         'pins': {}, 'resolution': None,

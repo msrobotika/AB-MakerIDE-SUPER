@@ -99,7 +99,7 @@ class LocalHTTPBoundaryTests(unittest.TestCase):
                     self.assertEqual(self.call(method, '/api/hardware/check', headers)[0], 403)
 
     def test_every_post_requires_token_before_dispatch(self):
-        paths = ('/api/upload', '/api/verify', '/api/jobs/start', '/api/jobs/cancel',
+        paths = ('/api/upload', '/api/boards/identify', '/api/verify', '/api/jobs/start', '/api/jobs/cancel',
                  '/api/agents/start', '/api/agents/cancel', '/api/serial/start', '/api/serial/stop',
                  '/api/serial/send', '/api/ai/config', '/api/ai/reset', '/api/ai/chat',
                  '/api/libraries/install', '/api/libraries/search', '/api/terminal/command',

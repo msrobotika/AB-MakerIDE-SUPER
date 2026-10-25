@@ -103,6 +103,7 @@ function setSidebar(open,persist=true){$('#sidebar').classList.toggle('is-collap
 function refreshDeviceHint(){
  refreshSketchTargetNotice();
  const label=$('#deviceHint'),p=state.ports.find(x=>x.port===state.port);
+ if(p&&boardIdentity.result?.port===p.port){label.textContent=boardIdentity.result.message;return}
  if(!p){label.textContent=state.ports.length?'Selecciona el puerto USB y el modelo de placa':'Conecta una placa y pulsa ↻';return}
  const ch340=/^(?:0x)?1a86$/i.test(String(p.vid||''))&&/^(?:0x)?7523$/i.test(String(p.pid||''));
  const cp210=/^(?:0x)?10c4$/i.test(String(p.vid||''))&&/^(?:0x)?ea60$/i.test(String(p.pid||''));
@@ -129,6 +130,43 @@ try{const pref=JSON.parse(localStorage.getItem(UI_STORAGE)||'null');if(pref){nor
 requestAnimationFrame(()=>resizeTerminal(normalTerminalHeight,false));
 // Asociación explícita de FQBN al dispositivo: USB CH340 no equivale a Arduino Uno.
 let boardProfiles={};
+let boardIdentity={running:false,seen:new Set(),result:null,available:false,manualPorts:null,selectionVersion:0};
+function portInventoryKey(){return JSON.stringify(state.ports.map(p=>[p.port,boardFingerprint(p)]).sort())}
+function choosePortManually(port){
+ boardIdentity.selectionVersion++;
+ boardIdentity.manualPorts=portInventoryKey();
+ applyPortChoice(port);
+}
+$('#quickScan').addEventListener('click',()=>boardIdentity.seen.clear());
+async function autoIdentifyBoard(force=false){
+ if(!boardIdentity.available||boardIdentity.running||state.busy||agentRunState.active)return;
+ const ports=state.ports;
+ const present=new Set(ports.map(p=>boardFingerprint(p)));
+ boardIdentity.seen=new Set([...boardIdentity.seen].filter(key=>present.has(key)));
+ if(!ports.length){boardIdentity.result=null;return}
+ if(!force&&boardIdentity.manualPorts===portInventoryKey())return;
+ const port=ports.length===1?ports[0]:force?ports.find(p=>p.port===state.port):null;
+ if(!port){if(force)toast('Hay varias placas: elige el puerto que quieres identificar.');return}
+ const fingerprint=boardFingerprint(port),selectionVersion=boardIdentity.selectionVersion;
+ if(!force&&boardIdentity.seen.has(fingerprint))return;
+ boardIdentity.running=true;
+ const selectedBefore=state.port;
+ $('#deviceHint').textContent=`${port.port}: consultando chip · puede reiniciar la placa; no graba firmware`;
+ try{
+  const r=await request('/api/boards/identify',{port:port.port});
+  if(!state.ports.some(p=>boardFingerprint(p)===fingerprint)||state.port!==selectedBefore||boardIdentity.selectionVersion!==selectionVersion)return;
+  if(r.status==='busy'){$('#deviceHint').textContent=r.message;return}
+  boardIdentity.seen.add(fingerprint);boardIdentity.result=r;
+  applyPortChoice(port.port);
+  if(r.fqbn){
+   if(!state.choices.some(b=>b.fqbn===r.fqbn))state.choices.push({fqbn:r.fqbn,name:r.name||r.fqbn});
+   applyBoardChoice(r.fqbn,false);
+  }
+  $('#deviceHint').textContent=r.message||'Modelo sin confirmar';
+  showLog('console','[Identificación] '+(r.message||'Modelo sin confirmar'),r.status==='identified'?'note':'cmd');
+ }catch(e){boardIdentity.seen.add(fingerprint);$('#deviceHint').textContent='Identificación pendiente: '+e.message;}
+ finally{boardIdentity.running=false;}
+}
 try{const prev=JSON.parse(localStorage.getItem(BOARD_PROFILES_KEY)||'{}');if(prev&&typeof prev==='object'&&!Array.isArray(prev))boardProfiles=prev}catch(_e){}
 function boardFingerprint(p){
  if(!p)return '';
@@ -146,6 +184,7 @@ function rememberBoard(){
 }
 function applyBoardChoice(fqbn,remember=true){
  if(!state.choices.some(b=>b.fqbn===fqbn))return toast('Instala primero el núcleo de esa placa');
+ if(remember){boardIdentity.selectionVersion++;boardIdentity.manualPorts=portInventoryKey();}
  state.fqbn=fqbn;if(remember)rememberBoard();
  RobotActivity.invalidate('build');
  $('#footBoard').textContent=state.choices.find(b=>b.fqbn===fqbn)?.name||fqbn;
@@ -245,20 +284,23 @@ $('#catalogNext').onclick=()=>{const a=catalogRemote||catalogLocal;if(a.page<a.p
 function refreshQuickSelectors(){
  const board=$('#quickBoard'),port=$('#quickPort');
  if(!board||!port)return;
- board.replaceChildren();port.replaceChildren();
+ const syncOptions=(select,items,value)=>{
+  const same=select.options.length===items.length&&items.every(([text,val],i)=>select.options[i].value===val&&select.options[i].text===text);
+  if(!same)select.replaceChildren(...items.map(([text,val])=>new Option(text,val)));
+  if(select.value!==value)select.value=value;
+ };
  const curated=state.choices.filter(p=>p.fqbn===state.fqbn || state.ports.some(d=>(d.boards||[]).some(x=>x.fqbn===p.fqbn))).slice(0,8);
- for(const p of curated)board.add(new Option(p.name,p.fqbn));
- if(!curated.some(p=>p.fqbn===state.fqbn))board.add(new Option(state.fqbn+' · verificar selección',state.fqbn));
- board.add(new Option('⌕ Buscar cualquier placa…','__search__'));
- board.value=state.fqbn;
- port.add(new Option(state.scanOk===false?'Detección no disponible':state.ports.length?'Seleccionar puerto COM':'Sin puertos COM detectados',''));
- for(const p of state.ports){const isCH340=/^(?:0x)?1a86$/i.test(String(p.vid||''))&&/^(?:0x)?7523$/i.test(String(p.pid||''));const description=isCH340?'USB CH340 · modelo a elegir':String(p.name||'Dispositivo serie').slice(0,35);port.add(new Option(p.port+' · '+description,p.port))}
- port.value=state.port;
- if(state.port&&!state.ports.some(p=>p.port===state.port)){port.add(new Option(state.port+' · desconectado / sin verificar',state.port));port.value=state.port;}
+ const boardOptions=curated.map(p=>[p.name,p.fqbn]);
+ if(!curated.some(p=>p.fqbn===state.fqbn))boardOptions.push([state.fqbn+' · verificar selección',state.fqbn]);
+ boardOptions.push(['⌕ Buscar cualquier placa…','__search__']);syncOptions(board,boardOptions,state.fqbn);
+ const portOptions=[[state.scanOk===false?'Detección no disponible':state.ports.length?'Seleccionar puerto COM':'Sin puertos COM detectados','']];
+ for(const p of state.ports){const isCH340=/^(?:0x)?1a86$/i.test(String(p.vid||''))&&/^(?:0x)?7523$/i.test(String(p.pid||''));const description=isCH340?'USB CH340 · modelo a elegir':String(p.name||'Dispositivo serie').slice(0,35);portOptions.push([p.port+' · '+description,p.port])}
+ if(state.port&&!state.ports.some(p=>p.port===state.port))portOptions.push([state.port+' · desconectado / sin verificar',state.port]);
+ syncOptions(port,portOptions,state.port);
 }
 $('#quickBoard').addEventListener('change',e=>{if(e.target.value==='__search__'){refreshQuickSelectors();openCatalog()}else applyBoardChoice(e.target.value)});
-$('#quickPort').addEventListener('change',e=>applyPortChoice(e.target.value));
-$('#quickScan').addEventListener('click',async()=>{const btn=$('#quickScan');btn.disabled=true;try{const scanned=await scan();if(scanned.scan_ok===false){toast('Detección incompleta: revisa el aviso');return;}if(!state.ports.length){showLog('console','No hay puertos COM detectados: comprueba cable USB de DATOS, controlador CH340/ATmega16U2 y Administrador de dispositivos. El IDE no inventa puertos.','bad');switchPane('console');toast('Sin puertos detectados. Revisa USB/driver.')}else toast(state.ports.length+' puerto(s) COM real(es) detectado(s)')}catch(e){showLog('console',e.message,'bad');toast('Error en detección: '+e.message)}finally{btn.disabled=false}});
+$('#quickPort').addEventListener('change',e=>choosePortManually(e.target.value));
+$('#quickScan').addEventListener('click',async()=>{const btn=$('#quickScan');btn.disabled=true;try{const scanned=await scan({force:true});if(scanned.scan_ok===false){toast('Detección incompleta: revisa el aviso');return;}if(!state.ports.length){showLog('console','No hay puertos COM detectados: comprueba cable USB de DATOS, controlador CH340/ATmega16U2 y Administrador de dispositivos. El IDE no inventa puertos.','bad');switchPane('console');toast('Sin puertos detectados. Revisa USB/driver.')}else toast(state.ports.length+' puerto(s) COM real(es) detectado(s)')}catch(e){showLog('console',e.message,'bad');toast('Error en detección: '+e.message)}finally{btn.disabled=false}});
 const openRight=(mode)=>{document.body.dataset.right=document.body.dataset.right===mode?'none':mode;if(document.body.dataset.right!=='sim'&&state.simRunning)pauseSim();if(mode==='lab')$('#hardwareLab').open=true;};
 $('#showAI').onclick=()=>openRight('ai');$('#showSim').onclick=()=>{openRight('sim');$('#extraTools').open=false};$('#showLab').onclick=()=>{openRight('lab');$('#extraTools').open=false};$('#rightClose').onclick=()=>{if(state.simRunning)pauseSim();document.body.dataset.right='none'};
 function checkSelection(requirePort){if(!state.apiReady){toast('Servidor desconectado. Inicia server.py');return false}if(requirePort&&!state.port){toast('Selecciona el puerto USB en la barra superior');$('#quickPort').focus();return false}if(state.lang==='cpp'&&!state.fqbn){toast('Selecciona una placa/FQBN');return false}return true}
@@ -336,7 +378,7 @@ async function upload(){
 }
 $('#verifyBtn').addEventListener('click',verify);$('#uploadBtn').addEventListener('click',upload);
 async function scan({force=false,quiet=false}={}){
- /* Nunca sobreescribir automáticamente el FQBN elegido por el usuario sin un perfil previamente confirmado. */
+ /* A unique connected port can replace a stale selection after a bounded chip query. */
  let d;
  try{d=await request('/api/boards?selected='+encodeURIComponent(state.fqbn)+(force?'&refresh=1':''));}
  catch(e){state.scanOk=false;refreshQuickSelectors();$('#scanNotice').textContent='No se pudo detectar hardware: '+e.message+'. Se conserva la selección; presencia sin verificar.';$('#scanNotice').classList.remove('hidden');throw e;}
@@ -347,9 +389,11 @@ async function scan({force=false,quiet=false}={}){
  const newFingerprint=JSON.stringify(ports.map(p=>[p.port,p.vid,p.pid,p.serial_number,p.boards]));
  const updated=force||!state.scanLoaded||state.scanOk!==(d.scan_ok!==false)||oldFingerprint!==newFingerprint||state.choices.length!==choices.length;
  state.scanLoaded=true;state.scanOk=d.scan_ok!==false;
+ boardIdentity.available=d.identify_available===true;
  state.ports=ports;state.choices=choices;state.catalogOk=d.catalog_ok===true;state.catalogError=d.catalog_error||'';state.catalogWarning=d.catalog_warning||'';state.catalogSource=d.catalog_source||'';state.catalogCount=d.catalog_count||0;
+ if(boardIdentity.manualPorts!==null&&boardIdentity.manualPorts!==portInventoryKey())boardIdentity.manualPorts=null;
  // Keep a disconnected manual port as a reference, never as evidence of presence.
- if(!state.port&&ports.length===1){
+ if(!state.port&&ports.length===1&&boardIdentity.manualPorts!==portInventoryKey()){
   state.port=ports[0].port;
 }
  const errors=[...(d.scan_errors||[]),...(!d.catalog_ok?[d.catalog_error||'Catálogo no disponible; total desconocido']:[]),...(d.catalog_warning?[d.catalog_warning]:[])];
@@ -361,6 +405,7 @@ async function scan({force=false,quiet=false}={}){
   if(catalogDialog.open)renderCatalog();
   if(quiet)toast(`${ports.length} puerto(s) USB detectado(s)`);
  }
+ await autoIdentifyBoard(force);
  return d;
 }
 async function recoverBuild(){
@@ -438,7 +483,7 @@ b.querySelector('#exportBtn').onclick=exportProject;b.querySelector('#importBtn'
 b.querySelector('#newBtn').onclick=()=>{if(!confirm('¿Crear proyecto nuevo? Se reemplazará el código actual. Exporta primero si deseas conservarlo.'))return;rememberAgentProject('');state.files={cpp:DEFAULT_CPP,py:DEFAULT_PY};state.name='mi-proyecto';setLang('cpp',false);$('#code').value=state.files.cpp;updateHL();save();renderSidebar();toast('Proyecto nuevo. Selecciona la placa antes de compilar.')};}
 else if(panel==='boards'){
 b.innerHTML=`<button class="action" id="scanBtn" style="width:100%;margin-bottom:15px">↻ Buscar placas reales</button><button class="action" id="openBoardSearch" style="width:100%;margin-bottom:12px">⌕ Buscar entre ${state.catalogOk?state.catalogCount:'total desconocido de'} modelos instalados</button><div class="field"><label class="formlabel" for="boardSelect">TIPO DE PLACA / FQBN</label><select class="selector" id="boardSelect">${state.choices.map(p=>`<option value="${escapeHtml(p.fqbn)}" ${p.fqbn===state.fqbn?'selected':''}>${escapeHtml(p.name)}</option>`).join('')}</select></div><div class="field"><label class="formlabel" for="portSelect">PUERTO FÍSICO</label><select class="selector" id="portSelect"><option value="">— Ningún dispositivo seleccionado —</option>${state.ports.map(p=>`<option value="${escapeHtml(p.port)}" ${p.port===state.port?'selected':''}>${escapeHtml(p.port+' · '+p.name)}</option>`).join('')}</select></div><div class="field"><label class="formlabel" for="baudSelect">BAUDIOS DEL MONITOR SERIE</label><select class="selector" id="baudSelect">${[9600,19200,38400,57600,74880,115200,230400,460800,921600].map(v=>`<option value="${v}" ${v===state.baud?'selected':''}>${v}</option>`).join('')}</select></div><div class="field"><label class="formlabel" for="uploadSpeedSelect">VELOCIDAD DE GRABACIÓN ESP32</label><select class="selector" id="uploadSpeedSelect">${[115200,230400,460800,921600].map(v=>`<option value="${v}" ${v===state.uploadSpeed?'selected':''}>${v} baudios</option>`).join('')}</select></div><label class="settingscheck" style="margin:7px 0 14px"><span>Reintento USB automático a 115200 (si falla el enlace)</span><input type="checkbox" id="retrySlow" ${state.retrySlow?'checked':''}></label><button class="action" id="serialConnect" style="width:100%;margin:4px 0">${state.serialConnected?'■ Desconectar monitor':'↗ Conectar monitor serie'}</button>${state.lang==='py'?'<button class="action" id="pyRun" style="width:100%;margin-top:7px">▶ Ejecutar MicroPython desde RAM</button>':''}<div class="boxinfo">${state.ports.length?'Dispositivos detectados: <strong>'+state.ports.length+'</strong>':'No se detectan dispositivos. No se inventan puertos COM.'}<br><span class="hint">La selección FQBN es manual si el puerto no identifica por sí solo el modelo. Comprueba la serigrafía de tu placa.</span></div>`;
-b.querySelector('#openBoardSearch').onclick=openCatalog;b.querySelector('#scanBtn').onclick=async()=>{toast('Buscando hardware real...');try{const result=await scan({force:true});toast(result.scan_ok===false?'Detección incompleta: revisa el aviso':state.ports.length+' puerto(s) detectado(s)')}catch(e){toast(e.message)}};b.querySelector('#boardSelect').onchange=e=>applyBoardChoice(e.target.value);b.querySelector('#portSelect').onchange=e=>applyPortChoice(e.target.value);b.querySelector('#baudSelect').onchange=e=>{state.baud=+e.target.value;save()};b.querySelector('#uploadSpeedSelect').onchange=e=>{state.uploadSpeed=+e.target.value;save()};b.querySelector('#retrySlow').onchange=e=>{state.retrySlow=e.target.checked;save()};b.querySelector('#serialConnect').onclick=toggleSerial;const py=b.querySelector('#pyRun');if(py)py.onclick=runPython;}
+b.querySelector('#openBoardSearch').onclick=openCatalog;b.querySelector('#scanBtn').onclick=async()=>{toast('Buscando hardware real...');try{const result=await scan({force:true});toast(result.scan_ok===false?'Detección incompleta: revisa el aviso':state.ports.length+' puerto(s) detectado(s)')}catch(e){toast(e.message)}};b.querySelector('#boardSelect').onchange=e=>applyBoardChoice(e.target.value);b.querySelector('#portSelect').onchange=e=>choosePortManually(e.target.value);b.querySelector('#baudSelect').onchange=e=>{state.baud=+e.target.value;save()};b.querySelector('#uploadSpeedSelect').onchange=e=>{state.uploadSpeed=+e.target.value;save()};b.querySelector('#retrySlow').onchange=e=>{state.retrySlow=e.target.checked;save()};b.querySelector('#serialConnect').onclick=toggleSerial;const py=b.querySelector('#pyRun');if(py)py.onclick=runPython;}
 else if(panel==='libraries'){
 b.innerHTML='<div class="notice">Se consultan e instalan librerías Arduino mediante Arduino CLI. Solo se mostrará éxito si la herramienta responde correctamente.</div><div class="miniheading">RECOMENDADAS PARA ESTE SKETCH</div><div id="advisorDetails" aria-live="polite"></div><button class="action small ghost" id="advisorRefresh" style="width:100%;margin-bottom:11px">Analizar el código actual</button><div class="miniheading">INSTALAR LIBRERÍA</div><input class="input" id="libName" placeholder="Ej.: DHT sensor library"><button class="action small" id="libInstall" style="width:100%;margin:9px 0 16px">Instalar con Arduino CLI</button><button class="action small ghost" id="libRefresh" style="width:100%">↻ Ver librerías instaladas</button><div class="miniheading">BUSCAR EN ARDUINO LIBRARY MANAGER</div><input class="input" id="libSearchQuery" placeholder="Nombre a buscar en el catálogo"><button class="action small ghost" style="width:100%;margin-top:7px" id="libSearch">Buscar con Arduino CLI</button><pre id="libSearchResult" class="notice" style="white-space:pre-wrap;max-height:175px;overflow:auto"></pre><div id="libList" style="margin-top:13px"></div>';b.querySelector('#libRefresh').onclick=loadLibraries;b.querySelector('#libInstall').onclick=installLibrary;b.querySelector('#libSearch').onclick=searchLibraries;b.querySelector('#advisorRefresh').onclick=()=>refreshAdvisor(false);renderAdvisorPanel();}
 else{b.innerHTML='<div class="miniheading">COMPORTAMIENTO</div><label class="settingscheck"><span>Guardado automático</span><input type="checkbox" checked disabled></label><label class="settingscheck"><span>Grabación con confirmación</span><input type="checkbox" checked disabled></label><label class="settingscheck"><span>Resultados de hardware reales</span><input type="checkbox" checked disabled></label><div class="miniheading">INTELIGENCIA ARTIFICIAL</div><div class="notice">Google Gemma 4 31B disponible por Google AI Studio u OpenRouter. Ollama se ejecuta localmente. Las claves quedan únicamente en memoria del servidor y las propuestas nunca se graban sin revisión.</div><div class="miniheading">SEGURIDAD</div><div class="boxinfo">Servidor limitado a <strong>127.0.0.1</strong>.<br>Sin telemetría. IA externa solo cuando el usuario la habilita.<br>Los proyectos se guardan en el navegador hasta exportarlos.</div><button class="action small" id="diagnosticBtn">Actualizar diagnósticos</button>';b.querySelector('#diagnosticBtn').onclick=refreshAll;}}
@@ -563,10 +608,12 @@ function assistant(text){const ms=text.match(/(\d{2,5})\s*(?:ms|milisegundos?)/i
 $('#chatSend').onclick=()=>{const e=$('#chatInput'),s=e.value.trim();if(!s)return;e.value='';userMsg(s);if($('#aiProvider').value==='local')assistant(s);else sendCloudAgent(s)};$('#chatInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();$('#chatSend').click()}});
 
 async function loadDeviceExample(kind){
-  const info={uno:{file:'uno_r3_diagnostico.ino',name:'Arduino Uno R3',fqbn:'arduino:avr:uno'},cam:{file:'esp32cam_ai_thinker_test.ino',name:'ESP32-CAM AI-Thinker (clásico)',fqbn:'esp32:esp32:esp32cam'},radar:{file:'ideaspark_114_radar.ino',name:'IdeaSpark ST7789 135×240 · radar',fqbn:'esp32:esp32:esp32'}}[kind];
+  const info={uno:{file:'uno_r3_diagnostico.ino',name:'Arduino Uno R3',fqbn:'arduino:avr:uno'},cam:{file:'esp32cam_ai_thinker_test.ino',name:'ESP32-CAM AI-Thinker (clásico)',fqbn:'esp32:esp32:esp32cam'},radar:{file:'ideaspark_114_radar.ino',name:'IdeaSpark ST7789 135×240 · radar',fqbn:'esp32:esp32:esp32'},cyd:{file:'cyd_28_bloques_tactil.ino',name:'CYD ESP32-2432S028R · bloques táctiles',fqbn:'esp32:esp32:esp32'}}[kind];
   if(!info)return;
   const advisory=kind==='cam'?'IMPORTANTE: el ejemplo exige el pinout AI-Thinker clásico; identifica el sensor al ejecutarse. Probado con OV3660. NO sirve para ESP32-S3-CAM ni otros pinouts. USB-C no identifica el chip.\n\n':'';
-  if(!confirm(advisory+'¿Cargar '+info.name+'? Reemplazará sketch.ino y seleccionará su perfil de compilación. EXPORTA tu proyecto actual primero.'))return;
+  if(kind!=='cyd'){
+   if(!confirm(advisory+'¿Cargar '+info.name+'? Reemplazará sketch.ino y seleccionará su perfil de compilación. EXPORTA tu proyecto actual primero.'))return;
+  }
   try{
     const r=await fetch('/examples/'+info.file,{cache:'no-store'});
     if(!r.ok)throw Error('Ejemplo no disponible');
@@ -579,6 +626,7 @@ async function loadDeviceExample(kind){
     localStorage.setItem('ab-makeride-ai-backup-v1',JSON.stringify(backups.slice(0,7)));
     rememberAgentProject('');
     if(kind==='radar')state.name='RadarIdeaSpark';
+    if(kind==='cyd'){state.name='BloquesCYD';$('#execHardware').value='esp32-cyd-28';$('#execAllowPC').checked=false;}
     state.files.cpp=source;
     state.fqbn=info.fqbn;
     state.baud=115200;
@@ -803,6 +851,7 @@ function reportAgentOutcome(r){
   if(r.legacy)return 'Archivo de una versión anterior recuperado. NO existe registro fiable de compilación ni grabación; revisa el código antes de importarlo.';
   if(r.interrupted || r.outcome==='unknown_after_restart')return 'Servidor cerrado durante la tarea · ESTADO DEL HARDWARE DESCONOCIDO. No repitas grabación sin diagnosticar.';
   if(r.active)return 'Agente trabajando. Puedes cerrar esta pestaña; la sesión se podrá consultar al volver.';
+  if(r.outcome==='target_mismatch')return 'Destino incorrecto: el agente creó una ventana de PC sin autorización. El proyecto de la pantalla física sigue pendiente. '+(r.error||'');
   if(!r.success)return 'Tarea fallida o cancelada. No se confirma firmware instalado.';
   if(r.outcome==='flash_reported_verified')return 'El registro declara firmware verificado. Falta comprobar en la pantalla que ejecuta el proyecto solicitado.';
   if(r.outcome==='compiled_only')return agent+' terminó y hay evidencia de compilación, pero NO consta grabación verificada.';
@@ -839,6 +888,7 @@ async function recoverAgentSession(silent=false){
   }catch(e){if(!silent)toast('No se pudo recuperar la sesión: '+e.message)}
 }
 $('#agentTaskRadar').onclick=()=>loadDeviceExample('radar');
+$('#agentTaskCYD').onclick=()=>loadDeviceExample('cyd');
 $('#agentRecover').onclick=()=>recoverAgentSession(false);
 $('#agentContinue').onclick=()=>{
   const prev=agentRunState.lastData;
@@ -856,6 +906,7 @@ function agentSetWorking(working){
   $('#execStop').disabled=!working;
   $('#execProvider').disabled=working;
   $('#execMode').disabled=working;
+  $('#execHardware').disabled=working;$('#execAllowPC').disabled=working;
 }
 function resetAgentStages(){
   $('#agentStages').classList.remove('hidden');
@@ -963,7 +1014,7 @@ function showAgentResult(data){
     btn.textContent='Abrir código en el editor';btn.title='Guarda una copia del código actual antes de abrir la propuesta';
     btn.onclick=async()=>{if(await openAgentCode(data))btn.disabled=true;};
     el.appendChild(btn);
-    openAgentCode(data,true).then(opened=>{if(opened)btn.textContent='Código abierto · copia anterior guardada';return rememberCompletedProject(data)});
+    if(data.outcome!=='target_mismatch')openAgentCode(data,true).then(opened=>{if(opened)btn.textContent='Código abierto · copia anterior guardada';return rememberCompletedProject(data)});
   }
   else rememberCompletedProject(data);
   $('#chatLog').appendChild(el);$('#chatLog').scrollTop=$('#chatLog').scrollHeight;
@@ -1019,6 +1070,7 @@ function authorizeAgent(provider,mode,task){
 }
 $('#execRun').onclick=async()=>{
   if($('#execRun').disabled||agentConsentDialog.open)return;
+  if(boardIdentity.running)return toast('Espera a que termine la identificación de la placa');
   const task=$('#execTask').value.trim(),provider=$('#execProvider').value,mode=$('#execMode').value;
   if(task.length<3)return toast('Describe primero la tarea del agente');
   if(!state.apiReady)return toast('Conecta el servidor local antes de iniciar el agente');
@@ -1035,6 +1087,7 @@ $('#execRun').onclick=async()=>{
       provider,mode,prompt:task,code:state.files[state.lang],lang:state.lang,fqbn:state.fqbn,
       confirm:true,full_consent:consent,port:state.port||'',
       parent_job_id:agentProjectId,
+      hardware_profile:$('#execHardware').value,allow_pc_ui:$('#execAllowPC').checked,
     });
     agentRunState.id=r.job_id;agentRunState.last=0;agentRunState.lastLang=state.lang;
     rememberAgent(r.job_id);$('#agentResumeMessage').textContent='Trabajo iniciado. Puedes recuperar esta sesión si cierras la pestaña.';
@@ -1050,5 +1103,5 @@ $('#execStop').onclick=async()=>{
 // Prefill agent task from the project wizard or chat without starting actions.
 $('#execTask').addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){$('#execRun').click()}});
 
-function init(){setTimeout(()=>{recoverAgentSession(true);recoverBuild()},1000);setLang(state.lang);updateHardwareLabVisibility();renderSidebar();showLog('console','AB MakerIDE v1.0.0-rc.1 SUPER · by MS Robotika','good');showLog('console','Modo de prueba: compilación/subida reales cuando estén las herramientas y la placa.','note');showLog('console','La simulación no ejecuta firmware. Codex puede grabar con tu permiso: exige evidencia real.','note');refreshAll();save();scheduleAdvisor();if(innerWidth<=520){$('#sidebar').classList.add('mobileclosed');$$('.rail button').forEach(b=>b.addEventListener('click',()=>$('#sidebar').classList.toggle('mobileclosed')))}}init();initAi();
+function init(){setTimeout(()=>{recoverAgentSession(true);recoverBuild()},1000);setLang(state.lang);updateHardwareLabVisibility();renderSidebar();showLog('console','AB MakerIDE v1.0.0-rc.2 SUPER · by MS Robotika','good');showLog('console','Modo de prueba: compilación/subida reales cuando estén las herramientas y la placa.','note');showLog('console','La simulación no ejecuta firmware. Codex puede grabar con tu permiso: exige evidencia real.','note');refreshAll();save();scheduleAdvisor();if(innerWidth<=520){$('#sidebar').classList.add('mobileclosed');$$('.rail button').forEach(b=>b.addEventListener('click',()=>$('#sidebar').classList.toggle('mobileclosed')))}}init();initAi();
 })();

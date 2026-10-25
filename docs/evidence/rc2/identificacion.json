@@ -1,0 +1,83 @@
+{
+  "checks": [
+    {
+      "name": "one connected board replaces stale Uno profile",
+      "passed": true
+    },
+    {
+      "name": "one connected port replaces stale COM99",
+      "passed": true
+    },
+    {
+      "name": "code is preserved when profile changes",
+      "passed": true
+    },
+    {
+      "name": "bridge is queried instead of treated as model",
+      "passed": true
+    },
+    {
+      "name": "display is still explicitly unknown",
+      "passed": true
+    },
+    {
+      "name": "manual deselection survives background discovery",
+      "passed": true
+    },
+    {
+      "name": "PC companion is opt-in",
+      "passed": true
+    },
+    {
+      "name": "screen profile does not come from USB",
+      "passed": true
+    },
+    {
+      "name": "CYD can be declared separately from chip",
+      "passed": true
+    },
+    {
+      "name": "new connection selects its own port and family",
+      "passed": true
+    },
+    {
+      "name": "reconnection does not replace the user source",
+      "passed": true
+    },
+    {
+      "name": "multiple ports never choose a random device",
+      "passed": true
+    },
+    {
+      "name": "manual port selection survives background discovery",
+      "passed": true
+    },
+    {
+      "name": "changing board leaves COM options attached",
+      "passed": true
+    },
+    {
+      "name": "explicit refresh queries selected port among several",
+      "passed": true
+    },
+    {
+      "name": "late chip result cannot undo manual selection even after return to same port",
+      "passed": true
+    },
+    {
+      "name": "CYD game opens as firmware in code editor",
+      "passed": true
+    },
+    {
+      "name": "CYD loader selects its profile without PC companion",
+      "passed": true
+    },
+    {
+      "name": "no uncaught JS errors",
+      "passed": true
+    }
+  ],
+  "page_errors": [],
+  "scope": "Real local HTTP and Chromium. Mock chip query; no physical port, AI CLI or firmware upload.",
+  "passed": true
+}

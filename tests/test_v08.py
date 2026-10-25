@@ -37,7 +37,7 @@ class Upgrade08Tests(unittest.TestCase):
     def test_health_is_new_version(self):
         status, headers, data = self.get('/api/health')
         self.assertEqual(status, 200)
-        self.assertEqual(json.loads(data)['version'], '1.0.0-rc.1')
+        self.assertEqual(json.loads(data)['version'], '1.0.0-rc.2')
         self.assertEqual(headers.get('Cache-Control'), 'no-store')
 
     def test_session_host_origin_restrictions(self):
@@ -60,8 +60,8 @@ class Upgrade08Tests(unittest.TestCase):
 
     def test_version_visible_frontend(self):
         self.assertIn('by MS ROBOTIKA', HTML)
-        self.assertIn('AB MakerIDE 1.0.0-rc.1</span>', HTML)
-        self.assertIn('AB MakerIDE v1.0.0-rc.1 SUPER · by MS Robotika', JS)
+        self.assertIn('AB MakerIDE 1.0.0-rc.2</span>', HTML)
+        self.assertIn('AB MakerIDE v1.0.0-rc.2 SUPER · by MS Robotika', JS)
 
     def test_migration_backup_preserves_prior_key(self):
         self.assertIn("const SAVEKEY='ab-makeride-project-v2'", JS)
@@ -70,9 +70,11 @@ class Upgrade08Tests(unittest.TestCase):
         self.assertIn('restoreMigrationBackup', JS)
         self.assertIn('¿Recuperar la copia? Exporta primero el trabajo actual.', JS)
 
-    def test_manual_board_is_not_overwritten_by_usb_scan(self):
+    def test_usb_label_alone_cannot_overwrite_board_profile(self):
         self.assertNotIn('state.fqbn=selected.boards[0].fqbn', JS)
-        self.assertIn('Nunca sobreescribir automáticamente el FQBN', JS)
+        # Automatic selection now uses the dedicated, bounded identification
+        # endpoint; USB bridge names alone still cannot identify a board.
+        self.assertIn("request('/api/boards/identify'", JS)
 
     def test_failed_job_does_not_show_fake_100_percent(self):
         self.assertIn("bar.style.width=d.success?'100%'", JS)

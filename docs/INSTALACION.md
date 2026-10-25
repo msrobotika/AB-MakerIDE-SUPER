@@ -19,7 +19,7 @@ Las funciones de IA son opcionales: cada usuario configura su proveedor y cuenta
 | --- | --- |
 | Falta Python o es demasiado antiguo | Instala Python 3.10 o posterior y abre otra vez el lanzador. No se han cambiado tus proyectos. |
 | Falta algún archivo del programa | Extrae de nuevo el ZIP completo en otra carpeta. No copies archivos sueltos de una versión antigua. |
-| Puerto 8770 ocupado | Revisa si ya tienes una ventana del IDE abierta. Usa la instancia existente o cierra tú la anterior cuando haya terminado sus tareas. El lanzador conserva el proceso que ocupa el puerto. |
+| Puerto 8770 ocupado | Puedes abrir una copia nueva con INICIAR_WINDOWS_8771.bat en http://127.0.0.1:8771, sin detener la anterior. Sus proyectos de navegador están separados. Revisa si ya tienes una ventana del IDE abierta. Usa la instancia existente o cierra tú la anterior cuando haya terminado sus tareas. El lanzador conserva el proceso que ocupa el puerto. |
 | No se puede escribir en los datos | Usa una carpeta del usuario donde puedas guardar archivos, o configura `AB_MAKERIDE_DATA_DIR`. No ejecutes como administrador solo para ocultar ese problema. |
 | Falta pyserial o mpremote | Ejecuta PREPARAR_WINDOWS.bat y vuelve a iniciar el IDE. |
 | Preparación interrumpida por la red | Vuelve a ejecutar PREPARAR_WINDOWS.bat. Conserva proyectos y sesiones; la preparación no los borra. Si `.venv` está incompleta y no contiene proyectos tuyos, conserva esa carpeta con otro nombre antes de preparar un entorno nuevo. |
@@ -31,7 +31,7 @@ El monitor cierra su conexión si falla una lectura o un envío y vuelve a ofrec
 
 ## Datos y copias
 
-El proyecto abierto se conserva en el almacenamiento del navegador y se puede exportar. Las sesiones del servidor se guardan en `.makeride-data` o en la carpeta indicada por `AB_MAKERIDE_DATA_DIR`. No borres ni sustituyas esas carpetas sin conservar antes tus datos. Los orígenes 8765 y 8770 tienen almacenamientos distintos: exporta e importa el proyecto para migrar.
+El proyecto abierto se conserva en el almacenamiento del navegador y se puede exportar. Las sesiones del servidor se guardan en `.makeride-data` o en la carpeta indicada por `AB_MAKERIDE_DATA_DIR`. No borres ni sustituyas esas carpetas sin conservar antes tus datos. Los orígenes 8765, 8770 y 8771 tienen almacenamientos distintos: exporta e importa el proyecto para migrar.
 
 La preparación opcional y el diagnóstico no abren puertos serie, no graban placas ni configuran cuentas de IA. Las copias binarias de las cinco placas probadas se conservan fuera del repositorio y del ZIP público.
 

@@ -28,6 +28,7 @@ from hardware_lab import public_profiles, check as check_hardware, inspect_sketc
 from dependency_advisor import summarize, redact_secrets
 from agent_runtime import AgentJobManager
 from toolchain import arduino_cli
+from board_identity import identify as identify_board
 
 ROOT = Path(__file__).resolve().parent
 MAX_BODY = 512 * 1024
@@ -519,6 +520,7 @@ JOBS = JobManager(HARDWARE_LOCK, DATA_ROOT / 'BuildSessions')
 AGENT = AgentService()
 AGENT_JOBS = AgentJobManager(DATA_ROOT / 'AgentWorkspaces')
 SESSION_KEY = secrets.token_urlsafe(32)
+BOARD_IDENTIFICATION_ENABLED = True
 
 
 def libraries_list() -> dict:
@@ -537,7 +539,7 @@ def libraries_list() -> dict:
 
 
 class IDEHandler(BaseHTTPRequestHandler):
-    server_version = "ABMakerIDE/1.0.0-rc.1"
+    server_version = "ABMakerIDE/1.0.0-rc.2"
 
     def log_message(self, fmt, *args):
         print("[MakerIDE] " + fmt % args)
@@ -611,7 +613,7 @@ class IDEHandler(BaseHTTPRequestHandler):
             return self._json(403, {"ok": False, "error": "Acceso restringido al equipo local"})
         parsed = urlsplit(self.path)
         if parsed.path == "/api/health":
-            return self._json(200, {"ok": True, "name": "AB MakerIDE · MS Robotika", "version": "1.0.0-rc.1", "mode": "local-real", "capabilities": ["agent-project-export", "agent-project-continuation", "agent-editor-open"]})
+            return self._json(200, {"ok": True, "name": "AB MakerIDE · MS Robotika", "version": "1.0.0-rc.2", "mode": "local-real", "capabilities": ["agent-project-export", "agent-project-continuation", "agent-editor-open"]})
         if parsed.path == "/api/session":
             return self._json(200, {"ok": True, "csrf": SESSION_KEY})
         if parsed.path == "/api/diagnostics":
@@ -631,7 +633,8 @@ class IDEHandler(BaseHTTPRequestHandler):
             return self._json(200, {"ok": True, **scan_ports(diagnostics=True), "choices": initial,
                                     "catalog_ok": catalog['ok'], "catalog_error": catalog['error'],
                                     "catalog_source": catalog['source'], "catalog_warning": catalog.get('warning',''),
-                                    "catalog_count": len(catalog['boards']), "catalog_paged": True})
+                                    "catalog_count": len(catalog['boards']), "catalog_paged": True,
+                                    'identify_available': BOARD_IDENTIFICATION_ENABLED})
         if parsed.path == '/api/board-catalog/installed':
             qs = parse_qs(parsed.query)
             try:
@@ -691,7 +694,7 @@ class IDEHandler(BaseHTTPRequestHandler):
             return self._json(200, SERIAL.status(since))
         if parsed.path in ('/examples/Blink_Uno.ino', '/examples/uno_r3_diagnostico.ino',
                            '/examples/esp32cam_ai_thinker_test.ino', '/examples/ideaspark_19_st7789.ino',
-                           '/examples/ideaspark_114_st7789.ino', '/examples/ideaspark_114_radar.ino'):
+                           '/examples/ideaspark_114_st7789.ino', '/examples/ideaspark_114_radar.ino', '/examples/cyd_28_bloques_tactil.ino'):
             source = (ROOT / parsed.path.lstrip('/')).read_bytes()
             self.send_response(200)
             self.send_header('Content-Type', 'text/plain; charset=utf-8')
@@ -737,13 +740,24 @@ class IDEHandler(BaseHTTPRequestHandler):
         try:
             d = self._post_data()
             p = urlsplit(self.path).path
-            if p == "/api/agents/start":
+            if p == '/api/boards/identify':
+                if not BOARD_IDENTIFICATION_ENABLED:
+                    raise ValueError('Identificación no disponible en este servidor.')
+                current = AGENT_JOBS._current
+                if (current and current.active) or SERIAL.status()['connected'] or not HARDWARE_LOCK.acquire(blocking=False):
+                    return self._json(200, {'ok': True, 'status': 'busy', 'message': 'Identificación aplazada: hay una tarea o monitor activo. No se interrumpe.'})
+                try:
+                    result = identify_board(scan_ports(), board_catalog()['boards'], d.get('port', ''))
+                finally:
+                    HARDWARE_LOCK.release()
+            elif p == "/api/agents/start":
                 result = AGENT_JOBS.start(
                     provider=d.get('provider'), mode=d.get('mode'),
                     prompt=d.get('prompt'), code=d.get('code'),
                     lang=d.get('lang'), fqbn=d.get('fqbn'),
                     confirmed=d.get('confirm'), full_consent=d.get('full_consent', ''), port=d.get('port', ''),
                     parent_job_id=d.get('parent_job_id', ''),
+                    hardware_profile=d.get('hardware_profile', 'board-unspecified'), allow_pc_ui=d.get('allow_pc_ui', False),
                 )
             elif p == "/api/agents/cancel":
                 result = AGENT_JOBS.cancel(d.get('job_id'))
@@ -890,7 +904,7 @@ def main():
         print(f"No se ha podido abrir el puerto {args.port}: {exc}", file=sys.stderr, flush=True)
         print("Comprueba si hay otro MakerIDE abierto. Cierra el servidor anterior y reintenta.", file=sys.stderr, flush=True)
         raise SystemExit(2)
-    print(f"AB MakerIDE v1.0.0-rc.1 SUPER (LOCAL) → http://127.0.0.1:{args.port}", flush=True)
+    print(f"AB MakerIDE v1.0.0-rc.2 SUPER (LOCAL) → http://127.0.0.1:{args.port}", flush=True)
     print("No se usan placas simuladas como si fueran reales.", flush=True)
     if not args.no_browser:
         threading.Timer(.6, lambda: webbrowser.open(f"http://127.0.0.1:{args.port}")).start()

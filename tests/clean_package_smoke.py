@@ -106,7 +106,7 @@ def main():
                     break
                 except OSError:time.sleep(.1)
             else:raise RuntimeError('Extracted startup timed out')
-            check('real startup from private bare venv',health['version']=='1.0.0-rc.1')
+            check('real startup from private bare venv',health['version']=='1.0.0-rc.2')
             with urlopen(url) as response:html=response.read()
             check('editor and simulator delivered without dependencies',b'id="code"' in html and b'id="simCanvas"' in html)
             if args.browser:

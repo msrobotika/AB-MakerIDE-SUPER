@@ -19,7 +19,7 @@ def diagnose(root=ROOT, port=8770):
         checks.append(dict(name=name, ok=bool(ok), message=message, required=required))
     check('python', sys.version_info >= (3, 10), 'Python 3.10 o posterior; actual: ' + sys.version.split()[0])
     required = ['server.py', 'app.js', 'index.html', 'activity.js', 'simulator.js', 'board_trials.js',
-                'jobs.py', 'agent_runtime.py', 'toolchain.py', 'agent_projects.py',
+                'jobs.py', 'agent_runtime.py', 'toolchain.py', 'board_identity.py', 'agent_projects.py',
                 'cloud_agent.py', 'hardware_lab.py', 'dependency_advisor.py', 'VERSION']
     missing = [name for name in required if not (root / name).is_file()]
     check('files', not missing, 'Carpeta de programa completa.' if not missing else 'Faltan archivos: ' + ', '.join(missing))

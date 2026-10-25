@@ -37,7 +37,7 @@ def main():
     catalog={'ok':True,'boards':[{'fqbn':'arduino:avr:uno','name':'Arduino Uno'}],'count':1,'source':'CONTROLLED','error':'','warning':''}
     bridge=server.SerialBridge()
     try:
-        with tempfile.TemporaryDirectory() as temp,patch.dict(sys.modules,serial=types.SimpleNamespace(Serial=factory,SerialException=OSError)),patch.object(server,'SERIAL',bridge),patch.object(server,'scan_ports',scan),patch.object(server,'board_catalog',return_value=catalog),patch.object(server,'JOBS',jobs.JobManager(threading.Lock(),Path(temp))):
+        with tempfile.TemporaryDirectory() as temp,patch.object(server,'BOARD_IDENTIFICATION_ENABLED',False),patch.dict(sys.modules,serial=types.SimpleNamespace(Serial=factory,SerialException=OSError)),patch.object(server,'SERIAL',bridge),patch.object(server,'scan_ports',scan),patch.object(server,'board_catalog',return_value=catalog),patch.object(server,'JOBS',jobs.JobManager(threading.Lock(),Path(temp))):
             journal=Path(temp)/('7'*32);journal.mkdir()
             data={'id':'7'*32,'action':'upload','active':True,'success':None,'stage':'grabación','fqbn':'arduino:avr:uno','port':'COM999','lines':[],'last_id':0}
             (journal/'job.json').write_text(json.dumps(data),encoding='utf-8')

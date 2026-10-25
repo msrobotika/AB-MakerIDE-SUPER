@@ -1,5 +1,14 @@
 # Cambios
 
+## 1.0.0-rc.2 · identificación y pantalla física · 25 octubre 2026
+
+- Consulta acotada del chip y selección de un único puerto/perfil instalado. Corrige referencias antiguas de Uno/COM sin reemplazar código. No identifica pantallas por CH340/CP210x ni elige al azar con varias placas.
+- Desplegable COM estable: la elección manual prevalece sobre el escaneo periódico. Actualizar consulta el puerto elegido cuando hay varios; una respuesta tardía no deshace cambios manuales. Lanzador opcional en 8771 para conservar una instancia anterior.
+- La identificación se aplaza con agentes, monitor u operaciones activas. Un puerto ocupado por otra aplicación se informa sin cerrarla. La consulta puede reiniciar el dispositivo y nunca escribe la flash.
+- Destino de agente: firmware. Perfil físico declarado y opción explícita de ventana auxiliar PC. Los imports de interfaces de escritorio no autorizadas producen un resultado de destino incorrecto, separado de las evidencias de herramientas y de la salida CLI.
+- Perfil documental CYD ESP32-2432S028R y juego de bloques ILI9341/XPT2046 de un archivo. Calibración táctil en RAM, sin microSD/red/configuración global de bibliotecas. Repintado de celdas modificadas para evitar el borrado completo en cada caída.
+- Regresiones unitarias y de interfaz para selección, reconexión, datos preservados, ambigüedad y destino de los proyectos.
+
 ## 1.0.0-rc.1 · publicación y límites locales · 25 octubre 2026
 
 - Repositorio público autorizado por el autor, documentación bilingüe, descarga RC y comunidad.

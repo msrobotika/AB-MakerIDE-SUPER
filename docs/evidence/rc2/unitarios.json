@@ -1,0 +1,10 @@
+{
+  "platform": "Windows development machine",
+  "python": "3.13.7",
+  "total": 258,
+  "passed": 254,
+  "skipped": 4,
+  "failed": 0,
+  "skipped_scope": "three require g++; one needs Windows symlink privileges",
+  "physical_ports_opened": false
+}

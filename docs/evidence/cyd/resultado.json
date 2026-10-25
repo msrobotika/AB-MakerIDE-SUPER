@@ -1,0 +1,44 @@
+{
+  "date": "2026-10-25",
+  "board_profile": "ESP32-2432S028R CYD, declared from user reference and tested on the connected board",
+  "chip": "ESP32-D0WD-V3 rev 3.0",
+  "port": "COM4",
+  "flash_bytes": 4194304,
+  "prior_backup": {
+    "private": true,
+    "independent_reads": 2,
+    "matching_sha256": "b99e209458054a4fe996349fe16c628226b6f251b371ac1e006da75998d73326",
+    "factory_image": false
+  },
+  "sketch": "examples/cyd_28_bloques_tactil.ino",
+  "sketch_sha256": "9fda3a0583fa8e298eb29fadba6dec2363faeb39879081927ec98a435319d648",
+  "build": {
+    "arduino_cli": "1.5.1",
+    "esp32_core": "3.3.12",
+    "fqbn": "esp32:esp32:esp32",
+    "program_bytes": 317747,
+    "static_ram_bytes": 24908
+  },
+  "upload": {
+    "authorized": true,
+    "verified": true,
+    "exit_code": 0,
+    "verified_blocks": 4,
+    "upload_speed": 115200
+  },
+  "rendering": "dirty_cells_v2",
+  "user_observation": {
+    "falling_pieces_without_flicker": true,
+    "touch_controls_work": true,
+    "evidence_type": "explicit user reply in conversation; not independently recorded video"
+  },
+  "scope": {
+    "physical_screen": true,
+    "wifi_tested": false,
+    "sd_mounted": false,
+    "sd_written": false,
+    "long_duration_tested": false,
+    "upload_via_user_browser_buttons": false,
+    "ai_cli_reexecuted_for_this_example": false
+  }
+}

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#0a1019">
-<title>AB MakerIDE SUPER 1.0.0-rc.1 · MS Robotika</title>
+<title>AB MakerIDE SUPER 1.0.0-rc.2 · MS Robotika</title>
 <style>
 :root{color-scheme:dark;--bg:#070b11;--rail:#0b111b;--side:#0e1621;--panel:#111c29;--line:#243244;--line2:#33465d;--txt:#e5eef8;--muted:#91a5b9;--subtle:#5f7790;--blue:#38bdf8;--violet:#9b86f9;--good:#44dbac;--bad:#fa8188;--amber:#f5c469;--mono:'Cascadia Code','JetBrains Mono',Consolas,monospace;--sans:Inter,'Segoe UI',system-ui,sans-serif}
 *{box-sizing:border-box}html,body{height:100%;margin:0}body{background:var(--bg);color:var(--txt);font:13px var(--sans);overflow:hidden}button,select,input,textarea{font:inherit}button{cursor:pointer}button:disabled{opacity:.42;cursor:not-allowed}button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
@@ -242,6 +242,10 @@ body[data-right="lab"] .right .hardwarelab{display:block;max-height:none;overflo
 <div class="agent-guide">Selecciona agente y permisos. La ejecución empieza en una copia del proyecto en la carpeta local de sesiones. El código puede abrirse con copia del anterior; si estás editando, se conserva tu borrador. Revisa el resultado antes de compilar. Los permisos de la CLI determinan el acceso a otras rutas.</div>
 <label>Agente<select class="selector" id="execProvider"><option value="codex">OpenAI Codex CLI · probado por el autor</option><option value="claude_code">Claude Code CLI · experimental</option></select></label>
 <p class="agent-guide" id="execAccountNote" role="status"></p>
+<label>Pantalla y placa del proyecto<select class="selector" id="execHardware"><option value="board-unspecified">Sin pantalla identificada · preguntar si hace falta</option><option value="esp32-cyd-28">CYD ESP32-2432S028R · ILI9341 + táctil XPT2046 (declarado)</option><option value="ideaspark-114">IdeaSpark ST7789 1,14″ (declarado)</option><option value="ideaspark-19">IdeaSpark ST7789 1,9″ (declarado)</option></select></label>
+<div class="agent-guide">Destino: la placa. El chip y el puerto se consultan automáticamente; la pantalla y su revisión necesitan su perfil físico.</div>
+<label class="optincode"><input type="checkbox" id="execAllowPC"> Permitir también una ventana auxiliar en el ordenador</label>
+<button class="action small ghost" id="agentTaskCYD" title="Abre el juego táctil CYD y guarda una copia del código anterior; no graba firmware">Abrir juego CYD · con copia</button>
 <label>Permisos para esta ejecución<select class="selector" id="execMode">
 <option value="consultar">Consultar · lectura</option>
 <option value="supervisado" selected>Supervisado · editar código</option>
@@ -275,7 +279,7 @@ body[data-right="lab"] .right .hardwarelab{display:block;max-height:none;overflo
 <div class="chatlog" id="chatLog"></div><div class="chatinput"><textarea id="chatInput" placeholder="Ej.: LED parpadeando cada 200 ms"></textarea><button class="action primary" id="chatSend" title="Enviar">➤</button></div></div>
 </aside>
 </div>
-<footer class="footer"><span id="footBoard">Arduino Uno R3</span><span id="footPort">Puerto: sin seleccionar</span><span id="footLang">C++ · Arduino</span><span class="space"></span><span id="footSave">Sin cambios</span><span id="footCaret">Ln 1, Col 1</span><span>AB MakerIDE 1.0.0-rc.1</span></footer>
+<footer class="footer"><span id="footBoard">Arduino Uno R3</span><span id="footPort">Puerto: sin seleccionar</span><span id="footLang">C++ · Arduino</span><span class="space"></span><span id="footSave">Sin cambios</span><span id="footCaret">Ln 1, Col 1</span><span>AB MakerIDE 1.0.0-rc.2</span></footer>
 </div>
 <input type="file" id="projectFile" accept=".json,.ino,.py,application/json,text/plain" class="hidden">
 

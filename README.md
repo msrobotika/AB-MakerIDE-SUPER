@@ -1,14 +1,16 @@
-# AB MakerIDE SUPER 1.0.0-rc.1 · MS Robotika
+# AB MakerIDE SUPER 1.0.0-rc.2 · MS Robotika
 
 [![Comprobaciones](https://github.com/msrobotika/AB-MakerIDE-SUPER/actions/workflows/checks.yml/badge.svg)](https://github.com/msrobotika/AB-MakerIDE-SUPER/actions/workflows/checks.yml) [![Licencia MIT](https://img.shields.io/badge/licencia-MIT-blue.svg)](LICENSE)
 
-**[Descargar RC1](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/tag/v1.0.0-rc.1)** · [Comunicar un fallo](https://github.com/msrobotika/AB-MakerIDE-SUPER/issues/new/choose) · [Compartir tus proyectos y pruebas](https://github.com/msrobotika/AB-MakerIDE-SUPER/discussions)
+**[Descargar RC2](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/tag/v1.0.0-rc.2)** · [Comunicar un fallo](https://github.com/msrobotika/AB-MakerIDE-SUPER/issues/new/choose) · [Compartir tus proyectos y pruebas](https://github.com/msrobotika/AB-MakerIDE-SUPER/discussions)
+
+**Nuevo en RC2:** selección automática de puerto/perfil cuando puede identificarse una única placa; perfil CYD, juego táctil que se ejecuta en su pantalla y destino del agente explícito para evitar sustituciones por Tkinter en el PC. [Funcionamiento y límites](docs/IDENTIFICACION_AUTOMATICA.md). La consulta del chip puede reiniciar la placa; no graba firmware. La suite local actual tiene 254 casos correctos y cuatro omitidos de 258.
 
 **De una idea a firmware verificable, en un IDE local y abierto.**
 
 AB MakerIDE reúne Arduino C++, MicroPython, herramientas de placa y agentes opcionales en una interfaz en español. Puedes ver el código que crea el agente, conservarlo, compilarlo y comprobar cada etapa de la tarea. Proyecto de **MS Robotika**, con [licencia MIT](LICENSE).
 
-**Estado: 1.0.0-rc.1, candidato de lanzamiento.** Validado localmente en Windows, con pruebas físicas de radar IdeaSpark, ESP32-CAM, WROOM con MicroPython, Nano y Mega documentadas en la [matriz de hardware](docs/MATRIZ_HARDWARE.md). Estas pruebas corresponden a esos dispositivos concretos; quedan por ampliar las placas, escenarios y sistemas operativos para declarar v1.0 estable.
+**Estado: 1.0.0-rc.2, candidato de lanzamiento.** Validado localmente en Windows, con pruebas físicas de radar IdeaSpark, ESP32-CAM, WROOM con MicroPython, Nano y Mega documentadas en la [matriz de hardware](docs/MATRIZ_HARDWARE.md). La RC2 añade la CYD con juego y táctil [documentados](docs/evidence/cyd/README.md). Estas pruebas corresponden a esos dispositivos concretos; quedan por ampliar las placas, escenarios y sistemas operativos para declarar v1.0 estable.
 
 [English overview](README.en.md) · [Guardar proyectos del agente](docs/PROYECTOS_DEL_AGENTE.md) · [Comparativa](docs/POSICIONAMIENTO_2026-10-25.md) · [Contribuir](CONTRIBUTING.md)
 
@@ -34,7 +36,7 @@ En **Herramientas → Pruebas de mis placas** puedes guardar el resultado de la 
 
 ## Demostración verificable
 
-La ronda de pruebas físicas de cinco placas está [registrada y cerrada](docs/CIERRE_PRUEBAS_2026-10-25.md). La siguiente mejora es el simulador, validado por separado mediante regresiones y capturas de escritorio y móvil.
+La primera ronda de cinco placas está [registrada y cerrada](docs/CIERRE_PRUEBAS_2026-10-25.md). La RC2 añade una CYD ESP32-2432S028R con juego en su pantalla, respaldo y grabación verificada: el usuario confirma caída sin parpadeo y controles táctiles funcionales. [Alcance de esta prueba](docs/evidence/cyd/README.md). El simulador se valida por separado mediante regresiones y capturas de escritorio y móvil.
 
 El [radar IdeaSpark](examples/ideaspark_114_radar.ino) es un ejemplo de un solo archivo para ESP32 y pantalla ST7789. Se compiló y grabó en COM4 con autorización y verificación del grabador; el usuario confirmó que lo ve. Los cuatro ecos son **simulados**. [Registros y perfil exacto](docs/evidence/radar-ideaspark/README.md).
 
@@ -48,15 +50,17 @@ El **Arduino Mega 2560** pasó una carga autorizada con copia previa de 256 KB d
 
 
 
-La revisión de seguridad pasa **236 pruebas unitarias**, con otras cuatro omitidas (tres por g++ y una por privilegios de enlaces simbólicos en Windows). Incluye Host/Origin/token y rutas/uniones de Windows. Las comprobaciones de interfaz del agente y de fallos de transporte son controladas; no se presentan como ejecuciones de IA o grabaciones reales. [Validación de seguridad](docs/evidence/local-security/README.md), [instalación y recuperación](docs/evidence/install-recovery/README.md) y [resultados anteriores del cuaderno](docs/evidence/board-trials/README.md).
+La suite RC2 pasa **254 pruebas unitarias de 258**, con otras cuatro omitidas (tres por g++ y una por privilegios de enlaces simbólicos en Windows). Incluye Host/Origin/token y rutas/uniones de Windows. Las comprobaciones de interfaz del agente y de fallos de transporte son controladas; no se presentan como ejecuciones de IA o grabaciones reales. [Validación de seguridad](docs/evidence/local-security/README.md), [instalación y recuperación](docs/evidence/install-recovery/README.md) y [resultados anteriores del cuaderno](docs/evidence/board-trials/README.md).
 
 ## Arranque en Windows
 
 1. Conserva la carpeta anterior. No sobrescribas v0.9.5 ni tus proyectos.
 2. Ejecuta `INICIAR_WINDOWS.bat` (Python 3.10+). Comprueba la instalación y usa **http://127.0.0.1:8770**, conservando cualquier instancia anterior. El editor y el simulador no necesitan dependencias opcionales. Para serie/MicroPython, `PREPARAR_WINDOWS.bat` prepara una `.venv` propia; vuelve a abrir el lanzador después.
-3. `/api/health` debe devolver `1.0.0-rc.1`. Arduino CLI se busca en PATH y en `C:\Program Files\Arduino CLI`. Para una ruta específica, define `AB_MAKERIDE_ARDUINO_CLI` antes de arrancar. El lanzador ajusta únicamente el entorno de su proceso y no modifica el Python global. [Instalación y recuperación](docs/INSTALACION.md).
-4. Elige **modelo** y **puerto** por separado. «Placas» busca los modelos instalados, en páginas de 40. CH340 y CP210x identifican un conversor USB, nunca prueban el modelo de placa. Una sugerencia de la CLI no reemplaza tu modelo.
+3. Si 8770 está ocupado, `INICIAR_WINDOWS_8771.bat` abre esta copia en **http://127.0.0.1:8771**, con otro almacenamiento de navegador. `/api/health` debe devolver `1.0.0-rc.2`. Arduino CLI se busca en PATH y en `C:\Program Files\Arduino CLI`. Para una ruta específica, define `AB_MAKERIDE_ARDUINO_CLI` antes de arrancar. El lanzador ajusta únicamente el entorno de su proceso y no modifica el Python global. [Instalación y recuperación](docs/INSTALACION.md).
+4. Con una sola placa, la consulta intenta seleccionar **puerto** y **perfil instalado**. Puedes elegirlos manualmente: tu selección prevalece hasta que cambien las conexiones o pulses actualizar. «Placas» busca los modelos instalados, en páginas de 40. CH340 y CP210x no identifican el modelo comercial ni la pantalla.
 5. Pulsa **Compilar** y revisa la consola. La grabación y el monitor serie son acciones independientes. El ejemplo radar se grabó con autorización; otras placas, periféricos y escenarios requieren su propia validación.
+
+Las comprobaciones RC2 de interfaz suman **104 casos**: agente 38, recuperación 21, simulador 26 e identificación/selección 19. [Resultados y alcance](docs/evidence/rc2/README.md).
 
 Arranque directo: `python server.py --no-browser --port 8770`. Linux/macOS: `./iniciar_linux_mac.sh`. Las funciones serie/MicroPython usan las dependencias opcionales de `requirements.txt`; no hacen falta para abrir el editor ni para Arduino CLI.
 

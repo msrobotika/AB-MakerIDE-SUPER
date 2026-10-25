@@ -54,3 +54,4 @@ jobs:
       - run: python tests/browser_agent_consent.py --outputs work/browser-ci
       - run: python tests/browser_simulator.py --outputs work/simulator-ci
       - run: python tests/browser_connection_recovery.py --outputs work/connection-ci
+      - run: python tests/browser_auto_identity.py --outputs work/identity-ci

@@ -79,7 +79,7 @@ try:
         page.on('pageerror',lambda error:report['page_errors'].append(str(error)))
         page.on('console',lambda message:report['console_errors'].append(message.text) if message.type=='error' else None)
         ready(page)
-        check('real server version',report['real']['health']['version']=='1.0.0-rc.1')
+        check('real server version',report['real']['health']['version']=='1.0.0-rc.2')
         check('robot idle neutral',page.locator('#robotStatus').get_attribute('data-state')=='idle')
         boards=page.request.get(url+'/api/boards').json();report['real']['boards']=boards
         check('real installed catalog available',boards['catalog_ok'] and boards['catalog_count']>0,boards['catalog_count'])
