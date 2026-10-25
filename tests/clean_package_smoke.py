@@ -115,6 +115,7 @@ def main():
                     browser=pw.chromium.launch(headless=True)
                     page=browser.new_page(viewport={'width':1440,'height':1000})
                     page.on('pageerror',lambda error:report['page_errors'].append(str(error)))
+                    page.on('dialog',lambda dialog:dialog.accept())
                     def guard(route):
                         if route.request.method=='POST':
                             if '/api/advisor/check' not in route.request.url:raise AssertionError('Unexpected operation')
