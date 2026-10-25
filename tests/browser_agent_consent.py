@@ -58,10 +58,20 @@ def main():
 
     catalog = {'ok': True, 'boards': [{'fqbn': 'arduino:avr:uno', 'name': 'Arduino Uno'}],
                'count': 1, 'source': 'CONTROLADO', 'error': '', 'warning': ''}
+    real_which = agent_runtime.shutil.which
+
+    def controlled_which(command, *args, **kwargs):
+        # The stub worker never launches a CLI. Keep its availability controlled
+        # too, so clean CI machines need neither an AI account nor a CLI install.
+        if command in agent_runtime.PROVIDERS.values():
+            return sys.executable
+        return real_which(command, *args, **kwargs)
+
     try:
         with tempfile.TemporaryDirectory() as temp, \
                 patch.object(server, 'AGENT_JOBS', agent_runtime.AgentJobManager(Path(temp))), \
                 patch.object(agent_runtime.AgentJobManager, '_work', worker), \
+                patch.object(agent_runtime.shutil, 'which', side_effect=controlled_which), \
                 patch.object(server, 'scan_ports', scan), \
                 patch.object(server, 'board_catalog', return_value=catalog):
             http = server.ThreadingHTTPServer(('127.0.0.1', 0), server.IDEHandler)

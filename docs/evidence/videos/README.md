@@ -27,6 +27,6 @@ Se mantienen los pendientes de lanzamiento de RELEASE_RC1.md: validación físic
 
 ## Conservación
 
-El MP4 original, esta ficha, sus metadatos y la hoja de doce fotogramas se añaden al Git **local**, sin publicación ni push. El ZIP de la entrega RC1 anterior conserva sus bytes; esta incorporación es un suplemento documental posterior.
+El MP4 original, esta ficha, sus metadatos y la hoja de doce fotogramas se incorporaron primero al Git local. El 25 de octubre de 2026, tras la autorización de publicación del autor, se incluyeron en el repositorio público y la entrega RC1. La observación del vídeo y sus límites siguen siendo los descritos arriba.
 
 ![Doce fotogramas extraídos del vídeo](video_2026-10-25_00-52-16.contact-sheet.jpg)

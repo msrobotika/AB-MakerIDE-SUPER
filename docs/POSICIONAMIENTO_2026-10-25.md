@@ -28,7 +28,7 @@ Ser abierto con licencia MIT facilita examinar, modificar y contribuir al códig
 - Instalar en equipos Windows limpios y probar migración, desconexión USB y recuperación sin depender de la máquina de desarrollo.
 - Ampliar la matriz a Uno y varias familias ESP32, con carga autorizada, cancelación y serie; validar MicroPython en placas concretas.
 - Mejorar el trabajo con varios archivos, incluido reabrir ZIP dentro del IDE, y la configuración reproducible de dependencias y opciones de placa.
-- Ejecutar la CI remota preparada, las pruebas C++ omitidas y los launchers de otros sistemas.
+- Mantener la [CI remota](https://github.com/msrobotika/AB-MakerIDE-SUPER/actions/workflows/checks.yml) y probar los launchers de otros sistemas. La primera ejecución unitaria remota completó los 219 casos en Linux y 218 en Windows, con un caso omitido por privilegios de enlaces simbólicos; eso no valida instalaciones ni hardware en Linux.
 - Medir con usuarios externos tiempo hasta el primer programa funcionando, pérdidas de trabajo y fallos recuperados. Publicar esos resultados antes de afirmar superioridad.
 
 La presentación recomendada es «IDE abierto para pasar de una idea a firmware verificable, con agentes opcionales». La base actual permite lanzar una RC y captar pruebas y contribuciones. No respalda anunciar el IDE más completo o fiable del mercado.

@@ -98,6 +98,6 @@ C:\ruta\work\test-venv\Scripts\python.exe tests/browser_acceptance.py --work C:\
 
 Usa un directorio de aceptación nuevo y un puerto libre. Esta prueba compila con los núcleos instalados, bloquea operaciones reales de grabación/serie/agentes y distingue sus escenarios interceptados. Auditoría de solo lectura: `python tests/audit_real_arduino.py --output C:\ruta\outputs\arduino-audit.json`.
 
-Resultados, capturas, cambios y pendientes: [informe RC1](docs/RELEASE_RC1.md), [evidencias](docs/evidence/README.md). Los informes v0.9.x son históricos y no sustituyen esta verificación. No se ha hecho push, publicación ni PR.
+Resultados, capturas, cambios y pendientes: [informe RC1](docs/RELEASE_RC1.md), [evidencias](docs/evidence/README.md). Los informes v0.9.x y las entregas locales anteriores son históricos. El repositorio público y sus [comprobaciones en GitHub](https://github.com/msrobotika/AB-MakerIDE-SUPER/actions/workflows/checks.yml) permiten seguir la evolución de la RC.
 
 Licencia MIT para MakerIDE. Marcas, herramientas, núcleos y bibliotecas externas mantienen sus propias licencias.

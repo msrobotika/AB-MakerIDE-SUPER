@@ -24,7 +24,7 @@ Se registraron pruebas físicas, con alcances distintos, en IdeaSpark con pantal
 
 Los tests de interfaz de agentes y fallos de conexión utilizan escenarios controlados. No sustituyen una ejecución real de IA o una operación física sobre el dispositivo. La compilación correcta tampoco confirma una grabación ni el funcionamiento de un periférico.
 
-La extracción nueva y el entorno Python aislado se probaron en el mismo Windows del desarrollo. Siguen pendientes otro PC o sistema limpio, Linux/macOS, desconexiones físicas y cancelaciones durante una carga real, pruebas prolongadas y usuarios externos. La configuración de CI está preparada, pero sus resultados en GitHub aún no están acreditados.
+La extracción nueva y el entorno Python aislado se probaron en el mismo Windows del desarrollo. Siguen pendientes otro PC o sistema limpio, launchers Linux/macOS, desconexiones físicas y cancelaciones durante una carga real, pruebas prolongadas y usuarios externos. La [CI de GitHub](https://github.com/msrobotika/AB-MakerIDE-SUPER/actions/workflows/checks.yml) ejecuta pruebas unitarias en Windows/Linux y pruebas de interfaz en Chromium; cada ejecución publica su resultado por revisión. Esa CI no sustituye las pruebas de instalación ni de hardware.
 
 No se distribuyen credenciales, cuentas de IA, controladores, respaldos privados de firmware ni herramientas de terceros dentro del código de MakerIDE. Esas herramientas mantienen sus licencias y condiciones propias. Los resultados locales y el manifiesto acompañan la entrega.
 

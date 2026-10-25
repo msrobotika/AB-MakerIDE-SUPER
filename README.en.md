@@ -43,6 +43,6 @@ An **Arduino Mega 2560** passed an authorized upload with prior 256 KB flash and
 
 
 
-The latest local suite has 199 passing Python tests and 4 skipped due to missing g++; 37 targeted browser checks pass. Browser agent execution is stubbed and does not flash hardware. Cross-platform CI is prepared but has not run on GitHub. [Evidence](docs/evidence/board-trials/README.md).
+The latest local suite has 215 passing Python tests and 4 skipped (three require g++; one requires Windows symlink privileges). There are 84 targeted browser checks across agent projects, the simulator and connection recovery. Browser agent execution and serial failures are controlled; these checks do not flash hardware. [Local evidence](docs/evidence/install-recovery/README.md). [GitHub Actions](https://github.com/msrobotika/AB-MakerIDE-SUPER/actions/workflows/checks.yml) runs the unit suite on Windows and Linux and the browser checks in Chromium. CI results do not establish launcher or physical device compatibility on those operating systems.
 
 [Spanish documentation](README.md) · [Contributing](CONTRIBUTING.md) · [Project saving](docs/PROYECTOS_DEL_AGENTE.md) · [Release notes](CHANGELOG.md)
