@@ -273,6 +273,6 @@
     "launch.py": "f86625af566bec0b4d84b69d5b9f7b4874150cca0cfaefe7fed96a9dc017f2b5",
     "app.js": "62cafa444df049621d0b16d9f80d9765bd33c7b2d01d05035747cca58f5bf3f9",
     "tests/test_local_security.py": "79745a3d57013581fdf0df3ebb6ad89d6b84a61ab19555ae6824d5d968efdd26",
-    "tests/browser_agent_consent.py": "10116426f065abbad346bd7c8d97b11c168873619250fbcf492d66a9f7a2f68f"
+    "tests/browser_agent_consent.py": "46c2c19b5d0b2780caa0293d49fd9e04cbefbbcd7383138bee6f585e5eb56164"
   }
 }

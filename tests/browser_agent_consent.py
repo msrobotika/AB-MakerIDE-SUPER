@@ -94,6 +94,21 @@ def main():
                         route.continue_()
 
                     page.route('**/api/**', guard)
+
+                    def approve_agent(*, enter=False):
+                        # Closing a dialog resolves an async handler. Do not read
+                        # the previous job's enabled button/status before the
+                        # next POST has actually been accepted by the server.
+                        with page.expect_response(lambda response: response.request.method == 'POST' and response.url.endswith('/api/agents/start')) as started:
+                            if enter:
+                                page.locator('#agentConsentInput').press('Enter')
+                            else:
+                                page.locator('#agentConsentApprove').click()
+                        response = started.value
+                        if response.status != 200:
+                            raise AssertionError('Controlled agent start rejected: ' + response.text())
+                        return response
+
                     page.goto(f'http://127.0.0.1:{http.server_port}')
                     page.wait_for_function('()=>document.querySelector("#backendState").textContent.includes("activo")')
                     page.locator('#showAI').click()
@@ -117,7 +132,7 @@ def main():
                     page.screenshot(path=str(args.outputs/'agent-consent-dialog.png'))
                     page.locator('#agentConsentInput').fill('ACCESO TOTAL')
                     check('exact consent enables start', page.locator('#agentConsentApprove').is_enabled())
-                    page.locator('#agentConsentInput').press('Enter')
+                    approve_agent(enter=True)
                     page.wait_for_function('()=>document.querySelector("#robotStatus").dataset.state==="success"')
                     check('one total request reaches real validation', len(report['starts']) == 1 and report['starts'][0]['full_consent'] == 'ACCESO TOTAL' and report['starts'][0]['confirm'] is True)
                     check('backend creates completed total job', server.AGENT_JOBS._current.mode == 'total' and server.AGENT_JOBS._current.success is True)
@@ -125,9 +140,8 @@ def main():
                     page.locator('#execMode').select_option('consultar')
                     page.locator('#execRun').click()
                     check('read-only hides full-access input', not page.locator('#agentConsentInput').is_visible() and page.locator('#agentConsentApprove').is_enabled())
-                    with page.expect_response(lambda response: response.request.method == 'POST' and response.url.endswith('/api/agents/start')) as started:
-                        page.locator('#agentConsentApprove').click()
-                    check('read-only start accepted before checking completion', started.value.status == 200)
+                    started = approve_agent()
+                    check('read-only start accepted before checking completion', started.status == 200)
                     page.wait_for_function('()=>document.querySelector("#robotStatus").dataset.state==="success"')
                     check('read-only request keeps permission scope', len(report['starts']) == 2 and report['starts'][1]['mode'] == 'consultar' and report['starts'][1]['full_consent'] == '')
                     page.set_viewport_size({'width': 390, 'height': 844})
@@ -140,7 +154,7 @@ def main():
                     original=page.locator('#code').input_value()
                     page.locator('#execMode').select_option('supervisado')
                     page.locator('#execTask').fill('PROJECT: generar código controlado')
-                    page.locator('#execRun').click();page.locator('#agentConsentApprove').click()
+                    page.locator('#execRun').click();approve_agent()
                     page.wait_for_function('()=>document.querySelector("#code").value.includes("PROJECT_GENERATED")')
                     check('generated code automatically opens in editor', 'PROJECT_GENERATED' in page.locator('#code').input_value())
                     backup=page.evaluate('JSON.parse(localStorage.getItem("ab-makeride-ai-backup-v1"))[0]')
@@ -154,7 +168,7 @@ def main():
                         check('project download includes header and sketch', 'sketch/radar_config.h' in archive.namelist() and 'sketch/sketch.ino' in archive.namelist())
                     page.screenshot(path=str(args.outputs/'agent-generated-editor-controlled.png'))
                     page.locator('#execTask').fill('PROJECT: continuar y conservar mis ediciones')
-                    page.locator('#execRun').click();page.locator('#agentConsentApprove').click()
+                    page.locator('#execRun').click();approve_agent()
                     page.locator('#code').fill('// edición del usuario durante la tarea')
                     page.wait_for_function('()=>!document.querySelector("#execRun").disabled')
                     page.wait_for_timeout(100)
@@ -168,7 +182,7 @@ def main():
                     manual_code=page.locator('#code').input_value()
                     page.locator('#agentAutoOpen').uncheck()
                     page.locator('#execTask').fill('PROJECT: conservar revisión manual')
-                    page.locator('#execRun').click();page.locator('#agentConsentApprove').click()
+                    page.locator('#execRun').click();approve_agent()
                     page.wait_for_function('()=>!document.querySelector("#execRun").disabled')
                     page.wait_for_timeout(100)
                     check('automatic open can be disabled without losing generated project',page.locator('#code').input_value()==manual_code and page.locator('#agentSaveProject').is_enabled())
