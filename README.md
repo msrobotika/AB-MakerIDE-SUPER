@@ -1,6 +1,33 @@
 # AB MakerIDE SUPER 1.0.0-rc.1 · MS Robotika
 
-IDE local para Arduino C++ y MicroPython, sobre la base v0.9.7. **Candidato de lanzamiento; no versión estable.** Se han verificado el catálogo y la compilación real en Windows. Falta validar grabación y funcionamiento físico del hardware con autorización.
+**De una idea a firmware verificable, en un IDE local y abierto.**
+
+AB MakerIDE reúne Arduino C++, MicroPython, herramientas de placa y agentes opcionales en una interfaz en español. Puedes ver el código que crea el agente, conservarlo, compilarlo y comprobar cada etapa de la tarea. Proyecto de **MS Robotika**, con [licencia MIT](LICENSE).
+
+**Estado: 1.0.0-rc.1, candidato de lanzamiento.** Validado localmente en Windows. El radar IdeaSpark se compiló y grabó con verificación, y el usuario confirmó la imagen en su pantalla. Esta prueba corresponde a ese perfil concreto; sigue pendiente la matriz de hardware y sistemas operativos para declarar v1.0 estable.
+
+[English overview](README.en.md) · [Guardar proyectos del agente](docs/PROYECTOS_DEL_AGENTE.md) · [Comparativa](docs/POSICIONAMIENTO_2026-10-25.md) · [Contribuir](CONTRIBUTING.md)
+
+![Editor de AB MakerIDE SUPER](docs/evidence/13-final-desktop.png)
+
+Captura real del servidor local RC1. [Galería y alcance de las evidencias](docs/evidence/README.md).
+
+## Qué ofrece
+
+- Editor para Arduino C++ y MicroPython con guardado local, exportación y recuperación de sesiones.
+- Catálogo de placas desde las herramientas instaladas; selección de modelo separada del puerto USB.
+- Compilación, grabación, monitor serie y diagnóstico desde la interfaz.
+- Agentes opcionales Codex CLI y Claude Code, con permisos visibles y registro de actividad.
+- Apertura del código generado con copia del anterior, descarga del sketch y ZIP con auxiliares. Continuar y compilar conservan las cabeceras creadas por el agente.
+- Robot MS Robotika: ámbar durante el trabajo, verde para el resultado concreto acreditado y rojo con error, acompañado de texto.
+
+El editor y las herramientas locales pueden usarse sin una cuenta de IA. Las funciones de IA requieren sus proveedores, autenticación y, según el servicio, créditos o suscripción. Código abierto no significa que las herramientas externas o sus servicios sean gratuitos. Los agentes externos pueden utilizar la red y recibir el código de la tarea.
+
+## Demostración verificable
+
+El [radar IdeaSpark](examples/ideaspark_114_radar.ino) es un ejemplo de un solo archivo para ESP32 y pantalla ST7789. Se compiló y grabó en COM4 con autorización y verificación del grabador; el usuario confirmó que lo ve. Los cuatro ecos son **simulados**. [Registros y perfil exacto](docs/evidence/radar-ideaspark/README.md).
+
+La mejora de proyectos pasa **197 pruebas unitarias**, con otras 4 omitidas por falta de g++, y **26 comprobaciones de interfaz**. Las pruebas de interfaz del agente son controladas; no se presentan como ejecuciones de IA o grabaciones reales. [Resultados y capturas](docs/evidence/agent-projects/README.md).
 
 ## Arranque en Windows
 
@@ -8,7 +35,7 @@ IDE local para Arduino C++ y MicroPython, sobre la base v0.9.7. **Candidato de l
 2. Ejecuta `INICIAR_WINDOWS.bat` (Python 3.10+). Usa **http://127.0.0.1:8770**, dejando libre de cambios el servidor anterior de 8765.
 3. `/api/health` debe devolver `1.0.0-rc.1`. Arduino CLI se busca en PATH y en `C:\Program Files\Arduino CLI`. Para una ruta específica, define `AB_MAKERIDE_ARDUINO_CLI` antes de arrancar. El servidor no cambia PATH ni configuración global.
 4. Elige **modelo** y **puerto** por separado. «Placas» busca los modelos instalados, en páginas de 40. CH340 y CP210x identifican un conversor USB, nunca prueban el modelo de placa. Una sugerencia de la CLI no reemplaza tu modelo.
-5. Pulsa **Compilar** y revisa la consola. La grabación y el monitor serie son acciones independientes que requieren intervención explícita; no se han ejercitado contra hardware en esta entrega.
+5. Pulsa **Compilar** y revisa la consola. La grabación y el monitor serie son acciones independientes. El ejemplo radar se grabó con autorización; otras placas, periféricos y escenarios requieren su propia validación.
 
 Arranque directo: `python server.py --no-browser --port 8770`. Linux/macOS: `./iniciar_linux_mac.sh`. Las funciones serie/MicroPython usan las dependencias opcionales de `requirements.txt`; no hacen falta para abrir el editor ni para Arduino CLI.
 
@@ -26,6 +53,8 @@ El robot SVG local lleva antena, ojos, brazos y distintivo MS. También informa 
 El éxito del agente **solo confirma la finalización de su CLI**. No prueba compilación, grabación ni funcionamiento físico. Una tarea pendiente impide el verde global; un fallo no desaparece por el éxito de otra tarea. Al editar o cambiar placa se invalida la compilación anterior. Los resultados incluyen FQBN y SHA-256 de la revisión compilada.
 
 ## Recuperación y compatibilidad
+
+El código creado por el agente se puede abrir en el editor con copia del anterior, guardar como sketch o descargar con sus archivos auxiliares en ZIP. Los auxiliares se conservan al continuar y compilar el proyecto. [Guía de guardado, reapertura y radar IdeaSpark](docs/PROYECTOS_DEL_AGENTE.md).
 
 - Los dos archivos, nombre, FQBN y puerto conservan la clave compatible `ab-makeride-project-v2`. Se guarda al editar y al abandonar/recargar la página. Un puerto desconectado permanece como referencia sin confirmar su presencia.
 - Cada origen del navegador tiene su almacenamiento: **8770 no puede leer automáticamente los proyectos de 8765**. Exporta `.abmaker.json` en la versión anterior e impórtalo aquí. No se accede a perfiles de navegador existentes.

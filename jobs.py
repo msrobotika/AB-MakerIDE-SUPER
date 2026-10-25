@@ -13,6 +13,7 @@ import uuid
 import json
 import hashlib
 from toolchain import arduino_cli
+from agent_projects import validate_project_files
 
 ANSI_RE = re.compile(r'\x1b\[[0-?]*[ -/]*[@-~]')
 PERCENT_RE = re.compile(r'(?<!\d)(\d{1,3})\s*%')
@@ -54,6 +55,7 @@ class Job:
     journal: Path | None = None
     finished_elapsed: float | None = None
     source_sha256: str = ''
+    agent_project_id: str = ''
     fqbn: str = ''
     _saved_at: float = 0
 
@@ -85,7 +87,7 @@ class Job:
     def snapshot(self, since: int = 0) -> dict:
         with self.lock:
             return dict(ok=True, id=self.id, action=self.action, active=self.active,
-                        source_sha256=self.source_sha256, fqbn=self.fqbn,
+                        source_sha256=self.source_sha256, fqbn=self.fqbn, agent_project_id=self.agent_project_id,
                         success=self.ok, cancelled=self.cancelled, stage=self.stage,
                         progress=self.upload_progress if self.stage in ('grabación', 'reintento 115200', 'completado') else None,
                         elapsed=self.finished_elapsed if self.finished_elapsed is not None else round(time.monotonic()-self.started, 1),
@@ -102,7 +104,11 @@ class JobManager:
         self._current: Job | None = None
         self.root = session_root
 
-    def start(self, code: str, fqbn: str, port: str | None = None, *, upload_speed: int = 115200, retry_slow: bool = False, request_id: str | None = None) -> dict:
+    def start(self, code: str, fqbn: str, port: str | None = None, *, upload_speed: int = 115200, retry_slow: bool = False, request_id: str | None = None, project_files: dict | None = None, agent_project_id: str = '') -> dict:
+        project_files = {} if project_files is None else project_files
+        validate_project_files(project_files)
+        if not isinstance(agent_project_id,str) or (agent_project_id and not re.fullmatch(r'[a-f0-9]{32}', agent_project_id)):
+            raise ValueError('Referencia de proyecto inválida.')
         if request_id is not None and (not isinstance(request_id,str) or not re.fullmatch(r'[a-f0-9]{32}',request_id)):
             raise ValueError('Referencia de operación inválida.')
         # A repeated HTTP submission must never repeat an upload/compile.
@@ -127,15 +133,21 @@ class JobManager:
                 job = Job(id=request_id or uuid.uuid4().hex, action='upload' if port else 'compile')
                 job.source_sha256 = hashlib.sha256(code.encode('utf-8')).hexdigest()
                 job.fqbn = fqbn
+                job.agent_project_id = agent_project_id
                 if self.root:
                     folder = self.root / job.id
                     folder.mkdir(parents=True, exist_ok=False)
                     (folder / 'sketch.ino').write_text(code, encoding='utf-8')
+                    for name, data in project_files.items():
+                        if name == 'sketch.ino':continue
+                        target = folder / 'project' / name
+                        target.parent.mkdir(parents=True, exist_ok=True)
+                        target.write_bytes(data)
                     (folder / 'target.json').write_text(json.dumps({'fqbn': fqbn, 'port': port}), encoding='utf-8')
                     job.journal = folder / 'job.json'
                     job.persist(force=True)
                 self._current = job
-            threading.Thread(target=self._worker, args=(job, code, fqbn, port, upload_speed, retry_slow), daemon=True).start()
+            threading.Thread(target=self._worker, args=(job, code, fqbn, port, upload_speed, retry_slow), kwargs={'project_files':project_files}, daemon=True).start()
             return {'ok': True, 'job_id': job.id}
         except Exception:
             self._hardware_lock.release()
@@ -221,12 +233,17 @@ class JobManager:
             with job.lock:
                 job.process = None
 
-    def _worker(self, job: Job, code: str, fqbn: str, port: str | None, upload_speed: int = 115200, retry_slow: bool = False):
+    def _worker(self, job: Job, code: str, fqbn: str, port: str | None, upload_speed: int = 115200, retry_slow: bool = False, *, project_files: dict | None = None):
         try:
             with tempfile.TemporaryDirectory(prefix='ab-makeride-') as temp:
                 root = Path(temp)
                 sketch = root / 'sketch'
                 sketch.mkdir()
+                for name, data in (project_files or {}).items():
+                    if name == 'sketch.ino':continue  # The current editor controls the main sketch.
+                    target = sketch / name
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    target.write_bytes(data)
                 (sketch / 'sketch.ino').write_text(code, encoding='utf-8')
                 build = root / 'build'
                 build.mkdir()

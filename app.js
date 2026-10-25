@@ -14,6 +14,9 @@ try{const old=JSON.parse(localStorage.getItem(SAVEKEY)||'null');if(old&&old.file
 let toasts;
 function toast(msg){const e=$('#toast');e.textContent=msg;e.classList.add('show');clearTimeout(toasts);toasts=setTimeout(()=>e.classList.remove('show'),2700)}
 let storageConflict=recoveryStorageError;
+let agentProjectId='';
+try{const saved=localStorage.getItem('ab-makeride-agent-project-v1')||'';if(/^[a-f0-9]{32}$/.test(saved))agentProjectId=saved}catch(_e){}
+function rememberAgentProject(id){agentProjectId=id||'';try{if(id)localStorage.setItem('ab-makeride-agent-project-v1',id);else localStorage.removeItem('ab-makeride-agent-project-v1')}catch(_e){}}
 function save(){if(storageConflict){$('#footSave').textContent='Guardado pausado: exporta tu copia antes de recargar';return;}try{localStorage.setItem(SAVEKEY,JSON.stringify({files:state.files,lang:state.lang,name:state.name,fqbn:state.fqbn,port:state.port,baud:state.baud,uploadSpeed:state.uploadSpeed,retrySlow:state.retrySlow}));state.dirty=false;$('#footSave').textContent='✓ Guardado local';}catch(e){$('#footSave').textContent='Error al guardar';toast('No se pudo guardar en este navegador')}}
 window.addEventListener('pagehide',()=>{clearTimeout(saveDelay);state.files[state.lang]=$('#code').value;save()});
 window.addEventListener('storage',e=>{if(e.key===SAVEKEY&&e.newValue){storageConflict=true;clearTimeout(saveDelay);$('#footSave').textContent='Otra pestaña cambió el proyecto: exporta esta copia antes de recargar';toast('Guardado pausado para evitar sobrescribir otra pestaña. Exporta tu copia.')}});
@@ -32,9 +35,23 @@ $('#code').addEventListener('keydown',e=>{if(e.key==='Tab'){e.preventDefault();c
 $$('[data-lang]').forEach(x=>x.addEventListener('click',()=>setLang(x.dataset.lang)));
 $$('[data-pane]').forEach(x=>x.addEventListener('click',()=>switchPane(x.dataset.pane)));
 $('#clearBtn').addEventListener('click',()=>$('#pane-'+state.pane).replaceChildren());
-function download(filename,text){const blob=new Blob([text],{type:'application/json;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),800)}
+function download(filename,text,type='application/json;charset=utf-8'){const blob=new Blob([text],{type});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),800)}
 function exportProject(){state.files[state.lang]=$('#code').value;const obj={format:'ab-makeride-v1',name:state.name,lang:state.lang,fqbn:state.fqbn,files:{'sketch.ino':state.files.cpp,'main.py':state.files.py},exported_at:new Date().toISOString()};download((state.name.replace(/[^a-z0-9-]/gi,'_')||'proyecto')+'.abmaker.json',JSON.stringify(obj,null,2));toast('Proyecto exportado a JSON')}
-function importProject(file){file.text().then(txt=>{const obj=JSON.parse(txt);if(obj.format!=='ab-makeride-v1'||!obj.files||typeof obj.files['sketch.ino']!=='string'||typeof obj.files['main.py']!=='string')throw Error('Formato de proyecto no compatible');if(obj.files['sketch.ino'].length>300000||obj.files['main.py'].length>300000)throw Error('Archivos demasiado grandes');if(!confirm('¿Reemplazar los dos archivos actuales? Exporta antes si quieres conservarlos.'))return;state.files.cpp=obj.files['sketch.ino'];state.files.py=obj.files['main.py'];state.name=String(obj.name||'proyecto').slice(0,60);state.fqbn=String(obj.fqbn||state.fqbn);setLang(obj.lang==='py'?'py':'cpp',false);$('#code').value=state.files[state.lang];updateHL();save();renderSidebar();toast('Proyecto importado')}).catch(e=>toast('No se pudo importar: '+e.message));}
+function importProject(file){file.text().then(txt=>{
+  if(/\.(ino|py)$/i.test(file.name)){
+    if(txt.length>300000)throw Error('Archivo demasiado grande');
+    if(storageConflict)throw Error('Exporta la copia actual antes de resolver el conflicto de guardado');
+    const lang=/\.py$/i.test(file.name)?'py':'cpp';
+    if(!confirm('¿Abrir '+file.name+' en el editor? Se guardará una copia del archivo anterior.'))return;
+    const list=JSON.parse(localStorage.getItem('ab-makeride-ai-backup-v1')||'[]');
+    if(!Array.isArray(list))throw Error('No se pudo guardar la copia anterior');
+    list.unshift({date:new Date().toISOString(),lang,code:state.files[lang]});
+    localStorage.setItem('ab-makeride-ai-backup-v1',JSON.stringify(list.slice(0,7)));
+    rememberAgentProject('');state.files[lang]=txt;state.name=file.name.replace(/\.(ino|py)$/i,'').slice(0,60);
+    setLang(lang,false);save();renderSidebar();toast('Archivo abierto · copia anterior guardada');return;
+  }
+  const obj=JSON.parse(txt);if(obj.format!=='ab-makeride-v1'||!obj.files||typeof obj.files['sketch.ino']!=='string'||typeof obj.files['main.py']!=='string')throw Error('Formato de proyecto no compatible');if(obj.files['sketch.ino'].length>300000||obj.files['main.py'].length>300000)throw Error('Archivos demasiado grandes');if(!confirm('¿Reemplazar los dos archivos actuales? Exporta antes si quieres conservarlos.'))return;rememberAgentProject('');state.files.cpp=obj.files['sketch.ino'];state.files.py=obj.files['main.py'];state.name=String(obj.name||'proyecto').slice(0,60);state.fqbn=String(obj.fqbn||state.fqbn);setLang(obj.lang==='py'?'py':'cpp',false);$('#code').value=state.files[state.lang];updateHL();save();renderSidebar();toast('Proyecto importado')
+}).catch(e=>toast('No se pudo importar: '+e.message));}
 $('#projectFile').addEventListener('change',e=>{const f=e.target.files[0];if(f)importProject(f);e.target.value='' });
 let csrfSession='';
 async function sessionToken(){
@@ -251,7 +268,7 @@ async function updateBuildVisual(d){
   if(!d.active&&d.success&&d.source_sha256){
    const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode($('#code').value));
    const sha=Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,'0')).join('');
-   d.stale=sha!==d.source_sha256||state.fqbn!==d.fqbn||state.lang!=='cpp';
+   d.stale=sha!==d.source_sha256||state.fqbn!==d.fqbn||state.lang!=='cpp'||(Object.hasOwn(d,'agent_project_id')&&d.agent_project_id!==agentProjectId);
   }
   RobotActivity.report('build',(d.action==='upload'?'Compilar y grabar':'Compilación')+(d.fqbn?' · '+d.fqbn:''),d);
   const panel=$('#buildProgress');panel.classList.remove('hidden');
@@ -280,7 +297,7 @@ async function runCppJob(action){
   try{
     const requestId=crypto.randomUUID().replaceAll('-','');
     localStorage.setItem('ab-makeride-last-build-v1',requestId);
-    const started=await request('/api/jobs/start',{request_id:requestId,action,lang:'cpp',fqbn:state.fqbn,code:state.files.cpp,port:state.port,upload_speed:state.uploadSpeed,retry_slow:state.retrySlow,confirm:action==='upload'});
+    const started=await request('/api/jobs/start',{request_id:requestId,action,lang:'cpp',fqbn:state.fqbn,code:state.files.cpp,port:state.port,upload_speed:state.uploadSpeed,retry_slow:state.retrySlow,confirm:action==='upload',agent_project_id:agentProjectId});
     currentJobId=started.job_id;
     localStorage.setItem('ab-makeride-last-build-v1',currentJobId);
     while(true){
@@ -417,7 +434,7 @@ b.querySelector('#restoreAiBackup').onclick=restoreAiBackup;
 b.querySelector('#projectName').addEventListener('input',e=>{state.name=e.target.value;scheduleSave()});
 b.querySelectorAll('[data-open]').forEach(x=>x.addEventListener('click',()=>setLang(x.dataset.open)));
 b.querySelector('#exportBtn').onclick=exportProject;b.querySelector('#importBtn').onclick=()=>$('#projectFile').click();
-b.querySelector('#newBtn').onclick=()=>{if(!confirm('¿Crear proyecto nuevo? Se reemplazará el código actual. Exporta primero si deseas conservarlo.'))return;state.files={cpp:DEFAULT_CPP,py:DEFAULT_PY};state.name='mi-proyecto';setLang('cpp',false);$('#code').value=state.files.cpp;updateHL();save();renderSidebar();toast('Proyecto nuevo. Selecciona la placa antes de compilar.')};}
+b.querySelector('#newBtn').onclick=()=>{if(!confirm('¿Crear proyecto nuevo? Se reemplazará el código actual. Exporta primero si deseas conservarlo.'))return;rememberAgentProject('');state.files={cpp:DEFAULT_CPP,py:DEFAULT_PY};state.name='mi-proyecto';setLang('cpp',false);$('#code').value=state.files.cpp;updateHL();save();renderSidebar();toast('Proyecto nuevo. Selecciona la placa antes de compilar.')};}
 else if(panel==='boards'){
 b.innerHTML=`<button class="action" id="scanBtn" style="width:100%;margin-bottom:15px">↻ Buscar placas reales</button><button class="action" id="openBoardSearch" style="width:100%;margin-bottom:12px">⌕ Buscar entre ${state.catalogOk?state.catalogCount:'total desconocido de'} modelos instalados</button><div class="field"><label class="formlabel" for="boardSelect">TIPO DE PLACA / FQBN</label><select class="selector" id="boardSelect">${state.choices.map(p=>`<option value="${escapeHtml(p.fqbn)}" ${p.fqbn===state.fqbn?'selected':''}>${escapeHtml(p.name)}</option>`).join('')}</select></div><div class="field"><label class="formlabel" for="portSelect">PUERTO FÍSICO</label><select class="selector" id="portSelect"><option value="">— Ningún dispositivo seleccionado —</option>${state.ports.map(p=>`<option value="${escapeHtml(p.port)}" ${p.port===state.port?'selected':''}>${escapeHtml(p.port+' · '+p.name)}</option>`).join('')}</select></div><div class="field"><label class="formlabel" for="baudSelect">BAUDIOS DEL MONITOR SERIE</label><select class="selector" id="baudSelect">${[9600,19200,38400,57600,74880,115200,230400,460800,921600].map(v=>`<option value="${v}" ${v===state.baud?'selected':''}>${v}</option>`).join('')}</select></div><div class="field"><label class="formlabel" for="uploadSpeedSelect">VELOCIDAD DE GRABACIÓN ESP32</label><select class="selector" id="uploadSpeedSelect">${[115200,230400,460800,921600].map(v=>`<option value="${v}" ${v===state.uploadSpeed?'selected':''}>${v} baudios</option>`).join('')}</select></div><label class="settingscheck" style="margin:7px 0 14px"><span>Reintento USB automático a 115200 (si falla el enlace)</span><input type="checkbox" id="retrySlow" ${state.retrySlow?'checked':''}></label><button class="action" id="serialConnect" style="width:100%;margin:4px 0">${state.serialConnected?'■ Desconectar monitor':'↗ Conectar monitor serie'}</button>${state.lang==='py'?'<button class="action" id="pyRun" style="width:100%;margin-top:7px">▶ Ejecutar MicroPython desde RAM</button>':''}<div class="boxinfo">${state.ports.length?'Dispositivos detectados: <strong>'+state.ports.length+'</strong>':'No se detectan dispositivos. No se inventan puertos COM.'}<br><span class="hint">La selección FQBN es manual si el puerto no identifica por sí solo el modelo. Comprueba la serigrafía de tu placa.</span></div>`;
 b.querySelector('#openBoardSearch').onclick=openCatalog;b.querySelector('#scanBtn').onclick=async()=>{toast('Buscando hardware real...');try{const result=await scan({force:true});toast(result.scan_ok===false?'Detección incompleta: revisa el aviso':state.ports.length+' puerto(s) detectado(s)')}catch(e){toast(e.message)}};b.querySelector('#boardSelect').onchange=e=>applyBoardChoice(e.target.value);b.querySelector('#portSelect').onchange=e=>applyPortChoice(e.target.value);b.querySelector('#baudSelect').onchange=e=>{state.baud=+e.target.value;save()};b.querySelector('#uploadSpeedSelect').onchange=e=>{state.uploadSpeed=+e.target.value;save()};b.querySelector('#retrySlow').onchange=e=>{state.retrySlow=e.target.checked;save()};b.querySelector('#serialConnect').onclick=toggleSerial;const py=b.querySelector('#pyRun');if(py)py.onclick=runPython;}
@@ -491,7 +508,7 @@ function assistant(text){const ms=text.match(/(\d{2,5})\s*(?:ms|milisegundos?)/i
 $('#chatSend').onclick=()=>{const e=$('#chatInput'),s=e.value.trim();if(!s)return;e.value='';userMsg(s);if($('#aiProvider').value==='local')assistant(s);else sendCloudAgent(s)};$('#chatInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();$('#chatSend').click()}});
 
 async function loadDeviceExample(kind){
-  const info={uno:{file:'uno_r3_diagnostico.ino',name:'Arduino Uno R3',fqbn:'arduino:avr:uno'},cam:{file:'esp32cam_ai_thinker_test.ino',name:'ESP32-CAM AI-Thinker (clásico)',fqbn:'esp32:esp32:esp32cam'}}[kind];
+  const info={uno:{file:'uno_r3_diagnostico.ino',name:'Arduino Uno R3',fqbn:'arduino:avr:uno'},cam:{file:'esp32cam_ai_thinker_test.ino',name:'ESP32-CAM AI-Thinker (clásico)',fqbn:'esp32:esp32:esp32cam'},radar:{file:'ideaspark_114_radar.ino',name:'IdeaSpark ST7789 135×240 · radar',fqbn:'esp32:esp32:esp32'}}[kind];
   if(!info)return;
   const advisory=kind==='cam'?'IMPORTANTE: el ejemplo exige AI-Thinker clásica OV2640; NO sirve para ESP32-S3-CAM ni otros pinouts. USB-C no identifica el chip.\n\n':'';
   if(!confirm(advisory+'¿Cargar '+info.name+'? Reemplazará sketch.ino y seleccionará su perfil de compilación. EXPORTA tu proyecto actual primero.'))return;
@@ -500,6 +517,13 @@ async function loadDeviceExample(kind){
     if(!r.ok)throw Error('Ejemplo no disponible');
     const source=await r.text();
     if(!source.includes('void setup()')||!source.includes('void loop()'))throw Error('Ejemplo inválido');
+    if(storageConflict)throw Error('Exporta primero la copia actual para resolver el conflicto de guardado');
+    const backups=JSON.parse(localStorage.getItem('ab-makeride-ai-backup-v1')||'[]');
+    if(!Array.isArray(backups))throw Error('No se pudo guardar la copia anterior');
+    backups.unshift({date:new Date().toISOString(),lang:'cpp',code:state.files.cpp});
+    localStorage.setItem('ab-makeride-ai-backup-v1',JSON.stringify(backups.slice(0,7)));
+    rememberAgentProject('');
+    if(kind==='radar')state.name='RadarIdeaSpark';
     state.files.cpp=source;
     state.fqbn=info.fqbn;
     state.baud=115200;
@@ -509,6 +533,7 @@ async function loadDeviceExample(kind){
     $('#code').value=source;updateHL();scheduleAdvisor();save();renderSidebar();
     $('#footBoard').textContent=info.name;
     updateHardwareLabVisibility();
+    refreshQuickSelectors();
     toast('Ejemplo '+info.name+' cargado: selecciona el puerto físico y compila.');
     showLog('console','Ejemplo cargado: '+info.name+' | FQBN='+info.fqbn+' | monitor serie 115200','cmd');
   }catch(e){toast('Error cargando ejemplo: '+e.message)}
@@ -668,7 +693,7 @@ function agentPermissionsView(){
   warning.classList.toggle('danger-warning',mode==='total');
   warning.textContent={
     consultar:'Solo análisis. No debe modificar los archivos del proyecto.',
-    supervisado:'La CLI puede editar el proyecto de trabajo. Los cambios no se insertarán en tu editor hasta que los revises.',
+    supervisado:'La CLI edita una copia del proyecto. Puedes abrir su código con respaldo; revisa el resultado antes de compilar.',
     autonomo:'Permite edición y herramientas de ejecución según la CLI. Podría alcanzar otros archivos o dispositivos: NO es aislamiento de sistema. Revísalo antes de activar.',
     total:'RIESGO ALTO: sin sandbox ni aprobaciones de la CLI. Puede leer o modificar archivos ajenos, borrar datos, usar la red e incluso intentar grabar placas mediante comandos. Recomendado SOLO en una máquina virtual. Exige consentimiento textual por tarea.'
   }[mode];
@@ -740,10 +765,12 @@ async function recoverAgentSession(silent=false){
     if(!silent)toast('Sesión recuperada desde el servidor local');
   }catch(e){if(!silent)toast('No se pudo recuperar la sesión: '+e.message)}
 }
+$('#agentTaskRadar').onclick=()=>loadDeviceExample('radar');
 $('#agentRecover').onclick=()=>recoverAgentSession(false);
 $('#agentContinue').onclick=()=>{
   const prev=agentRunState.lastData;
   if(!prev || prev.active)return;
+  rememberAgentProject(prev.job_id);
   const gap=prev.outcome==='flash_reported_verified'
     ? 'El grabador informó de verificación; no se ha comprobado visualmente la pantalla. Solicita una prueba visual al usuario y diagnostica pantalla, rotación y luz de fondo si sigue negra.'
     : 'No consta una grabación verificada en el informe o la tarea se interrumpió. Comprueba primero el estado actual del hardware y las salidas anteriores sin borrar ni grabar a ciegas.';
@@ -781,47 +808,91 @@ function appendAgentEvent(ev){
   pre.textContent=(pre.textContent+'['+(ev.kind||'log')+'] '+ev.text+'\n').slice(-85000);
   if(ev.kind==='milestone')showLog('console','[Agente] '+ev.text,'good');
 }
+try{$('#agentAutoOpen').checked=localStorage.getItem('ab-makeride-agent-auto-open-v1')!=='false'}catch(_e){}
+$('#agentAutoOpen').onchange=()=>{try{localStorage.setItem('ab-makeride-agent-auto-open-v1',String($('#agentAutoOpen').checked))}catch(_e){}};
+async function openAgentCode(data,automatic=false){
+  if(typeof data.modified_code!=='string'||!data.diff)return false;
+  const lang=data.file_name==='main.py'?'py':'cpp';
+  if(state.lang!==lang||storageConflict)return false;
+  const current=$('#code').value;
+  if(automatic){
+    if(!$('#agentAutoOpen').checked||data.success!==true||data.cancelled||data.interrupted||data.legacy||agentProjectId===data.job_id||!window.crypto?.subtle)return false;
+    const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(current));
+    const sha=Array.from(new Uint8Array(digest),x=>x.toString(16).padStart(2,'0')).join('');
+    if(sha!==data.before_sha256||$('#code').value!==current||state.lang!==lang)return false;
+  }else if(!confirm('¿Abrir el código generado en el editor? Se guardará una copia del código actual; revisa las diferencias.'))return false;
+  try{
+    const list=JSON.parse(localStorage.getItem('ab-makeride-ai-backup-v1')||'[]');
+    if(!Array.isArray(list))throw Error('Copia dañada');
+    list.unshift({date:new Date().toISOString(),lang,code:current,job_id:data.job_id});
+    localStorage.setItem('ab-makeride-ai-backup-v1',JSON.stringify(list.slice(0,7)));
+  }catch(_e){toast('No se pudo guardar la copia anterior; exporta el proyecto antes de abrir la propuesta.');return false;}
+  state.files[lang]=data.modified_code;$('#code').value=data.modified_code;
+  rememberAgentProject(data.job_id);RobotActivity.invalidate('build');
+  updateHL();updateCaret();save();scheduleAdvisor();refreshSketchTargetNotice();
+  showLog('console','Código del agente abierto en el editor; copia anterior guardada. Guarda el proyecto ZIP para conservar los archivos auxiliares.','note');
+  toast('Código del agente abierto · copia anterior guardada');
+  return true;
+}
+async function rememberCompletedProject(data){
+  if(data.success!==true||data.active||data.cancelled||data.interrupted||storageConflict||!window.crypto?.subtle)return;
+  if((data.file_name==='main.py'?'py':'cpp')!==state.lang)return;
+  const current=$('#code').value;
+  const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(current));
+  const sha=Array.from(new Uint8Array(digest),x=>x.toString(16).padStart(2,'0')).join('');
+  if($('#code').value===current&&(sha===data.before_sha256||current===data.modified_code)){
+    if(agentProjectId!==data.job_id)RobotActivity.invalidate('build');
+    rememberAgentProject(data.job_id);
+  }
+}
+async function saveAgentProject(data){
+  try{
+    const response=await fetch('/api/agents/project.zip?id='+encodeURIComponent(data.job_id));
+    if(!response.ok){const error=await response.json();throw Error(error.error||'No se pudo guardar el proyecto')}
+    const blob=await response.blob(),url=URL.createObjectURL(blob),link=document.createElement('a');
+    link.href=url;link.download='MakerIDE-'+data.job_id.slice(0,8)+'.zip';
+    document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+    toast('Proyecto guardado con su código y archivos auxiliares');
+  }catch(e){toast('No se pudo guardar: '+e.message)}
+}
+$('#agentOpenCode').onclick=()=>{if(agentRunState.lastData)openAgentCode(agentRunState.lastData)};
+$('#agentSaveProject').onclick=()=>{if(agentRunState.lastData)saveAgentProject(agentRunState.lastData)};
 function showAgentResult(data){
+  $('#agentOpenCode').disabled=typeof data.modified_code!=='string'||!data.diff;
+  $('#agentSaveProject').disabled=data.active===true;
   const el=document.createElement('div');el.className='msg bot';
   const text=document.createElement('div');
   text.textContent=reportAgentOutcome(data)+'\n'+(data.error||'')+
     `\nTiempo: ${data.elapsed}s · Modo: ${data.mode}\n`+
     (data.response||'(La CLI no devolvió texto.)');
   el.appendChild(text);
+  const saveProject=document.createElement('button');saveProject.className='action small';
+  saveProject.textContent='Guardar proyecto del agente (.zip)';saveProject.onclick=()=>saveAgentProject(data);el.appendChild(saveProject);
+  if(typeof data.modified_code==='string'){
+    const saveSketch=document.createElement('button');saveSketch.className='action small ghost';
+    saveSketch.textContent='Guardar solo sketch';
+    saveSketch.onclick=()=>download(data.file_name||'sketch.ino',data.modified_code,'text/plain;charset=utf-8');
+    el.appendChild(saveSketch);
+  }
   if(data.diff){
     const details=document.createElement('details');details.className='agent-raw';
-    const head=document.createElement('summary');head.textContent='Revisar diferencias antes de aplicar';details.appendChild(head);
+    const head=document.createElement('summary');head.textContent='Ver diferencias con el código anterior';details.appendChild(head);
     const diff=document.createElement('pre');diff.className='agent-diff';diff.textContent=data.diff;details.appendChild(diff);el.appendChild(details);
   }
   if(data.changed_files&&data.changed_files.length){
     const more=document.createElement('div');
     more.textContent='Otros archivos creados o existentes en la sesión: '+data.changed_files.join(', ')+
-      '. Puedes encontrarlos en la carpeta de sesiones; no se importan automáticamente.';
+      '. «Guardar proyecto» incluye los archivos auxiliares; las próximas tareas conservan la copia al continuar el proyecto.';
     el.appendChild(more);
   }
   if(data.modified_code!==null&&typeof data.modified_code==='string'&&data.diff){
-    const proposed=data.modified_code;
-    const originalLanguage=agentRunState.lastLang || state.lang;
     const btn=document.createElement('button');btn.className='action small primary';
-    btn.textContent=data.legacy?'↳ Importar código antiguo (con copia de seguridad)':'↳ Aplicar cambios al archivo abierto (con copia de seguridad)';
-    btn.onclick=async()=>{
-      if(!data.legacy && window.crypto?.subtle && data.before_sha256){
-        const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode($('#code').value));
-        const sha=Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,'0')).join('');
-        if(sha!==data.before_sha256){toast('El editor ha cambiado desde que Codex inició. Exporta el proyecto y revisa la comparación antes de reemplazar.');return;}
-      }
-      if(!confirm(data.legacy?'Esta sesión antigua no tiene historial de compilación o grabación. ¿Importar solo el archivo recuperado? Se guardará copia de seguridad.':'El agente ha modificado la copia del proyecto. ¿Reemplazar el archivo actual? Se conservará una copia de seguridad local. Revisa el diff antes.'))return;
-      try{
-        const list=JSON.parse(localStorage.getItem('ab-makeride-ai-backup-v1')||'[]');
-        list.unshift({date:new Date().toISOString(),lang:state.lang,code:$('#code').value});
-        localStorage.setItem('ab-makeride-ai-backup-v1',JSON.stringify(list.slice(0,7)));
-      }catch(e){toast('No se pudo guardar la copia de seguridad; exporta el proyecto antes.');return;}
-      if(state.lang!==originalLanguage){toast('Has cambiado de archivo; vuelve al archivo con el que iniciaste el agente para aplicar sus cambios.');return;}
-      state.files[state.lang]=proposed;$('#code').value=proposed;updateHL();scheduleSave();scheduleAdvisor();
-      toast('Cambios aplicados localmente. Compila y revisa antes de grabar.');btn.disabled=true;
-    };
+    btn.textContent='Abrir código en el editor';btn.title='Guarda una copia del código actual antes de abrir la propuesta';
+    btn.onclick=async()=>{if(await openAgentCode(data))btn.disabled=true;};
     el.appendChild(btn);
+    openAgentCode(data,true).then(opened=>{if(opened)btn.textContent='Código abierto · copia anterior guardada';return rememberCompletedProject(data)});
   }
+  else rememberCompletedProject(data);
   $('#chatLog').appendChild(el);$('#chatLog').scrollTop=$('#chatLog').scrollHeight;
 }
 async function pollAgent(){
@@ -856,7 +927,7 @@ $('#agentConsentInput').addEventListener('input',()=>{
 function authorizeAgent(provider,mode,task){
   if(agentConsentDialog.open)return Promise.resolve(null);
   const total=mode==='total',input=$('#agentConsentInput');
-  $('#agentConsentSummary').textContent=`${provider==='codex'?'Codex':'Claude Code'} · ${$('#execMode').selectedOptions[0].textContent}`;
+  $('#agentConsentSummary').textContent=`${provider==='codex'?'Codex':'Claude Code'} · ${$('#execMode').selectedOptions[0].textContent}. ${$('#agentAutoOpen').checked?'El código generado se abrirá con respaldo si no has editado el original.':'Revisarás el código antes de abrirlo en el editor.'}`;
   $('#agentConsentTask').textContent=task;
   $('#agentConsentGroup').classList.toggle('hidden',!total);
   $('#agentConsentRisk').classList.toggle('hidden',!total);
@@ -890,6 +961,7 @@ $('#execRun').onclick=async()=>{
     const r=await request('/api/agents/start',{
       provider,mode,prompt:task,code:state.files[state.lang],lang:state.lang,fqbn:state.fqbn,
       confirm:true,full_consent:consent,port:state.port||'',
+      parent_job_id:agentProjectId,
     });
     agentRunState.id=r.job_id;agentRunState.last=0;agentRunState.lastLang=state.lang;
     rememberAgent(r.job_id);$('#agentResumeMessage').textContent='Trabajo iniciado. Puedes recuperar esta sesión si cierras la pestaña.';

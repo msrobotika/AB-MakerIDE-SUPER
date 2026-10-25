@@ -25,6 +25,7 @@ import time
 import uuid
 
 from dependency_advisor import redact_secrets
+from agent_projects import collect_project, project_archive
 
 PROVIDERS = {'codex': 'codex', 'claude_code': 'claude'}
 MODES = ('consultar', 'supervisado', 'autonomo', 'total')
@@ -397,7 +398,7 @@ class AgentJobManager:
 
     def start(self, *, provider: str, mode: str, prompt: str,
               code: str, lang: str, fqbn: str, confirmed: bool,
-              full_consent: str = '', port: str = '') -> dict:
+              full_consent: str = '', port: str = '', parent_job_id: str = '') -> dict:
         if provider not in PROVIDERS or mode not in MODES:
             raise ValueError('Proveedor o permiso no reconocido.')
         if not isinstance(prompt, str) or not (3 <= len(prompt.strip()) <= MAX_PROMPT):
@@ -418,12 +419,23 @@ class AgentJobManager:
         executable = shutil.which(PROVIDERS[provider])
         if not executable:
             raise ValueError(f'Instala e inicia sesión en {PROVIDERS[provider]} antes de usar el agente.')
+        inherited = self.project_files(parent_job_id)[1] if parent_job_id else {}
+        for name, data in inherited.items():
+            if Path(name).suffix.lower() in ('.ino', '.h', '.hpp', '.c', '.cpp', '.py', '.json', '.txt'):
+                text = data.decode('utf-8', errors='replace')
+                _, found = redact_secrets(text)
+                if found or redact_log(text) != text:
+                    raise ValueError('Un archivo auxiliar contiene posibles credenciales: ' + name)
         with self._lock:
             if self._current is not None and self._current.active:
                 raise ValueError('Ya hay un agente activo. Cancélalo o finalízalo primero.')
             self.root.mkdir(parents=True, exist_ok=True)
             workspace = Path(tempfile.mkdtemp(prefix='sesion-', dir=str(self.root)))
             filename = 'sketch.ino' if lang == 'cpp' else 'main.py'
+            for name, data in inherited.items():
+                target = workspace / name
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_bytes(data)
             (workspace / filename).write_text(code, encoding='utf-8')
             (workspace / ORIGINAL_FILENAME).write_text(code, encoding='utf-8')
             (workspace / 'MAKERIDE_CONTEXT.txt').write_text(
@@ -452,6 +464,20 @@ class AgentJobManager:
         if isinstance(since, bool) or not isinstance(since, int) or since < 0:
             raise ValueError('Cursor de eventos inválido.')
         return job.snapshot(since)
+
+    def project_files(self, job_id: str) -> tuple[dict, dict[str, bytes]]:
+        if not isinstance(job_id, str) or not re.fullmatch(r'[a-f0-9]{32}', job_id):
+            raise ValueError('Identificador de proyecto no válido.')
+        snapshot = self.get(job_id)
+        if snapshot['job_id'] != job_id:
+            raise ValueError('Proyecto no encontrado.')
+        if snapshot['active']:
+            raise ValueError('Espera a que el agente termine antes de guardar o continuar el proyecto.')
+        return snapshot, collect_project(Path(snapshot['workspace']), self.root)
+
+    def export_project(self, job_id: str) -> bytes:
+        snapshot, files = self.project_files(job_id)
+        return project_archive(snapshot, files)
 
     def cancel(self, job_id: str) -> dict:
         with self._lock:
@@ -563,7 +589,7 @@ class AgentJobManager:
             job.changed_files = [p.name for p in job.workspace.iterdir()
                                  if p.is_file() and not p.is_symlink() and p.name not in ('MAKERIDE_CONTEXT.txt', job.file_name, JOURNAL_FILENAME, ORIGINAL_FILENAME)][:30]
             job.success = True
-            job.emit('Agente terminado. Revisa las evidencias y cualquier cambio propuesto antes de aplicarlo al editor.')
+            job.emit('Agente terminado. Revisa el código y las evidencias; puedes guardar el proyecto completo.')
         except (OSError, subprocess.TimeoutExpired) as exc:
             job.error = f'Error de ejecución de {job.provider}: {type(exc).__name__}'
             job.emit(job.error)

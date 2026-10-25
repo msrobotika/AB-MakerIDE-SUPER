@@ -558,7 +558,7 @@ class IDEHandler(BaseHTTPRequestHandler):
             return self._json(403, {"ok": False, "error": "Acceso restringido al equipo local"})
         parsed = urlsplit(self.path)
         if parsed.path == "/api/health":
-            return self._json(200, {"ok": True, "name": "AB MakerIDE · MS Robotika", "version": "1.0.0-rc.1", "mode": "local-real"})
+            return self._json(200, {"ok": True, "name": "AB MakerIDE · MS Robotika", "version": "1.0.0-rc.1", "mode": "local-real", "capabilities": ["agent-project-export", "agent-project-continuation", "agent-editor-open"]})
         if parsed.path == "/api/session":
             return self._json(200, {"ok": True, "csrf": SESSION_KEY})
         if parsed.path == "/api/diagnostics":
@@ -599,6 +599,21 @@ class IDEHandler(BaseHTTPRequestHandler):
             return self._json(200, AGENT_JOBS.status_overview())
         if parsed.path == '/api/agents/history':
             return self._json(200, {'ok': True, 'recent': AGENT_JOBS.history(12)})
+        if parsed.path == '/api/agents/project.zip':
+            job_id = parse_qs(parsed.query).get('id', [''])[0]
+            try:
+                payload = AGENT_JOBS.export_project(job_id)
+            except (ValueError, OSError) as error:
+                return self._json(400, {'ok': False, 'error': str(error)})
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/zip')
+            self.send_header('Content-Disposition', f'attachment; filename="MakerIDE-{job_id[:8]}.zip"')
+            self.send_header('Content-Length', str(len(payload)))
+            self.send_header('Cache-Control', 'no-store')
+            self.send_header('X-Content-Type-Options', 'nosniff')
+            self.end_headers()
+            self.wfile.write(payload)
+            return
         if parsed.path == "/api/agents/poll":
             q = parse_qs(parsed.query)
             try:
@@ -623,7 +638,7 @@ class IDEHandler(BaseHTTPRequestHandler):
             return self._json(200, SERIAL.status(since))
         if parsed.path in ('/examples/Blink_Uno.ino', '/examples/uno_r3_diagnostico.ino',
                            '/examples/esp32cam_ai_thinker_test.ino', '/examples/ideaspark_19_st7789.ino',
-                           '/examples/ideaspark_114_st7789.ino'):
+                           '/examples/ideaspark_114_st7789.ino', '/examples/ideaspark_114_radar.ino'):
             source = (ROOT / parsed.path.lstrip('/')).read_bytes()
             self.send_response(200)
             self.send_header('Content-Type', 'text/plain; charset=utf-8')
@@ -674,6 +689,7 @@ class IDEHandler(BaseHTTPRequestHandler):
                     prompt=d.get('prompt'), code=d.get('code'),
                     lang=d.get('lang'), fqbn=d.get('fqbn'),
                     confirmed=d.get('confirm'), full_consent=d.get('full_consent', ''), port=d.get('port', ''),
+                    parent_job_id=d.get('parent_job_id', ''),
                 )
             elif p == "/api/agents/cancel":
                 result = AGENT_JOBS.cancel(d.get('job_id'))
@@ -720,7 +736,9 @@ class IDEHandler(BaseHTTPRequestHandler):
                     SERIAL.close()
                 if not arduino_cli():
                     raise ValueError('Arduino CLI no instalado o fuera de PATH.')
-                result = JOBS.start(code, fqbn, port, upload_speed=d.get('upload_speed', 115200), retry_slow=d.get('retry_slow', False), request_id=d.get('request_id'))
+                project_id = d.get('agent_project_id', '')
+                project_files = AGENT_JOBS.project_files(project_id)[1] if project_id else {}
+                result = JOBS.start(code, fqbn, port, upload_speed=d.get('upload_speed', 115200), retry_slow=d.get('retry_slow', False), request_id=d.get('request_id'), project_files=project_files, agent_project_id=project_id)
             elif p == '/api/jobs/cancel':
                 result = JOBS.cancel(d.get('job_id', ''))
             elif p == '/api/libraries/search':

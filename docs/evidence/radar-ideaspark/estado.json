@@ -1,0 +1,27 @@
+{
+  "source_sha256": "be6c114c4b74aafa9f99b67158237513455b43430278c81a9c2aacf5cd837e4b",
+  "fqbn": "esp32:esp32:esp32:FlashMode=dio,FlashSize=4M,PSRAM=disabled,UploadSpeed=115200",
+  "compile_exit_code": 0,
+  "program_bytes": 315680,
+  "static_ram_bytes": 23804,
+  "display": "ST7789 135x240, rotation 1 (240x135)",
+  "display_pins": {
+    "MOSI": 23,
+    "SCLK": 18,
+    "CS": 15,
+    "DC": 2,
+    "RST": 4,
+    "BL": 32
+  },
+  "profile_source": "Proyecto Salto Robot que el usuario confirmó como ejecutado en la misma IdeaSpark en COM4",
+  "flash_performed": true,
+  "physical_display_checked": true,
+  "flash_exit_code": 0,
+  "flash_port": "COM4",
+  "flash_verify_requested": true,
+  "verified_segments": 4,
+  "physical_display_check_source": "Confirmación directa del usuario en este chat: «Sí, se ve el radar». No observación mediante cámara del agente.",
+  "flash_authorization": "Confirmación directa del usuario: «Sí, cargar el radar en COM4».",
+  "echoes": "Cuatro ecos simulados; no mide distancias ni utiliza sensor de radar.",
+  "upload_log_sha256": "506317e1cf654a9f9babe25c52c80ddbc38876b4f1be2401c3f510b29c17f606"
+}

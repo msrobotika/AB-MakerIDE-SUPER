@@ -1,5 +1,7 @@
 # AB MakerIDE SUPER 1.0.0-rc.1 · 25 de octubre de 2026
 
+Este informe describe la base RC1. La mejora posterior de guardado, continuidad y radar, con grabación autorizada, se documenta en [el registro de cambios](../CHANGELOG.md), [la guía de proyectos](PROYECTOS_DEL_AGENTE.md) y [sus evidencias](evidence/radar-ideaspark/README.md). Los resultados y pendientes que siguen corresponden a la ejecución original.
+
 Mejora local verificable sobre el commit base `cea7bcb` de v0.9.7. No se declara estable y no se ha publicado. Se conserva el ZIP de respaldo previo.
 
 ## Defectos y correcciones

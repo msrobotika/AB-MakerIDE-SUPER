@@ -1,0 +1,20 @@
+[
+  {
+    "source": "C:\\Users\\abeli\\Pictures\\Screenshots\\Captura de pantalla (134).png",
+    "file": "robot-134-cli-green.png",
+    "sha256": "ea62f45196dcc4a8c5c9f34bddc5b19adcbea02efe7c4468cb8b0586652319e2",
+    "bytes": 210175,
+    "observed_robot_color": "green",
+    "observed_text": "CLI completada (salida 0); hardware sin comprobar · Agente CLI",
+    "source_unmodified": true
+  },
+  {
+    "source": "C:\\Users\\abeli\\Pictures\\Screenshots\\Captura de pantalla (135).png",
+    "file": "robot-135-cli-green.png",
+    "sha256": "603dba4160826e1360311b14d6817684f778701634a187060f245b02b5d640ab",
+    "bytes": 149140,
+    "observed_robot_color": "green",
+    "observed_text": "CLI completada (salida 0); hardware sin comprobar · Agente CLI",
+    "source_unmodified": true
+  }
+]

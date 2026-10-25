@@ -232,19 +232,21 @@ body[data-right="lab"] .right .hardwarelab{display:block;max-height:none;overflo
 </div></details>
 <details class="wizard" id="agentWorkbench">
 <summary>⚡ Codex / Claude Code · Ejecutar tarea real</summary>
-<div class="agent-guide">Selecciona agente y permisos. La ejecución empieza en una copia del proyecto bajo Documentos/AB MakerIDE/AgentWorkspaces. El acceso a otras rutas depende de los permisos de la CLI; supervisado no equivale a sandbox de sistema. Los cambios al editor requieren revisión.</div>
+<div class="agent-guide">Selecciona agente y permisos. La ejecución empieza en una copia del proyecto bajo Documentos/AB MakerIDE/AgentWorkspaces. El código puede abrirse con copia del anterior; si estás editando, se conserva tu borrador. Revisa el resultado antes de compilar. Los permisos de la CLI determinan el acceso a otras rutas.</div>
 <label>Agente<select class="selector" id="execProvider"><option value="codex">OpenAI Codex CLI</option><option value="claude_code">Anthropic Claude Code CLI</option></select></label>
 <label>Permisos para esta ejecución<select class="selector" id="execMode">
 <option value="consultar">Consultar · lectura</option>
-<option value="supervisado" selected>Supervisado · editar código; aplicar tras revisar</option>
+<option value="supervisado" selected>Supervisado · editar código</option>
 <option value="autonomo">Autónomo · editar y ejecutar pruebas</option>
 <option value="total">Acceso total · sin sandbox ni aprobaciones CLI</option>
 </select></label>
 <label>Tarea<textarea class="input" id="execTask" maxlength="12000" placeholder="Ej.: revisa sketch.ino, corrige errores y mejora el programa sin cambiar los GPIO existentes"></textarea></label>
-<div class="agent-templates" aria-label="Tareas rápidas"><button class="action small ghost" id="agentTaskInspect" title="Solo prepara la solicitud">⌕ Diagnosticar placa</button><button class="action small ghost" id="agentTaskBlink" title="Prepara la prueba física; no ejecuta nada todavía">⚡ Probar Blink</button><button class="action small ghost" id="agentTaskPong" title="Preparar juego Pong para IdeaSpark; no lo ejecuta">▣ Pong IdeaSpark</button></div>
+<label class="optincode"><input type="checkbox" id="agentAutoOpen" checked> Abrir código generado al terminar, con copia del anterior</label>
+<div class="agent-templates" aria-label="Tareas rápidas"><button class="action small ghost" id="agentTaskInspect" title="Solo prepara la solicitud">⌕ Diagnosticar placa</button><button class="action small ghost" id="agentTaskBlink" title="Prepara la prueba física; no ejecuta nada todavía">⚡ Probar Blink</button><button class="action small ghost" id="agentTaskPong" title="Preparar juego Pong para IdeaSpark; no lo ejecuta">▣ Pong IdeaSpark</button><button class="action small ghost" id="agentTaskRadar" title="Abre el código del radar ST7789 135×240 con copia del archivo anterior">Abrir radar IdeaSpark</button></div>
 <div class="agent-guide" id="execWarning">Cada ejecución requiere autorización. En acceso total, Codex puede compilar y grabar si tú se lo pides: se mostrará la evidencia disponible.</div>
 <div class="agentactions"><button class="action small primary" id="execRun">▶ Ejecutar agente</button><button class="action small danger" id="execStop" disabled>■ Detener</button></div>
 <div class="agentactions"><button class="action small ghost" id="agentRecover">↺ Recuperar última sesión</button><button class="action small ghost" id="agentContinue" disabled>➜ Continuar pendiente</button></div>
+<div class="agentactions"><button class="action small" id="agentOpenCode" disabled>Abrir último código</button><button class="action small primary" id="agentSaveProject" disabled>Guardar proyecto (.zip)</button></div>
 <div id="agentResumeMessage" class="agent-guide" role="status"></div>
 <div id="execStatus" class="agent-guide" role="status">Agentes aún no comprobados.</div>
 <section id="agentStages" class="agent-stages hidden" aria-label="Etapas observadas de la tarea" aria-live="polite">
@@ -267,7 +269,7 @@ body[data-right="lab"] .right .hardwarelab{display:block;max-height:none;overflo
 </div>
 <footer class="footer"><span id="footBoard">Arduino Uno R3</span><span id="footPort">Puerto: sin seleccionar</span><span id="footLang">C++ · Arduino</span><span class="space"></span><span id="footSave">Sin cambios</span><span id="footCaret">Ln 1, Col 1</span><span>AB MakerIDE 1.0.0-rc.1</span></footer>
 </div>
-<input type="file" id="projectFile" accept=".json,application/json" class="hidden">
+<input type="file" id="projectFile" accept=".json,.ino,.py,application/json,text/plain" class="hidden">
 
 <dialog id="boardCatalog" class="board-picker" aria-labelledby="catalogTitle">
  <div class="picker-head"><div><strong id="catalogTitle">Elegir placa</strong><p class="hint">Placas procedentes de Arduino CLI. El puerto físico se elige por separado.</p></div><button class="action small ghost" id="catalogClose" aria-label="Cerrar selector">✕</button></div>

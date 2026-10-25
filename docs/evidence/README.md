@@ -15,3 +15,9 @@ Comandos de reproducción en el README principal. Usar siempre un nuevo director
 ## Vídeo posterior aportado por el usuario
 
 [Vídeo, ficha de observación y SHA-256](videos/README.md): evidencia física de campo, conservada sin edición. No sustituye la matriz de aceptación RC1 ni vincula por sí sola el hardware a un commit.
+
+[Capturas 134 y 135 aportadas por el usuario](user-robot-states/README.md): ambas muestran finalización CLI en verde, sin grabación confirmada.
+
+[Mejora de proyectos generados](agent-projects/README.md): apertura con respaldo, descarga ZIP, continuidad e importación, verificadas en pruebas aisladas.
+
+[Radar IdeaSpark](radar-ideaspark/README.md): grabación autorizada en COM4 y verificada por el grabador; el usuario confirmó que ve el radar. Esta evidencia posterior es independiente de las capturas 134/135.

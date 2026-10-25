@@ -5,6 +5,8 @@ Native confirm/prompt deliberately throw, matching the integrated browser bug.
 """
 import argparse
 import json
+import difflib
+import zipfile
 import os
 from pathlib import Path
 import sys
@@ -35,6 +37,14 @@ def main():
 
     def worker(_manager, job, executable, task):
         time.sleep(.6)
+        if task.startswith('PROJECT:'):
+            report.setdefault('inherited_headers', []).append((job.workspace/'radar_config.h').exists())
+            code='#include "radar_config.h"\n// PROJECT_GENERATED '+job.id[:8]+'\nvoid setup(){}\nvoid loop(){}\n'
+            (job.workspace/'radar_config.h').write_text('#define CONTROLLED_TEST 1\n')
+            (job.workspace/job.file_name).write_text(code)
+            job.modified_code=code
+            job.diff=''.join(difflib.unified_diff(job.before.splitlines(True), code.splitlines(True)))
+            job.changed_files=['radar_config.h']
         job.result = 'CONTROLADO: tarea de prueba completada sin CLI ni hardware.'
         job.exit_code = 0
         job.success = True
@@ -112,6 +122,55 @@ def main():
                     page.locator('#execRun').click()
                     check('dialog usable on mobile', page.locator('#agentConsentInput').is_visible() and page.evaluate('document.documentElement.scrollWidth<=innerWidth'))
                     page.locator('#agentConsentCancel').click()
+                    page.locator('#agentConsentDialog').wait_for(state='hidden')
+                    page.set_viewport_size({'width':1360,'height':950})
+                    original=page.locator('#code').input_value()
+                    page.locator('#execMode').select_option('supervisado')
+                    page.locator('#execTask').fill('PROJECT: generar código controlado')
+                    page.locator('#execRun').click();page.locator('#agentConsentApprove').click()
+                    page.wait_for_function('()=>document.querySelector("#code").value.includes("PROJECT_GENERATED")')
+                    check('generated code automatically opens in editor', 'PROJECT_GENERATED' in page.locator('#code').input_value())
+                    backup=page.evaluate('JSON.parse(localStorage.getItem("ab-makeride-ai-backup-v1"))[0]')
+                    check('original editor code backed up before replacement', backup['code']==original)
+                    parent=page.evaluate('localStorage.getItem("ab-makeride-agent-project-v1")')
+                    check('save and open controls visible beside agent actions',page.locator('#agentOpenCode').is_enabled() and page.locator('#agentSaveProject').is_enabled())
+                    with page.expect_download() as event:
+                        page.locator('#agentSaveProject').click()
+                    exported=event.value;exported.save_as(str(args.outputs/'controlled-agent-project.zip'))
+                    with zipfile.ZipFile(args.outputs/'controlled-agent-project.zip') as archive:
+                        check('project download includes header and sketch', 'sketch/radar_config.h' in archive.namelist() and 'sketch/sketch.ino' in archive.namelist())
+                    page.screenshot(path=str(args.outputs/'agent-generated-editor-controlled.png'))
+                    page.locator('#execTask').fill('PROJECT: continuar y conservar mis ediciones')
+                    page.locator('#execRun').click();page.locator('#agentConsentApprove').click()
+                    page.locator('#code').fill('// edición del usuario durante la tarea')
+                    page.wait_for_function('()=>!document.querySelector("#execRun").disabled')
+                    page.wait_for_timeout(100)
+                    check('continued task carries parent project reference', report['starts'][-1]['parent_job_id']==parent)
+                    check('continued backend receives auxiliary header', report['inherited_headers'][-1])
+                    check('editing during task prevents automatic overwrite', page.locator('#code').input_value()=='// edición del usuario durante la tarea')
+                    page.evaluate('window.confirm=()=>true')
+                    page.locator('#agentOpenCode').click()
+                    page.wait_for_function('()=>document.querySelector("#code").value.includes("PROJECT_GENERATED")')
+                    check('manual open preserves competing edit in backup', page.evaluate('JSON.parse(localStorage.getItem("ab-makeride-ai-backup-v1"))[0].code')=='// edición del usuario durante la tarea')
+                    manual_code=page.locator('#code').input_value()
+                    page.locator('#agentAutoOpen').uncheck()
+                    page.locator('#execTask').fill('PROJECT: conservar revisión manual')
+                    page.locator('#execRun').click();page.locator('#agentConsentApprove').click()
+                    page.wait_for_function('()=>!document.querySelector("#execRun").disabled')
+                    page.wait_for_timeout(100)
+                    check('automatic open can be disabled without losing generated project',page.locator('#code').input_value()==manual_code and page.locator('#agentSaveProject').is_enabled())
+                    page.locator('#agentAutoOpen').check()
+                    saved_code='// sketch reutilizado\nvoid setup(){}\nvoid loop(){}\n'
+                    reusable=Path(temp)/'Reutilizable.ino';reusable.write_text(saved_code)
+                    page.locator('#projectFile').set_input_files(str(reusable))
+                    page.wait_for_function('()=>document.querySelector("#code").value.includes("sketch reutilizado")')
+                    check('saved ino can be reopened with Importar', page.locator('#code').input_value().startswith('// sketch reutilizado'))
+                    check('importing another sketch clears old agent project reference',page.evaluate('localStorage.getItem("ab-makeride-agent-project-v1")') is None)
+                    page.locator('#agentTaskRadar').click()
+                    page.wait_for_function('()=>document.querySelector("#code").value.includes("RADAR IDEASPARK")')
+                    check('radar opens in code editor without hardware action', 'Adafruit_ST7789' in page.locator('#code').input_value())
+                    check('radar selects ESP32 instead of Uno', page.locator('#quickBoard').input_value()=='esp32:esp32:esp32')
+                    page.screenshot(path=str(args.outputs/'radar-editor-controlled.png'))
                     check('no native-popup exceptions', not report['page_errors'])
                     browser.close()
             finally:
