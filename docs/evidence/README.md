@@ -33,3 +33,5 @@ Comandos de reproducción en el README principal. Usar siempre un nuevo director
 [Arduino Mega ATmega2560](arduino-mega/README.md): reconocido en COM8, copia previa, carga autorizada y verificada, EEPROM conservada y cinco muestras serie correctas.
 
 [Simulador de secuencias digitales](simulator/README.md): ocho salidas, reproducción y pasos, regresiones del motor y 26 comprobaciones de interfaz. Capturas reales con catálogo y puertos controlados; sin hardware.
+
+[Instalación y recuperación](install-recovery/README.md): extracción nueva, .venv privada, 17 comprobaciones de instalación, 21 de recuperación y regresiones de proyectos/simulador. Sin nuevas operaciones de hardware.

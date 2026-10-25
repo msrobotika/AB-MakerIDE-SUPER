@@ -251,7 +251,7 @@ function refreshQuickSelectors(){
  if(!curated.some(p=>p.fqbn===state.fqbn))board.add(new Option(state.fqbn+' · verificar selección',state.fqbn));
  board.add(new Option('⌕ Buscar cualquier placa…','__search__'));
  board.value=state.fqbn;
- port.add(new Option(state.ports.length?'Seleccionar puerto COM':'Sin puertos COM detectados',''));
+ port.add(new Option(state.scanOk===false?'Detección no disponible':state.ports.length?'Seleccionar puerto COM':'Sin puertos COM detectados',''));
  for(const p of state.ports){const isCH340=/^(?:0x)?1a86$/i.test(String(p.vid||''))&&/^(?:0x)?7523$/i.test(String(p.pid||''));const description=isCH340?'USB CH340 · modelo a elegir':String(p.name||'Dispositivo serie').slice(0,35);port.add(new Option(p.port+' · '+description,p.port))}
  port.value=state.port;
  if(state.port&&!state.ports.some(p=>p.port===state.port)){port.add(new Option(state.port+' · desconectado / sin verificar',state.port));port.value=state.port;}
@@ -272,7 +272,7 @@ async function updateBuildVisual(d){
   }
   RobotActivity.report('build',(d.action==='upload'?'Compilar y grabar':'Compilación')+(d.fqbn?' · '+d.fqbn:''),d);
   const panel=$('#buildProgress');panel.classList.remove('hidden');
-  $('#buildStage').textContent=({'compilación':'Compilación Arduino CLI · en curso', 'grabación':'Grabando en el dispositivo real', 'reintento 115200':'Recuperación USB a 115200 baudios', 'completado':'Operación finalizada', 'error':'Operación fallida', 'cancelado':'Operación cancelada'})[d.stage]||'Preparando operación';
+  $('#buildStage').textContent=({'compilación':'Compilación Arduino CLI · en curso', 'grabación':'Grabando en el dispositivo real', 'reintento 115200':'Recuperación USB a 115200 baudios', 'completado':'Operación finalizada', 'error':'Operación fallida', 'cancelado':'Operación cancelada', 'interrumpido':'Resultado desconocido · operación interrumpida'})[d.stage]||'Preparando operación';
   $('#buildClock').textContent=(d.elapsed||0).toFixed(1)+' s';
   const percent=(d.stage==='grabación'||d.stage==='reintento 115200')&&Number.isInteger(d.progress)?d.progress:null;
   $('#buildPercent').textContent=percent===null?(d.active?'Tiempo real · % no disponible':'Sin porcentaje'):(percent+' % grabación');
@@ -339,13 +339,14 @@ async function scan({force=false,quiet=false}={}){
  /* Nunca sobreescribir automáticamente el FQBN elegido por el usuario sin un perfil previamente confirmado. */
  let d;
  try{d=await request('/api/boards?selected='+encodeURIComponent(state.fqbn)+(force?'&refresh=1':''));}
- catch(e){$('#scanNotice').textContent='No se pudo detectar hardware: '+e.message+'. Se conserva la selección; presencia sin verificar.';$('#scanNotice').classList.remove('hidden');throw e;}
+ catch(e){state.scanOk=false;refreshQuickSelectors();$('#scanNotice').textContent='No se pudo detectar hardware: '+e.message+'. Se conserva la selección; presencia sin verificar.';$('#scanNotice').classList.remove('hidden');throw e;}
  const ports=d.ports||[],choices=d.choices||[];
  const oldSelected=state.choices.find(b=>b.fqbn===state.fqbn);
  if(oldSelected&&!choices.some(b=>b.fqbn===state.fqbn))choices.push(oldSelected);
  const oldFingerprint=JSON.stringify(state.ports.map(p=>[p.port,p.vid,p.pid,p.serial_number,p.boards]));
  const newFingerprint=JSON.stringify(ports.map(p=>[p.port,p.vid,p.pid,p.serial_number,p.boards]));
- const updated=force||oldFingerprint!==newFingerprint||state.choices.length!==choices.length;
+ const updated=force||!state.scanLoaded||state.scanOk!==(d.scan_ok!==false)||oldFingerprint!==newFingerprint||state.choices.length!==choices.length;
+ state.scanLoaded=true;state.scanOk=d.scan_ok!==false;
  state.ports=ports;state.choices=choices;state.catalogOk=d.catalog_ok===true;state.catalogError=d.catalog_error||'';state.catalogWarning=d.catalog_warning||'';state.catalogSource=d.catalog_source||'';state.catalogCount=d.catalog_count||0;
  // Keep a disconnected manual port as a reference, never as evidence of presence.
  if(!state.port&&ports.length===1){
@@ -451,8 +452,42 @@ async function searchLibraries(){
  catch(e){result.textContent='Error: '+e.message}
 }
 async function installLibrary(){const name=$('#libName').value.trim();if(!name)return toast('Introduce una librería');if(!confirm(`¿Instalar la librería "${name}" usando Arduino CLI?`))return;showLog('console','Instalación REAL: '+name,'cmd');switchPane('console');try{const r=await request('/api/libraries/install',{name,confirm:true});showOutput('console',r.output);toast(r.ok?'Librería instalada':'No se pudo instalar');if(r.ok)loadLibraries()}catch(e){showLog('console',e.message,'bad')}}
-async function toggleSerial(){try{if(state.serialConnected){await request('/api/serial/stop',{});state.serialConnected=false;showLog('serial','[Sistema] Monitor serie desconectado','note')}else{if(!checkSelection(true))return;const r=await request('/api/serial/start',{port:state.port,baud:state.baud});state.serialConnected=r.connected;showLog('serial',`[Sistema] Abierto ${state.port} (${state.baud} baudios)`,'good');switchPane('serial')}renderSidebar()}catch(e){toast(e.message);showLog('serial',e.message,'bad')}}
-async function refreshSerial(){try{const d=await request('/api/serial/poll?since='+state.serialId);const changed=state.serialConnected!==d.connected;state.serialConnected=d.connected;state.serialId=d.last_id;for(const m of d.messages)showLog('serial',m.text,m.text.startsWith('[Sistema]')?'note':'good');if(changed&&state.panel==='boards')renderSidebar();}catch(e){state.serialConnected=false}}
+function syncSerialControls(){
+  $('#serialSend').disabled=!state.serialConnected;
+  $('#serialSend').title=state.serialConnected?'Enviar al dispositivo conectado':'Conecta primero el monitor serie';
+}
+syncSerialControls();
+async function toggleSerial(){
+  try{
+    if(state.serialConnected){
+      await request('/api/serial/stop',{});state.serialConnected=false;state.serialError='';
+      showLog('serial','[Sistema] Monitor serie desconectado','note');
+    }else{
+      if(!checkSelection(true))return;
+      const result=await request('/api/serial/start',{port:state.port,baud:state.baud});
+      state.serialConnected=result.connected;state.serialError=result.error||'';
+      showLog('serial',`[Sistema] Abierto ${state.port} (${state.baud} baudios)`,'good');switchPane('serial');
+    }
+    renderSidebar();
+  }catch(error){
+    state.serialConnected=false;state.serialError=error.message;
+    toast(error.message);showLog('serial',error.message,'bad');switchPane('serial');
+    if(state.panel==='boards')renderSidebar();
+  }finally{syncSerialControls()}
+}
+async function refreshSerial(){
+  try{
+    const result=await request('/api/serial/poll?since='+state.serialId);
+    const changed=state.serialConnected!==result.connected,previous=state.serialError||'';
+    state.serialConnected=result.connected;state.serialError=result.error||'';state.serialId=result.last_id;
+    for(const message of result.messages)showLog('serial',message.text,message.text.startsWith('[Sistema] Error')?'bad':message.text.startsWith('[Sistema]')?'note':'good');
+    if(state.serialError&&state.serialError!==previous)toast(state.serialError);
+    if(changed&&state.panel==='boards')renderSidebar();
+  }catch(error){
+    const changed=state.serialConnected;state.serialConnected=false;
+    if(changed){state.serialError='No se puede consultar el monitor serie. Estado de la conexión desconocido.';showLog('serial',state.serialError,'bad');if(state.panel==='boards')renderSidebar();}
+  }finally{syncSerialControls()}
+}
 setInterval(()=>{if(state.apiReady)refreshSerial()},1100);
 // Terminal interno: comandos guiados; nunca ejecuta shell arbitrario.
 const allowedTerminal={version:'version',ports:'ports',boards:'ports',cores:'cores',libraries:'libraries',details:'esp32_details'};

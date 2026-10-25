@@ -21,7 +21,7 @@ Current status: **1.0.0-rc.1**, a release candidate validated locally on Windows
 
 ## Start on Windows
 
-Install Python 3.10+ and Arduino CLI for Arduino builds. Run INICIAR_WINDOWS.bat from the project folder, then use http://127.0.0.1:8770. Optional serial/MicroPython dependencies are listed in requirements.txt. The editor does not require an AI account. AI features require their provider setup and may incur usage costs.
+Install Python 3.10+ and run INICIAR_WINDOWS.bat from the extracted project folder. It checks required files, the data directory and the local port before starting. The editor and simulator work without optional tools. PREPARAR_WINDOWS.bat installs serial/MicroPython dependencies in this copy's private .venv; restart the launcher afterward. Arduino builds also require Arduino CLI and the board core, installed separately. AI features require each user's own provider account and usage costs. [Installation and recovery guide](docs/INSTALACION.md).
 
 Keep previous versions and export existing projects before migrating. The local server stores its data under .makeride-data unless AB_MAKERIDE_DATA_DIR is set. Do not expose the server to a public network. Agent permissions are described in the UI; supervised mode is not an operating-system sandbox.
 

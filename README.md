@@ -42,13 +42,13 @@ El **Arduino Mega 2560** pasó una carga autorizada con copia previa de 256 KB d
 
 
 
-La mejora de proyectos y cuaderno pasa **199 pruebas unitarias**, con otras 4 omitidas por falta de g++, y **37 comprobaciones de interfaz**. Las pruebas de interfaz del agente son controladas; no se presentan como ejecuciones de IA o grabaciones reales. [Resultados del cuaderno](docs/evidence/board-trials/README.md) y [pruebas previas de proyectos](docs/evidence/agent-projects/README.md).
+La revisión de instalación y recuperación pasa **215 pruebas unitarias**, con otras cuatro omitidas (tres por g++ y una por privilegios de enlaces simbólicos en Windows). Las comprobaciones de interfaz del agente y de fallos de transporte son controladas; no se presentan como ejecuciones de IA o grabaciones reales. [Validación actual](docs/evidence/install-recovery/README.md) y [resultados anteriores del cuaderno](docs/evidence/board-trials/README.md).
 
 ## Arranque en Windows
 
 1. Conserva la carpeta anterior. No sobrescribas v0.9.5 ni tus proyectos.
-2. Ejecuta `INICIAR_WINDOWS.bat` (Python 3.10+). Usa **http://127.0.0.1:8770**, dejando libre de cambios el servidor anterior de 8765.
-3. `/api/health` debe devolver `1.0.0-rc.1`. Arduino CLI se busca en PATH y en `C:\Program Files\Arduino CLI`. Para una ruta específica, define `AB_MAKERIDE_ARDUINO_CLI` antes de arrancar. El servidor no cambia PATH ni configuración global.
+2. Ejecuta `INICIAR_WINDOWS.bat` (Python 3.10+). Comprueba la instalación y usa **http://127.0.0.1:8770**, conservando cualquier instancia anterior. El editor y el simulador no necesitan dependencias opcionales. Para serie/MicroPython, `PREPARAR_WINDOWS.bat` prepara una `.venv` propia; vuelve a abrir el lanzador después.
+3. `/api/health` debe devolver `1.0.0-rc.1`. Arduino CLI se busca en PATH y en `C:\Program Files\Arduino CLI`. Para una ruta específica, define `AB_MAKERIDE_ARDUINO_CLI` antes de arrancar. El lanzador ajusta únicamente el entorno de su proceso y no modifica el Python global. [Instalación y recuperación](docs/INSTALACION.md).
 4. Elige **modelo** y **puerto** por separado. «Placas» busca los modelos instalados, en páginas de 40. CH340 y CP210x identifican un conversor USB, nunca prueban el modelo de placa. Una sugerencia de la CLI no reemplaza tu modelo.
 5. Pulsa **Compilar** y revisa la consola. La grabación y el monitor serie son acciones independientes. El ejemplo radar se grabó con autorización; otras placas, periféricos y escenarios requieren su propia validación.
 

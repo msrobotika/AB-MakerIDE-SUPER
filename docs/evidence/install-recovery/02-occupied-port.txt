@@ -1,0 +1,8 @@
+AB MakerIDE SUPER 1.0.0-rc.1
+OK · Python 3.10 o posterior; actual: 3.13.7
+OK · Carpeta de programa completa.
+OK · Datos y sesiones: <WORKSPACE>\work\instalacion-rc-ready\isolated data
+ERROR · El puerto 55040 está ocupado o no disponible. No se ha cerrado ningún programa. Revisa si ya tienes MakerIDE abierto.
+OPCIONAL · Arduino CLI ausente: puedes usar el editor y el simulador. Instálalo para compilar Arduino.
+OPCIONAL · Monitor serie no disponible. Ejecuta PREPARAR_WINDOWS.bat para instalar las dependencias opcionales en esta carpeta.
+OPCIONAL · mpremote no disponible. Ejecuta PREPARAR_WINDOWS.bat para activar MicroPython; no se instala firmware automáticamente.

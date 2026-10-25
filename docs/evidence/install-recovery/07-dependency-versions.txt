@@ -1,0 +1,1 @@
+{"pyserial": "3.5", "mpremote": "1.29.0"}

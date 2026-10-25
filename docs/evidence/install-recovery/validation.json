@@ -1,0 +1,35 @@
+{
+  "unit_total": 219,
+  "unit_passed": 215,
+  "unit_skipped": 4,
+  "new_unit_cases": 15,
+  "browser_checks": {
+    "recovery": 21,
+    "simulator": 26,
+    "agents": 37
+  },
+  "browser_total": 84,
+  "install_checks": 17,
+  "runtime_matches_extracted_candidate": true,
+  "runtime_sha256": {
+    "launch.py": "181d14c7ab1528b90fdcbf34321b9bff26855d9783af4d8435e6dd07c24d12a4",
+    "prepare_windows.py": "b77e665bb0c48e7070e319f2b188a649c1782847289293e900c82f5b2c749005",
+    "INICIAR_WINDOWS.bat": "b32e24adf024bb3869ccbcd7135f0ed3f3126022f69ea07d3f9601dfe749a563",
+    "PREPARAR_WINDOWS.bat": "7fb445d0910388bfecab2b8812c3323abcd8b2c20d73992a30e96c8745f6c2cb",
+    "server.py": "97706199d419917acc49719bac8197fe0dabe6f2d3852eb6afbeeaccbb1eed87",
+    "app.js": "62cafa444df049621d0b16d9f80d9765bd33c7b2d01d05035747cca58f5bf3f9",
+    "index.html": "061b898881a0274a7e98387e000941b16fbe5deee7fdfeb56b681b78fd63057d",
+    "requirements.txt": "939b7d09729b37112969822dd78fda6cf6c8bceff6f18556d9b8a5e04bcdfe04",
+    "simulator.js": "26d5edc1e0c42b47c7e3b8ddb266c5ddbb6259f0443bffc9a659d235e35c0d82"
+  },
+  "candidate_package_sha256": "136eb752b86418195762e099e5a1c7d496a22542213bc31455172efe2f2139b6",
+  "dependency_versions": {
+    "pyserial": "3.5",
+    "mpremote": "1.29.0"
+  },
+  "installation_scope": "Fresh folder and private venv on the same Windows, not another PC or fresh OS.",
+  "transport_scope": "Controlled COM999 only; cancellation stops a real owned Python child, never a hardware uploader.",
+  "physical_hardware_written": false,
+  "published": false,
+  "push_performed": false
+}

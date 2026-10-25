@@ -1,0 +1,222 @@
+{
+  "checks": [
+    {
+      "name": "total opens in-page dialog with focus",
+      "passed": true
+    },
+    {
+      "name": "blank consent cannot start",
+      "passed": true
+    },
+    {
+      "name": "incorrect consent cannot start",
+      "passed": true
+    },
+    {
+      "name": "cancel starts nothing and explains outcome",
+      "passed": true
+    },
+    {
+      "name": "Escape starts nothing",
+      "passed": true
+    },
+    {
+      "name": "consent resets each task",
+      "passed": true
+    },
+    {
+      "name": "exact consent enables start",
+      "passed": true
+    },
+    {
+      "name": "one total request reaches real validation",
+      "passed": true
+    },
+    {
+      "name": "backend creates completed total job",
+      "passed": true
+    },
+    {
+      "name": "read-only hides full-access input",
+      "passed": true
+    },
+    {
+      "name": "read-only request keeps permission scope",
+      "passed": true
+    },
+    {
+      "name": "dialog usable on mobile",
+      "passed": true
+    },
+    {
+      "name": "generated code automatically opens in editor",
+      "passed": true
+    },
+    {
+      "name": "original editor code backed up before replacement",
+      "passed": true
+    },
+    {
+      "name": "save and open controls visible beside agent actions",
+      "passed": true
+    },
+    {
+      "name": "project download includes header and sketch",
+      "passed": true
+    },
+    {
+      "name": "continued task carries parent project reference",
+      "passed": true
+    },
+    {
+      "name": "continued backend receives auxiliary header",
+      "passed": true
+    },
+    {
+      "name": "editing during task prevents automatic overwrite",
+      "passed": true
+    },
+    {
+      "name": "manual open preserves competing edit in backup",
+      "passed": true
+    },
+    {
+      "name": "automatic open can be disabled without losing generated project",
+      "passed": true
+    },
+    {
+      "name": "saved ino can be reopened with Importar",
+      "passed": true
+    },
+    {
+      "name": "importing another sketch clears old agent project reference",
+      "passed": true
+    },
+    {
+      "name": "radar opens in code editor without hardware action",
+      "passed": true
+    },
+    {
+      "name": "radar selects ESP32 instead of Uno",
+      "passed": true
+    },
+    {
+      "name": "Codex requires own account without included AI balance",
+      "passed": true
+    },
+    {
+      "name": "Claude is explicitly unvalidated experimental integration",
+      "passed": true
+    },
+    {
+      "name": "trial without a build records no tool evidence",
+      "passed": true
+    },
+    {
+      "name": "trial notebook survives reload",
+      "passed": true
+    },
+    {
+      "name": "compile does not automatically confirm physical result",
+      "passed": true
+    },
+    {
+      "name": "upload on different port is not attributed to selected target",
+      "passed": true
+    },
+    {
+      "name": "notebook export preserves separate tool and user observations",
+      "passed": true
+    },
+    {
+      "name": "lost server job preserves manual observation without inventing tool evidence",
+      "passed": true
+    },
+    {
+      "name": "another tab cannot be overwritten by stale notebook",
+      "passed": true
+    },
+    {
+      "name": "damaged notebook prevents overwriting original",
+      "passed": true
+    },
+    {
+      "name": "trial dialog fits mobile without horizontal scrolling",
+      "passed": true
+    },
+    {
+      "name": "no native-popup exceptions",
+      "passed": true
+    }
+  ],
+  "page_errors": [],
+  "starts": [
+    {
+      "provider": "codex",
+      "mode": "total",
+      "prompt": "CONTROLADO: comprobar autorización, sin hardware",
+      "code": "/*\n  AB MakerIDE - MS Robotika\n  Prueba minima para Arduino Uno R3\n  Sin sensores ni librerias externas\n  LED integrado: D13 (LED_BUILTIN)\n*/\n\nconst byte LED = LED_BUILTIN;\n\nvoid setup() {\n  pinMode(LED, OUTPUT);\n  Serial.begin(9600);\n  Serial.println(\"AB MakerIDE - Arduino Uno listo\");\n}\n\nvoid loop() {\n  digitalWrite(LED, HIGH);\n  Serial.println(\"LED encendido\");\n  delay(500);\n\n  digitalWrite(LED, LOW);\n  Serial.println(\"LED apagado\");\n  delay(500);\n}\n",
+      "lang": "cpp",
+      "fqbn": "arduino:avr:uno",
+      "confirm": true,
+      "full_consent": "ACCESO TOTAL",
+      "port": "",
+      "parent_job_id": ""
+    },
+    {
+      "provider": "codex",
+      "mode": "consultar",
+      "prompt": "CONTROLADO: comprobar autorización, sin hardware",
+      "code": "/*\n  AB MakerIDE - MS Robotika\n  Prueba minima para Arduino Uno R3\n  Sin sensores ni librerias externas\n  LED integrado: D13 (LED_BUILTIN)\n*/\n\nconst byte LED = LED_BUILTIN;\n\nvoid setup() {\n  pinMode(LED, OUTPUT);\n  Serial.begin(9600);\n  Serial.println(\"AB MakerIDE - Arduino Uno listo\");\n}\n\nvoid loop() {\n  digitalWrite(LED, HIGH);\n  Serial.println(\"LED encendido\");\n  delay(500);\n\n  digitalWrite(LED, LOW);\n  Serial.println(\"LED apagado\");\n  delay(500);\n}\n",
+      "lang": "cpp",
+      "fqbn": "arduino:avr:uno",
+      "confirm": true,
+      "full_consent": "",
+      "port": "",
+      "parent_job_id": "d0760c3f906f4133be14a08575fad0dc"
+    },
+    {
+      "provider": "codex",
+      "mode": "supervisado",
+      "prompt": "PROJECT: generar código controlado",
+      "code": "/*\n  AB MakerIDE - MS Robotika\n  Prueba minima para Arduino Uno R3\n  Sin sensores ni librerias externas\n  LED integrado: D13 (LED_BUILTIN)\n*/\n\nconst byte LED = LED_BUILTIN;\n\nvoid setup() {\n  pinMode(LED, OUTPUT);\n  Serial.begin(9600);\n  Serial.println(\"AB MakerIDE - Arduino Uno listo\");\n}\n\nvoid loop() {\n  digitalWrite(LED, HIGH);\n  Serial.println(\"LED encendido\");\n  delay(500);\n\n  digitalWrite(LED, LOW);\n  Serial.println(\"LED apagado\");\n  delay(500);\n}\n",
+      "lang": "cpp",
+      "fqbn": "arduino:avr:uno",
+      "confirm": true,
+      "full_consent": "",
+      "port": "",
+      "parent_job_id": "92ee1e06312e42eb9a04bf97db754b3f"
+    },
+    {
+      "provider": "codex",
+      "mode": "supervisado",
+      "prompt": "PROJECT: continuar y conservar mis ediciones",
+      "code": "#include \"radar_config.h\"\n// PROJECT_GENERATED 6cee901f\nvoid setup(){}\nvoid loop(){}\n",
+      "lang": "cpp",
+      "fqbn": "arduino:avr:uno",
+      "confirm": true,
+      "full_consent": "",
+      "port": "",
+      "parent_job_id": "6cee901fb3ba4e3287d7219030af20d4"
+    },
+    {
+      "provider": "codex",
+      "mode": "supervisado",
+      "prompt": "PROJECT: conservar revisión manual",
+      "code": "#include \"radar_config.h\"\n// PROJECT_GENERATED 62b22d54\nvoid setup(){}\nvoid loop(){}\n",
+      "lang": "cpp",
+      "fqbn": "arduino:avr:uno",
+      "confirm": true,
+      "full_consent": "",
+      "port": "",
+      "parent_job_id": "62b22d54b8634399b574f1e124f82f4d"
+    }
+  ],
+  "scope": "Real HTTP handler/consent validation/workspace; stub CLI worker. No hardware.",
+  "inherited_headers": [
+    false,
+    true,
+    true
+  ],
+  "passed": true
+}

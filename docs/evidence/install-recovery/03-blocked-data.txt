@@ -1,0 +1,50 @@
+{
+  "ok": false,
+  "checks": [
+    {
+      "name": "python",
+      "ok": true,
+      "message": "Python 3.10 o posterior; actual: 3.13.7",
+      "required": true
+    },
+    {
+      "name": "files",
+      "ok": true,
+      "message": "Carpeta de programa completa.",
+      "required": true
+    },
+    {
+      "name": "data",
+      "ok": false,
+      "message": "No se puede escribir en la carpeta de datos: [WinError 183] No se puede crear un archivo que ya existe: 'C:\\\\Users\\\\abeli\\\\Documents\\\\Codex\\\\2026-10-25\\\\referenced-chatgpt-conversation-this-is-an\\\\work\\\\instalacion-rc-ready\\\\existing project file'",
+      "required": true
+    },
+    {
+      "name": "port",
+      "ok": true,
+      "message": "Puerto local disponible: 55039",
+      "required": true
+    },
+    {
+      "name": "arduino",
+      "ok": false,
+      "message": "Arduino CLI ausente: puedes usar el editor y el simulador. Instálalo para compilar Arduino.",
+      "required": false
+    },
+    {
+      "name": "serial",
+      "ok": false,
+      "message": "Monitor serie no disponible. Ejecuta PREPARAR_WINDOWS.bat para instalar las dependencias opcionales en esta carpeta.",
+      "required": false
+    },
+    {
+      "name": "micropython",
+      "ok": false,
+      "message": "mpremote no disponible. Ejecuta PREPARAR_WINDOWS.bat para activar MicroPython; no se instala firmware automáticamente.",
+      "required": false
+    }
+  ],
+  "data_dir": "<WORKSPACE>\\work\\instalacion-rc-ready\\existing project file",
+  "version": "1.0.0-rc.1",
+  "scope": "Diagnóstico local; no abre puertos serie, no graba hardware ni configura cuentas de IA."
+}

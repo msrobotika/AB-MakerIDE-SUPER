@@ -1,0 +1,99 @@
+{
+  "checks": [
+    {
+      "name": "ZIP CRC intact",
+      "passed": true
+    },
+    {
+      "name": "single source folder",
+      "passed": true
+    },
+    {
+      "name": "all extracted manifest hashes match",
+      "passed": true
+    },
+    {
+      "name": "launcher works in extracted folder with spaces and ampersand",
+      "passed": true
+    },
+    {
+      "name": "optional tools absent but editor permitted",
+      "passed": true
+    },
+    {
+      "name": "busy port explains failure without stopping owner",
+      "passed": true
+    },
+    {
+      "name": "unwritable data target is explained and preserved",
+      "passed": true
+    },
+    {
+      "name": "real startup from private bare venv",
+      "passed": true
+    },
+    {
+      "name": "editor and simulator delivered without dependencies",
+      "passed": true
+    },
+    {
+      "name": "empty discovery completes without endless loading labels",
+      "passed": true
+    },
+    {
+      "name": "editor saves and reloads in bare installation",
+      "passed": true
+    },
+    {
+      "name": "simulator works offline without optional tools",
+      "passed": true
+    },
+    {
+      "name": "bare installation browser has no JS errors",
+      "passed": true
+    },
+    {
+      "name": "test server stopped without touching other instances",
+      "passed": true
+    },
+    {
+      "name": "optional preparation succeeds in private venv",
+      "passed": true
+    },
+    {
+      "name": "prepared launcher succeeds",
+      "passed": true
+    },
+    {
+      "name": "serial and mpremote resolved from private environment",
+      "passed": true
+    }
+  ],
+  "page_errors": [],
+  "package_sha256": "136eb752b86418195762e099e5a1c7d496a22542213bc31455172efe2f2139b6",
+  "scope": "New extraction and isolated Python environment on the same Windows machine; not a fresh OS or another PC. Controlled empty browser port list. No hardware writes or serial opens.",
+  "manifest_files": 211,
+  "bare_tools": {
+    "python": true,
+    "files": true,
+    "data": true,
+    "port": true,
+    "arduino": false,
+    "serial": false,
+    "micropython": false
+  },
+  "prepared_tools": {
+    "python": true,
+    "files": true,
+    "data": true,
+    "port": true,
+    "arduino": false,
+    "serial": true,
+    "micropython": true
+  },
+  "dependency_versions": {
+    "pyserial": "3.5",
+    "mpremote": "1.29.0"
+  },
+  "passed": true
+}

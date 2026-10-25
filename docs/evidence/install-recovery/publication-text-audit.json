@@ -1,0 +1,10 @@
+{
+  "current_text_files_scanned": 188,
+  "historical_text_blobs_scanned": 243,
+  "candidate_findings": [],
+  "forbidden_distribution_paths": [],
+  "history_scope": "Reachable local Git refs; no reflogs, binary/media OCR or exhaustive secret detection.",
+  "patterns": "OpenAI/GitHub/Google-style tokens and private-key headers. Findings show only paths, never credential values.",
+  "published": false,
+  "push_performed": false
+}

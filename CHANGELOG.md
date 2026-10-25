@@ -1,5 +1,15 @@
 # Cambios
 
+## 1.0.0-rc.1 · instalación y recuperación · 25 octubre 2026
+
+- Diagnóstico de arranque con errores obligatorios y avisos opcionales; conserva el proceso que ocupa el puerto y los datos que no puede escribir.
+- Lanzador Windows que elige la `.venv` local y preparación opcional de pyserial/mpremote sin modificar el Python global.
+- Monitor serie corregido: lectura o envío fallidos cierran la conexión; errores de lectores anteriores no afectan a una reconexión. No hay reenvío ni reconexión automática del transporte. Enviar se deshabilita sin conexión.
+- Extracción nueva y entorno Python aislado probados en el mismo Windows, sin herramientas opcionales y después de prepararlas. No equivale a otro PC ni un sistema operativo recién instalado.
+- Regresiones con transporte controlado, cancelación de un proceso Python de prueba y recuperación sin repetir operaciones. Sin nuevas cargas de hardware.
+- Corregidos los selectores que quedaban en «Buscando» con catálogo vacío y el rótulo «Preparando» de una operación recuperada como interrumpida.
+- Guía de instalación, notas públicas de RC y evidencias; publicación y push siguen pendientes de autorización.
+
 ## 1.0.0-rc.1 · secuencias digitales · 25 octubre 2026
 
 - Cerrada y registrada la ronda de cinco placas disponibles; se continúa sin nuevas cargas de hardware.

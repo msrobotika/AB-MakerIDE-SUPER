@@ -382,7 +382,7 @@ def micropython_action(code: str, port: str, *, deploy: bool) -> dict:
     if not checked["ok"]:
         return checked
     if not shutil.which("mpremote"):
-        return {"ok": False, "stage": "dependencies", "output": "mpremote no instalado. Ejecuta: python -m pip install mpremote"}
+        return {"ok": False, "stage": "dependencies", "output": "mpremote no instalado. Consulta docs/INSTALACION.md; en Windows ejecuta PREPARAR_WINDOWS.bat y vuelve a iniciar el IDE."}
     with tempfile.TemporaryDirectory(prefix="ab-makeride-py-") as workspace:
         file = Path(workspace) / "main.py"
         file.write_text(code, encoding="utf-8")
@@ -408,6 +408,7 @@ class SerialBridge:
         self._counter = 0
         self.port = None
         self.baud = None
+        self.error = ''
 
     def _emit(self, text: str):
         with self._lock:
@@ -421,56 +422,94 @@ class SerialBridge:
         try:
             import serial
         except ImportError as e:
-            raise ValueError("Falta pyserial: python -m pip install pyserial") from e
+            raise ValueError("Falta pyserial. Consulta docs/INSTALACION.md; en Windows ejecuta PREPARAR_WINDOWS.bat y vuelve a iniciar el IDE.") from e
         self.close()
         try:
             conn = serial.Serial(port, baudrate=baud, timeout=.2, write_timeout=2)
         except (OSError, serial.SerialException) as e:
-            raise ValueError(f"No se pudo abrir {port}: {e}") from e
+            self.error = f"No se pudo abrir {port}. Revisa si está ocupado o desconectado: {e}"
+            raise ValueError(self.error) from e
         with self._lock:
             self._serial = conn
             self.port, self.baud = port, baud
+            self.error = ''
         self._emit(f"[Sistema] Conexión serie real: {port} a {baud} baudios")
         self._thread = threading.Thread(target=self._reader, args=(conn,), daemon=True)
         self._thread.start()
         return self.status()
 
+    def _disconnected(self, conn, reason):
+        """A late error from an older reader must never close a new connection."""
+        with self._lock:
+            if self._serial is not conn or conn is None:
+                return
+            self._serial = None
+            self.port, self.baud = None, None
+            self.error = reason
+            self._emit('[Sistema] Error de conexión serie: ' + reason)
+        try:
+            conn.close()
+        except Exception:
+            pass
+
     def _reader(self, conn):
-        while conn.is_open:
-            try:
+        try:
+            while conn.is_open:
                 data = conn.readline()
                 if data:
-                    self._emit(data.decode("utf-8", errors="replace").rstrip("\r\n"))
-            except Exception as e:
-                self._emit(f"[Sistema] Error de lectura serie: {e}")
-                break
+                    with self._lock:
+                        if self._serial is not conn:
+                            return
+                        self._emit(data.decode("utf-8", errors="replace").rstrip("\r\n"))
+        except Exception as e:
+            self._disconnected(conn, f'Lectura interrumpida; no se reconecta automáticamente: {e}')
+        finally:
+            self._disconnected(conn, 'El dispositivo cerró la conexión. Vuelve a conectar el monitor cuando esté disponible.')
 
     def write(self, text: str) -> dict:
         if not isinstance(text, str) or len(text) > 2048:
             raise ValueError("Mensaje serie inválido.")
+        try:
+            payload = text.encode('utf-8')
+        except UnicodeEncodeError as e:
+            raise ValueError('Mensaje serie UTF-8 inválido.') from e
         with self._lock:
-            if self._serial is None or not self._serial.is_open:
+            conn = self._serial
+            if conn is None:
                 raise ValueError("Monitor serie desconectado.")
-            self._serial.write(text.encode("utf-8"))
+            try:
+                if not conn.is_open:
+                    raise OSError('El puerto ya está cerrado.')
+                written = conn.write(payload)
+                if written != len(payload):
+                    raise OSError('Escritura incompleta; resultado de envío desconocido.')
+            except Exception as e:
+                reason = f'Envío no confirmado; no se repite automáticamente: {e}'
+                self._disconnected(conn, reason)
+                raise ValueError(reason) from e
         return {"ok": True}
 
     def close(self):
         with self._lock:
-            if self._serial is not None:
-                try:
-                    self._serial.close()
-                except Exception:
-                    pass
+            conn = self._serial
             self._serial = None
             self.port, self.baud = None, None
+            self.error = ''
+        if conn is not None:
+            try:
+                conn.close()
+            except Exception:
+                pass
 
     def status(self, since: int = 0):
         with self._lock:
             connected = self._serial is not None and self._serial.is_open
+            if self._serial is not None and not connected:
+                self._disconnected(self._serial, 'El puerto se ha cerrado. Reconecta el monitor explícitamente.')
             messages = [asdict(m) for m in self._messages if m.id > since]
             return {"ok": True, "connected": connected, "port": self.port if connected else None,
                     "baud": self.baud if connected else None, "messages": messages[-300:],
-                    "last_id": self._counter}
+                    "last_id": self._counter, "error": self.error}
 
 
 SERIAL = SerialBridge()
