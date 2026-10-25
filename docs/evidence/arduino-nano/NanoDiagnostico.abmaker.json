@@ -1,0 +1,10 @@
+{
+  "format": "ab-makeride-v1",
+  "name": "NanoDiagnostico",
+  "lang": "cpp",
+  "fqbn": "arduino:avr:nano:cpu=atmega328old",
+  "files": {
+    "sketch.ino": "// AB MakerIDE / MS Robotika: diagnostico por serie para Nano ATmega328P.\n// No configura GPIO. Emite cinco muestras y termina el diagnostico.\nvoid setup() {\n  Serial.begin(115200);\n  delay(1000);\n  Serial.println(F(\"MSR_NANO_START\"));\n  bool passed = true;\n  for (byte sample = 1; sample <= 5; ++sample) {\n    volatile unsigned int total = 0;\n    for (unsigned int i = 0; i < 100; ++i) total += i;\n    const bool ok = (total == 4950);\n    passed = passed && ok;\n    Serial.print(F(\"SAMPLE \")); Serial.print(sample);\n    Serial.print(F(\" ARITHMETIC \")); Serial.print(ok ? F(\"OK\") : F(\"FAIL\"));\n    Serial.print(F(\" MILLIS \")); Serial.println(millis());\n    delay(500);\n  }\n  Serial.println(passed ? F(\"MSR_NANO_PASS\") : F(\"MSR_NANO_FAIL\"));\n}\nvoid loop() { }\n",
+    "main.py": ""
+  }
+}

@@ -32,6 +32,9 @@ An AI-Thinker pinout ESP32-CAM was also backed up and programmed with user autho
 
 An ESP32-WROOM with a CP2102 bridge was backed up and flashed with official MicroPython 1.29.0 after user authorization. A finite RAM test passed five memory/arithmetic/JSON/timing samples and read filesystem capacity. The missing Windows driver was installed from a signed Microsoft Catalog package. No GPIO or networking was tested, and no main.py was saved. [Code and logs](docs/evidence/wroom-micropython/README.md).
 
+An **ATmega328P Arduino Nano using the old-bootloader profile** passed an authorized upload with prior flash/EEPROM backup and independent verification. Five serial diagnostic samples passed and EEPROM contents remained unchanged. GPIO and external peripherals were not tested. [Exact code and logs](docs/evidence/arduino-nano/README.md).
+
+
 The latest local suite has 199 passing Python tests and 4 skipped due to missing g++; 37 targeted browser checks pass. Browser agent execution is stubbed and does not flash hardware. Cross-platform CI is prepared but has not run on GitHub. [Evidence](docs/evidence/board-trials/README.md).
 
 [Spanish documentation](README.md) · [Contributing](CONTRIBUTING.md) · [Project saving](docs/PROYECTOS_DEL_AGENTE.md) · [Release notes](CHANGELOG.md)

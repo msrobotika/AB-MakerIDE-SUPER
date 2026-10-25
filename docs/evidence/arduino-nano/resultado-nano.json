@@ -1,0 +1,46 @@
+{
+  "port": "COM4",
+  "profile": "arduino:avr:nano:cpu=atmega328old",
+  "signature": "0x1e,0x95,0xf",
+  "authorization": "Sí, cargar y probar el Nano en COM4; autorización directa del usuario.",
+  "source_sha256": "37b3da2c177df231013f23c55d2e9bc408d61ef6dfe3f753d3eea4188f37c44b",
+  "hex_sha256": "9256e49e52be269b04fc42c2ffda175db8965d64bd162d6822859adb5b17cf84",
+  "upload_performed": true,
+  "verify_passed": true,
+  "runtime_test_passed": true,
+  "eeprom_unchanged_verified": true,
+  "steps": {
+    "01-identidad-y-contenido-previo": 0,
+    "02-grabacion": 0,
+    "03-verificacion-independiente": 0
+  },
+  "samples": [
+    {
+      "sample": 1,
+      "arithmetic_ok": true,
+      "millis": 1000
+    },
+    {
+      "sample": 2,
+      "arithmetic_ok": true,
+      "millis": 1500
+    },
+    {
+      "sample": 3,
+      "arithmetic_ok": true,
+      "millis": 2000
+    },
+    {
+      "sample": 4,
+      "arithmetic_ok": true,
+      "millis": 2501
+    },
+    {
+      "sample": 5,
+      "arithmetic_ok": true,
+      "millis": 3002
+    }
+  ],
+  "diagnostic_persisted_to_flash": true,
+  "scope": "Carga por AVRDUDE y prueba real por pyserial. Cinco muestras por serie; no valida GPIO, sensores ni todos los periféricos. El diagnóstico se repetirá al reiniciar."
+}

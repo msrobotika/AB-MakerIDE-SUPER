@@ -1,5 +1,11 @@
 # Cambios
 
+## 1.0.0-rc.1 · Nano ATmega328P · 25 octubre 2026
+
+- Firma real por cargador serie y perfil Nano antiguo confirmado a 57600 baudios; CH340 no se interpreta como identificación del modelo.
+- Respaldo previo de flash y EEPROM; carga autorizada del diagnóstico, verificación independiente y EEPROM conservada.
+- Cinco muestras reales por serie y resultado correcto; ejemplo, proyecto importable, registros y matriz actualizados. Sin pruebas de GPIO ni periféricos externos.
+
 ## 1.0.0-rc.1 · ESP32-WROOM y MicroPython · 25 octubre 2026
 
 - Identificada una WROOM con ESP32-D0WDQ6 revisión 1.0 y flash de 4 MB; controlador CP2102 ausente reparado en Windows, pasando de código 28 sin puerto a COM7 con estado correcto.

@@ -1,0 +1,35 @@
+Avrdude version 8.0-arduino.1
+
+Copyright see https://github.com/avrdudes/avrdude/blob/main/AUTHORS
+
+
+
+System wide configuration file is <ARDUINO15>\packages\arduino\tools\avrdude\8.0.0-arduino1\etc\avrdude.conf
+
+
+
+Using port            : COM4
+
+Using programmer      : arduino
+
+Setting baud rate     : 115200
+
+Warning: attempt 1 of 10: not in sync: resp=0x00
+
+Warning: attempt 2 of 10: not in sync: resp=0x00
+
+Warning: attempt 3 of 10: not in sync: resp=0x00
+
+Warning: attempt 4 of 10: not in sync: resp=0x00
+
+Warning: attempt 5 of 10: not in sync: resp=0x00
+
+Warning: attempt 6 of 10: not in sync: resp=0x00
+
+Warning: attempt 7 of 10: not in sync: resp=0x00
+
+Warning: attempt 8 of 10: not in sync: resp=0x00
+
+Warning: attempt 9 of 10: not in sync: resp=0x00
+
+Warning: attempt 10 of 10: not in sync: resp=0x00

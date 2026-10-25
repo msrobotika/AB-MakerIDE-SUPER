@@ -27,3 +27,5 @@ Comandos de reproducción en el README principal. Usar siempre un nuevo director
 [ESP32-CAM](esp32cam/README.md): respaldo completo, grabación autorizada y verificada; diagnóstico serie con PSRAM, sensor OV3660 y cinco fotogramas JPEG reportados por el controlador, sin revisión visual de las imágenes. [Matriz de hardware](../MATRIZ_HARDWARE.md).
 
 [ESP32-WROOM con MicroPython](wroom-micropython/README.md): controlador CP2102 reparado, firmware oficial instalado con autorización y respaldo, verificación independiente y diagnóstico finito en RAM terminado correctamente.
+
+[Arduino Nano ATmega328P](arduino-nano/README.md): cargador antiguo a 57600 baudios, copias previas, carga autorizada y verificada, EEPROM conservada y cinco muestras serie correctas.

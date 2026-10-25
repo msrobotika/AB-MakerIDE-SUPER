@@ -1,0 +1,12 @@
+
+Processing -U flash:v:NanoDiagnostico.ino.hex:i
+Verifying 2236 bytes of flash against input file NanoDiagnostico.ino.hex
+Reading | ################################################## | 100% 0.48s
+2236 bytes of flash verified
+
+Processing -U eeprom:v:Respaldo-previo-Nano/eeprom-antes.bin:r
+Verifying 1024 bytes of eeprom against input file eeprom-antes.bin
+Reading | ################################################## | 100% 1.49s
+1024 bytes of eeprom verified
+
+Avrdude done.  Thank you.

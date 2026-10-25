@@ -1,0 +1,7 @@
+Reading 2236 bytes for flash from input file NanoDiagnostico.ino.hex
+Writing 2236 bytes to flash
+Writing | ################################################## | 100% 0.68s
+Reading | ################################################## | 100% 0.48s
+2236 bytes of flash verified
+
+Avrdude done.  Thank you.

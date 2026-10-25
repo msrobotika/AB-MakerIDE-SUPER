@@ -1,0 +1,19 @@
+{
+  "port": "COM4",
+  "signature": "0x1e,0x95,0xf",
+  "profile": "arduino:avr:nano:cpu=atmega328old",
+  "flash_read_twice_matches": true,
+  "eeprom_comparison_passed": true,
+  "write_performed": false,
+  "files": {
+    "flash-antes.bin": {
+      "bytes": 32768,
+      "sha256": "3a9407585b0e699bd45d148faac0b1d8b1575f50f0a9f1db3e6349f4454ce631"
+    },
+    "eeprom-antes.bin": {
+      "bytes": 1024,
+      "sha256": "5f4ecdb7b71c3e403983fe405cddcdc2f2576b655fdb3e80d94a6f7c32e58bc2"
+    }
+  },
+  "scope": "Lectura por cargador serie; no incluye fusibles ni bits de bloqueo."
+}

@@ -1,0 +1,26 @@
+{
+  "port": "COM4",
+  "usb_bridge": "CH340",
+  "usb_vid_pid": "1A86:7523",
+  "claimed_board_by_user": "Arduino Nano",
+  "signature": "0x1e,0x95,0xf",
+  "compatible_profile": "arduino:avr:nano:cpu=atmega328old",
+  "baud": 57600,
+  "write_performed": false,
+  "erase_performed": false,
+  "attempts": [
+    {
+      "baud": 115200,
+      "exit_code": null,
+      "timed_out": true,
+      "signature": null
+    },
+    {
+      "baud": 57600,
+      "exit_code": 0,
+      "timed_out": false,
+      "signature": "0x1e,0x95,0xf"
+    }
+  ],
+  "scope": "Lectura de firma mediante el cargador; no prueba el programa actual ni el funcionamiento de GPIO."
+}
