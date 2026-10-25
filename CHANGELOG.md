@@ -1,5 +1,14 @@
 # Cambios
 
+## 1.0.0-rc.1 · secuencias digitales · 25 octubre 2026
+
+- Cerrada y registrada la ronda de cinco placas disponibles; se continúa sin nuevas cargas de hardware.
+- Simulador ampliado de Blink a secuencias lineales de hasta ocho salidas en Arduino C++ y MicroPython, con trazas y niveles por canal.
+- Pausa, continuación, reinicio, avance al final de cada espera y velocidades virtuales de 0,25× a 4×. Ediciones y cambios de placa o lenguaje descartan modelos obsoletos.
+- Corregida la fase de los patrones que comienzan en LOW y el estado inicial entre ciclos. LED_BUILTIN se resuelve únicamente en perfiles AVR Uno/Nano/Mega conocidos. Salidas MicroPython sin escritura inicial permanecen N/D.
+- Retirados controles de ADC y botón sin efecto. Instrucciones desconocidas y llamadas a otros objetos rechazan el modelo completo. No se ejecuta firmware ni se declara éxito de hardware.
+- Ejemplos de semáforo, regresiones del motor y pruebas de interfaz aisladas; capturas y alcance en docs/evidence/simulator.
+
 ## 1.0.0-rc.1 · Mega ATmega2560 · 25 octubre 2026
 
 - Mega reconocido en COM8 y firma ATmega2560 leída por el cargador wiring.

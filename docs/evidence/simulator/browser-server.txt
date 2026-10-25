@@ -1,0 +1,16 @@
+<SOURCE>\tests\browser_simulator.py:51: SyntaxWarning: invalid escape sequence '\d'
+  page.wait_for_function('()=>document.querySelector("#simClock").textContent.match(/\d+/)[0]>80')
+<SOURCE>\tests\browser_simulator.py:55: SyntaxWarning: invalid escape sequence '\d'
+  page.locator('#simBtn').click();page.wait_for_function('(n)=>Number(document.querySelector("#simClock").textContent.match(/\d+/)[0])>n+70',arg=int(paused.split(':')[1].split()[0]))
+[MakerIDE] "GET / HTTP/1.1" 200 -
+[MakerIDE] "GET /simulator.js HTTP/1.1" 200 -
+[MakerIDE] "GET /activity.js HTTP/1.1" 200 -
+[MakerIDE] "GET /board_trials.js HTTP/1.1" 200 -
+[MakerIDE] "GET /app.js HTTP/1.1" 200 -
+[MakerIDE] "GET /api/boards?selected=arduino%3Aavr%3Auno HTTP/1.1" 200 -
+[MakerIDE] "GET /api/diagnostics HTTP/1.1" 200 -
+[MakerIDE] "GET /api/ai/status HTTP/1.1" 200 -
+[MakerIDE] "GET /api/agents/history HTTP/1.1" 200 -
+[MakerIDE] "GET /api/serial/poll?since=0 HTTP/1.1" 200 -
+[MakerIDE] "GET /api/serial/poll?since=0 HTTP/1.1" 200 -
+{"passed": true, "checks": 26, "failure": null}

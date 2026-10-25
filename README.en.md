@@ -16,6 +16,7 @@ Current status: **1.0.0-rc.1**, a release candidate validated locally on Windows
 - Optional Codex CLI and Claude Code integration with explicit execution permissions.
 - Generated code can open in the editor with a backup, be saved as a sketch, or be exported with auxiliary files in a ZIP. Continuing a task and compiling preserve those files.
 - A robot status indicator distinguishes running work, tool success, errors and unknown outcomes. Agent completion does not establish that firmware was uploaded or works on hardware.
+- A bounded [digital sequence simulator](docs/SIMULADOR.md) displays up to eight Arduino C++ or MicroPython outputs with traces, pause, stepping, reset and playback speed. It does not connect to hardware or execute firmware.
 - A local board test notebook records tool results separately from user observations, ties Arduino job results to the current source/target, and exports JSON. It does not run or upload firmware.
 
 ## Start on Windows

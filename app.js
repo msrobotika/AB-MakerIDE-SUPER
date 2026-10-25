@@ -17,10 +17,10 @@ let storageConflict=recoveryStorageError;
 let agentProjectId='';
 try{const saved=localStorage.getItem('ab-makeride-agent-project-v1')||'';if(/^[a-f0-9]{32}$/.test(saved))agentProjectId=saved}catch(_e){}
 function rememberAgentProject(id){agentProjectId=id||'';try{if(id)localStorage.setItem('ab-makeride-agent-project-v1',id);else localStorage.removeItem('ab-makeride-agent-project-v1')}catch(_e){}}
-function save(){if(storageConflict){$('#footSave').textContent='Guardado pausado: exporta tu copia antes de recargar';return;}try{localStorage.setItem(SAVEKEY,JSON.stringify({files:state.files,lang:state.lang,name:state.name,fqbn:state.fqbn,port:state.port,baud:state.baud,uploadSpeed:state.uploadSpeed,retrySlow:state.retrySlow}));state.dirty=false;$('#footSave').textContent='✓ Guardado local';}catch(e){$('#footSave').textContent='Error al guardar';toast('No se pudo guardar en este navegador')}}
+function save(){invalidateSim();if(storageConflict){$('#footSave').textContent='Guardado pausado: exporta tu copia antes de recargar';return;}try{localStorage.setItem(SAVEKEY,JSON.stringify({files:state.files,lang:state.lang,name:state.name,fqbn:state.fqbn,port:state.port,baud:state.baud,uploadSpeed:state.uploadSpeed,retrySlow:state.retrySlow}));state.dirty=false;$('#footSave').textContent='✓ Guardado local';}catch(e){$('#footSave').textContent='Error al guardar';toast('No se pudo guardar en este navegador')}}
 window.addEventListener('pagehide',()=>{clearTimeout(saveDelay);state.files[state.lang]=$('#code').value;save()});
 window.addEventListener('storage',e=>{if(e.key===SAVEKEY&&e.newValue){storageConflict=true;clearTimeout(saveDelay);$('#footSave').textContent='Otra pestaña cambió el proyecto: exporta esta copia antes de recargar';toast('Guardado pausado para evitar sobrescribir otra pestaña. Exporta tu copia.')}});
-let saveDelay;function scheduleSave(){state.dirty=true;$('#footSave').textContent='● Cambios pendientes';clearTimeout(saveDelay);saveDelay=setTimeout(save,550)}
+let saveDelay;function scheduleSave(){invalidateSim();state.dirty=true;$('#footSave').textContent='● Cambios pendientes';clearTimeout(saveDelay);saveDelay=setTimeout(save,550)}
 function showLog(p,t,type='note'){const panel=$('#pane-'+p);const el=document.createElement('div');el.className='logline '+type;el.textContent=t;panel.appendChild(el);while(panel.childNodes.length>1100)panel.removeChild(panel.firstChild);panel.scrollTop=panel.scrollHeight;return el;}
 function showOutput(p,t){String(t||'').split(/\r?\n/).forEach(x=>showLog(p,x,/sin errores|no errors/i.test(x)?'good':/error|failed|fallid|fatal|traceback/i.test(x)?'bad':/success|correct|writing|compilaci[oó]n real|carga real|done/i.test(x)?'good':'note'))}
 function switchPane(name){state.pane=name;$$('[data-pane]').forEach(x=>x.classList.toggle('on',x.dataset.pane===name));['console','serial','problems'].forEach(p=>$('#pane-'+p).classList.toggle('hidden',p!==name));$('#serialBar').classList.toggle('hidden',name!=='serial');$('#terminalBar').classList.toggle('hidden',name!=='console');}
@@ -259,8 +259,8 @@ function refreshQuickSelectors(){
 $('#quickBoard').addEventListener('change',e=>{if(e.target.value==='__search__'){refreshQuickSelectors();openCatalog()}else applyBoardChoice(e.target.value)});
 $('#quickPort').addEventListener('change',e=>applyPortChoice(e.target.value));
 $('#quickScan').addEventListener('click',async()=>{const btn=$('#quickScan');btn.disabled=true;try{const scanned=await scan();if(scanned.scan_ok===false){toast('Detección incompleta: revisa el aviso');return;}if(!state.ports.length){showLog('console','No hay puertos COM detectados: comprueba cable USB de DATOS, controlador CH340/ATmega16U2 y Administrador de dispositivos. El IDE no inventa puertos.','bad');switchPane('console');toast('Sin puertos detectados. Revisa USB/driver.')}else toast(state.ports.length+' puerto(s) COM real(es) detectado(s)')}catch(e){showLog('console',e.message,'bad');toast('Error en detección: '+e.message)}finally{btn.disabled=false}});
-const openRight=(mode)=>{document.body.dataset.right=document.body.dataset.right===mode?'none':mode;if(mode==='lab')$('#hardwareLab').open=true;};
-$('#showAI').onclick=()=>openRight('ai');$('#showSim').onclick=()=>{openRight('sim');$('#extraTools').open=false};$('#showLab').onclick=()=>{openRight('lab');$('#extraTools').open=false};$('#rightClose').onclick=()=>{document.body.dataset.right='none'};
+const openRight=(mode)=>{document.body.dataset.right=document.body.dataset.right===mode?'none':mode;if(document.body.dataset.right!=='sim'&&state.simRunning)pauseSim();if(mode==='lab')$('#hardwareLab').open=true;};
+$('#showAI').onclick=()=>openRight('ai');$('#showSim').onclick=()=>{openRight('sim');$('#extraTools').open=false};$('#showLab').onclick=()=>{openRight('lab');$('#extraTools').open=false};$('#rightClose').onclick=()=>{if(state.simRunning)pauseSim();document.body.dataset.right='none'};
 function checkSelection(requirePort){if(!state.apiReady){toast('Servidor desconectado. Inicia server.py');return false}if(requirePort&&!state.port){toast('Selecciona el puerto USB en la barra superior');$('#quickPort').focus();return false}if(state.lang==='cpp'&&!state.fqbn){toast('Selecciona una placa/FQBN');return false}return true}
 let currentJobId=null, lastJobLine=0;
 async function updateBuildVisual(d){
@@ -476,31 +476,51 @@ $('#terminalCommand').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();runTe
 $('#serialSend').onclick=async()=>{const el=$('#serialText');if(!el.value)return;try{await request('/api/serial/send',{text:el.value+'\n'});showLog('serial','TX > '+el.value,'cmd');el.value=''}catch(e){toast(e.message)}};
 $('#serialText').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();$('#serialSend').click()}});
 async function runPython(){if(state.lang!=='py'||!checkSelection(true))return;if(!confirm('Ejecutar código MicroPython en RAM, sin sobrescribir main.py de la placa. ¿Continuar?'))return;switchPane('console');showLog('console','MicroPython · ejecución en RAM (mpremote)','cmd');busy(true);try{const r=await request('/api/micropython/run',{code:state.files.py,port:state.port});showOutput('console',r.output);toast(r.ok?'Ejecución enviada a placa':'Error al ejecutar MicroPython')}catch(e){showLog('console',e.message,'bad')}finally{busy(false);refreshSerial()}}
-// Simulator: only models deterministic Blink subset; not real firmware execution.
-let simModel=null,simStarted=0,simFrameId=0;
-function simDraw(now=0){
-  const pin=Number($('#simPin').value),analog=Number($('#simAnalog').value),button=$('#simButton').checked;
-  window.MakerSimulator.draw($('#simCanvas'),simModel,now,pin,analog,button);
+// Local deterministic model. Never calls build/upload/serial APIs or robot success.
+let simModel=null,simSource=null,simStarted=0,simElapsed=0,simFrameId=0,simLastDraw=0;
+function simCurrentTime(){return simElapsed+(state.simRunning?(performance.now()-simStarted)*Number($('#simSpeed').value):0)}
+function simDraw(now=simElapsed){
+  window.MakerSimulator.draw($('#simCanvas'),simModel,now,Number($('#simPin').value));
+  $('#simClock').textContent='Tiempo virtual: '+Math.round(now)+' ms';
+  $('#simLevels').replaceChildren();
+  for(const pin of simModel?.pins||[]){const level=window.MakerSimulator.output(simModel,now,pin),el=document.createElement('span');el.dataset.pin=pin;el.dataset.level=level;el.textContent='D'+pin+': '+(level===null?'N/D':level?'HIGH':'LOW');$('#simLevels').append(el)}
+}
+function pauseSim(message='Pausado · simulación lógica, sin firmware'){
+  simElapsed=simCurrentTime();state.simRunning=false;cancelAnimationFrame(simFrameId);
+  $('#simBtn').textContent=simModel?'▶ Continuar':'▶ Simular lógica';
+  $('#simStatus').textContent=message;simDraw();
+}
+function invalidateSim(){
+  if(!simSource||(simSource.code===$('#code').value&&simSource.lang===state.lang&&simSource.fqbn===state.fqbn))return;
+  state.simRunning=false;cancelAnimationFrame(simFrameId);simModel=null;simSource=null;simElapsed=0;
+  $('#simPin').replaceChildren(new Option('Sin analizar',''));$('#simPin').disabled=true;$('#simReset').disabled=true;
+  $('#simPeriod').textContent='El modelo anterior se ha descartado.';$('#simBtn').textContent='▶ Simular lógica';
+  $('#simStatus').textContent='Código o placa cambiados. Vuelve a analizar.';simDraw();
+}
+function prepareSim(){
+  invalidateSim();if(simModel)return true;
+  const model=window.MakerSimulator.analyze($('#code').value,state.lang,{fqbn:state.fqbn});
+  if(!model.supported){$('#simStatus').textContent='NO SOPORTADO: '+model.reason;simDraw();return false;}
+  simModel=model;simSource={code:$('#code').value,lang:state.lang,fqbn:state.fqbn};simElapsed=0;
+  $('#simPin').replaceChildren(...model.pins.map(pin=>new Option('D'+pin,String(pin))));$('#simPin').disabled=false;$('#simReset').disabled=false;
+  $('#simPeriod').textContent=model.board+' · '+model.pins.length+' salida(s) · ciclo '+model.period+' ms';simDraw();return true;
 }
 function simStep(timestamp){
   if(!state.simRunning)return;
-  simDraw(timestamp-simStarted);
+  if(timestamp-simLastDraw>=50){simDraw(simCurrentTime());simLastDraw=timestamp;}
   simFrameId=requestAnimationFrame(simStep);
 }
-function stopSim(){state.simRunning=false;cancelAnimationFrame(simFrameId);$('#simBtn').textContent='▶ Simular lógica';$('#simStatus').textContent='Detenido · no se ha ejecutado firmware';}
 $('#simBtn').onclick=()=>{
-  if(state.simRunning){stopSim();return;}
-  simModel=window.MakerSimulator.analyze(state.files[state.lang],state.lang);
-  if(!simModel.supported){$('#simStatus').textContent='NO SOPORTADO: '+simModel.reason;toast('Este sketch requiere emulación de hardware real, todavía no disponible');simDraw();return;}
-  $('#simPin').value=String(simModel.pin);
-  if($('#simPin').value!==String(simModel.pin)){const opt=new Option(String(simModel.pin),String(simModel.pin));$('#simPin').add(opt);$('#simPin').value=String(simModel.pin)}
-  $('#simPeriod').textContent=`GPIO ${simModel.pin} · HIGH ${simModel.on} ms · LOW ${simModel.off} ms · período ${simModel.period} ms`;
-  state.simRunning=true;simStarted=performance.now();$('#simBtn').textContent='■ Detener';
-  $('#simStatus').textContent='MODELO LÓGICO EN EJECUCIÓN · NO FIRMWARE';simFrameId=requestAnimationFrame(simStep);
+  if(state.simRunning){pauseSim();return;}if(!prepareSim())return;
+  state.simRunning=true;simStarted=performance.now();$('#simBtn').textContent='Ⅱ Pausar';
+  $('#simStatus').textContent='SIMULACIÓN LÓGICA EN CURSO · SIN ACCESO A LA PLACA';simFrameId=requestAnimationFrame(simStep);
 };
-$('#simPin').onchange=()=>{if(state.simRunning)stopSim();simDraw()};
-$('#simAnalog').oninput=()=>{$('#simAnalogValue').textContent=$('#simAnalog').value;simDraw()};
-$('#simButton').onchange=()=>simDraw();
+$('#simNext').onclick=()=>{if(!prepareSim())return;pauseSim();simElapsed=window.MakerSimulator.nextTime(simModel,simElapsed);$('#simStatus').textContent='Paso completado · simulación lógica en pausa';simDraw()};
+$('#simReset').onclick=()=>{pauseSim();simElapsed=0;$('#simStatus').textContent='Reiniciado a 0 ms · en pausa';simDraw()};
+let simPreviousSpeed=Number($('#simSpeed').value);
+$('#simSpeed').onchange=()=>{if(state.simRunning){simElapsed+=(performance.now()-simStarted)*simPreviousSpeed;simStarted=performance.now()}simPreviousSpeed=Number($('#simSpeed').value);simDraw(simCurrentTime())};
+$('#simPin').onchange=()=>simDraw(simCurrentTime());
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&state.simRunning)pauseSim()});
 requestAnimationFrame(()=>simDraw());
 function bot(message,action){const el=document.createElement('div');el.className='msg bot';const content=document.createElement('div');content.textContent=message;el.appendChild(content);if(action){const b=document.createElement('button');b.className='action small';b.textContent='↳ Insertar plantilla (reemplaza archivo actual)';b.onclick=()=>{if(!confirm('¿Reemplazar el contenido del archivo actual por la plantilla?'))return;state.files[state.lang]=action;$('#code').value=action;updateHL();scheduleSave();toast('Plantilla aplicada');};el.appendChild(b)}$('#chatLog').appendChild(el);$('#chatLog').scrollTop=$('#chatLog').scrollHeight}
 function userMsg(message){const el=document.createElement('div');el.className='msg user';el.textContent=message;$('#chatLog').appendChild(el);$('#chatLog').scrollTop=$('#chatLog').scrollHeight}

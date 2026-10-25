@@ -23,7 +23,8 @@
 .terminalinput.hidden{display:none}.simworkbench{padding:8px 12px 10px;border-bottom:1px solid var(--line)}
 #simCanvas{width:100%;height:auto;display:block;border:1px solid var(--line);border-radius:8px;background:#08111a}
 .simopts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}.simopts label{font:10px var(--mono);color:var(--muted)}.simopts select,.simopts input[type=range]{width:100%;margin-top:4px}.simsubtitle{font-size:10px;color:var(--muted);line-height:1.5;margin-top:8px}
-.simrow{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:7px}
+.simrow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:7px}
+.simworkbench{overflow:auto;min-height:0}.simworkbench .sectiontitle{padding:0;font-size:10px;letter-spacing:.5px;flex-wrap:wrap}.simlevels{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.simlevels span{border:1px solid var(--line);border-radius:6px;padding:5px;font:11px var(--mono)}.simlevels [data-level="1"]{color:var(--good);border-color:#216f56}.simopts{grid-template-columns:1fr 1fr}.simrow .action{flex:1}
 @media (max-height:750px){.simworkbench #simCanvas{max-height:180px;object-fit:contain}}
 
 .advisorstrip{display:flex;gap:9px;align-items:center;justify-content:space-between;background:#102538;border-bottom:1px solid #30536a;color:#bde7fd;padding:7px 13px;font-size:11px;min-height:32px}
@@ -200,13 +201,16 @@ body[data-right="lab"] .right .hardwarelab{display:block;max-height:none;overflo
 <div class="sectiontitle"><span>ENTORNO Y DEPENDENCIAS</span><button class="action small ghost" id="refreshStatus">↻</button></div>
 <div class="diag"><div class="diaggrid" id="diagGrid"><div class="diagitem">Comprobando herramientas...</div></div></div>
 <section class="simworkbench" id="simulatorPanel">
-<div class="sectiontitle"><span>SIMULADOR DE CIRCUITOS · BETA</span><span class="simlegend">SUBCONJUNTO BLINK</span></div>
+<div class="sectiontitle"><span>SIMULADOR LÓGICO · BETA</span><span class="simlegend">SECUENCIAS DIGITALES</span></div>
 <canvas id="simCanvas" width="460" height="285" aria-label="Simulador lógico con circuito y osciloscopio"></canvas>
-<div class="simopts"><label>GPIO conectado a LED<select id="simPin" class="selector"><option>2</option><option>4</option><option>5</option><option>13</option><option>16</option><option>17</option><option>18</option><option>19</option><option>21</option><option>22</option><option>23</option><option>25</option><option>26</option><option>27</option><option>32</option><option>33</option></select></label>
-<label>Entrada ADC virtual <span id="simAnalogValue">2048</span><input type="range" min="0" max="4095" value="2048" id="simAnalog"></label></div>
-<div class="simrow"><button class="action small" id="simBtn">▶ Simular lógica</button><label class="simlegend"><input type="checkbox" id="simButton"> Botón virtual pulsado</label></div>
+<div class="simlevels" id="simLevels" aria-label="Niveles de las salidas simuladas"></div>
+<div class="simopts"><label>Canal destacado<select id="simPin" class="selector" disabled><option value="">Sin analizar</option></select></label>
+<label>Velocidad virtual<select id="simSpeed" class="selector"><option value="0.25">0,25×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option></select></label></div>
+<div class="simrow"><button class="action small primary" id="simBtn">▶ Simular lógica</button><button class="action small" id="simNext">Siguiente paso</button><button class="action small" id="simReset" disabled>↺ Reiniciar</button></div>
+<div class="simsubtitle" id="simClock">Tiempo virtual: 0 ms</div>
 <div class="simsubtitle" id="simPeriod">Se analiza el código abierto; no se ejecuta firmware binario.</div>
-<div class="simsubtitle" id="simStatus">Listo para analizar</div>
+<div class="simsubtitle" id="simStatus" role="status">Listo para analizar</div>
+<p class="simsubtitle">Hasta ocho salidas con escrituras y esperas lineales. No emula CPU, pantallas, sensores ni circuitos eléctricos. No conecta la placa. Los mensajes serie se omiten.</p>
 </section>
 <details class="hardwarelab" id="hardwareLab">
 <summary>▣ LAB DE HARDWARE · Perfil IdeaSpark y conexiones</summary>

@@ -1,0 +1,28 @@
+{
+  "unit_total": 204,
+  "unit_passed": 200,
+  "unit_skipped": 4,
+  "unit_skip_reasons": "Tres comprobaciones necesitan g++; otra necesita privilegios Windows para enlaces simbólicos.",
+  "node_simulator_cases": 10,
+  "node_cases_included_in_one_python_test": true,
+  "simulator_browser_checks": 26,
+  "agent_browser_checks": 37,
+  "page_errors": 0,
+  "simulator_hardware_operations": 0,
+  "arduino_example_compile_passed": true,
+  "arduino_example_fqbn": "arduino:avr:uno",
+  "python_example_syntax_passed": true,
+  "physical_round_closed": true,
+  "physical_devices": 5,
+  "hardware_written_in_this_iteration": false,
+  "source_sha256": {
+    "app.js": "9154485d212e7f09b1559d53b950fcc96e29a9f1327cdcd4fe12fa9539253fca",
+    "index.html": "12b7a71df27b22195098da6d57df11219ba5d27852d7d340f6cbf9ea008379a3",
+    "simulator.js": "26d5edc1e0c42b47c7e3b8ddb266c5ddbb6259f0443bffc9a659d235e35c0d82",
+    "examples/semaforo_simulacion.ino": "7ed7a5234326d35a3263eabec6bc78879a7e5794b4e6e32138d834cac6cd1a87",
+    "examples/semaforo_simulacion.py": "796a3c2fbe7f2f17a3310a15b4f90dd23b079730536bcdd13aeb00ca316271d8"
+  },
+  "published": false,
+  "push_performed": false,
+  "scope": "Local source and isolated Chromium; controlled empty ports/catalog. No deployment into the user browser session."
+}

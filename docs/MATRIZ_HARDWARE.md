@@ -2,6 +2,8 @@
 
 25 octubre 2026. Esta matriz distingue las pruebas de dispositivos concretos de los tests automatizados del IDE. No implica compatibilidad con todas las revisiones que comparten un nombre comercial o conversor USB.
 
+**Ronda cerrada por disponibilidad de placas:** cinco dispositivos registrados. [Cierre y pendientes](CIERRE_PRUEBAS_2026-10-25.md). Se continúa con el simulador sin nuevas operaciones sobre hardware.
+
 | Dispositivo y perfil | Compilación y carga | Comprobación del periférico | Pendientes |
 | --- | --- | --- | --- |
 | IdeaSpark, ESP32-D0WD, flash 4 MB, ST7789 135x240, rotación 1 | Radar de archivo único; salida 0 y cuatro segmentos verificados en COM4, con autorización | El usuario confirmó que ve el radar; cuatro ecos simulados, sin sensor de distancias | Prueba prolongada, reconexión, cancelación durante carga y otras revisiones |

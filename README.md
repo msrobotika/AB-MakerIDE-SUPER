@@ -20,12 +20,15 @@ Captura real del servidor local RC1. [Galería y alcance de las evidencias](docs
 - Agentes opcionales Codex CLI y Claude Code, con permisos visibles y registro de actividad.
 - Apertura del código generado con copia del anterior, descarga del sketch y ZIP con auxiliares. Continuar y compilar conservan las cabeceras creadas por el agente.
 - Robot MS Robotika: ámbar durante el trabajo, verde para el resultado concreto acreditado y rojo con error, acompañado de texto.
+- [Simulador de secuencias digitales](docs/SIMULADOR.md) para hasta ocho salidas Arduino C++ o MicroPython, con trazas, pausa, pasos, reinicio y velocidad virtual. No conecta hardware ni emula firmware.
 
 El editor y las herramientas locales pueden usarse sin una cuenta de IA. **MakerIDE no incluye saldo, suscripciones ni acceso gratuito a IA: cada usuario vincula su propia cuenta del proveedor y asume su consumo.** Los agentes externos pueden utilizar la red y recibir el código de la tarea. Codex ha sido probado en uso real por el autor. Claude Code, los conectores de chat y Ollama siguen pendientes de validación equivalente; su presencia en el menú no acredita una cuenta conectada ni una prueba correcta.
 
 En **Herramientas → Pruebas de mis placas** puedes guardar el resultado de la herramienta junto al modelo/puerto seleccionados y tu observación del dispositivo, y exportar el cuaderno. [Guía de pruebas](docs/PRUEBAS_DE_PLACAS.md).
 
 ## Demostración verificable
+
+La ronda de pruebas físicas de cinco placas está [registrada y cerrada](docs/CIERRE_PRUEBAS_2026-10-25.md). La siguiente mejora es el simulador, validado por separado mediante regresiones y capturas de escritorio y móvil.
 
 El [radar IdeaSpark](examples/ideaspark_114_radar.ino) es un ejemplo de un solo archivo para ESP32 y pantalla ST7789. Se compiló y grabó en COM4 con autorización y verificación del grabador; el usuario confirmó que lo ve. Los cuatro ecos son **simulados**. [Registros y perfil exacto](docs/evidence/radar-ideaspark/README.md).
 

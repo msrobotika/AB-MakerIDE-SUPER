@@ -31,3 +31,5 @@ Comandos de reproducción en el README principal. Usar siempre un nuevo director
 [Arduino Nano ATmega328P](arduino-nano/README.md): cargador antiguo a 57600 baudios, copias previas, carga autorizada y verificada, EEPROM conservada y cinco muestras serie correctas.
 
 [Arduino Mega ATmega2560](arduino-mega/README.md): reconocido en COM8, copia previa, carga autorizada y verificada, EEPROM conservada y cinco muestras serie correctas.
+
+[Simulador de secuencias digitales](simulator/README.md): ocho salidas, reproducción y pasos, regresiones del motor y 26 comprobaciones de interfaz. Capturas reales con catálogo y puertos controlados; sin hardware.
