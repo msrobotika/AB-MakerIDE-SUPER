@@ -161,6 +161,7 @@ body[data-right="lab"] .right .hardwarelab{display:block;max-height:none;overflo
   <details class="extra-tools" id="extraTools"><summary class="action small ghost" title="Herramientas avanzadas">⋯ Herramientas</summary><div class="extra-menu">
    <button id="showSim" class="action small ghost" title="Simulador lógico; NO ejecuta firmware">Simulación lógica</button>
    <button id="showLab" class="action small ghost" title="Revisar conexiones y perfiles">Conexiones GPIO</button>
+   <button id="showTrials" class="action small ghost" title="Guardar y comparar pruebas de tus placas">Pruebas de mis placas</button>
   </div></details>
   <button id="verifyBtn" class="action" title="Compilar código Arduino o verificar sintaxis Python (Ctrl+Enter)">⌕ Verificar</button>
   <button id="uploadBtn" class="action primary" title="Compilar y grabar en la placa real">↑ Grabar placa</button>
@@ -223,7 +224,8 @@ body[data-right="lab"] .right .hardwarelab{display:block;max-height:none;overflo
 <div class="assistant"><div class="sectiontitle"><span>AGENTE MAKER · IA OPCIONAL</span><span id="aiState" style="color:var(--amber)">PLANTILLAS</span></div>
 <details class="agentconfig" id="aiConfig"><summary>⚙ Proveedor y modelo IA · Configurar</summary>
 <div class="agentfields">
- <label>Proveedor<select id="aiProvider" class="selector"><option value="local">Plantillas sin IA</option><option value="google">Google AI Studio · Gemma 4</option><option value="openrouter">OpenRouter · Gemma libre</option><option value="ollama">Ollama · modelo local</option><option value="codex">Codex CLI · cuenta vinculada</option><option value="claude_code">Claude Code CLI · cuenta vinculada</option></select></label>
+ <label>Proveedor<select id="aiProvider" class="selector"><option value="local">Plantillas sin IA</option><option value="google">Google AI Studio · experimental</option><option value="openrouter">OpenRouter · experimental</option><option value="ollama">Ollama · local, pendiente de validar</option><option value="codex">Codex CLI · requiere tu cuenta</option><option value="claude_code">Claude Code CLI · experimental, requiere tu cuenta</option></select></label>
+ <p class="hint" id="aiAccountNote" role="status"></p>
  <label>Modelo<select id="aiModel" class="selector"></select></label>
  <label id="aiKeyGroup">Clave API (solo memoria del servidor)<input type="password" class="input" id="aiKey" autocomplete="off" placeholder="Pegar clave; no se guarda en disco"></label>
  <div class="hint">Codex y Claude Code requieren sus CLI oficiales instaladas y sesión iniciada. Usa «Ejecutar tarea real» para permitirles consultar, editar o ejecutar según tu elección. No necesitan pegar claves en MakerIDE.</div><div class="agentactions"><button id="aiSave" class="action small">Guardar proveedor</button><button id="aiTest" class="action small ghost">Probar conexión</button><button id="aiReset" class="action small danger" title="Borrar claves API de la memoria del servidor">Borrar claves</button></div>
@@ -232,8 +234,9 @@ body[data-right="lab"] .right .hardwarelab{display:block;max-height:none;overflo
 </div></details>
 <details class="wizard" id="agentWorkbench">
 <summary>⚡ Codex / Claude Code · Ejecutar tarea real</summary>
-<div class="agent-guide">Selecciona agente y permisos. La ejecución empieza en una copia del proyecto bajo Documentos/AB MakerIDE/AgentWorkspaces. El código puede abrirse con copia del anterior; si estás editando, se conserva tu borrador. Revisa el resultado antes de compilar. Los permisos de la CLI determinan el acceso a otras rutas.</div>
-<label>Agente<select class="selector" id="execProvider"><option value="codex">OpenAI Codex CLI</option><option value="claude_code">Anthropic Claude Code CLI</option></select></label>
+<div class="agent-guide">Selecciona agente y permisos. La ejecución empieza en una copia del proyecto en la carpeta local de sesiones. El código puede abrirse con copia del anterior; si estás editando, se conserva tu borrador. Revisa el resultado antes de compilar. Los permisos de la CLI determinan el acceso a otras rutas.</div>
+<label>Agente<select class="selector" id="execProvider"><option value="codex">OpenAI Codex CLI · probado por el autor</option><option value="claude_code">Claude Code CLI · experimental</option></select></label>
+<p class="agent-guide" id="execAccountNote" role="status"></p>
 <label>Permisos para esta ejecución<select class="selector" id="execMode">
 <option value="consultar">Consultar · lectura</option>
 <option value="supervisado" selected>Supervisado · editar código</option>
@@ -307,8 +310,24 @@ body[data-right="lab"] .right .hardwarelab{display:block;max-height:none;overflo
   </div>
  </form>
 </dialog>
+<dialog id="boardTrialsDialog" class="quick-dialog" aria-labelledby="boardTrialsTitle" style="width:100%;max-width:min(760px,calc(100vw - 28px));max-height:85vh;overflow:auto">
+ <h2 id="boardTrialsTitle">Pruebas de mis placas</h2>
+ <p id="trialTarget" class="hint"></p>
+ <label for="trialName">Nombre de tu placa o revisión</label>
+ <input id="trialName" class="input" maxlength="80" placeholder="Ej.: IdeaSpark ST7789, placa azul del taller">
+ <label for="trialObservation">Qué has observado tú en el dispositivo</label>
+ <select id="trialObservation" class="selector"><option value="not_checked">Sin comprobar todavía</option><option value="works">Funciona como esperaba</option><option value="fails">No funciona como esperaba</option></select>
+ <label for="trialNotes">Prueba realizada y observaciones</label>
+ <textarea id="trialNotes" class="input" maxlength="2000" rows="3" placeholder="Pantalla, LED, alimentación, núcleo usado, resultado esperado… No incluyas claves ni datos privados."></textarea>
+ <p class="hint">Se registra el resultado disponible para el código y destino actuales. Tu observación queda separada del resultado de la herramienta. El cuaderno es local y editable; no certifica el hardware.</p>
+ <div class="dialogactions" style="flex-wrap:wrap"><button id="trialClose" class="action">Cerrar</button><button id="trialExport" class="action">Exportar cuaderno</button><button id="trialSave" class="action primary">Guardar prueba actual</button></div>
+ <p id="trialStatus" role="status" aria-live="polite"></p>
+ <p id="trialCount" class="hint"></p>
+ <div id="trialHistory" style="display:grid;gap:10px"></div>
+</dialog>
 <script src="/simulator.js"></script>
 <script src="/activity.js"></script>
+<script src="/board_trials.js"></script>
 <script src="/app.js"></script>
 </body>
 </html>

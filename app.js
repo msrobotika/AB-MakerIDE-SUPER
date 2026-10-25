@@ -545,12 +545,19 @@ async function loadExample(size){
   catch(e){toast('Error cargando ejemplo: '+e.message)}
 }
 const AI_MODELS={local:[],google:['gemma-4-31b-it','gemma-4-26b-a4b-it'],openrouter:['google/gemma-4-31b-it:free','google/gemma-4-26b-a4b-it:free'],ollama:['gemma3:4b','qwen2.5-coder:7b'],codex:['default'],claude_code:['default']};
+function providerAccountNote(provider){
+  if(provider==='local')return 'Plantillas locales sin IA: no usan una cuenta ni consumen saldo de un proveedor.';
+  if(provider==='ollama')return 'Ollama necesita tu instalación y recursos locales. Esta integración sigue pendiente de validación real por el autor.';
+  const account='Usa tu propia cuenta, sesión y cuota del proveedor. MakerIDE no incluye saldo, suscripción ni acceso gratuito a IA. ';
+  return account+(provider==='codex'?'Codex está probado en uso real por el autor.':'Integración experimental: pendiente de validación real por el autor.');
+}
 function renderAiModels(preferred){
   const provider=$('#aiProvider').value, select=$('#aiModel');select.replaceChildren();
   for(const model of AI_MODELS[provider]||[]){const o=document.createElement('option');o.value=model;o.textContent=model;select.appendChild(o)}
   if(preferred&&[...select.options].some(o=>o.value===preferred))select.value=preferred;
   $('#aiModel').disabled=['local','codex','claude_code'].includes(provider);$('#aiKeyGroup').classList.toggle('hidden',['local','ollama','codex','claude_code'].includes(provider));
   $('#aiTest').disabled=provider==='local';
+  $('#aiAccountNote').textContent=providerAccountNote(provider);
 }
 $('#aiProvider').addEventListener('change',()=>renderAiModels());
 async function saveAiConfig(){
@@ -683,7 +690,17 @@ labProfileNote();labRender();
 
 
 // =============================================================
+BoardTrials.mount({
+  readContext:()=>({code:$('#code').value,lang:state.lang,fqbn:state.fqbn,port:state.port,agent_project_id:agentProjectId}),
+  readBuild:async()=>{
+    const id=currentJobId||localStorage.getItem('ab-makeride-last-build-v1');
+    return id?request('/api/jobs/status?id='+encodeURIComponent(id)).catch(()=>({unavailable:true})):null;
+  }
+});
 // AB MakerIDE SUPER: Codex / Claude Code tasks with user-controlled permissions.
+function renderAgentAccountNote(){$('#execAccountNote').textContent=providerAccountNote($('#execProvider').value);}
+$('#execProvider').addEventListener('change',renderAgentAccountNote);
+renderAgentAccountNote();
 // This is a real external CLI job, never a simulated AI result.
 // =============================================================
 const AGENT_LAST='ab-makeride-last-agent-v094';
@@ -721,19 +738,20 @@ $('#agentTaskBlink').onclick=()=>{
 async function refreshAgentCLIs(){
   try{
     const r=await request('/api/agents/status');
-    $('#execStatus').textContent=`Codex: ${r.installed.codex?'detectado':'no instalado'} · Claude Code: ${r.installed.claude_code?'detectado':'no instalado'}. Carpeta de sesiones: ${r.workspace_base}`;
+    $('#execStatus').textContent=`CLI Codex: ${r.installed.codex?'instalada':'no instalada'} · Claude Code: ${r.installed.claude_code?'instalada':'no instalada'}. Inicio de sesión y cuota sin comprobar. Carpeta de sesiones: ${r.workspace_base}`;
   }catch(e){$('#execStatus').textContent='No disponible: '+e.message;}
 }
 $('#agentWorkbench').addEventListener('toggle',()=>{if($('#agentWorkbench').open)refreshAgentCLIs()});
 function rememberAgent(id){try{if(id)localStorage.setItem(AGENT_LAST,id);else localStorage.removeItem(AGENT_LAST)}catch(_e){}}
 function reportAgentOutcome(r){
+  const agent=r.provider==='codex'?'Codex':r.provider==='claude_code'?'Claude Code':'El agente';
   if(r.legacy)return 'Archivo de una versión anterior recuperado. NO existe registro fiable de compilación ni grabación; revisa el código antes de importarlo.';
   if(r.interrupted || r.outcome==='unknown_after_restart')return 'Servidor cerrado durante la tarea · ESTADO DEL HARDWARE DESCONOCIDO. No repitas grabación sin diagnosticar.';
   if(r.active)return 'Agente trabajando. Puedes cerrar esta pestaña; la sesión se podrá consultar al volver.';
   if(!r.success)return 'Tarea fallida o cancelada. No se confirma firmware instalado.';
   if(r.outcome==='flash_reported_verified')return 'El registro declara firmware verificado. Falta comprobar en la pantalla que ejecuta el proyecto solicitado.';
-  if(r.outcome==='compiled_only')return 'Codex terminó y hay evidencia de compilación, pero NO consta grabación verificada.';
-  return 'Codex terminó; NO consta compilación o grabación verificadas. Revisa los archivos creados y continúa la tarea.';
+  if(r.outcome==='compiled_only')return agent+' terminó y hay evidencia de compilación, pero NO consta grabación verificada.';
+  return agent+' terminó; NO consta compilación o grabación verificadas. Revisa los archivos creados y continúa la tarea.';
 }
 async function recoverAgentSession(silent=false){
   if(agentRunState.active)return;

@@ -57,6 +57,7 @@ class Job:
     source_sha256: str = ''
     agent_project_id: str = ''
     fqbn: str = ''
+    port: str = ''
     _saved_at: float = 0
 
     def persist(self, force=False):
@@ -87,7 +88,7 @@ class Job:
     def snapshot(self, since: int = 0) -> dict:
         with self.lock:
             return dict(ok=True, id=self.id, action=self.action, active=self.active,
-                        source_sha256=self.source_sha256, fqbn=self.fqbn, agent_project_id=self.agent_project_id,
+                        source_sha256=self.source_sha256, fqbn=self.fqbn, port=self.port, agent_project_id=self.agent_project_id,
                         success=self.ok, cancelled=self.cancelled, stage=self.stage,
                         progress=self.upload_progress if self.stage in ('grabación', 'reintento 115200', 'completado') else None,
                         elapsed=self.finished_elapsed if self.finished_elapsed is not None else round(time.monotonic()-self.started, 1),
@@ -133,6 +134,7 @@ class JobManager:
                 job = Job(id=request_id or uuid.uuid4().hex, action='upload' if port else 'compile')
                 job.source_sha256 = hashlib.sha256(code.encode('utf-8')).hexdigest()
                 job.fqbn = fqbn
+                job.port = port or ''
                 job.agent_project_id = agent_project_id
                 if self.root:
                     folder = self.root / job.id

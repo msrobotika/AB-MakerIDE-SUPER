@@ -1,0 +1,22 @@
+{
+  "port": "COM4",
+  "usb_bridge": "CH340, VID 1A86 PID 7523; no identifica el modelo de placa",
+  "chip": "ESP32-D0WD-V3",
+  "chip_revision": "v3.1",
+  "crystal_mhz": 40,
+  "flash_bytes": 4194304,
+  "read_exit_code": 0,
+  "read_scope": "esptool flash-id --no-stub; lectura de identificación, sin escribir firmware",
+  "board_profile": "AI-Thinker ESP32-CAM clásica, confirmado por el usuario",
+  "fqbn": "esp32:esp32:esp32cam",
+  "compile_exit_code": 0,
+  "source_sha256": "631a3098a73f727a2b95654b4766c244c0b532a9048e8f3cbc3d08b7626461f2",
+  "program_bytes": 372737,
+  "static_ram_bytes": 34108,
+  "flash_performed": false,
+  "sensor_checked": false,
+  "psram_checked": false,
+  "camera_frames_checked": false,
+  "status": "Preparado. Pendiente de autorización para sustituir firmware y leer diagnóstico de cámara.",
+  "pinout_source": "https://github.com/espressif/arduino-esp32/blob/master/libraries/ESP32/examples/Camera/CameraWebServer/camera_pins.h"
+}

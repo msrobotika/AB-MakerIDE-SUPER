@@ -1,0 +1,85 @@
+{
+  "format": "ab-makeride-board-trials-v1",
+  "exported_at": "2026-10-25T09:28:32.242Z",
+  "note": "Registros locales editables. Los resultados de herramienta y las observaciones del usuario son pruebas distintas; no constituyen certificación del hardware.",
+  "records": [
+    {
+      "schema": 1,
+      "id": "c80c8111-fc90-455c-af6d-d4cbbaa5d830",
+      "created_at": "2026-10-25T09:28:32.187Z",
+      "board_name": "IdeaSpark · compilación controlada",
+      "selected": {
+        "fqbn": "esp32:esp32:esp32",
+        "port": "",
+        "lang": "cpp"
+      },
+      "source_sha256": "be6c114c4b74aafa9f99b67158237513455b43430278c81a9c2aacf5cd837e4b",
+      "agent_project_id": "",
+      "tool": {
+        "status": "mismatch",
+        "job_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "action": "upload",
+        "exit_code": 0,
+        "port": "COM4"
+      },
+      "observation": {
+        "state": "not_checked",
+        "source": "user",
+        "notes": ""
+      },
+      "ide_version": "1.0.0-rc.1"
+    },
+    {
+      "schema": 1,
+      "id": "e2851d50-ead2-4e88-ae87-750542eb9803",
+      "created_at": "2026-10-25T09:28:32.123Z",
+      "board_name": "IdeaSpark · compilación controlada",
+      "selected": {
+        "fqbn": "esp32:esp32:esp32",
+        "port": "",
+        "lang": "cpp"
+      },
+      "source_sha256": "be6c114c4b74aafa9f99b67158237513455b43430278c81a9c2aacf5cd837e4b",
+      "agent_project_id": "",
+      "tool": {
+        "status": "compile_ok",
+        "job_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "action": "compile",
+        "exit_code": 0,
+        "port": null
+      },
+      "observation": {
+        "state": "not_checked",
+        "source": "user",
+        "notes": ""
+      },
+      "ide_version": "1.0.0-rc.1"
+    },
+    {
+      "schema": 1,
+      "id": "d77cb978-34de-4d6f-a689-ae5c6688b1fd",
+      "created_at": "2026-10-25T09:28:31.795Z",
+      "board_name": "IdeaSpark · prueba controlada",
+      "selected": {
+        "fqbn": "esp32:esp32:esp32",
+        "port": "",
+        "lang": "cpp"
+      },
+      "source_sha256": "be6c114c4b74aafa9f99b67158237513455b43430278c81a9c2aacf5cd837e4b",
+      "agent_project_id": "",
+      "tool": {
+        "status": "not_run",
+        "job_id": null,
+        "action": null,
+        "exit_code": null,
+        "port": null
+      },
+      "observation": {
+        "state": "not_checked",
+        "source": "user",
+        "notes": "No se ha accedido al hardware en esta prueba."
+      },
+      "ide_version": "1.0.0-rc.1"
+    }
+  ]
+}

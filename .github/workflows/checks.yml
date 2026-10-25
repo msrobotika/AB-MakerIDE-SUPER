@@ -34,6 +34,7 @@ jobs:
       - run: node --check app.js
       - run: node --check activity.js
       - run: node --check simulator.js
+      - run: node --check board_trials.js
 
   browser:
     name: Editor y proyectos / Chromium aislado

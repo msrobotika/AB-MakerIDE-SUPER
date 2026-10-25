@@ -647,7 +647,7 @@ class IDEHandler(BaseHTTPRequestHandler):
             self.send_header('Content-Length', str(len(source)))
             self.end_headers()
             return self.wfile.write(source)
-        if parsed.path in ('/simulator.js', '/app.js', '/activity.js'):
+        if parsed.path in ('/simulator.js', '/app.js', '/activity.js', '/board_trials.js'):
             raw = (ROOT / parsed.path.lstrip('/')).read_bytes()
             self.send_response(200)
             self.send_header('Content-Type', 'application/javascript; charset=utf-8')

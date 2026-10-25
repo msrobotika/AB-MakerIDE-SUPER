@@ -1,5 +1,14 @@
 # Cambios
 
+## 1.0.0-rc.1 · cuaderno de placas · 25 octubre 2026
+
+- Cuaderno local para guardar y exportar pruebas de varias placas, con resultados de herramienta y observaciones del usuario separados.
+- Asociación conservadora con revisión, placa, proyecto auxiliar y puerto; protección ante almacenamiento dañado y cambios en otra pestaña.
+- Puerto de grabación conservado en el registro recuperable de los trabajos Arduino.
+- Cuenta y consumo de IA propios explicados en la interfaz; Codex probado por el autor y otras integraciones marcadas como experimentales.
+- Estado «CLI instalada» separado de inicio de sesión y cuota. Los informes nombran al proveedor que ejecutó la tarea.
+- 199 pruebas Python correctas, 4 omitidas y 37 comprobaciones de interfaz. Las pruebas del cuaderno no operan hardware.
+
 ## 1.0.0-rc.1 · actualización de proyectos · 25 octubre 2026
 
 - Apertura del código generado en el editor al terminar, con respaldo previo y protección de las ediciones hechas durante la ejecución.

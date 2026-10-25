@@ -21,3 +21,7 @@ Comandos de reproducción en el README principal. Usar siempre un nuevo director
 [Mejora de proyectos generados](agent-projects/README.md): apertura con respaldo, descarga ZIP, continuidad e importación, verificadas en pruebas aisladas.
 
 [Radar IdeaSpark](radar-ideaspark/README.md): grabación autorizada en COM4 y verificada por el grabador; el usuario confirmó que ve el radar. Esta evidencia posterior es independiente de las capturas 134/135.
+
+[Cuaderno de placas y cuentas propias](board-trials/README.md): 199 pruebas Python correctas, 4 omitidas y 37 comprobaciones de interfaz. Los casos de hardware son controlados.
+
+[ESP32-CAM](esp32cam/README.md): identificación real del chip y memoria, y compilación del diagnóstico. Grabación y prueba del sensor pendientes de autorización en esta ficha inicial.
