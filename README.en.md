@@ -1,5 +1,9 @@
 # AB MakerIDE SUPER · MS Robotika
 
+[![Checks](https://github.com/msrobotika/AB-MakerIDE-SUPER/actions/workflows/checks.yml/badge.svg)](https://github.com/msrobotika/AB-MakerIDE-SUPER/actions/workflows/checks.yml) [![MIT license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
+**[Download RC1](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/tag/v1.0.0-rc.1)** · [Report an issue](https://github.com/msrobotika/AB-MakerIDE-SUPER/issues/new/choose) · [Share your projects and board tests](https://github.com/msrobotika/AB-MakerIDE-SUPER/discussions)
+
 **From an idea to verifiable firmware, with a local, open IDE.**
 
 AB MakerIDE brings Arduino C++, MicroPython, board tools and optional coding agents into a Spanish-language interface. The application source is available under the [MIT license](LICENSE). External tools and AI providers retain their own licenses, accounts and costs.

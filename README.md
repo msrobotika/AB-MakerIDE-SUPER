@@ -1,5 +1,9 @@
 # AB MakerIDE SUPER 1.0.0-rc.1 · MS Robotika
 
+[![Comprobaciones](https://github.com/msrobotika/AB-MakerIDE-SUPER/actions/workflows/checks.yml/badge.svg)](https://github.com/msrobotika/AB-MakerIDE-SUPER/actions/workflows/checks.yml) [![Licencia MIT](https://img.shields.io/badge/licencia-MIT-blue.svg)](LICENSE)
+
+**[Descargar RC1](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/tag/v1.0.0-rc.1)** · [Comunicar un fallo](https://github.com/msrobotika/AB-MakerIDE-SUPER/issues/new/choose) · [Compartir tus proyectos y pruebas](https://github.com/msrobotika/AB-MakerIDE-SUPER/discussions)
+
 **De una idea a firmware verificable, en un IDE local y abierto.**
 
 AB MakerIDE reúne Arduino C++, MicroPython, herramientas de placa y agentes opcionales en una interfaz en español. Puedes ver el código que crea el agente, conservarlo, compilarlo y comprobar cada etapa de la tarea. Proyecto de **MS Robotika**, con [licencia MIT](LICENSE).
