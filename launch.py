@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parent
 
 def diagnose(root=ROOT, port=8770):
     root = Path(root)
-    data = Path(os.environ.get('AB_MAKERIDE_DATA_DIR') or root / '.makeride-data').resolve()
+    data = Path(os.path.abspath(os.environ.get('AB_MAKERIDE_DATA_DIR') or root / '.makeride-data'))
     checks = []
     def check(name, ok, message, required=True):
         checks.append(dict(name=name, ok=bool(ok), message=message, required=required))
@@ -24,6 +24,9 @@ def diagnose(root=ROOT, port=8770):
     missing = [name for name in required if not (root / name).is_file()]
     check('files', not missing, 'Carpeta de programa completa.' if not missing else 'Faltan archivos: ' + ', '.join(missing))
     try:
+        for parent in (data, *data.parents):
+            if parent.is_symlink() or (parent.exists() and getattr(parent.lstat(), 'st_file_attributes', 0) & 1024):
+                raise OSError('La ruta de datos contiene un enlace o unión de carpetas.')
         data.mkdir(parents=True, exist_ok=True)
         with tempfile.TemporaryFile(dir=str(data)) as probe:
             probe.write(b'MakerIDE startup check')

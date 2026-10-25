@@ -12,6 +12,8 @@ AB MakerIDE reúne Arduino C++, MicroPython, herramientas de placa y agentes opc
 
 [English overview](README.en.md) · [Guardar proyectos del agente](docs/PROYECTOS_DEL_AGENTE.md) · [Comparativa](docs/POSICIONAMIENTO_2026-10-25.md) · [Contribuir](CONTRIBUTING.md)
 
+**Detección prudente:** MakerIDE sugiere modelos según la información disponible; confirma la placa, el perfil y el puerto antes de grabar. CH340/CP210x identifican un conversor USB. [Seguridad del servidor local](SECURITY.md).
+
 ![Editor de AB MakerIDE SUPER](docs/evidence/13-final-desktop.png)
 
 Captura real del servidor local RC1. [Galería y alcance de las evidencias](docs/evidence/README.md).
@@ -46,7 +48,7 @@ El **Arduino Mega 2560** pasó una carga autorizada con copia previa de 256 KB d
 
 
 
-La revisión de instalación y recuperación pasa **215 pruebas unitarias**, con otras cuatro omitidas (tres por g++ y una por privilegios de enlaces simbólicos en Windows). Las comprobaciones de interfaz del agente y de fallos de transporte son controladas; no se presentan como ejecuciones de IA o grabaciones reales. [Validación actual](docs/evidence/install-recovery/README.md) y [resultados anteriores del cuaderno](docs/evidence/board-trials/README.md).
+La revisión de seguridad pasa **236 pruebas unitarias**, con otras cuatro omitidas (tres por g++ y una por privilegios de enlaces simbólicos en Windows). Incluye Host/Origin/token y rutas/uniones de Windows. Las comprobaciones de interfaz del agente y de fallos de transporte son controladas; no se presentan como ejecuciones de IA o grabaciones reales. [Validación de seguridad](docs/evidence/local-security/README.md), [instalación y recuperación](docs/evidence/install-recovery/README.md) y [resultados anteriores del cuaderno](docs/evidence/board-trials/README.md).
 
 ## Arranque en Windows
 

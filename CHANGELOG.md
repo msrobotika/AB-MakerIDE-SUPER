@@ -1,5 +1,13 @@
 # Cambios
 
+## 1.0.0-rc.1 · publicación y límites locales · 25 octubre 2026
+
+- Repositorio público autorizado por el autor, documentación bilingüe, descarga RC y comunidad.
+- Host comprueba el puerto real; Origin exige el mismo esquema, nombre y puerto. Rechazo de cabeceras duplicadas, peticiones de otros orígenes y cuerpos JSON ambiguos. Todos los POST conservan el token aleatorio de proceso.
+- Rechazo de uniones NTFS/puntos de reanálisis en almacenes y sesiones, archivos con enlaces duros, nombres reservados de Windows, rutas ambiguas y colisiones en auxiliares. Sin cambios en proyectos originales ni nuevas operaciones físicas.
+- 21 regresiones de seguridad añadidas; suite local de 240 casos, con 236 correctos y cuatro omitidos. Nueva unión NTFS real comprobada sin privilegios de enlaces simbólicos.
+- Prueba de agente independiente de una CLI instalada y sincronizada con la respuesta de inicio. Política de seguridad y límites publicados.
+
 ## 1.0.0-rc.1 · instalación y recuperación · 25 octubre 2026
 
 - Diagnóstico de arranque con errores obligatorios y avisos opcionales; conserva el proceso que ocupa el puerto y los datos que no puede escribir.

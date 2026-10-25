@@ -125,7 +125,9 @@ def main():
                     page.locator('#execMode').select_option('consultar')
                     page.locator('#execRun').click()
                     check('read-only hides full-access input', not page.locator('#agentConsentInput').is_visible() and page.locator('#agentConsentApprove').is_enabled())
-                    page.locator('#agentConsentApprove').click()
+                    with page.expect_response(lambda response: response.request.method == 'POST' and response.url.endswith('/api/agents/start')) as started:
+                        page.locator('#agentConsentApprove').click()
+                    check('read-only start accepted before checking completion', started.value.status == 200)
                     page.wait_for_function('()=>document.querySelector("#robotStatus").dataset.state==="success"')
                     check('read-only request keeps permission scope', len(report['starts']) == 2 and report['starts'][1]['mode'] == 'consultar' and report['starts'][1]['full_consent'] == '')
                     page.set_viewport_size({'width': 390, 'height': 844})

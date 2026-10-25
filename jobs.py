@@ -13,7 +13,7 @@ import uuid
 import json
 import hashlib
 from toolchain import arduino_cli
-from agent_projects import validate_project_files
+from agent_projects import validate_project_files, is_link_or_reparse, plain_directory
 
 ANSI_RE = re.compile(r'\x1b\[[0-?]*[ -/]*[@-~]')
 PERCENT_RE = re.compile(r'(?<!\d)(\d{1,3})\s*%')
@@ -68,10 +68,13 @@ class Job:
             data['schema'] = 1
             tmp = self.journal.with_suffix('.tmp')
             try:
+                plain_directory(self.journal.parent)
+                if is_link_or_reparse(tmp) or is_link_or_reparse(self.journal):
+                    raise ValueError('El registro de sesión es un enlace.')
                 tmp.write_text(json.dumps(data, ensure_ascii=False), encoding='utf-8')
                 os.replace(tmp, self.journal)
                 self._saved_at = time.monotonic()
-            except OSError as exc:
+            except (OSError, ValueError) as exc:
                 self.error = 'No se pudo guardar la sesión: ' + str(exc)[:200]
 
     def emit(self, message: str, *, from_tool: bool = False):
@@ -108,6 +111,8 @@ class JobManager:
     def start(self, code: str, fqbn: str, port: str | None = None, *, upload_speed: int = 115200, retry_slow: bool = False, request_id: str | None = None, project_files: dict | None = None, agent_project_id: str = '') -> dict:
         project_files = {} if project_files is None else project_files
         validate_project_files(project_files)
+        if self.root is not None:
+            plain_directory(self.root, create=True)
         if not isinstance(agent_project_id,str) or (agent_project_id and not re.fullmatch(r'[a-f0-9]{32}', agent_project_id)):
             raise ValueError('Referencia de proyecto inválida.')
         if request_id is not None and (not isinstance(request_id,str) or not re.fullmatch(r'[a-f0-9]{32}',request_id)):
@@ -117,8 +122,15 @@ class JobManager:
             with self._guard:
                 if self._current and self._current.id == request_id:
                     return {'ok': True, 'job_id': request_id}
-                if self.root and (self.root / request_id / 'job.json').is_file():
-                    return {'ok': True, 'job_id': request_id}
+                if self.root:
+                    saved = self.root / request_id
+                    if saved.exists() or is_link_or_reparse(saved):
+                        plain_directory(saved)
+                        journal = saved / 'job.json'
+                        if is_link_or_reparse(journal):
+                            raise ValueError('El registro de sesión es un enlace.')
+                        if journal.is_file():
+                            return {'ok': True, 'job_id': request_id}
         if isinstance(upload_speed, bool) or upload_speed not in ESP_SPEEDS:
             raise ValueError('Velocidad de grabación no permitida.')
         if not isinstance(retry_slow, bool):
@@ -160,7 +172,8 @@ class JobManager:
             if self._current is None or job_id != self._current.id:
                 if self.root and re.fullmatch(r'[a-f0-9]{32}', job_id):
                     path = self.root / job_id / 'job.json'
-                    if path.is_file() and not path.is_symlink() and not path.parent.is_symlink():
+                    plain_directory(path.parent)
+                    if path.is_file() and not is_link_or_reparse(path):
                         data = json.loads(path.read_text('utf-8'))
                         if data.get('active'):
                             data.update(active=False, success=False, stage='interrumpido', exit_code=None,

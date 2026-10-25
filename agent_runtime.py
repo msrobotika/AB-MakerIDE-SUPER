@@ -25,7 +25,7 @@ import time
 import uuid
 
 from dependency_advisor import redact_secrets
-from agent_projects import collect_project, project_archive
+from agent_projects import collect_project, project_archive, is_link_or_reparse, plain_directory
 
 PROVIDERS = {'codex': 'codex', 'claude_code': 'claude'}
 MODES = ('consultar', 'supervisado', 'autonomo', 'total')
@@ -105,9 +105,13 @@ def command_available(provider: str) -> bool:
 
 
 def _safe_workspace_file(workspace: Path, name: str) -> Path | None:
+    try:
+        plain_directory(workspace)
+    except (OSError, ValueError):
+        return None
     candidate = workspace / name
     # Never return symlinks, including for a malicious agent attempting a redirect.
-    if candidate.is_symlink() or not candidate.is_file():
+    if is_link_or_reparse(candidate) or not candidate.is_file():
         return None
     if candidate.resolve().parent != workspace.resolve():
         return None
@@ -221,7 +225,9 @@ class AgentJob:
     def persist(self) -> None:
         """Atomic local checkpoint; never stores CLI credential files or API tokens."""
         with self.lock:
-            if not self.workspace.is_dir() or self.workspace.is_symlink():
+            try:
+                plain_directory(self.workspace)
+            except (OSError, ValueError):
                 return
             data = {
                 'schema': JOURNAL_SCHEMA,
@@ -243,6 +249,8 @@ class AgentJob:
             path = self.workspace / JOURNAL_FILENAME
             tmp = self.workspace / (JOURNAL_FILENAME + '.tmp')
             try:
+                if is_link_or_reparse(tmp) or is_link_or_reparse(path):
+                    return
                 with tmp.open('w', encoding='utf-8') as f:
                     json.dump(data, f, ensure_ascii=False)
                     f.flush()
@@ -259,10 +267,9 @@ class AgentJob:
 def restore_journal(workspace: Path) -> AgentJob | None:
     """Recover safe local records, never resume execution or infer flashing success."""
     try:
-        if workspace.is_symlink() or not workspace.is_dir():
-            return None
+        plain_directory(workspace)
         file = workspace / JOURNAL_FILENAME
-        if file.is_symlink() or not file.is_file() or file.stat().st_size > 500_000:
+        if is_link_or_reparse(file) or not file.is_file() or file.stat().st_size > 500_000:
             return None
         data = json.loads(file.read_text(encoding='utf-8'))
         if data.get('schema') != JOURNAL_SCHEMA or not re.fullmatch(r'[a-f0-9]{32}', data.get('id', '')):
@@ -359,11 +366,11 @@ class AgentJobManager:
 
     def _workspace_dirs(self) -> list[Path]:
         try:
-            if not self.root.exists() or self.root.is_symlink(): return []
-            paths = (p for p in self.root.iterdir() if p.is_dir() and not p.is_symlink()
+            plain_directory(self.root)
+            paths = (p for p in self.root.iterdir() if p.is_dir() and not is_link_or_reparse(p)
                      and p.name.startswith('sesion-'))
             return sorted(paths, key=lambda p: p.stat().st_mtime, reverse=True)[:80]
-        except OSError:
+        except (OSError, ValueError):
             return []
 
     def history(self, limit: int = 12) -> list[dict]:
@@ -429,7 +436,7 @@ class AgentJobManager:
         with self._lock:
             if self._current is not None and self._current.active:
                 raise ValueError('Ya hay un agente activo. Cancélalo o finalízalo primero.')
-            self.root.mkdir(parents=True, exist_ok=True)
+            plain_directory(self.root, create=True)
             workspace = Path(tempfile.mkdtemp(prefix='sesion-', dir=str(self.root)))
             filename = 'sketch.ino' if lang == 'cpp' else 'main.py'
             for name, data in inherited.items():

@@ -543,22 +543,33 @@ class IDEHandler(BaseHTTPRequestHandler):
         print("[MakerIDE] " + fmt % args)
 
     def _trusted_request(self) -> bool:
-        host = self.headers.get("Host", "")
-        try:
-            addr = host.split(":", 1)[0].lower()
-        except Exception:
+        hosts = self.headers.get_all('Host', [])
+        if len(hosts) != 1:
             return False
-        if addr not in ("127.0.0.1", "localhost"):
+        host = hosts[0].lower()
+        port = self.server.server_port
+        allowed = {f'127.0.0.1:{port}', f'localhost:{port}'}
+        if port == 80:
+            allowed.update(('127.0.0.1', 'localhost'))
+        if host not in allowed:
             return False
-        origin = self.headers.get("Origin")
-        if origin:
-            try:
-                parsed = urlsplit(origin)
-                if parsed.hostname not in ("127.0.0.1", "localhost") or parsed.port != self.server.server_port:
-                    return False
-            except ValueError:
+        # Reject alternate authorities, schemes, credentials, paths and duplicate
+        # headers. Other local web applications are different origins too.
+        target = self.requestline.split()[1]
+        if not target.startswith('/') or target.startswith('//'):
+            return False
+        origins = self.headers.get_all('Origin', [])
+        if len(origins) > 1:
+            return False
+        if origins:
+            allowed_origins = {f'http://{host}'}
+            if port == 80:
+                address = host.split(':', 1)[0]
+                allowed_origins.update((f'http://{address}', f'http://{address}:80'))
+            if origins[0].lower() not in allowed_origins:
                 return False
-        if self.command == "POST" and self.headers.get("Sec-Fetch-Site") == "cross-site":
+        sites = self.headers.get_all('Sec-Fetch-Site', [])
+        if len(sites) > 1 or (sites and sites[0] not in ('same-origin', 'none')):
             return False
         return True
 
@@ -579,8 +590,11 @@ class IDEHandler(BaseHTTPRequestHandler):
             pass  # Browser reload/disconnect: never alter the underlying task.
 
     def _post_data(self):
-        if "application/json" not in self.headers.get("Content-Type", ""):
+        types = self.headers.get_all('Content-Type', [])
+        if len(types) != 1 or types[0].split(';', 1)[0].strip().lower() != 'application/json':
             raise ValueError("Content-Type debe ser application/json")
+        if len(self.headers.get_all('Content-Length', [])) != 1 or self.headers.get_all('Transfer-Encoding'):
+            raise ValueError('Encuadre de petición no permitido')
         try:
             n = int(self.headers.get("Content-Length", "0"))
         except ValueError as e:
@@ -717,7 +731,8 @@ class IDEHandler(BaseHTTPRequestHandler):
         # A malicious tab on a foreign origin cannot read the per-run token.
         # This prevents blind HTML form/JS requests from writing firmware, changing
         # providers, or installing libraries even when Origin headers are absent.
-        if not hmac.compare_digest(self.headers.get('X-AB-Session', ''), SESSION_KEY):
+        tokens = self.headers.get_all('X-AB-Session', [])
+        if len(tokens) != 1 or not hmac.compare_digest(tokens[0].encode('utf-8'), SESSION_KEY.encode('ascii')):
             return self._json(403, {'ok': False, 'error': 'Sesión local no autorizada. Recarga MakerIDE.'})
         try:
             d = self._post_data()

@@ -11,6 +11,7 @@ Candidato de lanzamiento de MS Robotika, con código bajo licencia MIT. Entrega 
 - Simulador lógico de hasta ocho salidas con trazas, pausa, pasos, reinicio y velocidad virtual. No ejecuta firmware ni simula circuitos eléctricos.
 - Arranque Windows con diagnóstico y preparación opcional de dependencias en una `.venv` privada.
 - Corrección de desconexión del monitor serie: no queda conectado tras un error ni reenvía datos automáticamente.
+- Revisión de seguridad local: token obligatorio en todos los POST, Host/Origin exactos y bloqueo de rutas de escape, enlaces y uniones de carpetas. [Alcance y límites](../SECURITY.md).
 
 ## Para empezar
 

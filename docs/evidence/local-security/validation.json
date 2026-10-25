@@ -1,0 +1,278 @@
+{
+  "date": "2026-10-25",
+  "platform": "Windows, same development computer",
+  "unit_suite": {
+    "total": 240,
+    "passed": 236,
+    "skipped": 4,
+    "new_security_cases": 21
+  },
+  "browser": {
+    "agent_projects": {
+      "checks": [
+        {
+          "name": "total opens in-page dialog with focus",
+          "passed": true
+        },
+        {
+          "name": "blank consent cannot start",
+          "passed": true
+        },
+        {
+          "name": "incorrect consent cannot start",
+          "passed": true
+        },
+        {
+          "name": "cancel starts nothing and explains outcome",
+          "passed": true
+        },
+        {
+          "name": "Escape starts nothing",
+          "passed": true
+        },
+        {
+          "name": "consent resets each task",
+          "passed": true
+        },
+        {
+          "name": "exact consent enables start",
+          "passed": true
+        },
+        {
+          "name": "one total request reaches real validation",
+          "passed": true
+        },
+        {
+          "name": "backend creates completed total job",
+          "passed": true
+        },
+        {
+          "name": "read-only hides full-access input",
+          "passed": true
+        },
+        {
+          "name": "read-only start accepted before checking completion",
+          "passed": true
+        },
+        {
+          "name": "read-only request keeps permission scope",
+          "passed": true
+        },
+        {
+          "name": "dialog usable on mobile",
+          "passed": true
+        },
+        {
+          "name": "generated code automatically opens in editor",
+          "passed": true
+        },
+        {
+          "name": "original editor code backed up before replacement",
+          "passed": true
+        },
+        {
+          "name": "save and open controls visible beside agent actions",
+          "passed": true
+        },
+        {
+          "name": "project download includes header and sketch",
+          "passed": true
+        },
+        {
+          "name": "continued task carries parent project reference",
+          "passed": true
+        },
+        {
+          "name": "continued backend receives auxiliary header",
+          "passed": true
+        },
+        {
+          "name": "editing during task prevents automatic overwrite",
+          "passed": true
+        },
+        {
+          "name": "manual open preserves competing edit in backup",
+          "passed": true
+        },
+        {
+          "name": "automatic open can be disabled without losing generated project",
+          "passed": true
+        },
+        {
+          "name": "saved ino can be reopened with Importar",
+          "passed": true
+        },
+        {
+          "name": "importing another sketch clears old agent project reference",
+          "passed": true
+        },
+        {
+          "name": "radar opens in code editor without hardware action",
+          "passed": true
+        },
+        {
+          "name": "radar selects ESP32 instead of Uno",
+          "passed": true
+        },
+        {
+          "name": "Codex requires own account without included AI balance",
+          "passed": true
+        },
+        {
+          "name": "Claude is explicitly unvalidated experimental integration",
+          "passed": true
+        },
+        {
+          "name": "trial without a build records no tool evidence",
+          "passed": true
+        },
+        {
+          "name": "trial notebook survives reload",
+          "passed": true
+        },
+        {
+          "name": "compile does not automatically confirm physical result",
+          "passed": true
+        },
+        {
+          "name": "upload on different port is not attributed to selected target",
+          "passed": true
+        },
+        {
+          "name": "notebook export preserves separate tool and user observations",
+          "passed": true
+        },
+        {
+          "name": "lost server job preserves manual observation without inventing tool evidence",
+          "passed": true
+        },
+        {
+          "name": "another tab cannot be overwritten by stale notebook",
+          "passed": true
+        },
+        {
+          "name": "damaged notebook prevents overwriting original",
+          "passed": true
+        },
+        {
+          "name": "trial dialog fits mobile without horizontal scrolling",
+          "passed": true
+        },
+        {
+          "name": "no native-popup exceptions",
+          "passed": true
+        }
+      ],
+      "page_errors": [],
+      "scope": "Real HTTP handler/consent validation/workspace; stub CLI worker. No hardware."
+    },
+    "connection_recovery": {
+      "checks": [
+        {
+          "name": "busy port visible and reconnect remains available",
+          "passed": true
+        },
+        {
+          "name": "busy open never retries automatically",
+          "passed": true
+        },
+        {
+          "name": "explicit connect reaches connected state",
+          "passed": true
+        },
+        {
+          "name": "USB read failure clears connected state",
+          "passed": true
+        },
+        {
+          "name": "disconnected send button is disabled",
+          "passed": true
+        },
+        {
+          "name": "read failure is shown as error",
+          "passed": true
+        },
+        {
+          "name": "selection and editor survive disconnect",
+          "passed": true
+        },
+        {
+          "name": "disconnect does not automatically open another transport",
+          "passed": true
+        },
+        {
+          "name": "failed write disconnects and transmits once",
+          "passed": true
+        },
+        {
+          "name": "failed send remains available for review",
+          "passed": true
+        },
+        {
+          "name": "new connection does not replay prior send",
+          "passed": true
+        },
+        {
+          "name": "explicit reconnection enables send",
+          "passed": true
+        },
+        {
+          "name": "new explicit send succeeds",
+          "passed": true
+        },
+        {
+          "name": "manual disconnect remains neutral",
+          "passed": true
+        },
+        {
+          "name": "restart journal never turns successful",
+          "passed": true
+        },
+        {
+          "name": "interrupted operation is not labelled preparing",
+          "passed": true
+        },
+        {
+          "name": "restart preserves pending journal bytes",
+          "passed": true
+        },
+        {
+          "name": "reload preserves project and selected port",
+          "passed": true
+        },
+        {
+          "name": "reload does not reconnect",
+          "passed": true
+        },
+        {
+          "name": "no JavaScript errors",
+          "passed": true
+        },
+        {
+          "name": "no upload or agent request",
+          "passed": true
+        }
+      ],
+      "page_errors": [],
+      "scope": "Real HTTP and Chromium; controlled COM999 transport and interrupted journal. No physical port, firmware upload or AI execution."
+    }
+  },
+  "windows_junction": "Real NTFS junction fixtures created and removed inside temporary directories; passed.",
+  "hardware_operations": 0,
+  "real_ai_cli_runs": 0,
+  "limitations": [
+    "Not an independent audit.",
+    "No guarantee against a same-user malicious process changing paths concurrently.",
+    "No clean-PC, macOS launcher or physical hardware validation added."
+  ],
+  "source_sha256": {
+    "server.py": "077423564f1386e7c95bac2d32c897a894a60fb518f501d6cea29de4a787ff34",
+    "agent_projects.py": "af971c4d9996c8205c467d5314f19120f1b8e22a0edc4c82118e89ac87d31f30",
+    "agent_runtime.py": "b71a273f6ab20545749555f3f0de6f0c220bc971de4b4ea69ec02c0a2cc4e981",
+    "jobs.py": "bdbbc1673a7f7b850741f38dab9eb2864eef0aa4e48330889b4af904c84035b3",
+    "launch.py": "f86625af566bec0b4d84b69d5b9f7b4874150cca0cfaefe7fed96a9dc017f2b5",
+    "app.js": "62cafa444df049621d0b16d9f80d9765bd33c7b2d01d05035747cca58f5bf3f9",
+    "tests/test_local_security.py": "79745a3d57013581fdf0df3ebb6ad89d6b84a61ab19555ae6824d5d968efdd26",
+    "tests/browser_agent_consent.py": "10116426f065abbad346bd7c8d97b11c168873619250fbcf492d66a9f7a2f68f"
+  }
+}

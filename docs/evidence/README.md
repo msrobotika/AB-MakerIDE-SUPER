@@ -1,5 +1,7 @@
 # Evidencias RC1
 
+[Revisión de seguridad y publicación](local-security/README.md): Host/Origin/token, comandos como argumentos y protección de rutas, con 21 nuevos casos. Los informes anteriores conservan los resultados y el alcance de su revisión concreta.
+
 Los archivos de esta carpeta se copian de ejecuciones locales reales. Las capturas 07–11 muestran escenarios controlados indicados en su nombre. El resto muestra interfaz y compilación contra el servidor real, con Chromium aislado.
 
 - `arduino-real.json`: versión, núcleos, igualdad exacta de FQBN, puertos y páginas reales.
