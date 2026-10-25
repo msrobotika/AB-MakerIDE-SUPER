@@ -1,5 +1,12 @@
 # Cambios
 
+## 1.0.0-rc.1 · ESP32-WROOM y MicroPython · 25 octubre 2026
+
+- Identificada una WROOM con ESP32-D0WDQ6 revisión 1.0 y flash de 4 MB; controlador CP2102 ausente reparado en Windows, pasando de código 28 sin puerto a COM7 con estado correcto.
+- Respaldo completo previo, borrado e instalación de MicroPython 1.29.0 autorizados por el usuario, con verificación independiente del firmware.
+- Ejemplo reutilizable probado en RAM: cinco muestras de intérprete, memoria, JSON y temporización y lectura del sistema de archivos. Sin GPIO ni red y sin guardado de main.py.
+- Registros, código y matriz de hardware actualizados; binarios del respaldo, firmware y controlador fuera del repositorio.
+
 ## 1.0.0-rc.1 · prueba física ESP32-CAM · 25 octubre 2026
 
 - Copia completa de 4 MB del firmware previo y carga autorizada con verificación de cuatro segmentos en COM4.

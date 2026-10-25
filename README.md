@@ -31,6 +31,8 @@ El [radar IdeaSpark](examples/ideaspark_114_radar.ino) es un ejemplo de un solo 
 
 La **ESP32-CAM con sensor OV3660** pasó una prueba autorizada con respaldo previo de 4 MB y grabación verificada. El diagnóstico detectó PSRAM y reportó cinco fotogramas JPEG de 320x240 sin errores durante 16 segundos. No se transmitieron imágenes ni se evaluó su aspecto visual. [Código exacto y registros](docs/evidence/esp32cam/README.md).
 
+La **ESP32-WROOM con MicroPython 1.29.0** pasó una prueba finita en RAM: cinco muestras de memoria, aritmética, JSON y temporización, además de lectura del sistema de archivos. Se resolvió antes un controlador CP2102 ausente y se instaló el firmware con autorización, respaldo completo y verificación. No se probaron GPIO ni red y no se guardó main.py. [Código y evidencias](docs/evidence/wroom-micropython/README.md).
+
 La mejora de proyectos y cuaderno pasa **199 pruebas unitarias**, con otras 4 omitidas por falta de g++, y **37 comprobaciones de interfaz**. Las pruebas de interfaz del agente son controladas; no se presentan como ejecuciones de IA o grabaciones reales. [Resultados del cuaderno](docs/evidence/board-trials/README.md) y [pruebas previas de proyectos](docs/evidence/agent-projects/README.md).
 
 ## Arranque en Windows

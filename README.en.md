@@ -30,6 +30,8 @@ The single-file [IdeaSpark radar](examples/ideaspark_114_radar.ino), using ESP32
 
 An AI-Thinker pinout ESP32-CAM was also backed up and programmed with user authorization. Serial diagnostics detected PSRAM and an OV3660 sensor, reporting five 320x240 JPEG buffers without errors over 16 seconds. Images were not transmitted or visually evaluated. [Exact tested code and logs](docs/evidence/esp32cam/README.md). These board-specific tests do not establish universal compatibility.
 
+An ESP32-WROOM with a CP2102 bridge was backed up and flashed with official MicroPython 1.29.0 after user authorization. A finite RAM test passed five memory/arithmetic/JSON/timing samples and read filesystem capacity. The missing Windows driver was installed from a signed Microsoft Catalog package. No GPIO or networking was tested, and no main.py was saved. [Code and logs](docs/evidence/wroom-micropython/README.md).
+
 The latest local suite has 199 passing Python tests and 4 skipped due to missing g++; 37 targeted browser checks pass. Browser agent execution is stubbed and does not flash hardware. Cross-platform CI is prepared but has not run on GitHub. [Evidence](docs/evidence/board-trials/README.md).
 
 [Spanish documentation](README.md) · [Contributing](CONTRIBUTING.md) · [Project saving](docs/PROYECTOS_DEL_AGENTE.md) · [Release notes](CHANGELOG.md)

@@ -1,0 +1,9 @@
+{
+  "port": "COM7",
+  "chip": "ESP32-D0WDQ6 revision v1.0",
+  "flash_bytes": 4194304,
+  "backup_sha256": "96311cd59ccbd0928049e6b0bf9fbd480e48f316f604475e76c0f24bc0fc52b7",
+  "exit_code": 0,
+  "same_device_as_identification": true,
+  "scope": "Respaldo privado completo anterior al borrado autorizado para MicroPython."
+}

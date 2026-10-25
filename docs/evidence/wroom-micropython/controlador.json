@@ -1,0 +1,15 @@
+{
+  "Device": "Silicon Labs CP210x USB to UART Bridge (COM7)",
+  "Status": "OK",
+  "ProblemCode": 0,
+  "DriverVersion": "11.0.0.509",
+  "InfName": "oem121.inf",
+  "Provider": "Silicon Laboratories Inc.",
+  "IsSigned": true,
+  "Signer": "Microsoft Windows Hardware Compatibility Publisher",
+  "CatalogSource": "https://www.catalog.update.microsoft.com/ScopedViewInline.aspx?updateid=2e593f35-1f5b-4806-a77f-bd3841a6c9fb",
+  "CabSHA256": "c295137c774e097911c69ba1163bc65701cddf7af016bcf1ad63ca0736c262e5",
+  "BeforeProblemCode": 28,
+  "BeforePortAssigned": false,
+  "InstallerExitCode": 0
+}

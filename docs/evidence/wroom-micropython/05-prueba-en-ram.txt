@@ -1,0 +1,13 @@
+MSR_MICROPYTHON_BEGIN
+VERSION 3.4.0; MicroPython v1.29.0 on 2026-08-24
+PLATAFORMA esp32
+PLACA Generic ESP32 module with ESP32
+CPU_HZ 160000000
+FILESYSTEM_BYTES 2097152
+FILESYSTEM_FREE_BYTES 2084864
+MSR_SAMPLE {"heap_free": 163200, "arithmetic_ok": true, "elapsed_ms": 1, "sample": 1}
+MSR_SAMPLE {"heap_free": 163072, "arithmetic_ok": true, "elapsed_ms": 507, "sample": 2}
+MSR_SAMPLE {"heap_free": 163072, "arithmetic_ok": true, "elapsed_ms": 1010, "sample": 3}
+MSR_SAMPLE {"heap_free": 163072, "arithmetic_ok": true, "elapsed_ms": 1513, "sample": 4}
+MSR_SAMPLE {"heap_free": 163072, "arithmetic_ok": true, "elapsed_ms": 2016, "sample": 5}
+MSR_MICROPYTHON_PASS

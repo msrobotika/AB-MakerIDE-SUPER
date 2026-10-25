@@ -1,0 +1,56 @@
+{
+  "port": "COM7",
+  "chip": "ESP32-D0WDQ6 revision v1.0",
+  "flash_bytes": 4194304,
+  "firmware": "MicroPython 1.29.0 ESP32_GENERIC",
+  "firmware_source": "https://micropython.org/resources/firmware/ESP32_GENERIC-20260824-v1.29.0.bin",
+  "firmware_sha256": "e67ad6015a0a504c1fec9aa9bbf589d0432ed28e62546f4f8dd8a147f8bd95f6",
+  "backup_sha256": "96311cd59ccbd0928049e6b0bf9fbd480e48f316f604475e76c0f24bc0fc52b7",
+  "authorization": "Sí, instalar MicroPython y probar en COM7; autorización directa del usuario.",
+  "erase_performed": true,
+  "flash_performed": true,
+  "verify_passed": true,
+  "ram_test_passed": true,
+  "test_persisted_to_device_filesystem": false,
+  "steps": {
+    "01-identidad-antes-borrado": 0,
+    "02-borrado": 0,
+    "03-grabacion": 0,
+    "04-verificacion": 0,
+    "05-prueba-en-ram": 0
+  },
+  "samples": [
+    {
+      "heap_free": 163200,
+      "arithmetic_ok": true,
+      "elapsed_ms": 1,
+      "sample": 1
+    },
+    {
+      "heap_free": 163072,
+      "arithmetic_ok": true,
+      "elapsed_ms": 507,
+      "sample": 2
+    },
+    {
+      "heap_free": 163072,
+      "arithmetic_ok": true,
+      "elapsed_ms": 1010,
+      "sample": 3
+    },
+    {
+      "heap_free": 163072,
+      "arithmetic_ok": true,
+      "elapsed_ms": 1513,
+      "sample": 4
+    },
+    {
+      "heap_free": 163072,
+      "arithmetic_ok": true,
+      "elapsed_ms": 2016,
+      "sample": 5
+    }
+  ],
+  "diagnostic_sha256": "8fd2105f032c504d9fc1ecb5988b25052bc53dbf3dcc16213b0ddd6b86203b40",
+  "scope": "Prueba finita en RAM mediante mpremote: intérprete, memoria, JSON, temporización y lectura del sistema de archivos. Sin GPIO ni red. No se guarda main.py."
+}
