@@ -1,0 +1,56 @@
+name: Reseal AI Activity manifest (one-time)
+on:
+  push:
+    branches: [feat/agent-activity-center]
+    paths: ['.github/workflows/agent-center-manifest-once.yml']
+permissions:
+  contents: write
+jobs:
+  integrity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: true
+      - name: Update SHA-256 of tracked current sources
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib, pathlib, subprocess
+          root = pathlib.Path('.')
+          target = pathlib.Path('MANIFEST_SHA256.txt')
+          old = target.read_text(encoding='utf-8').splitlines()
+          header = old[:3]
+          existing = {}
+          for line in old[3:]:
+              if '  ' in line:
+                  digest, path = line.split('  ', 1)
+                  existing[path] = digest
+          files = [path for path in subprocess.check_output(
+              ['git','ls-files','-z']).decode().split('\0') if path]
+          excluded = {'MANIFEST_SHA256.txt',
+              '.github/workflows/agent-center-manifest-once.yml',
+              '.github/workflows/agent-center-format-once.yml'}
+          for path in files:
+              if path in excluded:
+                  continue
+              existing[path] = hashlib.sha256(
+                  (root/path).read_bytes()).hexdigest()
+          for path in list(existing):
+              if path in excluded or not (root/path).is_file():
+                  del existing[path]
+          result = '\n'.join(header)+'\n'
+          result += '\n'.join(f'{existing[p]}  {p}' for p in sorted(existing))+'\n'
+          target.write_text(result,encoding='utf-8')
+          print('Resealed',len(existing),'tracked files')
+          PY
+      - name: Commit manifest only
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add MANIFEST_SHA256.txt
+          if ! git diff --cached --quiet; then
+            git commit -m "build(integrity): reseal activity center source manifest"
+            git push origin HEAD:feat/agent-activity-center
+          fi
