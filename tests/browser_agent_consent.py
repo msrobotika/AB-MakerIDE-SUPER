@@ -284,6 +284,9 @@ def main():
                     )
                     page.locator("#agentOpenCode").click()
                     page.locator("#actionConfirmApprove").click()
+                    page.wait_for_function(
+                        '()=>document.querySelector("#code").value.includes("PROJECT_GENERATED")'
+                    )
                     parent = created.json()["job_id"]
                     check(
                         "save and open controls visible beside agent actions",
@@ -359,6 +362,9 @@ def main():
                     page.wait_for_function(
                         '()=>document.querySelector("#code").value.includes("PROJECT_GENERATED")'
                     )
+                    page.wait_for_function(
+                        '()=>document.querySelector("#code").value.includes("PROJECT_GENERATED")'
+                    )
                     if not page.locator("[data-panel=project]").evaluate(
                         '(e)=>e.classList.contains("on")'
                     ) or page.locator("#sidebar").evaluate(
@@ -379,6 +385,9 @@ def main():
                     )
                     page.locator("#agentOpenCode").click()
                     page.locator("#actionConfirmApprove").click()
+                    page.wait_for_function(
+                        '()=>document.querySelector("#code").value.includes("PROJECT_GENERATED")'
+                    )
                     manual_code = page.locator("#code").input_value()
                     page.locator("#agentAutoOpen").uncheck()
                     page.locator("#execTask").fill("PROJECT: conservar revisión manual")

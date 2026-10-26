@@ -22,6 +22,8 @@ bash iniciar_linux_mac.sh --port 8771
 
 El diagnóstico no abre puertos serie ni escribe firmware. Un puerto TCP ocupado se informa sin cerrar el proceso existente. La escucha sigue siendo solo `127.0.0.1`.
 
+El almacén rechaza rutas con enlaces simbólicos. Si eliges una carpeta de datos temporal en macOS, usa su ruta física (por ejemplo `/private/var/...`), porque `/var` es un alias del sistema. Las fixtures de CI usan la ruta temporal canónica sin desactivar estas comprobaciones.
+
 ## Puertos serie
 
 **Linux:** revisa los permisos del dispositivo (`/dev/ttyUSB*` o `/dev/ttyACM*`). En distribuciones que usan el grupo `dialout`, añade tu usuario a ese grupo siguiendo la guía de Arduino y vuelve a iniciar sesión. Otras usan `uucp`; comprueba el grupo real. No ejecutes el IDE como root ni apliques permisos universales `666` para ocultar el problema.
