@@ -155,6 +155,11 @@ def main():
                     )
                     # Baseline: actual IDE in a clean session, not a marketing mockup.
                     page.locator('[data-panel="agent-activity"]').click()
+                    check(
+                        "AI activity view replaces old project controls",
+                        page.locator("#projectName").count() == 0
+                        and page.locator("#acConfigure").is_visible(),
+                    )
                     page.screenshot(
                         path=str(args.outputs / "agent-activity-empty-controlled.png"),
                         full_page=True,
