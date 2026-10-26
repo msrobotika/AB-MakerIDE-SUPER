@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "convergence": "converged",
+  "requirements": [
+    {
+      "id": "FR-001",
+      "result": "passed",
+      "notes": "Official stable upstream, CLI initialization and license reviewed.",
+      "evidence": [
+        ".specify/UPSTREAM.md",
+        ".specify/UPSTREAM_LICENSE",
+        ".specify/integration.json"
+      ]
+    },
+    {
+      "id": "FR-002",
+      "result": "passed",
+      "notes": "Persistent development process with explicit permission boundaries.",
+      "evidence": [
+        "AGENTS.md",
+        ".specify/memory/constitution.md",
+        "docs/SPEC_KIT.md"
+      ]
+    },
+    {
+      "id": "FR-003",
+      "result": "passed",
+      "notes": "Missing/empty/pending documents and open tasks rejected in fixtures.",
+      "evidence": [
+        "tests/test_specification_gate.py",
+        "tests/specification_gate.py"
+      ]
+    },
+    {
+      "id": "FR-004",
+      "result": "passed",
+      "notes": "Exact requirement/evidence matching tested, without executing evidence.",
+      "evidence": [
+        "tests/test_specification_gate.py",
+        "specs/001-spec-kit-gate/results.json"
+      ]
+    },
+    {
+      "id": "FR-005",
+      "result": "passed",
+      "notes": "Current hashes and modified/added/deleted Git paths checked.",
+      "evidence": [
+        "tests/test_specification_gate.py",
+        "tests/specification_gate.py"
+      ]
+    },
+    {
+      "id": "FR-006",
+      "result": "passed",
+      "notes": "Malformed JSON, unsafe paths, links and invalid Git bases rejected.",
+      "evidence": [
+        "tests/test_specification_gate.py",
+        "tests/specification_gate.py"
+      ]
+    },
+    {
+      "id": "FR-007",
+      "result": "passed",
+      "notes": "CI step configured, independent tests and limitations documented; remote execution is visible in commit checks.",
+      "evidence": [
+        ".github/workflows/checks.yml",
+        "docs/SPEC_KIT.md",
+        "specs/001-spec-kit-gate/results.json"
+      ]
+    }
+  ],
+  "changed_files": {
+    ".github/workflows/checks.yml": "3daad1896d2fd1968e557ea85057e215cbf26b7804d7f8db36dd0aedd5edc7a5",
+    "pyproject.toml": "cca8d856fd8009c0e6d2fc72d638f979a2d1ebf2c0e20129aea9684cf74570d8",
+    "tests/specification_gate.py": "80af4caa64b8f35da69fc0619e659ddc5b837e5aaa8c29e3171754de16915dff",
+    "tests/test_specification_gate.py": "d7c48d625b97852b267f83840a8bfc7ff4b2c2d5c113d55bd83f63ac3225f347"
+  }
+}

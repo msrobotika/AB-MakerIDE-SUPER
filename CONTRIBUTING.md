@@ -8,6 +8,11 @@ Indica la versión, sistema operativo, pasos, resultado esperado y observado. Si
 
 ## Proponer cambios
 
+**Spec Kit es obligatorio para las nuevas creaciones y mejoras.** Lee [AGENTS.md](AGENTS.md),
+la [guía del proceso](docs/SPEC_KIT.md) y la constitución antes de implementar. Cada
+cambio debe tener especificación, plan, checklist revisado, tareas, análisis y evidencia
+de convergencia. El control CI verifica cobertura y huellas del expediente activo.
+
 Explica el problema y el comportamiento final, con captura si cambia la interfaz. Mantén la interfaz en español y distingue los hechos observados de las sugerencias de la IA. Una CLI terminada no demuestra compilación ni funcionamiento del hardware.
 
 No incluyas proyectos personales, .makeride-data, credenciales o binarios de compilación. No ejecutes pruebas de grabación en una placa ajena sin autorización para ese firmware y dispositivo.

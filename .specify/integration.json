@@ -1,0 +1,20 @@
+{
+  "version": "1.2.3",
+  "integration_state_schema": 1,
+  "installed_integrations": [
+    "codex"
+  ],
+  "integration_settings": {
+    "codex": {
+      "script": "py",
+      "raw_options": "--skills --events false",
+      "parsed_options": {
+        "skills": true,
+        "events": "false"
+      },
+      "invoke_separator": "-"
+    }
+  },
+  "integration": "codex",
+  "default_integration": "codex"
+}

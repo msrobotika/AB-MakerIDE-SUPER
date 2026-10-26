@@ -50,6 +50,7 @@ jobs:
       - uses: actions/checkout@v7
         with:
           persist-credentials: false
+          fetch-depth: 0
       - uses: actions/setup-python@v7
         with:
           python-version: '3.13'
@@ -64,6 +65,11 @@ jobs:
       - run: npm run lint
       - run: npm run format:check
       - run: python tests/manifest.py
+
+      - name: Spec Kit delivery gate
+        env:
+          SPECIFICATION_BASE: ${{ github.event.pull_request.base.sha || github.event.before || '0000000000000000000000000000000000000000' }}
+        run: python tests/specification_gate.py --base "$SPECIFICATION_BASE" --json
 
   browser:
     name: Editor y proyectos / Chromium aislado

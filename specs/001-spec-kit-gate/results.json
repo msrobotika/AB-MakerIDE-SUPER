@@ -1,0 +1,20 @@
+{
+  "date": "2026-10-26",
+  "scope": "Spec Kit adoption and internal delivery gate; no application runtime changes, AI calls or hardware operations.",
+  "unit": {
+    "total": 314,
+    "passed": 309,
+    "skipped": 5,
+    "failures": 0
+  },
+  "gate_behavior_tests": 15,
+  "quality": {
+    "ruff_check": "passed",
+    "ruff_format": "passed",
+    "eslint": "passed",
+    "prettier": "passed"
+  },
+  "production_changed_files": [],
+  "ci": "Runs independently after the commit is pushed; consult the commit checks, not a self-declared result.",
+  "limits": "Artifact consistency and hashes are not proof of test execution, provider compatibility or physical behavior."
+}

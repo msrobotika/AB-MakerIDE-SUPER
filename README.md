@@ -52,4 +52,7 @@ La suite local RC4 pasa **294 de 299 pruebas unitarias**, con cinco omisiones po
 
 [IA, cuentas y opción online con cuota gratuita](docs/IA_Y_CUOTAS.md).
 
+El desarrollo de nuevas mejoras sigue [GitHub Spec Kit y un control de entrega en CI](docs/SPEC_KIT.md).
+La adopción del proceso no altera la RC4 publicada ni sus resultados de hardware.
+
 [Prueba real de carga manual CYD desde RC4](docs/evidence/cyd-rc4/README.md): respaldo comprobado, una carga desde la interfaz, cuatro hashes verificados, guardado con Ctrl+S y pantalla/táctil confirmados por el usuario.
