@@ -10,7 +10,8 @@ import * as feature7 from './assistant.js';
 import * as feature8 from './ai.js';
 import * as feature9 from './hardware.js';
 import * as feature10 from './agent.js';
-import * as feature11 from './startup.js';
+import * as feature11 from './agent_observer.js';
+import * as feature12 from './startup.js';
 export function start() {
   const context = Object.create(null);
   context.confirmAction = confirmAction;
@@ -26,6 +27,7 @@ export function start() {
   feature9.define(context);
   feature10.define(context);
   feature11.define(context);
+  feature12.define(context);
   feature0.initialize(context);
   feature1.initialize(context);
   feature2.initialize(context);
@@ -38,4 +40,5 @@ export function start() {
   feature9.initialize(context);
   feature10.initialize(context);
   feature11.initialize(context);
+  feature12.initialize(context);
 }
