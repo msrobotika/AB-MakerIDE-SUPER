@@ -222,6 +222,32 @@ def main():
                         and server.AGENT_JOBS._current.success is True,
                     )
                     page.screenshot(path=str(args.outputs / "agent-consent-started-controlled.png"))
+                    page.locator('[data-panel="agent-activity"]').click()
+                    page.wait_for_function(
+                        '()=>document.querySelector(".ac-state")?.textContent==="CLI FINALIZADA"'
+                    )
+                    check(
+                        "left activity center reflects real agent job, without falsely certifying firmware",
+                        page.locator("#acConfigure").is_visible()
+                        and page.locator(".ac-check.confirmed").count() == 0
+                        and "Codex" in page.locator(".ac-session").inner_text().replace("codex", "Codex"),
+                    )
+                    check(
+                        "activity timeline exposes received output rather than mock stages",
+                        "CONTROLADO" in page.locator(".ac-timeline").inner_text()
+                        and "La salida del grabador no prueba" in page.locator(".ac-evidence").inner_text(),
+                    )
+                    page.screenshot(
+                        path=str(args.outputs / "agent-activity-center-controlled.png"),
+                        full_page=True,
+                    )
+                    page.locator("#acFilter").select_option("evidence")
+                    check(
+                        "filter retains state and shows no imaginary milestones",
+                        page.locator(".ac-timeline").inner_text().count("No hay eventos") == 1,
+                    )
+                    page.locator('[data-panel="project"]').click()
+
                     page.locator("#execMode").select_option("consultar")
                     page.locator("#execRun").click()
                     check(
