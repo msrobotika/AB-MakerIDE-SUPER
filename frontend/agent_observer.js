@@ -38,7 +38,7 @@ export function summarizeEvents(events, limit = 9) {
 }
 
 export function define(context) {
-  const $ = id => context.$('#' + id);
+  const $ = id => context.$(id.startsWith('#') ? id : '#' + id);
   const el = (tag, className = '', value = '') => {
     const node = document.createElement(tag);
     node.className = className;
