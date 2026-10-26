@@ -1,5 +1,5 @@
 /*
-  Space Invaders / MS Robotika / CYD ESP32-2432S028R original.
+  Juego de defensa orbital (arcade retro) / MS Robotika / CYD ESP32-2432S028R.
   Hardware confirmado por el usuario con el ejemplo de bloques el 25-10-2026.
   ILI9341 240x320, horizontal 320x240 (rotation=1).
   LCD HSPI: CLK14 MISO12 MOSI13 CS15 DC2 RST=-1 BL21 HIGH.
@@ -54,7 +54,7 @@ void calibrate() {
     for(int point=0;point<3;point++) {
       calibrationPoint=point+1;
       lcd.fillScreen(0x0843);lcd.setTextWrap(false);
-      label(40,76,"SPACE INVADERS",ILI9341_GREEN,2);
+      label(40,76,"DEFENSA ORBITAL",ILI9341_GREEN,2);
       label(40,108,"CALIBRAR TACTIL",ILI9341_CYAN,2);
       label(40,139,"Toca el centro y suelta");
       char step[32];snprintf(step,sizeof(step),"Cruz %d de 3 / solo RAM",point+1);
