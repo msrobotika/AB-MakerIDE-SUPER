@@ -42,6 +42,7 @@ jobs:
       - run: node --check activity.js
       - run: node --check simulator.js
       - run: node --check board_trials.js
+      - run: node --test tests/test_agent_observer.mjs
       - name: Check POSIX launchers without hardware
         if: runner.os != 'Windows'
         shell: bash
