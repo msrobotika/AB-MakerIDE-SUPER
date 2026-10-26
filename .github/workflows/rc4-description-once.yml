@@ -1,0 +1,47 @@
+name: RC4 description update (one time)
+
+# A controlled, single-purpose maintenance operation authorised by the owner.
+# Does not create a release, mutate a tag, or upload/replace any assets.
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/rc4-description-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  edit-existing-release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out the release notes in main
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Update notes of existing RC4 only
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          tag="v1.0.0-rc.4"
+          notes="docs/RC4_PUBLICACION.md"
+          test -s "$notes"
+          grep -Fq "## Capturas reales de la aplicación RC4" "$notes"
+          grep -Fq "docs/evidence/cyd-rc4/carga-desde-ide-real.png" "$notes"
+          grep -Fq "docs/evidence/cyd-rc4/monitor-serie-real.png" "$notes"
+          release_info="$(gh release view "$tag" --json tagName,isPrerelease,isDraft,assets)"
+          actual_tag="$(jq -r .tagName <<<"$release_info")"
+          is_pre="$(jq -r .isPrerelease <<<"$release_info")"
+          is_draft="$(jq -r .isDraft <<<"$release_info")"
+          asset_count="$(jq '.assets | length' <<<"$release_info")"
+          [[ "$actual_tag" == "$tag" && "$is_pre" == true && "$is_draft" == false ]]
+          [[ "$asset_count" -ge 5 ]]
+          gh release edit "$tag" --notes-file "$notes"
+          body="$(gh release view "$tag" --json body --jq .body)"
+          grep -Fq "## Capturas reales de la aplicación RC4" <<<"$body"
+          grep -Fq "raw.githubusercontent.com/msrobotika/AB-MakerIDE-SUPER/v1.0.0-rc.4" <<<"$body"
+          echo "SUCCESS: existing RC4 description updated; tag and assets unchanged."
