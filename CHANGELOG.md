@@ -22,7 +22,7 @@
 - El chat Codex/Claude prepara una tarea real y su consentimiento de ejecución; el asistente guiado respeta las fases solicitadas en lugar de prohibir siempre el hardware. No se cambian silenciosamente los permisos elegidos.
 - Contexto físico, referencia LCD/táctil y herramientas locales acompañan al agente. Un modelo CYD declarado o un marcador conocido del firmware permite usar su perfil; CH340 sigue sin identificar la pantalla.
 - Codex usa eventos JSONL. Las evidencias se extraen de salidas de comandos completados con salida 0, no de mensajes de la IA, código citado o comandos fallidos. Pedir una carga sin verificación termina como pendiente, incluyendo registros antiguos recuperados, sin repetir escrituras.
-- Space Invaders compilado y cargado en la CYD con dos respaldos coincidentes, cuatro bloques verificados y marcador serie; el usuario confirmó el juego.
+- Demostración de juego de naves **similar a los arcades clásicos de invasores espaciales**, compilado y cargado en la CYD con dos respaldos coincidentes, cuatro bloques verificados y marcador serie; el usuario confirmó el juego.
 - Arranque UTF-8 corregido para Windows con salida redirigida/cp1252 y regresión con servidor real.
 - Panel MCP con configuración stdio/Streamable HTTP para Codex y Claude Code, autorización por tarea y credenciales fuera de los proyectos. Codex registra llamadas estructuradas y no declara éxito si queda un error MCP sin resolver. Ambos transportes comprobados con Codex real y servidores de prueba locales; Claude permanece experimental.
 - El análisis de dependencias no consulta sketches vacíos ni aplica una respuesta de una revisión anterior al código nuevo.
