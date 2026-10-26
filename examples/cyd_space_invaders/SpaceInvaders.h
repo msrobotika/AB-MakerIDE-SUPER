@@ -153,8 +153,8 @@ class SpaceInvaders {
     g.fillScreen(BLACK);
     g.setTextWrap(false);
     if (mode_ == TITLE) {
-      text(g, 40, 35, "SPACE", CYAN, 4);
-      text(g, 40, 75, "INVADERS", GREEN, 4);
+      text(g, 40, 35, "DEFENSA", CYAN, 4);
+      text(g, 40, 75, "ORBITAL", GREEN, 4);
       sprite(g, 142, 126, 0, GREEN, 2);
       text(g, 40, 166, "TOCA PARA COMENZAR", WHITE, 2);
       text(g, 22, 201, "Arrastra: mover y disparar", CYAN);
