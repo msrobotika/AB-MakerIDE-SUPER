@@ -1,4 +1,5 @@
 """Exercise the offline distribution checker with synthetic, untrusted archives."""
+
 import hashlib
 from pathlib import Path
 import tempfile
@@ -50,17 +51,13 @@ class DistributionArchiveTests(unittest.TestCase):
         self.assertTrue(self.audit_fixture()["passed"])
 
     def test_missing_notice_blocked(self):
-        self.assertFalse(
-            self.audit_fixture(remove=("THIRD_PARTY_NOTICES.md",))["passed"]
-        )
+        self.assertFalse(self.audit_fixture(remove=("THIRD_PARTY_NOTICES.md",))["passed"])
 
     def test_sha_tampering_blocked(self):
         self.assertFalse(self.audit_fixture(tamper="README.md")["passed"])
 
     def test_arduino_cli_binary_blocked(self):
-        self.assertFalse(
-            self.audit_fixture(add={"bin/arduino-cli.exe": b"fake"})["passed"]
-        )
+        self.assertFalse(self.audit_fixture(add={"bin/arduino-cli.exe": b"fake"})["passed"])
 
     def test_old_game_name_blocked(self):
         self.assertFalse(
