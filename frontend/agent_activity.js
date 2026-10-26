@@ -7,7 +7,10 @@ const EVIDENCE = [
   ['compiled', 'Compilación observada'],
   ['flash_verified', 'Grabación verificada por herramienta'],
 ];
-const safe = (value, max = 500) => String(value ?? '').replace(/[\u0000-\u001f\u007f]/g, ' ').slice(0, max);
+const safe = (value, max = 500) =>
+  String(value ?? '')
+    .replace(/[\u0000-\u001f\u007f]/g, ' ')
+    .slice(0, max);
 export function createAgentTrail() {
   let run = null;
   const items = [];
@@ -15,19 +18,28 @@ export function createAgentTrail() {
     start({ job_id, provider, mode, task }) {
       if (!job_id) return;
       run = {
-        id: safe(job_id, 96), provider: safe(provider, 40),
-        mode: safe(mode, 40), task: safe(task, 180),
-        state: 'working', elapsed: 0, changedFiles: [],
-        diff: false, approvals: 0, evidence: {}, error: '',
+        id: safe(job_id, 96),
+        provider: safe(provider, 40),
+        mode: safe(mode, 40),
+        task: safe(task, 180),
+        state: 'working',
+        elapsed: 0,
+        changedFiles: [],
+        diff: false,
+        approvals: 0,
+        evidence: {},
+        error: '',
       };
       items.length = 0;
     },
     event(entry, receivedAt = new Date().toISOString()) {
       if (!run || !entry || typeof entry.text !== 'string') return;
-      const kind = entry.kind === 'milestone' ? 'evidence' : entry.kind === 'error' ? 'error' : 'tool';
+      const kind =
+        entry.kind === 'milestone' ? 'evidence' : entry.kind === 'error' ? 'error' : 'tool';
       items.push({
         seq: Number.isInteger(entry.id) ? entry.id : 0,
-        kind, time: safe(receivedAt, 40),
+        kind,
+        time: safe(receivedAt, 40),
         text: safe(entry.text, 520),
       });
       if (items.length > LIMIT) items.splice(0, items.length - LIMIT);
@@ -44,25 +56,35 @@ export function createAgentTrail() {
       else run.state = 'failed';
       if (!data.active) {
         run.changedFiles = Array.isArray(data.changed_files)
-          ? data.changed_files.slice(0, 30).map((file) => safe(file, 180)) : [];
+          ? data.changed_files.slice(0, 30).map((file) => safe(file, 180))
+          : [];
         run.diff = Boolean(data.diff);
       }
       run.error = safe(data.error, 230);
     },
     connectionError(message) {
-      if (run) { run.state = 'unknown'; run.error = safe(message, 230); }
+      if (run) {
+        run.state = 'unknown';
+        run.error = safe(message, 230);
+      }
     },
     state() {
       return {
-        run: run ? { ...run, changedFiles: [...run.changedFiles], evidence: { ...run.evidence } } : null,
+        run: run
+          ? { ...run, changedFiles: [...run.changedFiles], evidence: { ...run.evidence } }
+          : null,
         items: items.map((e) => ({ ...e })),
       };
     },
   };
 }
 const labels = {
-  working: 'EJECUTANDO', completed: 'CLI FINALIZADA', failed: 'FALLO',
-  cancelled: 'CANCELADO', interrupted: 'INTERRUMPIDO', unknown: 'CONEXIÓN PERDIDA',
+  working: 'EJECUTANDO',
+  completed: 'CLI FINALIZADA',
+  failed: 'FALLO',
+  cancelled: 'CANCELADO',
+  interrupted: 'INTERRUMPIDO',
+  unknown: 'CONEXIÓN PERDIDA',
 };
 export function define(context) {
   context.agentActivity = createAgentTrail();
@@ -123,10 +145,22 @@ export function define(context) {
       context.$('#agentRecover').click();
     };
     actions.append(recover);
-    root.append(n('p', 'ac-intro',
-      'Observación de la CLI real. Los pasos aparecen solo al recibir eventos; no ejecuta comandos por sí solo.'), actions);
+    root.append(
+      n(
+        'p',
+        'ac-intro',
+        'Observación de la CLI real. Los pasos aparecen solo al recibir eventos; no ejecuta comandos por sí solo.',
+      ),
+      actions,
+    );
     if (!run) {
-      root.append(n('p', 'ac-empty', 'Sin tarea activa o recuperada. Elige Codex o Claude Code y autoriza una tarea para ver su actividad aquí.'));
+      root.append(
+        n(
+          'p',
+          'ac-empty',
+          'Sin tarea activa o recuperada. Elige Codex o Claude Code y autoriza una tarea para ver su actividad aquí.',
+        ),
+      );
       return;
     }
     const header = n('section', 'ac-session');
@@ -134,11 +168,21 @@ export function define(context) {
     indicator.setAttribute('role', 'status');
     header.append(indicator, n('strong', '', run.provider + ' · ' + run.mode));
     header.append(n('p', 'ac-task', run.task || 'Tarea recuperada'));
-    header.append(n('small', '', 'Duración observada: ' + run.elapsed.toFixed(1) + ' s · sesión ' + run.id.slice(0, 8)));
+    header.append(
+      n(
+        'small',
+        '',
+        'Duración observada: ' + run.elapsed.toFixed(1) + ' s · sesión ' + run.id.slice(0, 8),
+      ),
+    );
     if (run.error) header.append(n('p', 'ac-error', run.error));
     root.append(header);
     if (run.approvals) {
-      const auth = n('button', 'action small ac-approval', run.approvals + ' aprobación(es) pendientes · Revisar');
+      const auth = n(
+        'button',
+        'action small ac-approval',
+        run.approvals + ' aprobación(es) pendientes · Revisar',
+      );
       auth.id = 'acApprovals';
       auth.onclick = () => context.openAgentWorkbench('#agentApprovals');
       root.append(auth);
@@ -149,12 +193,28 @@ export function define(context) {
       const ok = run.evidence[key] === true;
       evidence.append(n('div', 'ac-check ' + (ok ? 'confirmed' : ''), (ok ? '✓ ' : '○ ') + title));
     }
-    evidence.append(n('small', '', 'La salida del grabador no prueba por sí sola el comportamiento físico de la placa.'));
+    evidence.append(
+      n(
+        'small',
+        '',
+        'La salida del grabador no prueba por sí sola el comportamiento físico de la placa.',
+      ),
+    );
     root.append(evidence);
     const changed = n('section', 'ac-changes');
     changed.append(n('h3', '', 'Cambios y comprobación'));
-    if (run.changedFiles.length) for (const file of run.changedFiles) changed.append(n('div', 'ac-file', file));
-    else changed.append(n('p', 'ac-empty', run.state === 'working' ? 'Los archivos se resumen al finalizar.' : 'No se han reportado archivos auxiliares.'));
+    if (run.changedFiles.length)
+      for (const file of run.changedFiles) changed.append(n('div', 'ac-file', file));
+    else
+      changed.append(
+        n(
+          'p',
+          'ac-empty',
+          run.state === 'working'
+            ? 'Los archivos se resumen al finalizar.'
+            : 'No se han reportado archivos auxiliares.',
+        ),
+      );
     const review = n('button', 'action small ghost', 'Revisar código / diferencias');
     review.id = 'acReview';
     review.disabled = !run.diff;
@@ -167,24 +227,48 @@ export function define(context) {
     const filter = document.createElement('select');
     filter.className = 'selector';
     filter.id = 'acFilter';
-    for (const [name, value] of [['Todo', 'all'], ['Herramientas', 'tool'], ['Evidencias', 'evidence'], ['Errores', 'error']])
+    for (const [name, value] of [
+      ['Todo', 'all'],
+      ['Herramientas', 'tool'],
+      ['Evidencias', 'evidence'],
+      ['Errores', 'error'],
+    ])
       filter.add(new Option(name, value));
     filter.value = context.agentActivityFilter || 'all';
     const timeline = n('ol', 'ac-timeline');
     const draw = () => {
       timeline.replaceChildren();
-      const selected = items.filter(e => filter.value === 'all' || e.kind === filter.value);
-      if (!selected.length) timeline.append(n('li', 'ac-empty', 'No hay eventos de esta categoría.'));
+      const selected = items.filter((e) => filter.value === 'all' || e.kind === filter.value);
+      if (!selected.length)
+        timeline.append(n('li', 'ac-empty', 'No hay eventos de esta categoría.'));
       for (const item of selected) {
         const li = n('li', 'ac-item ' + item.kind);
-        const time = item.time && !Number.isNaN(Date.parse(item.time)) ? new Date(item.time).toLocaleTimeString('es-ES') : '—';
-        li.append(n('small', '', time + ' · ' + (item.kind === 'evidence' ? 'Evidencia' : item.kind === 'error' ? 'Error' : 'Salida de CLI')));
+        const time =
+          item.time && !Number.isNaN(Date.parse(item.time))
+            ? new Date(item.time).toLocaleTimeString('es-ES')
+            : '—';
+        li.append(
+          n(
+            'small',
+            '',
+            time +
+              ' · ' +
+              (item.kind === 'evidence'
+                ? 'Evidencia'
+                : item.kind === 'error'
+                  ? 'Error'
+                  : 'Salida de CLI'),
+          ),
+        );
         const detail = n('p', '', item.text);
         li.append(detail);
         timeline.append(li);
       }
     };
-    filter.onchange = () => { context.agentActivityFilter = filter.value; draw(); };
+    filter.onchange = () => {
+      context.agentActivityFilter = filter.value;
+      draw();
+    };
     label.append(filter);
     root.append(label, timeline);
     draw();

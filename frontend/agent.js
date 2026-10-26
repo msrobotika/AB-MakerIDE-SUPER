@@ -181,7 +181,10 @@ export function define(context) {
         '/api/agents/poll?id=' + encodeURIComponent(picked.job_id) + '&since=0',
       );
       context.agentObserveStart({
-        job_id: r.job_id, provider: r.provider, mode: r.mode, task: r.task_summary,
+        job_id: r.job_id,
+        provider: r.provider,
+        mode: r.mode,
+        task: r.task_summary,
       });
       context.agentRunState.last = r.last_id;
       for (const e of r.events) context.appendAgentEvent(e);
