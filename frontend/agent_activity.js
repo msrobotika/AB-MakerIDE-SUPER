@@ -83,7 +83,12 @@ export function define(context) {
     context.renderAgentActivityIfOpen();
   };
   context.renderAgentActivityIfOpen = () => {
-    if (context.state.panel === 'agent-activity') context.renderSidebar();
+    if (context.state.panel === 'agent-activity') {
+      const viewport = context.$('#sideBody');
+      const scroll = viewport.scrollTop;
+      context.renderSidebar();
+      viewport.scrollTop = scroll;
+    }
     const rail = context.$('[data-panel="agent-activity"]');
     if (rail) {
       const run = context.agentActivity.state().run;
@@ -164,6 +169,7 @@ export function define(context) {
     filter.id = 'acFilter';
     for (const [name, value] of [['Todo', 'all'], ['Herramientas', 'tool'], ['Evidencias', 'evidence'], ['Errores', 'error']])
       filter.add(new Option(name, value));
+    filter.value = context.agentActivityFilter || 'all';
     const timeline = n('ol', 'ac-timeline');
     const draw = () => {
       timeline.replaceChildren();
@@ -178,7 +184,7 @@ export function define(context) {
         timeline.append(li);
       }
     };
-    filter.onchange = draw;
+    filter.onchange = () => { context.agentActivityFilter = filter.value; draw(); };
     label.append(filter);
     root.append(label, timeline);
     draw();
