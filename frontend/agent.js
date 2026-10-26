@@ -173,7 +173,7 @@ export function define(context) {
       context.agentRunState.id = picked.job_id;
       context.agentRunState.last = 0;
       context.agentRunState.lastLang = context.state.lang;
-      context.agentFlowSync?.({job_id: r.job_id, provider, mode, active: true, evidence: {}});
+      context.agentFlowSync?.({ job_id: r.job_id, provider, mode, active: true, evidence: {} });
       context.rememberAgent(picked.job_id);
       context.resetAgentStages();
       context.$('#agentWorkbench').open = true;

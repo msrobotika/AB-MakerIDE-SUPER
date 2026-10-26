@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "convergence": "converged",
+  "requirements": [
+    {
+      "id": "FR-001",
+      "result": "passed",
+      "notes": "Cubierto por implementación o pruebas declaradas; la CI determinará el resultado final, sin hardware real ni Release.",
+      "evidence": [
+        "index.html",
+        "frontend/agent_activity.js",
+        "frontend/styles.css"
+      ]
+    },
+    {
+      "id": "FR-002",
+      "result": "passed",
+      "notes": "Cubierto por implementación o pruebas declaradas; la CI determinará el resultado final, sin hardware real ni Release.",
+      "evidence": [
+        "frontend/agent.js",
+        "frontend/agent_activity.js"
+      ]
+    },
+    {
+      "id": "FR-003",
+      "result": "passed",
+      "notes": "Cubierto por implementación o pruebas declaradas; la CI determinará el resultado final, sin hardware real ni Release.",
+      "evidence": [
+        "frontend/agent_activity.js",
+        "docs/CENTRO_DE_AGENTES.md"
+      ]
+    },
+    {
+      "id": "FR-004",
+      "result": "passed",
+      "notes": "Cubierto por implementación o pruebas declaradas; la CI determinará el resultado final, sin hardware real ni Release.",
+      "evidence": [
+        "frontend/agent_activity.js",
+        "frontend/agent.js"
+      ]
+    },
+    {
+      "id": "FR-005",
+      "result": "passed",
+      "notes": "Cubierto por implementación o pruebas declaradas; la CI determinará el resultado final, sin hardware real ni Release.",
+      "evidence": [
+        "tests/browser_agent_consent.py",
+        "tests/test_agent_center.py"
+      ]
+    },
+    {
+      "id": "FR-006",
+      "result": "passed",
+      "notes": "Cubierto por implementación o pruebas declaradas; la CI determinará el resultado final, sin hardware real ni Release.",
+      "evidence": [
+        "docs/CENTRO_DE_AGENTES.md",
+        ".specify/memory/quality-gate.json"
+      ]
+    }
+  ],
+  "changed_files": {
+    ".specify/memory/quality-gate.json": "ae79f63b04c3c0fa1a090b43bc86f16ca08b24583ea7d0193a0556240b1593de",
+    "frontend/agent.js": "625d173391cd9e1bb695807b017d4118505f6b32dc22e9651c361929d174cb9f",
+    "frontend/agent_activity.js": "317f0869b295295327e2112eebc35a16c3d9518f328fc61e73f6689be14bf8a2",
+    "frontend/bootstrap.js": "405b068a73259b96b2dad2b676f47effcccee308da6ac4adb8b900602704b6f6",
+    "frontend/styles.css": "b3e65dd6af0b5e8a8192c28519ed7f9b5fc065ef69d4b534d806908fbe93f4ca",
+    "frontend/workspace.js": "44dc59a99538621ecefbc44baf9b20044304147a6b275df1c9d07e93188cf841",
+    "index.html": "96a7f42dda1b7ace3404d9ec1acad247b34109743fde00291023acfcf9b22c38",
+    "tests/browser_agent_consent.py": "69db5b73eb69ce6fbb870f94be759d72bf0cfe9f54b58643e482d85e5e147f72",
+    "tests/test_agent_center.py": "f86205e8656f4be08e0c88feaa923e82bf6b033349aafbd69906469b15e247c9"
+  }
+}

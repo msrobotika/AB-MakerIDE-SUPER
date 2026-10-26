@@ -14,8 +14,10 @@ export function summarizeAgentEvent(event) {
     return { type: 'evidence', label: 'Hito registrado por el servidor' };
   }
   if (/^Comando terminado · salida (-?\d+)/i.test(text))
-    return { type: /salida 0/i.test(text) ? 'command' : 'warning',
-      label: 'Comando terminado · ' + text.match(/salida (-?\d+)/i)[1] + ' (código de salida)' };
+    return {
+      type: /salida 0/i.test(text) ? 'command' : 'warning',
+      label: 'Comando terminado · ' + text.match(/salida (-?\d+)/i)[1] + ' (código de salida)',
+    };
   if (/^Archivos del proyecto:/i.test(text))
     return { type: 'file', label: 'Operación sobre archivos del proyecto registrada' };
   if (/^Herramienta MCP /i.test(text))
@@ -30,7 +32,11 @@ export function summarizeAgentEvent(event) {
 
 export function define(context) {
   context.agentFlow = {
-    events: [], run: null, active: false, selected: '', preparing: false,
+    events: [],
+    run: null,
+    active: false,
+    selected: '',
+    preparing: false,
   };
   const $ = (tag, cls, value) => {
     const el = document.createElement(tag);
@@ -59,7 +65,7 @@ export function define(context) {
   context.agentFlowEvent = (ev) => {
     if (!ev || !Number.isInteger(ev.id)) return;
     const items = context.agentFlow.events;
-    if (items.some(x => x.id === ev.id)) return;
+    if (items.some((x) => x.id === ev.id)) return;
     items.push({ id: ev.id, ...summarizeAgentEvent(ev) });
     if (items.length > 50) items.splice(0, items.length - 50);
     refresh();
@@ -88,21 +94,35 @@ export function define(context) {
     if (focus) context.$('#execTask').focus();
   };
   context.renderAgentFlowPanel = (root) => {
-    const state = context.agentFlow, run = state.run, events = state.events;
+    const state = context.agentFlow,
+      run = state.run,
+      events = state.events;
     const active = state.active || Boolean(run?.active);
     root.replaceChildren();
     root.append(
-      $('p', 'agent-flow-intro',
-        'Sesiones reales · Codex / Claude Code · permisos controlados por el usuario'),
+      $(
+        'p',
+        'agent-flow-intro',
+        'Sesiones reales · Codex / Claude Code · permisos controlados por el usuario',
+      ),
     );
     const stateLine = $('div', 'agent-flow-status');
     stateLine.setAttribute('aria-live', 'polite');
     const led = $('span', 'agent-flow-led' + (active ? ' is-active' : ''));
     led.setAttribute('aria-hidden', 'true');
     const text = run
-      ? (active ? 'EJECUTANDO' : run.interrupted ? 'INTERRUMPIDA'
-          : run.cancelled ? 'CANCELADA' : run.success ? 'FINALIZADA' : 'REVISAR RESULTADO')
-      : state.preparing ? 'INICIANDO TAREA' : 'SIN SESIÓN ACTIVA';
+      ? active
+        ? 'EJECUTANDO'
+        : run.interrupted
+          ? 'INTERRUMPIDA'
+          : run.cancelled
+            ? 'CANCELADA'
+            : run.success
+              ? 'FINALIZADA'
+              : 'REVISAR RESULTADO'
+      : state.preparing
+        ? 'INICIANDO TAREA'
+        : 'SIN SESIÓN ACTIVA';
     stateLine.append(led, $('strong', '', text));
     root.append(stateLine);
 
@@ -121,8 +141,17 @@ export function define(context) {
     identity.append($('strong', '', 'SESIÓN Y PERMISOS'));
     if (run) {
       identity.append(
-        $('p', '', (run.provider === 'codex' ? 'Codex' : run.provider === 'claude_code'
-          ? 'Claude Code' : 'Agente CLI') + ' · ' + (run.mode || 'sin modo')),
+        $(
+          'p',
+          '',
+          (run.provider === 'codex'
+            ? 'Codex'
+            : run.provider === 'claude_code'
+              ? 'Claude Code'
+              : 'Agente CLI') +
+            ' · ' +
+            (run.mode || 'sin modo'),
+        ),
         $('small', '', 'Duración: ' + (Number(run.elapsed) || 0).toFixed(1) + ' s'),
         $('small', '', 'Sesión recuperable; la carpeta de trabajo pertenece al servidor local.'),
       );
@@ -142,30 +171,56 @@ export function define(context) {
     ];
     for (const [label, yes] of rows) {
       const line = $('div', 'agent-flow-check');
-      line.append($('span', yes ? 'agent-flow-tick yes' : 'agent-flow-tick', yes ? '✓' : '○'),
-        $('span', '', label));
+      line.append(
+        $('span', yes ? 'agent-flow-tick yes' : 'agent-flow-tick', yes ? '✓' : '○'),
+        $('span', '', label),
+      );
       steps.append(line);
     }
-    steps.append($('p', 'agent-flow-note',
-      'No hay porcentaje inventado. Las fases sin ✓ NO constan como verificadas. La pantalla física no se observa desde aquí.'));
+    steps.append(
+      $(
+        'p',
+        'agent-flow-note',
+        'No hay porcentaje inventado. Las fases sin ✓ NO constan como verificadas. La pantalla física no se observa desde aquí.',
+      ),
+    );
     root.append(steps);
 
     const requests = Array.isArray(run?.pending_approvals) ? run.pending_approvals : [];
     const approval = $('section', 'agent-flow-card');
     approval.append($('strong', '', 'AUTORIZACIONES'));
-    approval.append($('p', requests.length ? 'Pendientes: ' + requests.length
-      : 'No hay solicitudes pendientes en esta sesión.'));
-    approval.append(action('Revisar autorizaciones', () => {
-      openWorkbench();
-      context.$('#agentApprovals').scrollIntoView({ block: 'nearest' });
-    }, requests.length === 0));
+    approval.append(
+      $(
+        'p',
+        requests.length
+          ? 'Pendientes: ' + requests.length
+          : 'No hay solicitudes pendientes en esta sesión.',
+      ),
+    );
+    approval.append(
+      action(
+        'Revisar autorizaciones',
+        () => {
+          openWorkbench();
+          context.$('#agentApprovals').scrollIntoView({ block: 'nearest' });
+        },
+        requests.length === 0,
+      ),
+    );
     root.append(approval);
 
     const files = Array.isArray(run?.changed_files) ? run.changed_files : [];
     const result = $('section', 'agent-flow-card');
     result.append($('strong', '', 'ARCHIVOS Y RESULTADO'));
-    result.append($('p', '', files.length ? files.length + ' archivo(s) reportados por la CLI'
-      : 'No hay cambios de archivos confirmados.'));
+    result.append(
+      $(
+        'p',
+        '',
+        files.length
+          ? files.length + ' archivo(s) reportados por la CLI'
+          : 'No hay cambios de archivos confirmados.',
+      ),
+    );
     for (const item of files.slice(0, 8)) {
       // Paths are displayed as text, not inserted into HTML.
       const name = typeof item === 'string' ? item : item?.path || '';
@@ -173,19 +228,30 @@ export function define(context) {
     }
     if (files.length > 8) result.append($('small', '', 'Más archivos en los resultados.'));
     if (run?.outcome) result.append($('p', 'agent-flow-note', context.reportAgentOutcome(run)));
-    result.append(action('Ver diferencias (sin aplicar)', () => {
-      openWorkbench();
-      const candidates = context.$('#chatLog .agent-diff');
-      const latest = candidates[candidates.length - 1];
-      if (latest) latest.scrollIntoView({ block: 'nearest' });
-      else context.toast('Todavía no se han cargado diferencias revisables.');
-    }, !run?.diff));
+    result.append(
+      action(
+        'Ver diferencias (sin aplicar)',
+        () => {
+          openWorkbench();
+          const candidates = context.$('#chatLog .agent-diff');
+          const latest = candidates[candidates.length - 1];
+          if (latest) latest.scrollIntoView({ block: 'nearest' });
+          else context.toast('Todavía no se han cargado diferencias revisables.');
+        },
+        !run?.diff,
+      ),
+    );
     root.append(result);
 
     const timeline = $('section', 'agent-flow-card');
     timeline.append($('strong', '', 'ACTIVIDAD OBSERVADA'));
-    timeline.append($('p', 'agent-flow-note',
-      'Resumen de eventos reales. La consola técnica completa conserva el detalle.'));
+    timeline.append(
+      $(
+        'p',
+        'agent-flow-note',
+        'Resumen de eventos reales. La consola técnica completa conserva el detalle.',
+      ),
+    );
     const list = $('ol', 'agent-flow-timeline');
     for (const event of events.slice(-20).reverse()) {
       const li = $('li', 'agent-flow-event');
@@ -194,14 +260,19 @@ export function define(context) {
     }
     if (!events.length) list.append($('li', 'agent-flow-note', 'Aún no hay eventos registrados.'));
     timeline.append(list);
-    timeline.append(action('Abrir registro técnico', () => {
-      openWorkbench();
-      context.$('#agentRawLog').closest('details').open = true;
-      context.$('#agentRawLog').scrollIntoView({ block: 'nearest' });
-    }));
+    timeline.append(
+      action('Abrir registro técnico', () => {
+        openWorkbench();
+        context.$('#agentRawLog').closest('details').open = true;
+        context.$('#agentRawLog').scrollIntoView({ block: 'nearest' });
+      }),
+    );
     root.append(timeline);
-    const footer = $('p', 'agent-flow-note',
-      'No son registros simulados. Los cambios y las acciones requieren las autorizaciones existentes en MakerIDE.');
+    const footer = $(
+      'p',
+      'agent-flow-note',
+      'No son registros simulados. Los cambios y las acciones requieren las autorizaciones existentes en MakerIDE.',
+    );
     root.append(footer);
   };
 }
