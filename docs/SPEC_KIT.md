@@ -42,6 +42,10 @@ crea otro y cambia la referencia activa; no sobrescribe el resultado anterior.
 Dependabot también necesita una especificación de mantenimiento y actualizar el manifiesto
 antes de integrar una actualización. No hay excepción automática para sus PR.
 
+## Puerta de publicación
+
+Spec Kit estructura el trabajo; **no obliga a lanzar versiones** ni sustituye una validación real. El expediente activo y el check de coherencia son condiciones necesarias, no suficientes, para crear una Release. [Política de publicación y congelación de versiones](RELEASE_POLICY.md).
+
 ## Lo que verifica y lo que no
 
 El gate comprueba estructura y correspondencia de archivos. **No demuestra que una prueba
