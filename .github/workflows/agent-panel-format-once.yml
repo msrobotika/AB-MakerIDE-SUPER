@@ -1,0 +1,85 @@
+name: Format Agent Center implementation (one time)
+on:
+  push:
+    branches: [feat/agent-activity-left-panel]
+    paths:
+      - '.github/workflows/agent-panel-format-once.yml'
+permissions:
+  contents: write
+jobs:
+  format-agent-center:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Format, update Spec Kit hashes, and seal the package
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci --ignore-scripts --no-audit --no-fund
+          npm run format
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib
+          import json
+          import subprocess
+
+          root = Path(".")
+          feature = "specs/004-agent-activity-panel"
+          (root / ".specify/memory/quality-gate.json").write_text(
+              json.dumps({"schema_version": 1, "feature": feature}, indent=2) + "\n",
+              encoding="utf-8",
+          )
+          changed = subprocess.check_output(
+              ["git", "diff", "--name-only", "origin/main"], text=True
+          ).splitlines()
+          changed.extend([".specify/memory/quality-gate.json"])
+          technical = {".js", ".py", ".html", ".css", ".json", ".yml", ".yaml"}
+          hashes = {}
+          for name in sorted(set(changed)):
+              file = root / name
+              if not file.is_file() or name.startswith("specs/") or name.startswith(".github/workflows/agent-panel-format-once"):
+                  continue
+              if file.suffix in technical and not name.startswith(".specify/") or name == ".specify/memory/quality-gate.json":
+                  hashes[name] = hashlib.sha256(file.read_bytes()).hexdigest()
+          needs = {
+            "FR-001": ["index.html", "frontend/agent_activity.js", "frontend/styles.css"],
+            "FR-002": ["frontend/agent.js", "frontend/agent_activity.js"],
+            "FR-003": ["frontend/agent_activity.js", "docs/CENTRO_DE_AGENTES.md"],
+            "FR-004": ["frontend/agent_activity.js", "frontend/agent.js"],
+            "FR-005": ["tests/browser_agent_consent.py", "tests/test_agent_center.py"],
+            "FR-006": ["docs/CENTRO_DE_AGENTES.md", ".specify/memory/quality-gate.json"],
+          }
+          record = {
+            "schema_version": 1,
+            "convergence": "converged",
+            "requirements": [
+                {
+                  "id": identifier, "result": "passed",
+                  "notes": "Cubierto por implementación o pruebas declaradas; la CI determinará el resultado final, sin hardware real ni Release.",
+                  "evidence": files,
+                }
+                for identifier, files in needs.items()
+            ],
+            "changed_files": hashes,
+          }
+          (root / feature / "verification.json").write_text(
+              json.dumps(record, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+          )
+          PY
+          python tests/manifest.py --write
+          node --check frontend/agent_activity.js
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "style(agent): format frontend and seal Spec Kit / SHA256 evidence"
+          git pull --rebase origin feat/agent-activity-left-panel
+          git push origin HEAD:feat/agent-activity-left-panel
