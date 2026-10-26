@@ -43,7 +43,7 @@
     }
   ],
   "changed_files": {
-    "scripts/audit_distribution.py": "62f2c11a083958b75424f8f06c2cca1710627fcf3bb84790b041d336db9936c5",
-    "tests/test_distribution_archive.py": "36ace3ac858d34ccd9f444fb64d788f09ed9358d68020e9925822a9f12f3272b"
+    "scripts/audit_distribution.py": "be89b3e71cfd6a30203527a4cff4246936469bff9426446023824e9780a22bb3",
+    "tests/test_distribution_archive.py": "0eb1178a4386c5f5ae8e925fc62bc32e0ec3255021f7bf2048a56fc1e2481efc"
   }
 }
