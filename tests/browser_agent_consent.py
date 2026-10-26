@@ -230,7 +230,10 @@ def main():
                         "left activity center reflects real agent job, without falsely certifying firmware",
                         page.locator("#acConfigure").is_visible()
                         and page.locator(".ac-check.confirmed").count() == 0
-                        and "Codex" in page.locator(".ac-session").inner_text().replace("codex", "Codex"),
+                        and "Codex"
+                        in page.locator(".ac-session")
+                        .inner_text()
+                        .replace("codex", "Codex"),
                     )
                     check(
                         "activity timeline exposes received output rather than mock stages",
