@@ -2115,3 +2115,60 @@ body[data-right='lab'] .right .hardwarelab {
 .agent-explanation {
   margin-top: 7px;
 }
+
+/* MS ROBOTIKA · Centro de actividad IA. Original task/evidence visualization. */
+@media (min-width: 1101px) {
+  .sidebar.is-agent-activity { width: 310px; flex-basis: 310px; }
+}
+.rail [data-panel='agent-activity'][data-status='working']::before {
+  content: ''; position: absolute; right: 3px; top: 3px;
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #37c49e; border: 2px solid #111b29;
+}
+.rail [data-panel='agent-activity'][data-status='failed']::before,
+.rail [data-panel='agent-activity'][data-status='unknown']::before {
+  content: ''; position: absolute; right: 3px; top: 3px;
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #f08086; border: 2px solid #111b29;
+}
+.ac-intro { font-size: 11px; line-height: 1.5; color: #a5b9c9; margin: 0 0 10px; }
+.ac-actions { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
+.ac-actions .action { width: auto; max-width: 100%; font-size: 11px; flex: 1 1 auto; }
+.ac-session { display: flex; flex-direction: column; gap: 7px;
+  border: 1px solid #315064; border-radius: 10px; padding: 11px;
+  background: linear-gradient(135deg,#152d3a,#101c2c); }
+.ac-state { align-self: start; border-radius: 6px; padding: 4px 7px;
+  font-size: 10px; letter-spacing: .4px; font-weight: 800;
+  color: #98d7e2; background: #1c4555; }
+.ac-state.state-working { color: #56d9b0; background: #134537; }
+.ac-state.state-completed { color: #a5dcb9; background: #23513c; }
+.ac-state.state-failed, .ac-state.state-unknown { color: #ff9ba1; background: #502733; }
+.ac-state.state-cancelled,.ac-state.state-interrupted { color: #f0c987; background: #4c3d25; }
+.ac-session strong { font-size: 13px; color: #f0fbff; }
+.ac-session small,.ac-evidence small { font-size: 10px; color: #92aebf; line-height: 1.45; }
+.ac-task { font-size: 12px; line-height: 1.45; overflow-wrap: anywhere; white-space: pre-wrap; margin: 0; }
+.ac-error { color: #ffafb1; font-size: 11px; overflow-wrap: anywhere; margin: 0; }
+.ac-evidence,.ac-changes { margin: 12px 0; padding: 10px; border: 1px solid #283f50;
+  border-radius: 9px; background: #101e2b; display: flex; flex-direction: column; gap: 8px; }
+.ac-evidence h3,.ac-changes h3,.sidebody>h3 { margin: 0; font-size: 12px; color: #cae5ef; }
+.ac-check { font-size: 11px; color: #9bb0bf; }
+.ac-check.confirmed { color: #5de1b4; font-weight: 750; }
+.ac-file { font-size: 11px; color: #9cd6e0; background: #1b2c3d;
+  padding: 5px 7px; border-radius: 5px; overflow-wrap: anywhere; }
+.ac-empty { color: #829daf; font-size: 11px; line-height: 1.5; }
+.ac-approval { margin: 8px 0; width: 100%; color: #ffe8a9;
+  background: #4c3820; border: 1px solid #89652f; }
+.ac-filter { display:block; color:#aac1d1; font-size:11px; margin: 10px 0; }
+.ac-filter select { margin-top: 5px; min-height: 33px; }
+.ac-timeline { list-style: none; padding: 0 0 0 12px; margin: 5px 0 12px;
+  border-left: 2px solid #335367; }
+.ac-item { position: relative; margin: 0 0 12px 0; padding: 8px 8px 8px 10px;
+  border-radius: 7px; background: #172635; border: 1px solid #293d50; }
+.ac-item::before { content:''; position:absolute; width:8px; height:8px;
+  border-radius:50%; background:#5792ba; left:-18px; top:14px; }
+.ac-item.evidence::before { background:#49c995; }
+.ac-item.error::before { background:#fa717c; }
+.ac-item small { font-size: 10px; color: #a5b9ca; }
+.ac-item p { font-size: 11px; margin: 4px 0 0; overflow-wrap: anywhere;
+  white-space: pre-wrap; line-height: 1.45; color: #d9e7f0; }
+@media (max-width: 700px) { .sidebar.is-agent-activity .ac-actions { flex-direction: column; } }
