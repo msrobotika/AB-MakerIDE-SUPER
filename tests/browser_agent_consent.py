@@ -153,6 +153,24 @@ def main():
                     page.wait_for_function(
                         '()=>document.querySelector("#backendState").textContent.includes("activo")'
                     )
+                    page.locator('[data-panel="agentflow"]').click()
+                    check(
+                        "left activity rail opens original agent center",
+                        page.locator("#sideTitle").inner_text() == "CENTRO DE AGENTES"
+                        and page.locator("#sidebar").is_visible(),
+                    )
+                    check(
+                        "empty task shows no fabricated verification",
+                        page.locator(".agent-flow-tick.yes").count() == 0
+                        and "SIN SESIÓN" in page.locator(".agent-flow-status").inner_text(),
+                    )
+                    page.screenshot(path=str(args.outputs / "agent-center-idle-controlled.png"))
+                    page.locator(".agent-flow-button.primary").click()
+                    check(
+                        "new task focuses existing agent without executing",
+                        page.locator("#execTask").evaluate("(el)=>el===document.activeElement")
+                        and not report["starts"],
+                    )
                     if page.locator("body").get_attribute("data-right") != "ai":
                         page.locator("#showAI").click()
                     page.locator("#agentWorkbench").evaluate("(e)=>e.open=true")
@@ -221,6 +239,21 @@ def main():
                         server.AGENT_JOBS._current.mode == "total"
                         and server.AGENT_JOBS._current.success is True,
                     )
+                    page.locator('[data-panel="agentflow"]').click()
+                    check(
+                        "actual CLI result visible in left activity",
+                        "FINALIZADA" in page.locator(".agent-flow-status").inner_text()
+                        and "Codex" in page.locator(".agent-flow-card").first.inner_text(),
+                    )
+                    check(
+                        "no pretend compiler and flash proof after stub",
+                        page.locator(".agent-flow-tick.yes").count() == 1,
+                    )
+                    check(
+                        "left activity contains real events and no raw secrets",
+                        page.locator(".agent-flow-event").count() > 0,
+                    )
+                    page.screenshot(path=str(args.outputs / "agent-center-finished-controlled.png"))
                     page.screenshot(path=str(args.outputs / "agent-consent-started-controlled.png"))
                     page.locator("#execMode").select_option("consultar")
                     page.locator("#execRun").click()
@@ -265,6 +298,24 @@ def main():
                         "generated code automatically opens in editor",
                         "PROJECT_GENERATED" in page.locator("#code").input_value(),
                     )
+                    page.locator('[data-panel="agentflow"]').click()
+                    check(
+                        "modified files reported without reapplying them",
+                        "radar_config.h" in page.locator(".agent-flow-card").nth(3).inner_text()
+                        and page.locator(".agent-flow-button").filter(
+                            has_text="Ver diferencias (sin aplicar)"
+                        ).is_enabled(),
+                    )
+                    before_review = page.locator("#code").input_value()
+                    page.locator(".agent-flow-button").filter(
+                        has_text="Ver diferencias (sin aplicar)"
+                    ).click()
+                    check(
+                        "diff inspection never changes the editor",
+                        page.locator("#code").input_value() == before_review,
+                    )
+                    page.screenshot(path=str(args.outputs / "agent-center-changes-controlled.png"))
+
                     if not page.locator("[data-panel=project]").evaluate(
                         '(e)=>e.classList.contains("on")'
                     ) or page.locator("#sidebar").evaluate(
