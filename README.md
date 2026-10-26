@@ -2,7 +2,7 @@
 
 [![Comprobaciones](https://github.com/msrobotika/AB-MakerIDE-SUPER/actions/workflows/checks.yml/badge.svg)](https://github.com/msrobotika/AB-MakerIDE-SUPER/actions/workflows/checks.yml) [![Licencia MIT](https://img.shields.io/badge/licencia-MIT-blue.svg)](LICENSE)
 
-**[Única versión recomendada: RC4 (pre-release)](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/tag/v1.0.0-rc.4)** · [Comunicar un fallo](https://github.com/msrobotika/AB-MakerIDE-SUPER/issues/new/choose) · [Proyectos y pruebas de placas](https://github.com/msrobotika/AB-MakerIDE-SUPER/discussions) · [English](README.en.md)
+**[Única candidata pública: RC4 (pre-release)](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/tag/v1.0.0-rc.4)** · [Comunicar un fallo](https://github.com/msrobotika/AB-MakerIDE-SUPER/issues/new/choose) · [Proyectos y pruebas de placas](https://github.com/msrobotika/AB-MakerIDE-SUPER/discussions) · [English](README.en.md)
 
 **Un editor con agente para crear firmware de Arduino, ESP32 y MicroPython.** Pide el proyecto desde el chat, trabaja con el código en el editor y distingue cada resultado: código, compilación, carga verificada y observación física.
 
@@ -19,6 +19,8 @@ Estas imágenes proceden de la **aplicación RC4 en Windows con una placa CYD ES
 *Panel de placas/COM4, monitor serie y mensajes de inicialización. [Evidencias completas](docs/evidence/cyd-rc4/README.md).*
 
 **[Ver características, descarga, instalación, pruebas y límites de RC4](docs/RC4_PUBLICACION.md)**.
+
+**Descarga histórica sin certificación de licencias actualizadas:** el ZIP público RC4 se empaquetó antes de la PR #10. No se ha verificado que contenga las nuevas atribuciones ni el ejemplo renombrado. [Auditoría pendiente](docs/AUDITORIA_DISTRIBUCION_RC4.md) · [Incidencia #11](https://github.com/msrobotika/AB-MakerIDE-SUPER/issues/11).
 
 La aplicación es open source, con [licencia MIT](LICENSE). **AB MakerIDE SUPER es independiente y no oficial**: utiliza Arduino CLI instalada por separado por cada usuario. Arduino® es marca de Arduino S.r.l.; no existe afiliación ni respaldo. [Licencias y avisos de terceros](THIRD_PARTY_NOTICES.md) · [Política de marcas](docs/MARCAS_Y_LICENCIAS.md). **La IA es opcional y no es gratuita por incluir MakerIDE:** cada usuario vincula su propia cuenta y utiliza su cuota. Codex está probado en uso real por el autor. Claude Code, conectores de chat y Ollama siguen pendientes de validación equivalente.
 
@@ -66,7 +68,7 @@ Se conservan el **inicio vacío**, el guardado manual con **Ctrl+S**, la importa
 
 Incluye editor Arduino C++/MicroPython, catálogo de modelos instalados, compilación, carga, monitor serie, diagnóstico, agente opcional, exportación/importación y un [simulador de secuencias digitales](docs/SIMULADOR.md). El simulador no emula firmware ni acredita funcionamiento físico. El [cuaderno de placas](docs/PRUEBAS_DE_PLACAS.md) guarda pruebas cuando el usuario lo solicita.
 
-Hay pruebas físicas documentadas de **seis dispositivos concretos**: radar IdeaSpark, ESP32-CAM, WROOM con MicroPython, Nano con cargador antiguo, Mega 2560 y CYD con pantalla táctil. La CYD recibió primero bloques y después [un ensayo histórico de juego arcade de naves](docs/evidence/cyd-space-invaders/README.md); el ejemplo del código actual es [Defensa Orbital](examples/defensa_orbital/defensa_orbital.ino): dos respaldos de flash coincidentes, firmware completo compilado, cuatro bloques de grabación verificados y marcador serie. El usuario confirmó que tenía el juego. Esto no acredita cualquier revisión ni una prueba prolongada de todos sus periféricos.
+Hay pruebas físicas documentadas de **seis dispositivos concretos**: radar IdeaSpark, ESP32-CAM, WROOM con MicroPython, Nano con cargador antiguo, Mega 2560 y CYD con pantalla táctil. La CYD recibió primero bloques y después [un ensayo histórico de juego arcade de naves](docs/evidence/cyd-space-invaders/README.md): dos respaldos de flash coincidentes, firmware compilado y cuatro bloques verificados. **Estas pruebas pertenecen al firmware histórico, no al ejemplo renombrado.** El ejemplo de desarrollo actual, [Defensa Orbital](examples/defensa_orbital/defensa_orbital.ino), todavía requiere compilación y validación física independientes. Esto no acredita cualquier revisión ni una prueba prolongada de todos sus periféricos.
 
 [Matriz de hardware](docs/MATRIZ_HARDWARE.md) · [Radar](docs/evidence/radar-ideaspark/README.md) · [Cámara](docs/evidence/esp32cam/README.md) · [MicroPython](docs/evidence/wroom-micropython/README.md) · [Nano](docs/evidence/arduino-nano/README.md) · [Mega](docs/evidence/arduino-mega/README.md) · [Bloques CYD](docs/evidence/cyd/README.md)
 

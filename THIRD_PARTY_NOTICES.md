@@ -6,7 +6,9 @@
 | --- | --- | --- |
 | **Arduino CLI** | Herramienta **externa**, instalada y gestionada por el usuario. MakerIDE localiza el ejecutable y lo invoca por subproceso; ni fuentes ni binarios de Arduino CLI empaquetados. | GPL-3.0. [Repositorio y licencia Arduino CLI](https://github.com/arduino/arduino-cli#license); el titular advierte además sobre usos comerciales que requieren evaluación específica. |
 | **Arduino cores, toolchains y cores ESP32** | Instalación externa del usuario; no se entregan aquí. | Según cada paquete/revisión. Revisar licencias al redistribuir firmware. |
-| **Adafruit GFX / ILI9341; XPT2046** | Dependencias externas incluidas mediante `#include` en sketches; **no se copia su código aquí**. | Consultar las licencias de cada versión instalada antes de distribuir binarios. |
+| **Adafruit GFX** | Cabeceras referenciadas desde firmware, biblioteca externa. | BSD, preservar atribuciones según [licencia oficial](https://github.com/adafruit/Adafruit-GFX-Library/blob/master/license.txt). |
+| **Adafruit ILI9341** | Biblioteca de pantalla externa. | Verificar la licencia del archivo/version efectivamente instalado: su README upstream indica MIT y otras referencias BSD. Conservar los avisos originales. [Fuente](https://github.com/adafruit/Adafruit_ILI9341). |
+| **XPT2046 Touchscreen** | Biblioteca externa de Paul Stoffregen para el panel táctil. | Permiso estilo MIT; requiere conservar aviso y mención de financiación según [cabecera upstream](https://github.com/PaulStoffregen/XPT2046_Touchscreen/blob/master/XPT2046_Touchscreen.h). |
 | **GitHub Spec Kit** | Scripts/plantillas scaffolding incluidos en `.specify/` y `.agents/`. | MIT, © GitHub, Inc. Ver [licencia original](.specify/UPSTREAM_LICENSE) y [procedencia](.specify/UPSTREAM.md). |
 | **pyserial, mpremote, keyring** | Instalación opcional mediante pip en `.venv` privada. No se entregan paquetes/ruedas en el ZIP fuente. | Consultar licencias e inventario del entorno resuelto al distribuir binarios. |
 | **Ruff, Playwright, ESLint, Prettier** | Herramientas de CI/desarrollo, no parte del paquete de ejecución. | Titulares y licencias originales de cada proveedor. |
@@ -25,3 +27,7 @@ La versión en desarrollo del ejemplo arcade se denomina **Defensa Orbital**, `e
 ## Antes de publicar
 
 Comprobar los **bytes exactos** del paquete, dependencias internas, recursos visuales, atribuciones, licencias transitorias, derechos de código/arte/sonido generado con IA, y marcas. Registrar revisión humana y bloquear una nueva Release con dudas materiales pendientes. Sin nueva Release en esta corrección.
+
+## Versión descargable anterior a esta revisión
+
+La RC4 pública precede al inventario completo de este documento. **Sus bytes no se han auditado aquí.** No confundir las atribuciones de `main` con el contenido histórico de la descarga. [Estado y procedimiento](docs/AUDITORIA_DISTRIBUCION_RC4.md) · [bloqueante #11](https://github.com/msrobotika/AB-MakerIDE-SUPER/issues/11).

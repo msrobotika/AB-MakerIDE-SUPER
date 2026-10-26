@@ -28,7 +28,7 @@ Codex/Claude chat now routes to a real task with its execution consent. The sele
 
 On Windows, install Python 3.10+, extract to a new folder and open INICIAR_WINDOWS.bat (default http://127.0.0.1:8770). PREPARAR_WINDOWS.bat prepares optional serial/MicroPython dependencies in that copy's private venv. Arduino builds also need Arduino CLI and the board core. Preserve existing installations and files. [Installation guide](docs/INSTALACION.md).
 
-The current original-label space game example is [Defensa Orbital](examples/defensa_orbital/defensa_orbital.ino), separate from the unchanged historic firmware evidence. Six specific physical devices are documented: IdeaSpark radar, ESP32-CAM, WROOM/MicroPython, Nano, Mega and CYD. The CYD [retro arcade-style space shooter demonstration](docs/evidence/cyd-space-invaders/README.md) includes two matching flash backups, a complete build, four verified upload blocks and a serial marker; the user subsequently confirmed the game. It does not establish every screen revision, touch control or long-duration scenario. [Hardware matrix](docs/MATRIZ_HARDWARE.md).
+The currently maintained example is [Defensa Orbital](examples/defensa_orbital/defensa_orbital.ino); it **has not received a fresh physical test**. The historic RC4 hardware evidence applies only to the original recorded firmware. Six specific physical devices are documented: IdeaSpark radar, ESP32-CAM, WROOM/MicroPython, Nano, Mega and CYD. The CYD [retro arcade-style space shooter demonstration](docs/evidence/cyd-space-invaders/README.md) includes two matching flash backups, a complete build, four verified upload blocks and a serial marker; the user subsequently confirmed the game. It does not establish every screen revision, touch control or long-duration scenario. [Hardware matrix](docs/MATRIZ_HARDWARE.md).
 
 The [MCP panel](docs/MCP.md) accepts stdio and Streamable HTTP. **Codex defaults to manual approvals in the IDE.** Automatic approval is explicit, off on opening, and applies only to that run. Claude Code manual MCP approvals are not integrated: that combination is blocked rather than silently approving tools. Claude live execution remains unvalidated.
 
@@ -38,7 +38,7 @@ RC4 splits the frontend into ES modules and Python services into `ab_makeride/`,
 
 Local RC4 validation: **294 passing unit tests out of 299**, five platform/tool/privilege skips, and **196 browser checks** across eight controlled flows. The installed Codex/account exercised a manually approved local MCP tool. No new firmware was uploaded for this security review. [Evidence and limits](docs/evidence/rc4/README.md). The original video is a Release asset; it remains in older Git commits because history has not been rewritten.
 
-This is a release candidate, physically validated on Windows. [Security policy](SECURITY.md) · [Contributing](CONTRIBUTING.md) · [Discussions](https://github.com/msrobotika/AB-MakerIDE-SUPER/discussions)
+**Distribution notice:** the public RC4 ZIP predates the copyright/trademark clean-up, and its exact contents have not been audited against the new [third-party notices](THIRD_PARTY_NOTICES.md). [Distribution audit](docs/AUDITORIA_DISTRIBUCION_RC4.md) · [blocker #11](https://github.com/msrobotika/AB-MakerIDE-SUPER/issues/11). This is a release candidate with specific historical Windows hardware evidence. [Security policy](SECURITY.md) · [Contributing](CONTRIBUTING.md) · [Discussions](https://github.com/msrobotika/AB-MakerIDE-SUPER/discussions)
 
 [AI accounts and an online free-tier option](docs/IA_Y_CUOTAS.md).
 
