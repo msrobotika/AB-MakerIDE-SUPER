@@ -126,6 +126,7 @@ export function define(context) {
     workbench.scrollIntoView({ behavior: 'auto', block: 'start' });
   };
   context.renderAgentActivityPanel = (root) => {
+    root.replaceChildren(); // Never retain content from Proyecto/Placas in this panel.
     const { run, items } = context.agentActivity.state();
     const n = (tag, className, value) => {
       const el = document.createElement(tag);
