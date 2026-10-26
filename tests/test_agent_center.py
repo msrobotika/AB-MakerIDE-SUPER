@@ -1,4 +1,5 @@
 """The Center of Agents must report real events without granting permissions."""
+
 from pathlib import Path
 import json
 import subprocess
@@ -35,7 +36,11 @@ console.log(JSON.stringify(logs.map(f)));
 """
         result = subprocess.run(
             ["node", "--input-type=module", "-e", code],
-            cwd=ROOT, capture_output=True, text=True, timeout=12, check=True,
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            timeout=12,
+            check=True,
         )
         out = json.loads(result.stdout)
         self.assertNotIn("SECRET_TOKEN", json.dumps(out))
