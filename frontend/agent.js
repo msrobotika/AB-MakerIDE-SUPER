@@ -155,13 +155,14 @@ export function define(context) {
       ' terminó; NO consta compilación o grabación verificadas. Revisa los archivos creados y continúa la tarea.'
     );
   };
-  context.recoverAgentSession = async function recoverAgentSession(silent = false) {
+  context.recoverAgentSession = async function recoverAgentSession(silent = false, requestedId = '') {
     if (context.agentRunState.active) return;
     const stored = context.lastAgentId;
     try {
       const list = await context.request('/api/agents/history');
       const recent = list.recent || [];
       const picked =
+        (requestedId ? recent.find((x) => x.job_id === requestedId) : null) ||
         recent.find((x) => x.active) ||
         (!silent ? recent[0] : null) ||
         recent.find((x) => x.job_id === stored) ||
@@ -183,6 +184,7 @@ export function define(context) {
       context.agentRunState.last = r.last_id;
       for (const e of r.events) context.appendAgentEvent(e);
       context.updateAgentStages(r);
+      context.observeAgentSnapshot(r, true);
       context.agentRunState.lastData = r;
       RobotActivity.report('agent', 'Agente CLI', {
         ...r,
@@ -219,6 +221,7 @@ export function define(context) {
     context.$('#execUseMCP').disabled = working;
     context.$('#mcpSave').disabled = working;
     context.$('#execAutoMCP').disabled = working;
+    context.updateAgentObserver();
   };
   context.resetAgentStages = function resetAgentStages() {
     context.$('#agentStages').classList.remove('hidden');
@@ -460,6 +463,7 @@ export function define(context) {
       context.agentRunState.last = r.last_id;
       for (const e of r.events) context.appendAgentEvent(e);
       context.updateAgentStages(r);
+      context.observeAgentSnapshot(r);
       context.$('#execStatus').textContent =
         `${r.provider} · ${r.mode} · ${r.elapsed}s · ${r.active ? 'ejecutando' : 'finalizado'}`;
       if (r.active) {
@@ -475,6 +479,7 @@ export function define(context) {
       context.toast(context.reportAgentOutcome(r));
     } catch (e) {
       RobotActivity.lost('agent', 'Agente CLI', e.message);
+      context.observeAgentError(e.message);
       context.$('#execStatus').textContent = 'No se pudo consultar el agente: ' + e.message;
       // A transient connection error must not erase the job ID: allow recovery.
       context.agentSetWorking(false);
@@ -711,6 +716,8 @@ export function initialize(context) {
       context.agentRunState.last = 0;
       context.agentRunState.lastLang = context.state.lang;
       context.rememberAgent(r.job_id);
+      context.observeAgentSnapshot({ job_id: r.job_id, provider, mode, active: true,
+        task_summary: task.slice(0, 180), elapsed: 0, events: [], evidence: {} }, true);
       context.$('#agentResumeMessage').textContent =
         'Trabajo iniciado. Puedes recuperar esta sesión si cierras la pestaña.';
       context.showLog(
@@ -721,6 +728,7 @@ export function initialize(context) {
       context.pollAgent();
     } catch (e) {
       RobotActivity.lost('agent', 'Agente CLI', e.message);
+      context.observeAgentError(e.message);
       context.agentSetWorking(false);
       context.$('#execStatus').textContent = e.message;
       context.toast(e.message);
