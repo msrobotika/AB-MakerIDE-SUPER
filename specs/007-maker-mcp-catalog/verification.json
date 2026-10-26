@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "convergence": "converged",
+  "requirements": [
+    {
+      "id": "FR-001",
+      "result": "passed",
+      "notes": "Presets REA 6.8.0, Context7 HTTPS y Playwright 0.0.83 configurables sin afirmar conexión/descarga.",
+      "evidence": [
+        "ab_makeride/mcp_catalog.py",
+        "docs/CATALOGO_MCP_MAKER.md"
+      ]
+    },
+    {
+      "id": "FR-002",
+      "result": "passed",
+      "notes": "Fusión reversible conservando servidores y secretos; personalizaciones no se pisan.",
+      "evidence": [
+        "tests/test_mcp_catalog.py",
+        "ab_makeride/mcp_catalog.py"
+      ]
+    },
+    {
+      "id": "FR-003",
+      "result": "passed",
+      "notes": "Candidatos KiCad, depuración, serie, ESP32 y otros deshabilitados hasta pruebas.",
+      "evidence": [
+        "index.html",
+        "frontend/agent.js",
+        "docs/CATALOGO_MCP_MAKER.md"
+      ]
+    },
+    {
+      "id": "FR-004",
+      "result": "passed",
+      "notes": "API protegida con sesión y consentimiento por tarea; tests de navegador de altas/bajas sin ejecutar MCP.",
+      "evidence": [
+        "server.py",
+        "tests/browser_mcp.py",
+        "tests/test_mcp_catalog.py"
+      ]
+    },
+    {
+      "id": "FR-005",
+      "result": "passed",
+      "notes": "Guía para Codex personal sin alterar el PC y límites de terceros documentados.",
+      "evidence": [
+        "scripts/preparar_rea_codex.ps1",
+        "THIRD_PARTY_NOTICES.md",
+        "docs/MCP.md"
+      ]
+    }
+  ],
+  "changed_files": {
+    "ab_makeride/mcp_catalog.py": "924ac2390285537e04ed2469cfb1f147931552a6c7e702ed41c648c45f1832e6",
+    "frontend/agent.js": "bd310422e45bef91c55cc4aa67494dc51a848970bbc3217c5f01ac94d1b314f1",
+    "index.html": "ae3c1670df0c714b1ea44560b15254b1be53dd6dea8d919ee0ae5de53cc3ca18",
+    "server.py": "f735f95d4ad4713baab91071ea44682ca965f33506715ad9f5f699c536c4d55e",
+    "tests/browser_mcp.py": "38555270604a32af12103e65aeebb8f019d4de5163b984d8200dc12bc63710aa",
+    "tests/test_mcp_catalog.py": "5fb5f9a1386f9f0ac68e9a7a4f016fa96f94e443d265a3da92cc8470078b3c7c"
+  }
+}
