@@ -334,8 +334,12 @@ export function define(context) {
       boards: 'PLACAS Y PUERTOS',
       libraries: 'LIBRERÍAS',
       settings: 'AJUSTES',
+      agentflow: 'CENTRO DE AGENTES',
     }[panel];
-    if (panel === 'project') {
+    context.$('#sidebar').classList.toggle('is-agent-flow', panel === 'agentflow');
+    if (panel === 'agentflow') {
+      context.renderAgentFlowPanel(b);
+    } else if (panel === 'project') {
       context.renderProjectPanel(b, context.state);
       b.querySelector('#restoreMigrationBackup').onclick = async () => {
         try {
