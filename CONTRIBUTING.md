@@ -17,6 +17,12 @@ Explica el problema y el comportamiento final, con captura si cambia la interfaz
 
 No incluyas proyectos personales, .makeride-data, credenciales o binarios de compilación. No ejecutes pruebas de grabación en una placa ajena sin autorización para ese firmware y dispositivo.
 
+## Políticas de integración y publicación
+
+Los PR deben tener una única finalidad, alcance verificable y riesgos conocidos. Una rama terminada no es una Release: solo una autorización expresa de MS ROBOTIKA, respaldada por los criterios en [docs/RELEASE_POLICY.md](docs/RELEASE_POLICY.md), permite etiquetar y publicar. No incrementar versiones por cada commit ni llenar Releases de candidatos consecutivos.
+
+La documentación anterior a RC4 se identifica como histórica y no se presenta como documentación vigente. Las carpetas `.agents/`, `.specify/`, `specs/` y `tests/` tienen una función activa; no se borran por estética.
+
 ## Verificar una contribución
 
 Consulta [arquitectura y comandos de desarrollo](docs/DESARROLLO.md). Se requieren Python 3.10+ y Node 24 para todas las herramientas de calidad; el usuario final no necesita Node.
