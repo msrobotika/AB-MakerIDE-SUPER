@@ -1,0 +1,30 @@
+name: Format AI Activity Center (one-time)
+on:
+  push:
+    branches: [feat/agent-activity-center]
+    paths: ['.github/workflows/agent-center-format-once.yml']
+permissions:
+  contents: write
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Apply existing repository formatting rules
+        run: npx prettier --write frontend/agent_activity.js frontend/agent.js frontend/workspace.js frontend/bootstrap.js frontend/styles.css index.html
+      - name: Commit only formatted source
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add frontend/agent_activity.js frontend/agent.js frontend/workspace.js frontend/bootstrap.js frontend/styles.css index.html
+          if ! git diff --cached --quiet; then
+            git commit -m "style(agent): format new activity center using repository Prettier"
+            git push origin HEAD:feat/agent-activity-center
+          fi
