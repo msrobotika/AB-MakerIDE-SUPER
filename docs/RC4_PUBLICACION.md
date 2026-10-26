@@ -1,6 +1,6 @@
 # AB MakerIDE SUPER · 1.0.0-rc.4
 
-**MS ROBOTIKA — IDE local, código abierto (MIT).** Versión candidata (*pre-release*), publicada el 26 de octubre de 2026. **No es una edición estable** ni garantiza compatibilidad universal con cualquier placa. Esta ficha describe el código y los artefactos de la etiqueta `v1.0.0-rc.4`; las mejoras de documentación posteriores en `main` no modifican el ZIP ya publicado.
+**MS ROBOTIKA — IDE local, código abierto (MIT).** Versión candidata (*pre-release*), publicada el 26 de octubre de 2026. **No es una edición estable** ni garantiza compatibilidad universal con cualquier placa. El tag `v1.0.0-rc.4` conserva su fuente e historial originales. El **ZIP vigente de esta misma Release** se actualizó con el Centro de Actividad IA; no representa una validación física nueva.
 
 ## Capturas reales de la aplicación RC4
 
@@ -13,6 +13,16 @@
 *Panel de puertos y monitor serie. Se recibieron los mensajes de inicialización y calibración; no se recogió un marcador final de juego durante la ventana automatizada.*
 
 [Prueba física y sus límites](https://github.com/msrobotika/AB-MakerIDE-SUPER/blob/v1.0.0-rc.4/docs/evidence/cyd-rc4/README.md) · [Auditoría técnica de RC4](https://github.com/msrobotika/AB-MakerIDE-SUPER/blob/v1.0.0-rc.4/docs/AUDITORIA_RC4.md)
+
+## Centro de Actividad IA · descarga RC4 actualizada
+
+El ZIP **`AB-MakerIDE-SUPER-1.0.0-rc.4-IA-actualizada.zip`** incluye el Centro de Actividad IA en la barra izquierda, que presenta eventos de sesiones reales de CLI de Codex o Claude Code, permisos existentes, evidencias del proceso y archivos informados.
+
+[![Centro de Actividad IA sin sesión](https://raw.githubusercontent.com/msrobotika/AB-MakerIDE-SUPER/main/docs/evidence/agent-activity/01-panel-sin-sesion.png)](https://github.com/msrobotika/AB-MakerIDE-SUPER/blob/main/docs/evidence/agent-activity/01-panel-sin-sesion.png)
+
+[![Centro de Actividad IA con tarea controlada](https://raw.githubusercontent.com/msrobotika/AB-MakerIDE-SUPER/main/docs/evidence/agent-activity/02-actividad-cli-controlada.png)](https://github.com/msrobotika/AB-MakerIDE-SUPER/blob/main/docs/evidence/agent-activity/02-actividad-cli-controlada.png)
+
+Estas capturas son del programa ejecutado en Chromium con **worker CLI controlado**: no hay cuenta IA ni placa física conectada. [Verificación y actualización del ZIP existente](https://github.com/msrobotika/AB-MakerIDE-SUPER/actions/runs/40317679226). Las pruebas de hardware indicadas más abajo proceden de la RC4 histórica.
 
 ## Qué se puede hacer
 
@@ -36,7 +46,7 @@ Hay evidencias sobre seis dispositivos concretos, con alcances diferentes. Consu
 
 ## Descargar y comenzar
 
-**[Descargar los archivos de RC4](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/tag/v1.0.0-rc.4)** — seleccionar `AB-MakerIDE-SUPER-1.0.0-rc.4.zip` en *Assets*. Los archivos `SHA256SUMS.txt`, `validacion-RC4.json` y un vídeo de demostración están adjuntos a la misma ficha.
+**[Descargar los archivos de RC4](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/tag/v1.0.0-rc.4)** — seleccionar `AB-MakerIDE-SUPER-1.0.0-rc.4-IA-actualizada.zip` en *Assets*. Los archivos `SHA256SUMS.txt`, `validacion-RC4.json` y un vídeo de demostración están adjuntos a la misma ficha.
 
 **Windows:** necesitas Python 3.10 o posterior. Descomprime todo en **una carpeta nueva**, sin mezclar versiones, ejecuta `PREPARAR_WINDOWS.bat` si necesitas funciones opcionales de serie y MicroPython, y abre `INICIAR_WINDOWS.bat`. Interfaz local predeterminada: `http://127.0.0.1:8770`. Para compilar Arduino necesitas **Arduino CLI** y el core de la placa, por separado.
 
