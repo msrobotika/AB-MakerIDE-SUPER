@@ -1,5 +1,5 @@
 # Solo para funcionalidades serie y MicroPython. La interfaz y Arduino CLI
 # funcionan sin instalar estas bibliotecas Python (si existe arduino-cli).
 pyserial>=3.5,<4
-mpremote>=1.24,<2
+mpremote>=1.29.0,<2
 keyring>=25,<26
