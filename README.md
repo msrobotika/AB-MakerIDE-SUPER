@@ -26,6 +26,12 @@ La aplicación es open source, con [licencia MIT](LICENSE). **La IA es opcional 
 
 **Publicaciones congeladas:** el desarrollo continúa mediante PR y pruebas; no se crearán lanzamientos cada día. La RC4 es **un candidato, no una versión estable**. [Política estricta de publicación](docs/RELEASE_POLICY.md) · [Índice de documentación vigente](docs/README.md). Las RC anteriores deben retirarse de la vista pública sin reescribir el historial Git; la limpieza de esas fichas está pendiente de una operación autorizada de GitHub Releases.
 
+## Centro de actividad IA · nueva función en desarrollo
+
+Una pestaña **✧ en la barra izquierda** permite seguir el trabajo real de Codex y Claude Code: estado y permisos de la tarea, eventos recibidos, evidencias de compilación/grabación, archivos informados, aprobaciones pendientes y acceso a las diferencias del editor. No se muestran tareas simuladas ni se modifica el sistema de consentimiento. [Cómo funciona y qué verifica](docs/CENTRO_ACTIVIDAD_IA.md).
+
+Esta mejora está en revisión hasta pasar las pruebas; **no forma parte del paquete RC4 publicado**. No se ha creado un nuevo lanzamiento.
+
 ## Nuevo en RC4
 
 - **MCP manual por defecto en Codex.** Cada solicitud aparece en el IDE con sus argumentos y necesita una decisión. La aprobación automática es una opción visible, desactivada al abrir y limitada a esa ejecución. Claude Code conserva su estado experimental y bloquea el modo MCP manual hasta integrar sus aprobaciones nativas. [Permisos y compatibilidad](docs/MCP.md).
