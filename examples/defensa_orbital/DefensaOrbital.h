@@ -7,7 +7,7 @@
 
 // Coordenadas de diseno; NO declaran la resolucion fisica de la placa.
 // El adaptador de pantalla debera proporcionar una superficie de 320 x 240.
-class SpaceInvaders {
+class DefensaOrbital {
  public:
   static constexpr int WIDTH = 320;
   static constexpr int HEIGHT = 240;

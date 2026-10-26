@@ -15,20 +15,20 @@
 #include <Adafruit_ILI9341.h>
 #include <XPT2046_Touchscreen.h>
 #include "CYDFrame.h"
-#include "SpaceInvaders.h"
+#include "DefensaOrbital.h"
 
 SPIClass lcdBus(HSPI), touchBus(VSPI);
 Adafruit_ILI9341 lcd(&lcdBus, 2, 15, -1);
 XPT2046_Touchscreen touch(33, 36);
 CYDFrame frame;
-SpaceInvaders game;
+DefensaOrbital game;
 float ax=0, bx=0, cx=0, ay=0, by=0, cy=0;
 uint32_t lastFrame=0, lastStatus=0;
 int calibrationPoint=0;
 bool gameReady=false;
 
 void statusMarker() {
-  Serial.printf("MSR_SPACEINVADERS_BOOT build=CYD_SI_20261025_v1 lcd=ILI9341_320x240 touch=XPT2046 render=ram_dirty_rows state=%s point=%d uptime_ms=%lu\n",
+  Serial.printf("MSR_DEFENSA_ORBITAL_BOOT build=CYD_ORBITAL_20261026_v1 lcd=ILI9341_320x240 touch=XPT2046 render=ram_dirty_rows state=%s point=%d uptime_ms=%lu\n",
     gameReady ? "GAME_READY" : "CALIBRATION", calibrationPoint,
     (unsigned long)millis());
   lastStatus=millis();
@@ -77,7 +77,7 @@ void calibrate() {
     float ux=rx[1]-rx[0],uy=ry[1]-ry[0],vx=rx[2]-rx[0],vy=ry[2]-ry[0];
     float det=ux*vy-vx*uy;
     if(fabsf(det)<10000) {
-      Serial.println("MSR_SPACEINVADERS_CALIBRATION_RETRY degenerate_points");
+      Serial.println("MSR_DEFENSA_ORBITAL_CALIBRATION_RETRY degenerate_points");
       label(40,184,"Repite las tres cruces",ILI9341_RED);waitingDelay(1000);continue;
     }
     ax=((sx[1]-sx[0])*vy-(sx[2]-sx[0])*uy)/det;
@@ -86,12 +86,12 @@ void calibrate() {
     ay=((sy[1]-sy[0])*vy-(sy[2]-sy[0])*uy)/det;
     by=(ux*(sy[2]-sy[0])-vx*(sy[1]-sy[0]))/det;
     cy=sy[0]-ay*rx[0]-by*ry[0];
-    Serial.println("MSR_SPACEINVADERS_CALIBRATION_OK RAM_ONLY");return;
+    Serial.println("MSR_DEFENSA_ORBITAL_CALIBRATION_OK RAM_ONLY");return;
   }
 }
 void setup() {
   Serial.begin(115200);delay(250);
-  Serial.println("MSR_SPACEINVADERS_START build=CYD_SI_20261025_v1");
+  Serial.println("MSR_DEFENSA_ORBITAL_START build=CYD_ORBITAL_20261026_v1");
   pinMode(5,OUTPUT);digitalWrite(5,HIGH);
   pinMode(15,OUTPUT);digitalWrite(15,HIGH);
   pinMode(33,OUTPUT);digitalWrite(33,HIGH);
@@ -103,9 +103,9 @@ void setup() {
   if(!memoryOK || !touchOK) {
     lcd.fillScreen(ILI9341_BLACK);label(20,80,"ERROR DE INICIALIZACION",ILI9341_RED);
     label(20,110,memoryOK ? "No inicia el tactil" : "RAM insuficiente");
-    while(true) {Serial.printf("MSR_SPACEINVADERS_ERROR memory=%d touch_init=%d\n",memoryOK,touchOK);delay(2000);}
+    while(true) {Serial.printf("MSR_DEFENSA_ORBITAL_ERROR memory=%d touch_init=%d\n",memoryOK,touchOK);delay(2000);}
   }
-  Serial.printf("MSR_SPACEINVADERS_HW_INIT heap_free=%lu framebuffer_bytes=153600 spi_hz=20000000 sd=unused\n",(unsigned long)ESP.getFreeHeap());
+  Serial.printf("MSR_DEFENSA_ORBITAL_HW_INIT heap_free=%lu framebuffer_bytes=153600 spi_hz=20000000 sd=unused\n",(unsigned long)ESP.getFreeHeap());
   calibrate();game.begin(millis());game.draw(frame);frame.present(lcd);
   gameReady=true;calibrationPoint=0;lastFrame=millis();statusMarker();
 }
@@ -114,7 +114,7 @@ void loop() {
   if(now-lastFrame>=33) {
     lastFrame=now;
     int rawx,rawy;
-    SpaceInvaders::Input input;
+    DefensaOrbital::Input input;
     input.down=sampleRaw(rawx,rawy);
     if(input.down) {
       input.x=constrain(lroundf(ax*rawx+bx*rawy+cx),0L,319L);

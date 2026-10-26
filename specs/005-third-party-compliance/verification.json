@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "convergence": "converged",
+  "requirements": [
+    {
+      "id": "FR-001",
+      "result": "passed",
+      "notes": "Ruta del juego, clase y marcador de desarrollo propios, sin alterar las pruebas físicas y el tag de RC4.",
+      "evidence": [
+        "examples/defensa_orbital/defensa_orbital.ino",
+        "examples/defensa_orbital/DefensaOrbital.h",
+        "docs/evidence/cyd-space-invaders/README.md"
+      ]
+    },
+    {
+      "id": "FR-002",
+      "result": "passed",
+      "notes": "Inventario de licencias original, upstream Spec Kit y Arduino CLI externa con límites explícitos.",
+      "evidence": [
+        "THIRD_PARTY_NOTICES.md",
+        ".specify/UPSTREAM_LICENSE",
+        "ab_makeride/toolchain.py"
+      ]
+    },
+    {
+      "id": "FR-003",
+      "result": "passed",
+      "notes": "Disclaimers de compatibilidad y no afiliación en documentación de ambos idiomas.",
+      "evidence": [
+        "README.md",
+        "README.en.md",
+        "docs/MARCAS_Y_LICENCIAS.md"
+      ]
+    },
+    {
+      "id": "FR-004",
+      "result": "passed",
+      "notes": "Prueba nueva incluida en descubrimiento unittest, hashes de cambios y publicación no modificada. CI pendiente de validación.",
+      "evidence": [
+        "tests/test_distribution_policy.py",
+        "tests/run_isolated.py",
+        "docs/RELEASE_POLICY.md"
+      ]
+    }
+  ],
+  "changed_files": {
+    "examples/defensa_orbital/defensa_orbital.ino": "337a427ce4b3be0a3bcd69bfc613224ba4c517341ed3c57141a7c915ac9b006f",
+    "examples/defensa_orbital/DefensaOrbital.h": "f24fccf193b4934c88ee86123c2e1eba4be1a674a3e4f804cc1042a8ccdeb3f0",
+    "examples/defensa_orbital/CYDFrame.h": "fcf57f48851b59fadae39b229aea42e747ba9271f690984cd44321cf962f1680",
+    "tests/test_distribution_policy.py": "8d3d64afc15d7adb4b001b462b0d4272fabe1ff52bd907280d85ee57a67dc842",
+    "examples/cyd_space_invaders/cyd_space_invaders.ino": "deleted",
+    "examples/cyd_space_invaders/SpaceInvaders.h": "deleted",
+    "examples/cyd_space_invaders/CYDFrame.h": "deleted"
+  }
+}

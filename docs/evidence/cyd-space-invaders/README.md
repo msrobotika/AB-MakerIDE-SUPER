@@ -1,6 +1,6 @@
 # Demostración de juego arcade de naves en una CYD física
 
-El ejemplo es una **demostración no oficial de mecánicas de arcade clásico**, de estilo similar a los juegos históricos de invasores espaciales. No se presenta como el juego comercial original ni como una publicación autorizada por sus titulares. El nombre de carpeta, ciertos identificadores serie y las referencias en los registros antiguos se conservan como **identificadores históricos**, no como marca comercial. No se ha realizado una auditoría jurídica de gráficos ni mecánicas.
+Esta es **evidencia histórica de RC4**; los identificadores antiguos reproducen literalmente el ensayo y no son marcas del producto actual. La rama mantenida contiene [Defensa Orbital](../../../examples/defensa_orbital/defensa_orbital.ino). El ejemplo histórico es una **demostración no oficial de mecánicas de arcade clásico**, de estilo similar a los juegos históricos de invasores espaciales. No se presenta como el juego comercial original ni como una publicación autorizada por sus titulares. El nombre de carpeta, ciertos identificadores serie y las referencias en los registros antiguos se conservan como **identificadores históricos**, no como marca comercial. No se ha realizado una auditoría jurídica de gráficos ni mecánicas.
 
 25 octubre 2026. Misma CYD ESP32-2432S028R de la prueba de bloques, ESP32-D0WD-V3 revisión 3.0, 4 MB, COM4. El usuario pidió expresamente crear, compilar y cargar el juego. Se reutilizó el perfil LCD/táctil que ya había funcionado, sin volver a pedir su identificación.
 
