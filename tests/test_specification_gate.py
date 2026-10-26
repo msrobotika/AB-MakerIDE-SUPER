@@ -57,6 +57,12 @@ class SpecificationGateTests(unittest.TestCase):
         self.assertFalse(result["passed"])
         self.assertIn(text, " ".join(result["errors"]))
 
+    def test_arduino_sources_require_delivery_hashes(self):
+        self.assertTrue(gate.technical("examples/cyd_space_invaders/cyd_space_invaders.ino"))
+        self.assertTrue(gate.technical("examples/cyd_space_invaders/SpaceInvaders.h"))
+        self.assertTrue(gate.technical("src/hardware/driver.cpp"))
+        self.assertFalse(gate.technical("docs/example.md"))
+
     def test_complete_delivery_and_no_comparison_are_explicit(self):
         result = gate.validate(self.root)
         self.assertTrue(result["passed"], result)
