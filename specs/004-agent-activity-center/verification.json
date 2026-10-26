@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "convergence": "converged",
+  "requirements": [
+    {
+      "id": "FR-001",
+      "result": "passed",
+      "notes": "La barra lateral ✧ abre el centro sin sustituir editor o consola. Estado del rail accesible mediante aria-label y tareas observadas.",
+      "evidence": [
+        "index.html",
+        "frontend/workspace.js",
+        "frontend/styles.css"
+      ]
+    },
+    {
+      "id": "FR-002",
+      "result": "passed",
+      "notes": "Datos reales de agente: job_id, eventos, evidence del servidor, archivos y aprobaciones; sin tareas ficticias ni persistencia de logs.",
+      "evidence": [
+        "frontend/agent_activity.js",
+        "frontend/agent.js",
+        "ab_makeride/agent_runtime.py"
+      ]
+    },
+    {
+      "id": "FR-003",
+      "result": "passed",
+      "notes": "Acciones de izquierda abren configuración, recuperación, revisión de cambios y consola; botón Stop usa el original con permisos CLI sin cambios.",
+      "evidence": [
+        "frontend/agent_activity.js",
+        "frontend/agent.js"
+      ]
+    },
+    {
+      "id": "FR-004",
+      "result": "passed",
+      "notes": "Estado de hardware limitado a pruebas que el backend declara verificadas, conexión perdida queda desconocida; máximo de 70 eventos en memoria.",
+      "evidence": [
+        "frontend/agent_activity.js",
+        "docs/CENTRO_ACTIVIDAD_IA.md"
+      ]
+    },
+    {
+      "id": "FR-005",
+      "result": "passed",
+      "notes": "Pruebas del reductor con Node y browser Playwright en CLI simulada, salida etiquetada; cobertura añadida a CI.",
+      "evidence": [
+        "tests/test_agent_activity.mjs",
+        "tests/browser_agent_consent.py",
+        ".github/workflows/checks.yml"
+      ]
+    }
+  ],
+  "changed_files": {
+    "index.html": "b3da610ba1ca9f2bc8b450b4d6452fb5d0264efda8607a533720274109420370",
+    "frontend/bootstrap.js": "a501ad4df717fc7d02b4c353dfa556719a6cb31bc0a05a1eecbd8bacc5c7a7fe",
+    "frontend/workspace.js": "2b3d6512a85a283054a1b8eff18b5cad7fab6e84fa08bddf26df739650320594",
+    "frontend/agent.js": "064a1a1a4520773703cb7e7bd12ee348642c7fd333baf3dcbf79f8d101799562",
+    "frontend/agent_activity.js": "b414ef639c9c0306815a4ce0ee8725b62b994dc860c6a1dd7a8ee022703c4138",
+    "frontend/styles.css": "3fe7c955b686226c5b41e9807aa011777e9364d56d52507442f35a6761aea247",
+    "tests/test_agent_activity.mjs": "db667a855ccb59f0c8ebc526efb35854f5a0e670399263f39671a029373a8437",
+    "tests/browser_agent_consent.py": "87a386b700fd70791e09970c939db86c73496a48dc35e5d0a9eb444ffaff9303",
+    ".github/workflows/checks.yml": "ae5a0e68c35a45ecb42b056420951c4aec64108126f42ca986bc3f434394f105"
+  }
+}
