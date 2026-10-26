@@ -155,6 +155,12 @@ def main():
                     )
                     if page.locator("body").get_attribute("data-right") != "ai":
                         page.locator("#showAI").click()
+                    page.locator("[data-panel=agents]").click()
+                    check(
+                        "agent activity sidebar opens without fake progress",
+                        page.locator("#activityState").inner_text() == "Sin sesión"
+                        and "No consta" in page.locator("#activityPhases").inner_text(),
+                    )
                     page.locator("#agentWorkbench").evaluate("(e)=>e.open=true")
                     page.locator("#execTask").fill(
                         "CONTROLADO: comprobar autorización, sin hardware"
@@ -222,8 +228,19 @@ def main():
                         and server.AGENT_JOBS._current.success is True,
                     )
                     page.screenshot(path=str(args.outputs / "agent-consent-started-controlled.png"))
+                    page.wait_for_function(
+                        '()=>document.querySelector("#activityState").textContent.includes("CLI finalizada")'
+                    )
+                    check(
+                        "left sidebar receives actual job result and tool activity",
+                        page.locator("#activityProvider").inner_text() == "Codex"
+                        and page.locator("#activityPhases").count() == 1
+                        and page.locator("#activityTimeline li").count() > 0,
+                    )
+                    page.screenshot(path=str(args.outputs / "agent-activity-sidebar-controlled.png"))
                     page.locator("#execMode").select_option("consultar")
-                    page.locator("#execRun").click()
+                    page.locator("#activityPrompt").fill("CONTROLADO: lectura mediante el panel izquierdo")
+                    page.locator("#activityRun").click()
                     check(
                         "read-only hides full-access input",
                         not page.locator("#agentConsentInput").is_visible()
