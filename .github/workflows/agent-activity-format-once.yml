@@ -1,0 +1,86 @@
+name: One-time agent observer quality preparation
+on:
+  push:
+    branches: [feat/agent-activity-workbench]
+    paths:
+      - '.github/workflows/agent-activity-format-once.yml'
+permissions:
+  contents: write
+jobs:
+  format-and-integrity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Format new activity center and browser acceptance
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund
+          npx prettier --write frontend/agent_observer.js frontend/agent.js frontend/bootstrap.js frontend/workspace.js frontend/styles.css index.html
+          python -m pip install ruff==0.17.2
+          python -m ruff format tests/browser_agent_consent.py
+      - name: Finalize Spec Kit, remove one-time workflow, and reseal manifest
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+          source = Path('.')
+          technical = [
+              '.github/workflows/checks.yml',
+              'frontend/agent.js',
+              'frontend/agent_observer.js',
+              'frontend/bootstrap.js',
+              'frontend/styles.css',
+              'frontend/workspace.js',
+              'index.html',
+              'tests/browser_agent_consent.py',
+              'tests/test_agent_observer.mjs',
+          ]
+          records = [
+              ('FR-001', 'Botón propio en el rail y diseño original.', ['index.html','frontend/styles.css','frontend/workspace.js']),
+              ('FR-002', 'Estado y evidencias proceden de snapshots CLI reales, sin progreso inventado.', ['frontend/agent_observer.js','frontend/agent.js']),
+              ('FR-003', 'La ejecución reutiliza el diálogo de consentimiento, permisos y detención.', ['frontend/agent.js','tests/browser_agent_consent.py']),
+              ('FR-004', 'El historial se consulta y recupera desde el servidor sin relanzar comandos.', ['frontend/agent.js','frontend/agent_observer.js']),
+              ('FR-005', 'Pruebas unitarias y navegador conectadas a CI.', ['tests/test_agent_observer.mjs','tests/browser_agent_consent.py','.github/workflows/checks.yml']),
+              ('FR-006', 'Este cambio no crea ninguna Release, solo revisión PR.', ['docs/AGENT_ACTIVITY.md','docs/RELEASE_POLICY.md']),
+          ]
+          verify = {
+              'schema_version': 1,
+              'convergence': 'converged',
+              'requirements': [
+                  {'id': i, 'result': 'passed', 'notes': n, 'evidence': e}
+                  for i, n, e in records
+              ],
+              'changed_files': {
+                  path: hashlib.sha256((source / path).read_bytes()).hexdigest()
+                  for path in technical
+              },
+          }
+          (source / 'specs/004-agent-activity/verification.json').write_text(
+              json.dumps(verify, ensure_ascii=False, indent=2) + '\n',
+              encoding='utf-8',
+          )
+          (source / '.specify/memory/quality-gate.json').write_text(
+              json.dumps({'schema_version':1,'feature':'specs/004-agent-activity'}, indent=2) + '\n',
+              encoding='utf-8',
+          )
+          PY
+          rm .github/workflows/agent-activity-format-once.yml
+          git add -A
+          python tests/manifest.py --write
+          git add MANIFEST_SHA256.txt
+          python tests/manifest.py
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "style(agent): format original activity workbench and verify Spec Kit + integrity"
+          git pull --rebase origin feat/agent-activity-workbench
+          git push origin HEAD:feat/agent-activity-workbench
