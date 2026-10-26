@@ -6,6 +6,10 @@
 
 **Un editor con agente para crear firmware de Arduino, ESP32 y MicroPython.** Pide el proyecto desde el chat, trabaja con el código en el editor y distingue cada resultado: código, compilación, carga verificada y observación física.
 
+## En desarrollo · Centro de actividad IA
+
+Se ha preparado una vista propia de MS ROBOTIKA en la **barra izquierda** para observar tareas reales de Codex y Claude Code. Muestra fases sustentadas en el registro, archivos modificados, diferencias y evidencias de compilación/grabación, con las mismas autorizaciones del IDE. **No forma parte del ZIP publicado de RC4**: permanece en desarrollo y requiere validación de las CLIs y hardware reales. [Manual del centro de actividad](docs/AGENT_ACTIVITY.md).
+
 ## Capturas auténticas del IDE · RC4
 
 Estas imágenes proceden de la **aplicación RC4 en Windows con una placa CYD ESP32-2432S028R**, no de un concepto gráfico ni de un simulador.
