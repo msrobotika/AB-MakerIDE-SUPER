@@ -6,6 +6,20 @@
 
 **Un editor con agente para crear firmware de Arduino, ESP32 y MicroPython.** Pide el proyecto desde el chat, trabaja con el código en el editor y distingue cada resultado: código, compilación, carga verificada y observación física.
 
+## Capturas auténticas del IDE · RC4
+
+Estas imágenes proceden de la **aplicación RC4 en Windows con una placa CYD ESP32-2432S028R**, no de un concepto gráfico ni de un simulador.
+
+[![RC4: carga de firmware desde el IDE y consola de verificación](docs/evidence/cyd-rc4/carga-desde-ide-real.png)](docs/evidence/cyd-rc4/carga-desde-ide-real.png)
+
+*IDE con editor, selección de placa, asistente opcional, verificación de carga y consola. La captura verifica la finalización del grabador; la pantalla/táctil fueron confirmados por separado por el usuario.*
+
+[![RC4: panel de placas y monitor serie conectado](docs/evidence/cyd-rc4/monitor-serie-real.png)](docs/evidence/cyd-rc4/monitor-serie-real.png)
+
+*Panel de placas/COM4, monitor serie y mensajes de inicialización. [Evidencias completas](docs/evidence/cyd-rc4/README.md).*
+
+**[Ver características, descarga, instalación, pruebas y límites de RC4](docs/RC4_PUBLICACION.md)**.
+
 La aplicación es open source, con [licencia MIT](LICENSE). **La IA es opcional y no es gratuita por incluir MakerIDE:** cada usuario vincula su propia cuenta y utiliza su cuota. Codex está probado en uso real por el autor. Claude Code, conectores de chat y Ollama siguen pendientes de validación equivalente.
 
 ![RC4: carga CYD real verificada desde el IDE](docs/evidence/cyd-rc4/carga-desde-ide-real.png)
@@ -40,7 +54,7 @@ Se conservan el **inicio vacío**, el guardado manual con **Ctrl+S**, la importa
 
 Incluye editor Arduino C++/MicroPython, catálogo de modelos instalados, compilación, carga, monitor serie, diagnóstico, agente opcional, exportación/importación y un [simulador de secuencias digitales](docs/SIMULADOR.md). El simulador no emula firmware ni acredita funcionamiento físico. El [cuaderno de placas](docs/PRUEBAS_DE_PLACAS.md) guarda pruebas cuando el usuario lo solicita.
 
-Hay pruebas físicas documentadas de **seis dispositivos concretos**: radar IdeaSpark, ESP32-CAM, WROOM con MicroPython, Nano con cargador antiguo, Mega 2560 y CYD con pantalla táctil. La CYD recibió primero bloques y después [Space Invaders](docs/evidence/cyd-space-invaders/README.md): dos respaldos de flash coincidentes, firmware completo compilado, cuatro bloques de grabación verificados y marcador serie. El usuario confirmó que tenía el juego. Esto no acredita cualquier revisión ni una prueba prolongada de todos sus periféricos.
+Hay pruebas físicas documentadas de **seis dispositivos concretos**: radar IdeaSpark, ESP32-CAM, WROOM con MicroPython, Nano con cargador antiguo, Mega 2560 y CYD con pantalla táctil. La CYD recibió primero bloques y después [un juego de naves de estilo arcade clásico (inspiración en juegos de invasores espaciales)](docs/evidence/cyd-space-invaders/README.md): dos respaldos de flash coincidentes, firmware completo compilado, cuatro bloques de grabación verificados y marcador serie. El usuario confirmó que tenía el juego. Esto no acredita cualquier revisión ni una prueba prolongada de todos sus periféricos.
 
 [Matriz de hardware](docs/MATRIZ_HARDWARE.md) · [Radar](docs/evidence/radar-ideaspark/README.md) · [Cámara](docs/evidence/esp32cam/README.md) · [MicroPython](docs/evidence/wroom-micropython/README.md) · [Nano](docs/evidence/arduino-nano/README.md) · [Mega](docs/evidence/arduino-mega/README.md) · [Bloques CYD](docs/evidence/cyd/README.md)
 
