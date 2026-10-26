@@ -29,4 +29,4 @@ Las pruebas físicas de Uno, otras familias ESP32, MicroPython en otras placas, 
 
 [Registros y alcance de la CYD](evidence/cyd/README.md).
 
-RC3 añade [Space Invaders en la misma CYD](evidence/cyd-space-invaders/README.md): firmware completo, respaldo doble coincidente, carga con cuatro bloques verificados y marcador serie. El usuario confirmó que tenía el juego. No se añade otro dispositivo a la cuenta de seis ni se atribuyen pruebas independientes de todos sus controles o duración.
+RC3 añade [un juego de naves de estilo arcade clásico en la misma CYD](evidence/cyd-space-invaders/README.md): firmware completo, respaldo doble coincidente, carga con cuatro bloques verificados y marcador serie. El usuario confirmó que tenía el juego. No se añade otro dispositivo a la cuenta de seis ni se atribuyen pruebas independientes de todos sus controles o duración.
