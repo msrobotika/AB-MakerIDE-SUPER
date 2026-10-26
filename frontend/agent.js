@@ -614,8 +614,10 @@ export function initialize(context) {
     const id = context.$('#mcpCatalogSelect').value;
     const options = {
       rea: 'REA 6.8.0 · firmware y binarios. Requiere Node compatible y proveedor de análisis. Primera ejecución autorizada puede descargar paquete.',
-      context7: 'Context7 · documentación de bibliotecas mediante HTTPS externo. Puede aplicar límites de uso y necesita clave para mayores cuotas.',
-      playwright: 'Playwright MCP 0.0.83 · prueba HTML en navegador aislado. Requiere navegador Chromium local. Agente con permiso puede visitar sitios externos.',
+      context7:
+        'Context7 · documentación de bibliotecas mediante HTTPS externo. Puede aplicar límites de uso y necesita clave para mayores cuotas.',
+      playwright:
+        'Playwright MCP 0.0.83 · prueba HTML en navegador aislado. Requiere navegador Chromium local. Agente con permiso puede visitar sitios externos.',
     };
     const supported = Object.hasOwn(options, id);
     context.$('#mcpCatalogAdd').disabled = !supported || context.state.agentWorking;
