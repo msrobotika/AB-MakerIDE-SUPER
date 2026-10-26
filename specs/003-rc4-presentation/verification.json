@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "convergence": "converged",
+  "requirements": [
+    {
+      "id": "FR-001",
+      "result": "passed",
+      "notes": "Las dos capturas provienen de la ejecución Windows RC4; galería y leyendas diferencian herramienta, grabación física y confirmación del usuario.",
+      "evidence": [
+        "README.md",
+        "README.en.md",
+        "docs/evidence/cyd-rc4/README.md"
+      ]
+    },
+    {
+      "id": "FR-002",
+      "result": "passed",
+      "notes": "Notas listas para el editor de Release con URLs inmutables y detalles de instalación, pruebas y límites. Aún no están aplicadas en la ficha GitHub Release.",
+      "evidence": [
+        "docs/RC4_PUBLICACION.md",
+        "docs/INSTALACION.md"
+      ]
+    },
+    {
+      "id": "FR-003",
+      "result": "passed",
+      "notes": "El título visible en el código de desarrollo es genérico y los enlaces de los registros antiguos señalan el tag RC4; nombres de archivos históricos se conservan.",
+      "evidence": [
+        "examples/cyd_space_invaders/SpaceInvaders.h",
+        "examples/cyd_space_invaders/cyd_space_invaders.ino",
+        "docs/evidence/cyd-space-invaders/README.md",
+        "CHANGELOG.md"
+      ]
+    },
+    {
+      "id": "FR-004",
+      "result": "passed",
+      "notes": "Spec Kit incluye fuentes .ino y .h como técnicos, con test para nuevas extensiones y huellas registradas.",
+      "evidence": [
+        "tests/specification_gate.py",
+        "tests/test_specification_gate.py",
+        "docs/SPEC_KIT.md"
+      ]
+    }
+  ],
+  "changed_files": {
+    "examples/cyd_space_invaders/cyd_space_invaders.ino": "4d7ddfb3e07569acb1d16e55dd8d6a96c923a81f6453442d64854944a241d58a",
+    "examples/cyd_space_invaders/SpaceInvaders.h": "7b1667881d27c9451d0bee815632f7394fac51c496cfd041f53ddc005417382d",
+    "tests/specification_gate.py": "c1e9bdfe966e2ef5c0fb2f5e7572cce68b81568e099d012900dd8ce37086b9aa",
+    "tests/test_specification_gate.py": "b8c1f541ea519dfd9da8efe2461d85e19b0d6e78cbd39a858f67679e8fcdbfa4"
+  }
+}

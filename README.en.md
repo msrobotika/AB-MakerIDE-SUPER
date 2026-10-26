@@ -4,6 +4,20 @@
 
 **Release freeze:** code changes are reviewed as pull requests. No daily public releases; RC4 is a **pre-release, not stable software**. [Release governance](docs/RELEASE_POLICY.md) · [Current documentation index](docs/README.md).
 
+## Real RC4 screenshots
+
+The images below are from **the actual Windows RC4 application** running against the documented CYD ESP32 board, not promotional mockups.
+
+[![RC4 IDE with verified real firmware upload](docs/evidence/cyd-rc4/carga-desde-ide-real.png)](docs/evidence/cyd-rc4/carga-desde-ide-real.png)
+
+*IDE editor, board selection, agent permission panel and uploader console. The user separately confirmed the physical screen and touch.*
+
+[![RC4 IDE serial monitor](docs/evidence/cyd-rc4/monitor-serie-real.png)](docs/evidence/cyd-rc4/monitor-serie-real.png)
+
+*Port selection, serial console and firmware initialization messages.*
+
+[RC4 details, requirements, verified scope and limitations (Spanish)](docs/RC4_PUBLICACION.md).
+
 A local editor and optional coding agent for Arduino, ESP32 and MicroPython. Ask for a project in chat, work with its code, and distinguish code generation, compilation, verified upload and physical observation.
 
 **AI credits are not included.** Each user connects their own provider account and uses their own quota. Codex has been tested in real use by the author. Claude Code, chat connectors and Ollama remain experimental pending equivalent validation.
@@ -14,7 +28,7 @@ Codex/Claude chat now routes to a real task with its execution consent. The sele
 
 On Windows, install Python 3.10+, extract to a new folder and open INICIAR_WINDOWS.bat (default http://127.0.0.1:8770). PREPARAR_WINDOWS.bat prepares optional serial/MicroPython dependencies in that copy's private venv. Arduino builds also need Arduino CLI and the board core. Preserve existing installations and files. [Installation guide](docs/INSTALACION.md).
 
-Six specific physical devices are documented: IdeaSpark radar, ESP32-CAM, WROOM/MicroPython, Nano, Mega and CYD. The CYD [Space Invaders test](docs/evidence/cyd-space-invaders/README.md) includes two matching flash backups, a complete build, four verified upload blocks and a serial marker; the user subsequently confirmed the game. It does not establish every screen revision, touch control or long-duration scenario. [Hardware matrix](docs/MATRIZ_HARDWARE.md).
+Six specific physical devices are documented: IdeaSpark radar, ESP32-CAM, WROOM/MicroPython, Nano, Mega and CYD. The CYD [retro arcade-style space shooter demonstration](docs/evidence/cyd-space-invaders/README.md) includes two matching flash backups, a complete build, four verified upload blocks and a serial marker; the user subsequently confirmed the game. It does not establish every screen revision, touch control or long-duration scenario. [Hardware matrix](docs/MATRIZ_HARDWARE.md).
 
 The [MCP panel](docs/MCP.md) accepts stdio and Streamable HTTP. **Codex defaults to manual approvals in the IDE.** Automatic approval is explicit, off on opening, and applies only to that run. Claude Code manual MCP approvals are not integrated: that combination is blocked rather than silently approving tools. Claude live execution remains unvalidated.
 

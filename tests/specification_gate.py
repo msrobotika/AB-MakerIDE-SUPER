@@ -21,6 +21,11 @@ REQUIRED_DOCUMENTS = (
     "convergence.md",
 )
 TECHNICAL_SUFFIXES = {
+    ".ino",
+    ".h",
+    ".hpp",
+    ".c",
+    ".cpp",
     ".py",
     ".js",
     ".cjs",

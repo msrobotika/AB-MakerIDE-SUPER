@@ -1,4 +1,6 @@
-# Space Invaders en la CYD física
+# Demostración de juego arcade de naves en una CYD física
+
+El ejemplo es una **demostración no oficial de mecánicas de arcade clásico**, de estilo similar a los juegos históricos de invasores espaciales. No se presenta como el juego comercial original ni como una publicación autorizada por sus titulares. El nombre de carpeta, ciertos identificadores serie y las referencias en los registros antiguos se conservan como **identificadores históricos**, no como marca comercial. No se ha realizado una auditoría jurídica de gráficos ni mecánicas.
 
 25 octubre 2026. Misma CYD ESP32-2432S028R de la prueba de bloques, ESP32-D0WD-V3 revisión 3.0, 4 MB, COM4. El usuario pidió expresamente crear, compilar y cargar el juego. Se reutilizó el perfil LCD/táctil que ya había funcionado, sin volver a pedir su identificación.
 
@@ -6,6 +8,6 @@ La tarea se ejecutó mediante el Codex CLI real lanzado por el IDE, con el permi
 
 Arduino CLI cargó con `--verify`, a 115200, con salida 0 y cuatro bloques verificados. El lector serie recibió el marcador propio `MSR_SPACEINVADERS_BOOT` mientras esperaba la primera cruz de calibración; no transmitió bytes ni ordenó otro reset. Después el usuario confirmó que ya tenía el juego. No se registró una evaluación independiente de todos los botones, parpadeo o estabilidad prolongada de este firmware.
 
-[Fuente exacta compilada](../../../examples/cyd_space_invaders/cyd_space_invaders.ino), con [motor](../../../examples/cyd_space_invaders/SpaceInvaders.h) y [dibujo](../../../examples/cyd_space_invaders/CYDFrame.h). Solo se adaptó el nombre del archivo principal al nombre de su carpeta Arduino; sus bytes y los auxiliares coinciden con la fuente compilada. No usa microSD, Wi-Fi, sonido ni ventana PC.
+[Fuente exacta compilada en RC4](https://github.com/msrobotika/AB-MakerIDE-SUPER/blob/v1.0.0-rc.4/examples/cyd_space_invaders/cyd_space_invaders.ino), con [motor original del ensayo](https://github.com/msrobotika/AB-MakerIDE-SUPER/blob/v1.0.0-rc.4/examples/cyd_space_invaders/SpaceInvaders.h) y [adaptador de pantalla](https://github.com/msrobotika/AB-MakerIDE-SUPER/blob/v1.0.0-rc.4/examples/cyd_space_invaders/CYDFrame.h). **Estos enlaces están fijados a la etiqueta histórica:** en la rama de desarrollo posterior se cambió el título visible a **Defensa orbital** y ya no es el mismo binario cuyo hash consta en esta ficha. Solo se adaptó el nombre del archivo principal al nombre de su carpeta Arduino; sus bytes y los auxiliares coinciden con la fuente compilada. No usa microSD, Wi-Fi, sonido ni ventana PC.
 
 [Resultado estructurado y hashes](resultado.json) · [Resumen del grabador sin identificadores privados](grabacion-resumen.txt) · [Serie](serie.txt). Las imágenes completas de flash y los registros privados permanecen fuera del repositorio y del ZIP público. Esta prueba no acredita compatibilidad con cualquier revisión CYD ni cualquier placa china.
