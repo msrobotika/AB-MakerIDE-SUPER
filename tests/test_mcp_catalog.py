@@ -24,6 +24,7 @@ class MakerMCPCatalogTests(unittest.TestCase):
         original = {
             "mcpServers": {
                 "private": {
+                    "type": "http",
                     "url": "https://example.com/mcp",
                     "headers": {"Authorization": "secret-not-for-display"},
                 }
@@ -52,9 +53,7 @@ class MakerMCPCatalogTests(unittest.TestCase):
         )
         flags, environment = prepare_run("codex", saved, None)
         config = tomllib.loads("\n".join(flags[1::2]))
-        self.assertEqual(
-            config["mcp_servers"]["context7"]["default_tools_approval_mode"], "prompt"
-        )
+        self.assertEqual(config["mcp_servers"]["context7"]["default_tools_approval_mode"], "prompt")
         self.assertEqual(environment, {})
 
     def test_playwright_is_pinned_and_runs_isolated(self):
@@ -64,9 +63,7 @@ class MakerMCPCatalogTests(unittest.TestCase):
         self.assertIn("--headless", entry["args"])
         self.assertIn("--isolated", entry["args"])
         self.assertNotIn("@latest", " ".join(entry["args"]))
-        self.assertEqual(
-            change_preset(config, "playwright", "remove"), {"mcpServers": {}}
-        )
+        self.assertEqual(change_preset(config, "playwright", "remove"), {"mcpServers": {}})
 
     def test_preset_never_overwrites_custom_context7_key(self):
         existing = {
