@@ -1,4 +1,5 @@
 """Packaging/trademark regression checks, NOT legal certification."""
+
 import unittest
 from pathlib import Path
 
@@ -9,7 +10,9 @@ class DistributionPolicy(unittest.TestCase):
     def test_current_arcade_example_uses_own_names(self):
         folder = ROOT / "examples" / "defensa_orbital"
         sketch = folder / "defensa_orbital.ino"
-        code = sketch.read_text(encoding="utf-8") + (folder / "DefensaOrbital.h").read_text(encoding="utf-8")
+        code = sketch.read_text(encoding="utf-8") + (folder / "DefensaOrbital.h").read_text(
+            encoding="utf-8"
+        )
         self.assertTrue((folder / "CYDFrame.h").is_file())
         self.assertIn('#include "DefensaOrbital.h"', code)
         self.assertIn("class DefensaOrbital", code)
