@@ -333,6 +333,7 @@ export function define(context) {
       project: 'PROYECTO',
       boards: 'PLACAS Y PUERTOS',
       libraries: 'LIBRERÍAS',
+      agents: 'ACTIVIDAD IA',
       settings: 'AJUSTES',
     }[panel];
     if (panel === 'project') {
@@ -394,6 +395,8 @@ export function define(context) {
         context.renderSidebar();
         context.toast('Proyecto nuevo. Selecciona la placa antes de compilar.');
       };
+    } else if (panel === 'agents') {
+      context.renderAgentObserverSidebar(b);
     } else if (panel === 'boards') {
       context.renderBoardsPanel(b, context.state);
       b.querySelector('#openBoardSearch').onclick = context.openCatalog;
