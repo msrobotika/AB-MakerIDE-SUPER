@@ -46,6 +46,7 @@ export function define(context) {
 
   context.agentFlowReset = () => {
     context.agentFlow.events = [];
+    context.agentFlow.selected = '';
     context.agentFlow.run = null;
     context.agentFlow.preparing = true;
     refresh();
@@ -95,6 +96,7 @@ export function define(context) {
         'Sesiones reales · Codex / Claude Code · permisos controlados por el usuario'),
     );
     const stateLine = $('div', 'agent-flow-status');
+    stateLine.setAttribute('aria-live', 'polite');
     const led = $('span', 'agent-flow-led' + (active ? ' is-active' : ''));
     led.setAttribute('aria-hidden', 'true');
     const text = run
