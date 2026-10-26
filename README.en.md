@@ -1,6 +1,8 @@
 # AB MakerIDE SUPER · MS Robotika
 
-[![Checks](https://github.com/msrobotika/AB-MakerIDE-SUPER/actions/workflows/checks.yml/badge.svg)](https://github.com/msrobotika/AB-MakerIDE-SUPER/actions/workflows/checks.yml) · [MIT](LICENSE) · [Download RC4](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/tag/v1.0.0-rc.4) · [Spanish documentation](README.md)
+[![Checks](https://github.com/msrobotika/AB-MakerIDE-SUPER/actions/workflows/checks.yml/badge.svg)](https://github.com/msrobotika/AB-MakerIDE-SUPER/actions/workflows/checks.yml) · [MIT](LICENSE) · [Recommended candidate: RC4 only](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/tag/v1.0.0-rc.4) · [Spanish documentation](README.md)
+
+**Release freeze:** code changes are reviewed as pull requests. No daily public releases; RC4 is a **pre-release, not stable software**. [Release governance](docs/RELEASE_POLICY.md) · [Current documentation index](docs/README.md).
 
 A local editor and optional coding agent for Arduino, ESP32 and MicroPython. Ask for a project in chat, work with its code, and distinguish code generation, compilation, verified upload and physical observation.
 

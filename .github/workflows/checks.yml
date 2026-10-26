@@ -5,6 +5,12 @@ on:
   pull_request:
   workflow_dispatch:
 
+# Only one CI run per branch/PR; superseded runs are cancelled.
+# None of these jobs publishes releases or creates Git tags.
+concurrency:
+  group: makeride-checks-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 

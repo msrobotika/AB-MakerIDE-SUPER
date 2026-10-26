@@ -21,3 +21,16 @@ node_modules/
 build/
 dist/
 *.egg-info/
+
+# Local build and test outputs (never publish generated or personal data)
+work/
+.coverage
+coverage/
+htmlcov/
+.ruff_cache/
+.playwright/
+playwright-report/
+test-results/
+.pyright/
+*.tmp
+*.bak

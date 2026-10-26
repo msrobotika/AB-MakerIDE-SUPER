@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "convergence": "converged",
+  "requirements": [
+    {
+      "id": "FR-001",
+      "result": "passed",
+      "notes": "La política exige autorización expresa, pruebas y un único hito público; PRs y CI no publican.",
+      "evidence": [
+        "docs/RELEASE_POLICY.md",
+        "AGENTS.md",
+        ".github/workflows/checks.yml"
+      ]
+    },
+    {
+      "id": "FR-002",
+      "result": "passed",
+      "notes": "RC4 se presenta como único candidato recomendado; se declara por escrito que RC1–RC3 siguen visibles y su eliminación es externa.",
+      "evidence": [
+        "README.md",
+        "README.en.md",
+        "docs/RELEASE_POLICY.md"
+      ]
+    },
+    {
+      "id": "FR-003",
+      "result": "passed",
+      "notes": "Las guías 0.9.2/0.9.7 están bajo archive con avisos; índice de documentación separa vigente e histórico.",
+      "evidence": [
+        "docs/README.md",
+        "docs/archive/GUIA_RAPIDA_UX_092.md",
+        "docs/archive/RUMBO_PRODUCTO_097.md",
+        "docs/archive/README.md"
+      ]
+    },
+    {
+      "id": "FR-004",
+      "result": "passed",
+      "notes": "Reglas de contribución y agentes remiten a Spec Kit sin permisos implícitos de publicación.",
+      "evidence": [
+        "AGENTS.md",
+        "CONTRIBUTING.md",
+        ".github/PULL_REQUEST_TEMPLATE.md",
+        "docs/SPEC_KIT.md"
+      ]
+    },
+    {
+      "id": "FR-005",
+      "result": "passed",
+      "notes": "Las actualizaciones de dependencias se agrupan mensualmente con un máximo de un PR por ecosistema; la CI cancela ejecuciones sustituidas, .gitignore excluye salidas locales.",
+      "evidence": [
+        ".github/workflows/checks.yml",
+        ".gitignore",
+        ".github/dependabot.yml"
+      ]
+    }
+  ],
+  "changed_files": {
+    ".github/workflows/checks.yml": "7579425f3f5a1dddcfcc96bf8dd293c514ed2ef0aa55f2aaa5e2edc9df71b061",
+    ".github/dependabot.yml": "4218c4ab24a20b19d0fb273be718f2fe2f63c76536c0fb1d9125f3805d2a8f01"
+  }
+}

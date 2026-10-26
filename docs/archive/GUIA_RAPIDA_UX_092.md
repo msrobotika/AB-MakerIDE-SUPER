@@ -1,3 +1,5 @@
+> **DOCUMENTO HISTÓRICO (0.9.2).** No seguir sus instrucciones de versión, puerto ni instalación en la RC4. Véase [documentación vigente](../README.md).
+
 # Guía rápida — AB MakerIDE 0.9.2
 
 ## Abrir

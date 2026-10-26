@@ -1,3 +1,5 @@
+> **DOCUMENTO HISTÓRICO (0.9.7).** No seguir sus instrucciones de versión, puerto ni instalación en la RC4. Véase [documentación vigente](../README.md).
+
 # Rumbo del producto — criterios antes del plan maestro
 
 Esto **no es el plan definitivo de ejecución**; son los principios resultantes de la investigación que servirán para construirlo y estimarlo después de validar la v0.9.7 físicamente.

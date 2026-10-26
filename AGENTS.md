@@ -15,6 +15,12 @@ históricos; no modificar sus huellas para atribuirles trabajo posterior. Actual
 referencia compartida del gate y el puntero local de Spec Kit. Las reparaciones requieren
 diagnóstico y verificación del síntoma, además de cobertura de requisitos.
 
+## Publicación y limpieza de versiones
+
+No crear `git tag`, GitHub Releases, distribuciones públicas ni anuncios por defecto. **Cada publicación exige autorización específica del titular** y cumplir [la política de publicación](docs/RELEASE_POLICY.md), incluyendo los resultados reales de los checks del commit y las pruebas de instalación. Nunca anunciar éxito físico por pruebas simuladas, ni dar por borradas Releases si no se verificó la lista en GitHub.
+
+Todo mantenimiento debe separar material vigente de archivos históricos; no eliminar `docs/evidence/`, `.specify/` ni `specs/` a ciegas. Evitar múltiples archivos de arranque alternativos sin justificación. No reescribir historia Git para ocultar un lanzamiento anterior.
+
 ## Validación y límites
 
 - `python tests/run_isolated.py` ejecuta unidades con datos temporales.
