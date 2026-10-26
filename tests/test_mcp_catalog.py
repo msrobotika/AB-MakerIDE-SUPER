@@ -44,8 +44,46 @@ class MakerMCPCatalogTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "personalizado"):
             change_preset(original, "rea", "remove")
 
+    def test_context7_preserves_remote_url_and_requires_consent(self):
+        saved = change_preset({"mcpServers": {}}, "context7", "add")
+        self.assertEqual(
+            saved["mcpServers"]["context7"],
+            {"type": "http", "url": "https://mcp.context7.com/mcp"},
+        )
+        flags, environment = prepare_run("codex", saved, None)
+        config = tomllib.loads("\n".join(flags[1::2]))
+        self.assertEqual(
+            config["mcp_servers"]["context7"]["default_tools_approval_mode"], "prompt"
+        )
+        self.assertEqual(environment, {})
+
+    def test_playwright_is_pinned_and_runs_isolated(self):
+        config = change_preset({"mcpServers": {}}, "playwright", "add")
+        entry = config["mcpServers"]["playwright"]
+        self.assertIn("@playwright/mcp@0.0.83", entry["args"])
+        self.assertIn("--headless", entry["args"])
+        self.assertIn("--isolated", entry["args"])
+        self.assertNotIn("@latest", " ".join(entry["args"]))
+        self.assertEqual(
+            change_preset(config, "playwright", "remove"), {"mcpServers": {}}
+        )
+
+    def test_preset_never_overwrites_custom_context7_key(self):
+        existing = {
+            "mcpServers": {
+                "context7": {
+                    "url": "https://mcp.context7.com/mcp",
+                    "headers": {"Authorization": "Bearer private-example"},
+                }
+            }
+        }
+        with self.assertRaisesRegex(ValueError, "sobrescribirá"):
+            change_preset(existing, "context7", "add")
+        with self.assertRaisesRegex(ValueError, "personalizado"):
+            change_preset(existing, "context7", "remove")
+
     def test_reject_unverified_catalog_entries(self):
-        for candidate in ("kicad", "espressif_docs", "../rea", ""):
+        for candidate in ("kicad", "espressif_docs", "../rea", "serial", ""):
             with self.subTest(candidate=candidate):
                 with self.assertRaises(ValueError):
                     change_preset({"mcpServers": {}}, candidate, "add")

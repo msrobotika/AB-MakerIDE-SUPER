@@ -20,14 +20,30 @@ def _rea():
     }
 
 
+def _context7():
+    # Official remote endpoint; API key is optional but increases rate limits.
+    # A custom entry with secrets is never overwritten by the preset.
+    return {"type": "http", "url": "https://mcp.context7.com/mcp"}
+
+
+def _playwright():
+    # Isolated browser; no inherited login profile. Browser download is separate.
+    package = "@playwright/mcp@0.0.83"
+    args = ["-y", package, "--headless", "--isolated", "--browser=chromium"]
+    if os.name == "nt":
+        return {"command": "cmd.exe", "args": ["/d", "/c", "npx", *args]}
+    return {"command": "npx", "args": args}
+
+
 def _preset(preset_id):
-    if preset_id != "rea":
+    providers = {"rea": _rea, "context7": _context7, "playwright": _playwright}
+    if preset_id not in providers:
         raise ValueError("MCP Maker desconocido o sin adaptador auditado.")
-    return _rea()
+    return providers[preset_id]()
 
 
 def change_preset(current, preset_id, action):
-    """Merge/remove only exact known registrations; preserve unrelated credentials."""
+    """Merge/remove known registrations without editing unrelated credentials."""
     original = validate_config(current)
     if action not in ("add", "remove"):
         raise ValueError("Acción de catálogo MCP no autorizada.")

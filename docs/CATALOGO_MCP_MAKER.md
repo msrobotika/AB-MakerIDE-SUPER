@@ -7,7 +7,7 @@ de agente con MCP. Mantener aprobación **manual** para cada llamada en Codex
 por defecto. No es un sandbox: el servidor MCP puede ejecutar sus propias
 herramientas con permisos del usuario cuando se invoca.
 
-**Solo REA figura como integrable desde el botón; los otros nombres del desplegable son referencias descriptivas deshabilitadas.** Esto evita inventar URLs, comandos o versiones. Se requerirá una propuesta auditable independiente para cada integración.
+**Tres plantillas disponibles para registrar voluntariamente:** REA (firmware), Context7 (documentación) y Playwright (pruebas web). Son integraciones de configuración comprobables, **no conexiones ni instalaciones probadas en un PC real**. Los otros nombres del menú son candidatos sin botón operativo. Cada nuevo adaptador debe pasar una revisión de origen, permisos y funcionamiento.
 
 ## Primer servidor: REA — análisis inverso autorizado
 
@@ -20,7 +20,7 @@ REA requiere Node.js 22.23.4+, 24.22.1+ o 26.12.1+ (con ramas soportadas). En Wi
 redistribuir, ya que MakerIDE no incluye REA. REA es de un proveedor externo
 sin asociación comercial con MS Robotika.
 
-En **MCP → Catálogo Maker**, pulsar **Añadir REA**:
+En **MCP → Catálogo Maker**, seleccionar REA y pulsar **Añadir integración**:
 - fusiona solo la entrada `rea` sin revelar, reemplazar ni perder el resto
   de configuraciones o credenciales;
 - **no** ejecuta `npx`, no descarga el paquete y no modifica Codex global;
@@ -39,6 +39,15 @@ firmware. Registrar SHA-256 del original y diferencias entre resultados de
 REA y referencia conocida. No afirmar reconstrucción de fuente exacta,
 elusión de protecciones, medidas electrónicas ni análisis nativo sin un
 proveedor real operativo.
+
+## Context7 — documentación actualizada de APIs (opcional)
+
+Preset HTTP: `https://mcp.context7.com/mcp` según [instrucciones oficiales](https://github.com/upstash/context7).
+Al registrarlo **no se envía un API key**, no se efectúan consultas y no se comprueba la conectividad. El servicio puede exigir autenticar alguna funcionalidad o limitar la cuota. Para mayores límites, el usuario debe obtener su propia clave y configurar las cabeceras con el editor JSON protegido. Las consultas pueden enviar fragmentos de contexto al proveedor externo. Respetar políticas del proyecto, privacidad y uso empresarial.
+
+## Playwright MCP — navegador aislado (opcional)
+
+Paquete `@playwright/mcp@0.0.83` conforme a [Microsoft Playwright MCP](https://github.com/microsoft/playwright-mcp). El preset registra `--headless --isolated --browser=chromium`. Aislado significa **perfil nuevo sin cookies de usuario**, no aislamiento de red o del sistema operativo. El navegador requerido puede precisar instalación adicional; no se descarga al añadir la entrada. Un agente con permisos podría visitar páginas arbitrarias o interactuar con servicios; empezar con un HTML local de ensayo, en modo de agente que pida permiso. No introducir secretos reales en el navegador de pruebas.
 
 ## Usar REA en tu Codex personal (independiente de MakerIDE)
 
@@ -82,8 +91,6 @@ repetir instalaciones o restaurar.
 | Firmware en hardware | [Embedded Debugger MCP](https://github.com/adancurusul/embedded-debugger-mcp) | **Alta**: probe-rs/OpenOCD, lectura de registros y diagnóstico; también puede escribir flash y detener CPU: permisos privilegiados |
 | Comunicación USB/UART | [Serial MCP Server](https://github.com/adancurusul/serial-mcp-server) | **Alta**: captura/diagnóstico de serie; escribir bytes, alternar líneas y ejecutar macros puede actuar físicamente sobre la placa |
 | Datos de fabricante | [Espressif Documentation MCP](https://developer.espressif.com/blog/2026/04/doc-mcp-server/) | **Alta** para ESP32: referencia oficial; autenticación/configuración propias, no habilitar sin validación |
-| Bibliotecas y ejemplos | [Context7](https://github.com/upstash/context7) | **Alta**: documentación específica de bibliotecas, servicio externo y política de datos/cuota |
-| Pruebas HTML locales | [Microsoft Playwright MCP](https://github.com/microsoft/playwright-mcp) | **Media**: verificar configuradores, portales e interfaces maker; usar solo orígenes y perfiles de navegador autorizados |
 | Ficheros de proyecto | [Filesystem MCP](https://github.com/modelcontextprotocol/servers/tree/main/src/filesystem) | **Media**: solo en directorios autorizados; también ofrece herramientas de escritura, no asumir modo lectura |
 | Versionado de firmware | [GitHub MCP Server](https://github.com/github/github-mcp-server) | **Media**: PR/commits/issues; requiere autenticación por el usuario y tokens mínimos, no duplicar con integración propia |
 | Protocolos industriales | MCP de Modbus, MQTT, CAN, I²C, SPI y SCADA | **Investigación**: candidatos a auditar o adaptadores MS Robotika propios; no habilitar comandos sobre equipos reales por defecto |
@@ -91,5 +98,5 @@ repetir instalaciones o restaurar.
 Cada nuevo preset tendrá **origen oficial, versión fijada, permisos
 declarados, instalación explícita, pruebas de integración, aislamiento por
 sesión y eliminación reversible**. Los nombres y enlaces no implican
-patrocinio, certificación ni instalación. Solo REA dispone de plantilla
-operativa en esta fase.
+patrocinio, certificación ni instalación. REA, Context7 y Playwright tienen plantillas de **configuración** en esta fase;
+la verificación en un equipo real sigue pendiente.
