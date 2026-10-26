@@ -24,13 +24,11 @@
 - Los artefactos CI no son automáticamente Releases públicas. La CI existente solo verifica; **no publica**.
 - Incidencias: issues reproducibles; mejoras: ramas con PR; experimentos: documentación interna. Nunca anunciar pruebas controladas como hardware físico verificado.
 
-## Limpieza pendiente de Releases antiguas
+## Inventario público de Releases (26/10/2026)
 
-El propietario ha solicitado conservar solo `v1.0.0-rc.4` como Release visible y eliminar los objetos Release `v1.0.0-rc.1`, `v1.0.0-rc.2` y `v1.0.0-rc.3`. **La operación exige acceso de escritura a GitHub Releases y no se ha ejecutado mediante este cambio documental.** Los adjuntos de esos lanzamientos se perderán de su ficha; el historial de commits se preserva.
+Solo figura **una Release pública: `v1.0.0-rc.4`**. Las RC anteriores no aparecen ya en la ficha pública. Esto no implica eliminar tags ni reescribir historial.
 
-Para cada release anterior: abrir [Releases](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases), entrar en la versión, seleccionar **Delete release** y confirmar. **No activar borrado de tags** si el objetivo es solo limpiar la presentación. Revisar que RC4 sigue disponible con sus archivos y hashes.
-
-**Verificación posterior:** listar Releases y exigir exclusivamente `v1.0.0-rc.4`; comparar los checksums del ZIP principal y confirmar que su etiqueta apunta al commit documentado. Dejar constancia del resultado en la incidencia o acta de mantenimiento antes de afirmar que la limpieza terminó.
+El ZIP de RC4 se creó antes de integrar las nuevas atribuciones de terceros. Su contenido no puede acreditarse desde la rama `main`. [Auditoría de la distribución pendiente](AUDITORIA_DISTRIBUCION_RC4.md) · [bloqueante #11](https://github.com/msrobotika/AB-MakerIDE-SUPER/issues/11). Ningún cambio documental constituye una verificación del ZIP antiguo.
 
 ## Históricos y documentación
 
