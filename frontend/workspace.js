@@ -329,6 +329,7 @@ export function define(context) {
   context.renderSidebar = function renderSidebar() {
     const b = context.$('#sideBody'),
       panel = context.state.panel;
+    context.$('#sidebar').classList.toggle('is-agent-activity', panel === 'agent-activity');
     context.$('#sideTitle').textContent = {
       project: 'PROYECTO',
       boards: 'PLACAS Y PUERTOS',
