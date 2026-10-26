@@ -54,15 +54,12 @@ def change_preset(current, preset_id, action):
     if action == "add":
         if present is not None and present != expected:
             raise ValueError(
-                "Ya existe un MCP con ese nombre y otra configuración. "
-                "No se sobrescribirá."
+                "Ya existe un MCP con ese nombre y otra configuración. No se sobrescribirá."
             )
         servers[preset_id] = expected
     elif present is not None:
         if present != expected:
-            raise ValueError(
-                "Este MCP está personalizado. No se eliminará desde el catálogo."
-            )
+            raise ValueError("Este MCP está personalizado. No se eliminará desde el catálogo.")
         del servers[preset_id]
 
     return validate_config({"mcpServers": servers})
