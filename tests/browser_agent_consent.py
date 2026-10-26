@@ -236,7 +236,8 @@ def main():
                     check(
                         "activity timeline exposes received output rather than mock stages",
                         "CONTROLADO" in page.locator(".ac-timeline").inner_text()
-                        and "La salida del grabador no prueba" in page.locator(".ac-evidence").inner_text(),
+                        and "La salida del grabador no prueba"
+                        in page.locator(".ac-evidence").inner_text(),
                     )
                     page.screenshot(
                         path=str(args.outputs / "agent-activity-center-controlled.png"),

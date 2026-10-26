@@ -59,7 +59,7 @@
     "frontend/agent_activity.js": "b414ef639c9c0306815a4ce0ee8725b62b994dc860c6a1dd7a8ee022703c4138",
     "frontend/styles.css": "3fe7c955b686226c5b41e9807aa011777e9364d56d52507442f35a6761aea247",
     "tests/test_agent_activity.mjs": "db667a855ccb59f0c8ebc526efb35854f5a0e670399263f39671a029373a8437",
-    "tests/browser_agent_consent.py": "fe30867847b1d853d8ada6887323e4133508e42991a268c7e32be111375c0e51",
+    "tests/browser_agent_consent.py": "c617e45cad708efdb64bbfbbbaeb41b36ff2dd25a0e6b00e3b7f8895796a0595",
     ".github/workflows/checks.yml": "ae5a0e68c35a45ecb42b056420951c4aec64108126f42ca986bc3f434394f105"
   }
 }
