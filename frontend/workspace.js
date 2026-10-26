@@ -329,11 +329,13 @@ export function define(context) {
   context.renderSidebar = function renderSidebar() {
     const b = context.$('#sideBody'),
       panel = context.state.panel;
+    context.$('#sidebar').classList.toggle('is-agent-activity', panel === 'agent-activity');
     context.$('#sideTitle').textContent = {
       project: 'PROYECTO',
       boards: 'PLACAS Y PUERTOS',
       libraries: 'LIBRERÍAS',
       settings: 'AJUSTES',
+      'agent-activity': 'ACTIVIDAD DE IA',
     }[panel];
     if (panel === 'project') {
       context.renderProjectPanel(b, context.state);
@@ -427,6 +429,8 @@ export function define(context) {
       b.querySelector('#serialConnect').onclick = context.toggleSerial;
       const py = b.querySelector('#pyRun');
       if (py) py.onclick = context.runPython;
+    } else if (panel === 'agent-activity') {
+      context.renderAgentActivityPanel(b);
     } else if (panel === 'libraries') {
       context.renderLibrariesPanel(b);
       b.querySelector('#libRefresh').onclick = context.loadLibraries;

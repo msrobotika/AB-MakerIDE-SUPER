@@ -180,8 +180,15 @@ export function define(context) {
       const r = await context.request(
         '/api/agents/poll?id=' + encodeURIComponent(picked.job_id) + '&since=0',
       );
+      context.agentObserveStart({
+        job_id: r.job_id,
+        provider: r.provider,
+        mode: r.mode,
+        task: r.task_summary,
+      });
       context.agentRunState.last = r.last_id;
       for (const e of r.events) context.appendAgentEvent(e);
+      context.agentObservePoll(r);
       context.updateAgentStages(r);
       context.agentRunState.lastData = r;
       RobotActivity.report('agent', 'Agente CLI', {
@@ -254,6 +261,7 @@ export function define(context) {
     pre.textContent = (pre.textContent + '[' + (ev.kind || 'log') + '] ' + ev.text + '\n').slice(
       -85000,
     );
+    context.agentObserveEvent(ev);
     if (ev.kind === 'milestone') context.showLog('console', '[Agente] ' + ev.text, 'good');
   };
   context.openAgentCode = async function openAgentCode(data, automatic = false) {
@@ -459,6 +467,7 @@ export function define(context) {
       });
       context.agentRunState.last = r.last_id;
       for (const e of r.events) context.appendAgentEvent(e);
+      context.agentObservePoll(r);
       context.updateAgentStages(r);
       context.$('#execStatus').textContent =
         `${r.provider} · ${r.mode} · ${r.elapsed}s · ${r.active ? 'ejecutando' : 'finalizado'}`;
@@ -475,6 +484,7 @@ export function define(context) {
       context.toast(context.reportAgentOutcome(r));
     } catch (e) {
       RobotActivity.lost('agent', 'Agente CLI', e.message);
+      context.agentObserveError(e.message);
       context.$('#execStatus').textContent = 'No se pudo consultar el agente: ' + e.message;
       // A transient connection error must not erase the job ID: allow recovery.
       context.agentSetWorking(false);
@@ -708,6 +718,7 @@ export function initialize(context) {
       });
       if (r.hardware_profile) context.setPhysicalProfile(r.hardware_profile);
       context.agentRunState.id = r.job_id;
+      context.agentObserveStart({ job_id: r.job_id, provider, mode, task });
       context.agentRunState.last = 0;
       context.agentRunState.lastLang = context.state.lang;
       context.rememberAgent(r.job_id);
@@ -731,6 +742,7 @@ export function initialize(context) {
     try {
       await context.request('/api/agents/cancel', { job_id: context.agentRunState.id });
       context.$('#execStatus').textContent = 'Solicitando detención del proceso…';
+      context.renderAgentActivityIfOpen();
     } catch (e) {
       context.toast(e.message);
     }

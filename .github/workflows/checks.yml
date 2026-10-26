@@ -38,6 +38,7 @@ jobs:
           node-version: '22'
           package-manager-cache: false
       - run: python tests/run_isolated.py
+      - run: node --test tests/test_agent_activity.mjs
       - run: node --check app.js
       - run: node --check activity.js
       - run: node --check simulator.js

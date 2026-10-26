@@ -153,6 +153,18 @@ def main():
                     page.wait_for_function(
                         '()=>document.querySelector("#backendState").textContent.includes("activo")'
                     )
+                    # Baseline: actual IDE in a clean session, not a marketing mockup.
+                    page.locator('[data-panel="agent-activity"]').click()
+                    check(
+                        "AI activity view replaces old project controls",
+                        page.locator("#projectName").count() == 0
+                        and page.locator("#acConfigure").is_visible(),
+                    )
+                    page.screenshot(
+                        path=str(args.outputs / "agent-activity-empty-controlled.png"),
+                        full_page=True,
+                    )
+                    page.locator('[data-panel="project"]').click()
                     if page.locator("body").get_attribute("data-right") != "ai":
                         page.locator("#showAI").click()
                     page.locator("#agentWorkbench").evaluate("(e)=>e.open=true")
@@ -222,6 +234,34 @@ def main():
                         and server.AGENT_JOBS._current.success is True,
                     )
                     page.screenshot(path=str(args.outputs / "agent-consent-started-controlled.png"))
+                    page.locator('[data-panel="agent-activity"]').click()
+                    page.wait_for_function(
+                        '()=>document.querySelector(".ac-state")?.textContent==="CLI FINALIZADA"'
+                    )
+                    agent_name = page.locator(".ac-session").inner_text().lower()
+                    check(
+                        "left activity center reflects real agent job, without falsely certifying firmware",
+                        page.locator("#acConfigure").is_visible()
+                        and page.locator(".ac-check.confirmed").count() == 0
+                        and "codex" in agent_name,
+                    )
+                    check(
+                        "activity timeline exposes received output rather than mock stages",
+                        "CONTROLADO" in page.locator(".ac-timeline").inner_text()
+                        and "La salida del grabador no prueba"
+                        in page.locator(".ac-evidence").inner_text(),
+                    )
+                    page.screenshot(
+                        path=str(args.outputs / "agent-activity-center-controlled.png"),
+                        full_page=True,
+                    )
+                    page.locator("#acFilter").select_option("evidence")
+                    check(
+                        "filter retains state and shows no imaginary milestones",
+                        page.locator(".ac-timeline").inner_text().count("No hay eventos") == 1,
+                    )
+                    page.locator('[data-panel="project"]').click()
+
                     page.locator("#execMode").select_option("consultar")
                     page.locator("#execRun").click()
                     check(
