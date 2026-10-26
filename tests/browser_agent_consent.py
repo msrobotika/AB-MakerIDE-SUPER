@@ -156,6 +156,14 @@ def main():
                     if page.locator("body").get_attribute("data-right") != "ai":
                         page.locator("#showAI").click()
                     page.locator("[data-panel=agents]").click()
+                    page.wait_for_function(
+                        '()=>document.querySelector("#activityState") && document.querySelector("#activityPhases")'
+                    )
+                    print(json.dumps({
+                        "observer_initial_state": page.locator("#activityState").inner_text(),
+                        "observer_initial_phases": page.locator("#activityPhases").inner_text(),
+                        "observer_page_errors": report["page_errors"],
+                    }, ensure_ascii=False))
                     check(
                         "agent activity sidebar opens without fake progress",
                         page.locator("#activityState").inner_text() == "Sin sesión"
@@ -237,9 +245,13 @@ def main():
                         and page.locator("#activityPhases").count() == 1
                         and page.locator("#activityTimeline li").count() > 0,
                     )
-                    page.screenshot(path=str(args.outputs / "agent-activity-sidebar-controlled.png"))
+                    page.screenshot(
+                        path=str(args.outputs / "agent-activity-sidebar-controlled.png")
+                    )
                     page.locator("#execMode").select_option("consultar")
-                    page.locator("#activityPrompt").fill("CONTROLADO: lectura mediante el panel izquierdo")
+                    page.locator("#activityPrompt").fill(
+                        "CONTROLADO: lectura mediante el panel izquierdo"
+                    )
                     page.locator("#activityRun").click()
                     check(
                         "read-only hides full-access input",
