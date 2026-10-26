@@ -36,7 +36,7 @@ class CYDFrame : public Adafruit_GFX {
     fillRect(x, y, 1, h, c);
   }
   void present(Adafruit_ILI9341 &lcd) {
-    // SpaceInvaders::draw borra solo RAM. El LCD recibe filas finales cambiadas.
+    // DefensaOrbital::draw borra solo RAM. El LCD recibe filas finales cambiadas.
     lcd.startWrite();
     int y = 0;
     while (y < 240) {
