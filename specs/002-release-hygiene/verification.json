@@ -47,14 +47,16 @@
     {
       "id": "FR-005",
       "result": "passed",
-      "notes": "CI cancela solo ejecuciones reemplazadas de una misma referencia y .gitignore excluye salidas locales no versionables.",
+      "notes": "Las actualizaciones de dependencias se agrupan mensualmente con un máximo de un PR por ecosistema; la CI cancela ejecuciones sustituidas, .gitignore excluye salidas locales.",
       "evidence": [
         ".github/workflows/checks.yml",
-        ".gitignore"
+        ".gitignore",
+        ".github/dependabot.yml"
       ]
     }
   ],
   "changed_files": {
-    ".github/workflows/checks.yml": "7579425f3f5a1dddcfcc96bf8dd293c514ed2ef0aa55f2aaa5e2edc9df71b061"
+    ".github/workflows/checks.yml": "7579425f3f5a1dddcfcc96bf8dd293c514ed2ef0aa55f2aaa5e2edc9df71b061",
+    ".github/dependabot.yml": "4218c4ab24a20b19d0fb273be718f2fe2f63c76536c0fb1d9125f3805d2a8f01"
   }
 }
