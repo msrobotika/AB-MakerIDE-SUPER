@@ -22,20 +22,21 @@ Estas imágenes proceden de la **aplicación RC4 en Windows con una placa CYD ES
 
 La aplicación es open source, con [licencia MIT](LICENSE). **La IA es opcional y no es gratuita por incluir MakerIDE:** cada usuario vincula su propia cuenta y utiliza su cuota. Codex está probado en uso real por el autor. Claude Code, conectores de chat y Ollama siguen pendientes de validación equivalente.
 
-![RC4: carga CYD real verificada desde el IDE](docs/evidence/cyd-rc4/carga-desde-ide-real.png)
+**Publicaciones congeladas:** el desarrollo continúa mediante PR y pruebas; no se crearán lanzamientos cada día. La RC4 es **un candidato, no una versión estable**. [Política estricta de publicación](docs/RELEASE_POLICY.md) · [Índice de documentación vigente](docs/README.md). En la página pública de Releases solo se mantiene RC4. Se conservan los commits históricos y su trazabilidad.
 
-**Publicaciones congeladas:** el desarrollo continúa mediante PR y pruebas; no se crearán lanzamientos cada día. La RC4 es **un candidato, no una versión estable**. [Política estricta de publicación](docs/RELEASE_POLICY.md) · [Índice de documentación vigente](docs/README.md). Las RC anteriores deben retirarse de la vista pública sin reescribir el historial Git; la limpieza de esas fichas está pendiente de una operación autorizada de GitHub Releases.
-
-## Centro de actividad IA · nueva función en desarrollo
+## Centro de actividad IA · integrado en la descarga actual de RC4
 
 Una pestaña **✧ en la barra izquierda** permite seguir el trabajo real de Codex y Claude Code: estado y permisos de la tarea, eventos recibidos, evidencias de compilación/grabación, archivos informados, aprobaciones pendientes y acceso a las diferencias del editor. No se muestran tareas simuladas ni se modifica el sistema de consentimiento. [Cómo funciona y qué verifica](docs/CENTRO_ACTIVIDAD_IA.md).
 
-**Capturas reales de navegador** (worker CLI de prueba, sin IA ni hardware físico):
-[centro vacío](docs/evidence/agent-activity/01-panel-sin-sesion.png) ·
-[actividad de tarea controlada](docs/evidence/agent-activity/02-actividad-cli-controlada.png).
-Son evidencias del diseño y del flujo operativo, **no una prueba de ejecución de Codex/Claude con cuenta real**.
+**Capturas reales de navegador** del Centro de Actividad IA. Son recorridos con worker CLI controlado, sin cuenta IA ni hardware físico conectado.
 
-La etiqueta Git `v1.0.0-rc.4` conserva su historial original. Consulta los archivos de la ficha Releases para distinguir la descarga original de una eventual distribución actualizada; no se crean prelanzamientos diarios.
+[![Centro de Actividad IA, sin sesión](docs/evidence/agent-activity/01-panel-sin-sesion.png)](docs/evidence/agent-activity/01-panel-sin-sesion.png)
+
+[![Centro de Actividad IA con una tarea CLI controlada](docs/evidence/agent-activity/02-actividad-cli-controlada.png)](docs/evidence/agent-activity/02-actividad-cli-controlada.png)
+
+La vista utiliza eventos de la CLI y conserva los controles de permisos. No interpreta una tarea terminada como una grabación física verificada.
+
+La etiqueta Git `v1.0.0-rc.4` conserva su historial original. La descarga actualizada se denomina **`AB-MakerIDE-SUPER-1.0.0-rc.4-IA-actualizada.zip`**. [Validación del paquete actualizado](https://github.com/msrobotika/AB-MakerIDE-SUPER/actions/runs/40317679226); no sustituye nuevas pruebas físicas.
 
 ## Nuevo en RC4
 
