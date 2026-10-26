@@ -173,6 +173,7 @@ export function define(context) {
       context.agentRunState.id = picked.job_id;
       context.agentRunState.last = 0;
       context.agentRunState.lastLang = context.state.lang;
+      context.agentFlowSync?.({job_id: r.job_id, provider, mode, active: true, evidence: {}});
       context.rememberAgent(picked.job_id);
       context.resetAgentStages();
       context.$('#agentWorkbench').open = true;
@@ -184,6 +185,7 @@ export function define(context) {
       for (const e of r.events) context.appendAgentEvent(e);
       context.updateAgentStages(r);
       context.agentRunState.lastData = r;
+      context.agentFlowSync?.(r);
       RobotActivity.report('agent', 'Agente CLI', {
         ...r,
         evidenceVerified: Boolean(r.response || r.events?.length || r.diff),
@@ -210,6 +212,7 @@ export function define(context) {
     context.busy(context.state.busy);
     context.syncSerialControls();
     context.agentRunState.active = working;
+    context.agentFlowWorking?.(working);
     context.$('#execRun').disabled = working;
     context.$('#execStop').disabled = !working;
     context.$('#execProvider').disabled = working;
@@ -223,6 +226,7 @@ export function define(context) {
   context.resetAgentStages = function resetAgentStages() {
     context.$('#agentStages').classList.remove('hidden');
     context.$('#agentRawLog').textContent = '';
+    context.agentFlowReset?.();
     context.$('#agentEventCount').textContent = '0 eventos';
     context.agentRunState.eventCount = 0;
     context.agentRunState.evidence = {};
@@ -247,6 +251,7 @@ export function define(context) {
   };
   context.appendAgentEvent = function appendAgentEvent(ev) {
     context.agentRunState.eventCount = (context.agentRunState.eventCount || 0) + 1;
+    context.agentFlowEvent?.(ev);
     context.$('#agentEventCount').textContent =
       context.agentRunState.eventCount + ' eventos vistos';
     const pre = context.$('#agentRawLog');
@@ -460,6 +465,7 @@ export function define(context) {
       context.agentRunState.last = r.last_id;
       for (const e of r.events) context.appendAgentEvent(e);
       context.updateAgentStages(r);
+      context.agentFlowSync?.(r);
       context.$('#execStatus').textContent =
         `${r.provider} · ${r.mode} · ${r.elapsed}s · ${r.active ? 'ejecutando' : 'finalizado'}`;
       if (r.active) {
