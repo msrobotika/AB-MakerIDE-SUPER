@@ -1,0 +1,72 @@
+name: Capture validated AI activity screenshots (single use)
+on:
+  push:
+    branches: [feat/agent-activity-center]
+    paths:
+      - '.github/workflows/agent-activity-screens-once.yml'
+permissions:
+  contents: write
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Install tested browser runtime and formatter
+        run: |
+          python -m pip install playwright==1.56.0 ruff==0.17.2
+          python -m playwright install --with-deps chromium
+      - name: Capture real browser under controlled CLI worker (no physical hardware)
+        run: python tests/browser_agent_consent.py --outputs work/agent-center-shot
+      - name: Save only two useful screenshots, remove this workflow and seal integrity
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p docs/evidence/agent-activity
+          cp work/agent-center-shot/agent-activity-empty-controlled.png docs/evidence/agent-activity/01-panel-sin-sesion.png
+          cp work/agent-center-shot/agent-activity-center-controlled.png docs/evidence/agent-activity/02-actividad-cli-controlada.png
+          cat > docs/evidence/agent-activity/README.md <<'EOF'
+          # Centro de actividad IA · evidencias del navegador
+
+          Estas son **capturas reales de AB MakerIDE en Chromium**, tomadas con el
+          servidor HTTP del IDE y un **worker de agente controlado de pruebas**.
+          No son fotomontajes, pero tampoco demuestran una cuenta de Codex o Claude
+          Code conectada ni ejecución de firmware físico.
+
+          - [Panel izquierdo sin sesión](01-panel-sin-sesion.png): interfaz limpia inicial
+          - [Resultado de tarea controlada](02-actividad-cli-controlada.png):
+            estado de CLI, eventos recibidos, filtros y ausencia de falsos éxitos
+            de compilación/grabación
+
+          El test `tests/browser_agent_consent.py` produce ambas imágenes y
+          verifica permiso explícito, recuperación y exportación de proyectos.
+          Las capturas se conservan para inspección; no sustituye validación real
+          con las cuentas IA y hardware del usuario.
+          EOF
+          python -m ruff format tests/browser_agent_consent.py
+          python - <<'PY'
+          import hashlib, json, pathlib
+          path=pathlib.Path("specs/004-agent-activity-center/verification.json")
+          record=json.loads(path.read_text(encoding="utf-8"))
+          target=pathlib.Path("tests/browser_agent_consent.py")
+          record["changed_files"][str(target)]=hashlib.sha256(target.read_bytes()).hexdigest()
+          record["changed_files"][".github/workflows/agent-activity-screens-once.yml"]="deleted"
+          record["requirements"][-1]["evidence"].append("docs/evidence/agent-activity/README.md")
+          path.write_text(json.dumps(record,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+          PY
+          git rm .github/workflows/agent-activity-screens-once.yml
+          git add tests/browser_agent_consent.py specs/004-agent-activity-center/verification.json docs/evidence/agent-activity/
+          python tests/manifest.py --write
+          git add MANIFEST_SHA256.txt
+          python tests/manifest.py
+      - name: Commit validated captures and remove workflow automatically
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "docs(agent): real browser captures of AI activity, Spec Kit and SHA-256 integrity"
+          git push origin HEAD:feat/agent-activity-center
