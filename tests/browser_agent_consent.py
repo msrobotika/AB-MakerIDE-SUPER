@@ -302,9 +302,9 @@ def main():
                     check(
                         "modified files reported without reapplying them",
                         "radar_config.h" in page.locator(".agent-flow-card").nth(3).inner_text()
-                        and page.locator(".agent-flow-button").filter(
-                            has_text="Ver diferencias (sin aplicar)"
-                        ).is_enabled(),
+                        and page.locator(".agent-flow-button")
+                        .filter(has_text="Ver diferencias (sin aplicar)")
+                        .is_enabled(),
                     )
                     before_review = page.locator("#code").input_value()
                     page.locator(".agent-flow-button").filter(
