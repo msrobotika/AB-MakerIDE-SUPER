@@ -57,14 +57,15 @@
     "frontend/bootstrap.js": "a501ad4df717fc7d02b4c353dfa556719a6cb31bc0a05a1eecbd8bacc5c7a7fe",
     "frontend/workspace.js": "2b3d6512a85a283054a1b8eff18b5cad7fab6e84fa08bddf26df739650320594",
     "frontend/agent.js": "064a1a1a4520773703cb7e7bd12ee348642c7fd333baf3dcbf79f8d101799562",
-    "frontend/agent_activity.js": "b414ef639c9c0306815a4ce0ee8725b62b994dc860c6a1dd7a8ee022703c4138",
+    "frontend/agent_activity.js": "520a01d3e476d943df3f39a178e1ba5c0c0787b4a50de11aea84d053f9e267c3",
     "frontend/styles.css": "3fe7c955b686226c5b41e9807aa011777e9364d56d52507442f35a6761aea247",
     "tests/test_agent_activity.mjs": "db667a855ccb59f0c8ebc526efb35854f5a0e670399263f39671a029373a8437",
-    "tests/browser_agent_consent.py": "980c9c4cbd6dc21bc5b0be3775aede1144f73e140a54b4f5ab8dfcb14c09deea",
+    "tests/browser_agent_consent.py": "e7c1df944ef57288f4f09592a3667fd1addd05ade0d2700879df07daec05b097",
     ".github/workflows/checks.yml": "ae5a0e68c35a45ecb42b056420951c4aec64108126f42ca986bc3f434394f105",
     ".github/workflows/agent-center-polish-once.yml": "deleted",
     ".github/workflows/agent-center-manifest-once.yml": "deleted",
     ".github/workflows/agent-center-format-once.yml": "deleted",
-    ".github/workflows/agent-activity-screens-once.yml": "deleted"
+    ".github/workflows/agent-activity-screens-once.yml": "deleted",
+    ".github/workflows/agent-center-final-capture-once.yml": "deleted"
   }
 }
