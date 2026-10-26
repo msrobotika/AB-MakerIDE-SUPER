@@ -226,14 +226,12 @@ def main():
                     page.wait_for_function(
                         '()=>document.querySelector(".ac-state")?.textContent==="CLI FINALIZADA"'
                     )
+                    agent_name = page.locator(".ac-session").inner_text().lower()
                     check(
                         "left activity center reflects real agent job, without falsely certifying firmware",
                         page.locator("#acConfigure").is_visible()
                         and page.locator(".ac-check.confirmed").count() == 0
-                        and "Codex"
-                        in page.locator(".ac-session")
-                        .inner_text()
-                        .replace("codex", "Codex"),
+                        and "codex" in agent_name,
                     )
                     check(
                         "activity timeline exposes received output rather than mock stages",
