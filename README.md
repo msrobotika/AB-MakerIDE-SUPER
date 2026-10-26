@@ -30,7 +30,12 @@ La aplicación es open source, con [licencia MIT](LICENSE). **La IA es opcional 
 
 Una pestaña **✧ en la barra izquierda** permite seguir el trabajo real de Codex y Claude Code: estado y permisos de la tarea, eventos recibidos, evidencias de compilación/grabación, archivos informados, aprobaciones pendientes y acceso a las diferencias del editor. No se muestran tareas simuladas ni se modifica el sistema de consentimiento. [Cómo funciona y qué verifica](docs/CENTRO_ACTIVIDAD_IA.md).
 
-Esta mejora está en revisión hasta pasar las pruebas; **no forma parte del paquete RC4 publicado**. No se ha creado un nuevo lanzamiento.
+**Capturas reales de navegador** (worker CLI de prueba, sin IA ni hardware físico):
+[centro vacío](docs/evidence/agent-activity/01-panel-sin-sesion.png) ·
+[actividad de tarea controlada](docs/evidence/agent-activity/02-actividad-cli-controlada.png).
+Son evidencias del diseño y del flujo operativo, **no una prueba de ejecución de Codex/Claude con cuenta real**.
+
+La etiqueta Git `v1.0.0-rc.4` conserva su historial original. Consulta los archivos de la ficha Releases para distinguir la descarga original de una eventual distribución actualizada; no se crean prelanzamientos diarios.
 
 ## Nuevo en RC4
 
