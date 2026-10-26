@@ -2115,3 +2115,141 @@ body[data-right='lab'] .right .hardwarelab {
 .agent-explanation {
   margin-top: 7px;
 }
+
+/* MS Robotika Centro de Agentes — activity comes from real server job events.
+   Distinct from other IDE interfaces, no simulated progress or automatic approval. */
+.sidebar.is-agent-flow {
+  width: 300px;
+  flex-basis: 300px;
+  min-width: 0;
+}
+.sidebar.is-agent-flow .sidebody {
+  padding: 10px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.agent-flow-intro {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.55;
+  margin: 2px 0 10px;
+}
+.agent-flow-status {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  border: 1px solid var(--line2);
+  background: rgba(34, 51, 72, 0.7);
+  border-radius: 8px;
+  padding: 11px;
+  font-size: 11px;
+  letter-spacing: .7px;
+}
+.agent-flow-led {
+  width: 9px;
+  height: 9px;
+  flex: 0 0 9px;
+  background: var(--muted);
+  border-radius: 50%;
+}
+.agent-flow-led.is-active {
+  background: var(--blue);
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, .15);
+}
+.agent-flow-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin: 10px 0;
+}
+.agent-flow-button {
+  color: var(--txt);
+  background: #142539;
+  border: 1px solid var(--line2);
+  border-radius: 7px;
+  min-height: 32px;
+  padding: 6px 9px;
+  font-size: 11px;
+  text-align: center;
+}
+.agent-flow-button:hover:not(:disabled) { background: #1d3550; }
+.agent-flow-button.primary { border-color: #227da1; color: #c6f0ff; }
+.agent-flow-button.danger { border-color: #82535c; color: #ffb3bd; }
+.agent-flow-button:disabled { opacity: .42; }
+.agent-flow-card {
+  background: rgba(11, 24, 37, .85);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 11px;
+  margin: 9px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+}
+.agent-flow-card > strong {
+  font-size: 10px;
+  letter-spacing: .65px;
+  color: #9cdbea;
+}
+.agent-flow-card p, .agent-flow-card small {
+  margin: 0;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.agent-flow-card small { color: var(--muted); font-size: 11px; }
+.agent-flow-card .agent-flow-button { width: 100%; margin-top: 3px; }
+.agent-flow-check {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  font-size: 11px;
+  line-height: 1.4;
+}
+.agent-flow-tick { color: #7891a6; font-weight: 700; }
+.agent-flow-tick.yes { color: var(--good); }
+.agent-flow-note {
+  font-size: 10px;
+  line-height: 1.55;
+  color: var(--muted);
+}
+.agent-flow-file {
+  font-family: var(--mono);
+  font-size: 10px !important;
+  color: #b4d9ee !important;
+  padding: 4px 6px;
+  background: #101c2b;
+  border-radius: 4px;
+}
+.agent-flow-timeline {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.agent-flow-event {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  line-height: 1.4;
+  border-left: 2px solid #37526a;
+  padding: 4px 0 4px 8px;
+  font-size: 11px;
+}
+.agent-flow-event-id {
+  color: var(--subtle);
+  flex: 0 0 30px;
+  font-family: var(--mono);
+  font-size: 10px;
+}
+@media (max-width: 950px) {
+  .sidebar.is-agent-flow {
+    width: 242px;
+    flex-basis: 242px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .agent-flow-led { transition: none; }
+}
