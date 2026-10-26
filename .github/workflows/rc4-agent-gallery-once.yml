@@ -1,0 +1,43 @@
+name: Update existing RC4 Agent Gallery (one-time)
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/rc4-agent-gallery-once.yml'
+permissions:
+  contents: write
+jobs:
+  edit-rc4-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Update existing release description; preserve assets and tag
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          tag="v1.0.0-rc.4"
+          notes="docs/RC4_PUBLICACION.md"
+          test -s "$notes"
+          grep -Fq 'Centro de Actividad IA · descarga RC4 actualizada' "$notes"
+          grep -Fq 'agent-activity/01-panel-sin-sesion.png' "$notes"
+          grep -Fq 'agent-activity/02-actividad-cli-controlada.png' "$notes"
+          grep -Fq 'AB-MakerIDE-SUPER-1.0.0-rc.4-IA-actualizada.zip' "$notes"
+          before="$(gh release view "$tag" --json tagName,isPrerelease,isDraft,assets)"
+          jq -e --arg tag "$tag" '.tagName==$tag and .isPrerelease == true and .isDraft == false' <<< "$before"
+          jq -e '.assets|length==5' <<< "$before"
+          jq -e '[.assets[].name] | index("AB-MakerIDE-SUPER-1.0.0-rc.4-IA-actualizada.zip")!=null' <<< "$before"
+          gh release edit "$tag" --notes-file "$notes"
+          after="$(gh release view "$tag" --json tagName,isPrerelease,isDraft,assets,body)"
+          jq -e --arg tag "$tag" '.tagName==$tag and .isPrerelease == true and .isDraft == false' <<< "$after"
+          before_assets="$(jq -c '[.assets[].name]|sort' <<< "$before")"
+          after_assets="$(jq -c '[.assets[].name]|sort' <<< "$after")"
+          [[ "$before_assets" == "$after_assets" ]]
+          grep -Fq 'agent-activity/01-panel-sin-sesion.png' <<< "$(jq -r .body <<< "$after")"
+          grep -Fq 'agent-activity/02-actividad-cli-controlada.png' <<< "$(jq -r .body <<< "$after")"
+          echo "Updated description of existing RC4. Tag, status and assets unchanged."
