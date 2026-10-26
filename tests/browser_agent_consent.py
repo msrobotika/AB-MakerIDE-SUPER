@@ -153,6 +153,13 @@ def main():
                     page.wait_for_function(
                         '()=>document.querySelector("#backendState").textContent.includes("activo")'
                     )
+                    # Baseline: actual IDE in a clean session, not a marketing mockup.
+                    page.locator('[data-panel="agent-activity"]').click()
+                    page.screenshot(
+                        path=str(args.outputs / "agent-activity-empty-controlled.png"),
+                        full_page=True,
+                    )
+                    page.locator('[data-panel="project"]').click()
                     if page.locator("body").get_attribute("data-right") != "ai":
                         page.locator("#showAI").click()
                     page.locator("#agentWorkbench").evaluate("(e)=>e.open=true")
