@@ -13,8 +13,10 @@ REA_PACKAGE = f"rea-agents@{REA_VERSION}"
 def _rea():
     """The command is only a proposed MCP registration, not an installation."""
     return {
-        "command": "npx.cmd" if os.name == "nt" else "npx",
-        "args": ["-y", REA_PACKAGE, "mcp"],
+        "command": "cmd.exe" if os.name == "nt" else "npx",
+        "args": ["/d", "/c", "npx", "-y", REA_PACKAGE, "mcp"]
+        if os.name == "nt"
+        else ["-y", REA_PACKAGE, "mcp"],
     }
 
 

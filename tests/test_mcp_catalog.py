@@ -1,6 +1,7 @@
 """Catalog permissions, safe merging and REA provenance. No package execution."""
 
 import os
+import tomllib
 import unittest
 
 from ab_makeride.mcp_catalog import REA_PACKAGE, change_preset
@@ -11,8 +12,12 @@ class MakerMCPCatalogTests(unittest.TestCase):
     def test_rea_is_opt_in_and_version_pinned(self):
         value = change_preset({"mcpServers": {}}, "rea", "add")
         item = value["mcpServers"]["rea"]
-        self.assertEqual(item["command"], "npx.cmd" if os.name == "nt" else "npx")
-        self.assertEqual(item["args"], ["-y", REA_PACKAGE, "mcp"])
+        if os.name == "nt":
+            self.assertEqual(item["command"], "cmd.exe")
+            self.assertEqual(item["args"], ["/d", "/c", "npx", "-y", REA_PACKAGE, "mcp"])
+        else:
+            self.assertEqual(item["command"], "npx")
+            self.assertEqual(item["args"], ["-y", REA_PACKAGE, "mcp"])
         self.assertNotIn("@latest", repr(value))
 
     def test_preserve_existing_servers_and_credentials(self):
@@ -52,7 +57,8 @@ class MakerMCPCatalogTests(unittest.TestCase):
     def test_codex_keeps_per_call_approval_default(self):
         value = change_preset({"mcpServers": {}}, "rea", "add")
         flags, secrets = prepare_run("codex", value, None)
-        self.assertIn('default_tools_approval_mode = "prompt"', " ".join(flags))
+        data = tomllib.loads("\n".join(flags[1::2]))
+        self.assertEqual(data["mcp_servers"]["rea"]["default_tools_approval_mode"], "prompt")
         self.assertEqual(secrets, {})
 
 

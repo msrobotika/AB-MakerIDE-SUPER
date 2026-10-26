@@ -7,6 +7,8 @@ de agente con MCP. Mantener aprobación **manual** para cada llamada en Codex
 por defecto. No es un sandbox: el servidor MCP puede ejecutar sus propias
 herramientas con permisos del usuario cuando se invoca.
 
+**Solo REA figura como integrable desde el botón; los otros nombres del desplegable son referencias descriptivas deshabilitadas.** Esto evita inventar URLs, comandos o versiones. Se requerirá una propuesta auditable independiente para cada integración.
+
 ## Primer servidor: REA — análisis inverso autorizado
 
 Fuente oficial: <https://github.com/morluto/rea>, paquete npm
@@ -14,7 +16,7 @@ Fuente oficial: <https://github.com/morluto/rea>, paquete npm
 revisarse y actualizarse solo con auditoría y pruebas. No usar `@latest`
 silenciosamente. REA exige una versión de Node.js compatible según su guía
 vigente y, para descompilación nativa profunda, Ghidra, Hopper o IDA.
-Verificar la licencia de la distribución exacta y las dependencias antes de
+REA requiere Node.js 22.23.4+, 24.22.1+ o 26.12.1+ (con ramas soportadas). En Windows, la llamada stdio pasa por `cmd.exe /d /c npx ...`, siguiendo su documentación. Verificar la licencia de la distribución exacta y las dependencias antes de
 redistribuir, ya que MakerIDE no incluye REA. REA es de un proveedor externo
 sin asociación comercial con MS Robotika.
 
@@ -76,9 +78,15 @@ repetir instalaciones o restaurar.
 | Categoría | Proyecto candidato | Estado |
 | --- | --- | --- |
 | Documentación ESP32 | [MCP oficial Espressif](https://developer.espressif.com/blog/2026/04/doc-mcp-server/) | Solo referencia: requiere autenticación OAuth que el panel actual no negocia; no añadir a ciegas |
-| Electrónica y PCB | [Seeed Studio KiCad MCP](https://github.com/Seeed-Studio/kicad-mcp-server) | Candidato, necesita revisión de dependencias, licencia, permisos y pruebas |
-| Esquemáticos/PCB avanzados | [KiCad MCP Server](https://github.com/mixelpixx/KiCAD-MCP-Server) | Candidato comunitario: puede modificar proyectos; requiere pruebas en copias |
-| Herramientas locales maker | Puertos serie, análisis I²C, lógica y registros, depuración | Solo como futuros adaptadores auditados, sin paquetes inventados |
+| Diseño electrónico | [Seeed Studio KiCad MCP](https://github.com/Seeed-Studio/kicad-mcp-server) | **Alta prioridad**: análisis esquemático/PCB, ERC y DRC; KiCad y bindings Python requieren instalación y copia de seguridad |
+| Firmware en hardware | [Embedded Debugger MCP](https://github.com/adancurusul/embedded-debugger-mcp) | **Alta**: probe-rs/OpenOCD, lectura de registros y diagnóstico; también puede escribir flash y detener CPU: permisos privilegiados |
+| Comunicación USB/UART | [Serial MCP Server](https://github.com/adancurusul/serial-mcp-server) | **Alta**: captura/diagnóstico de serie; escribir bytes, alternar líneas y ejecutar macros puede actuar físicamente sobre la placa |
+| Datos de fabricante | [Espressif Documentation MCP](https://developer.espressif.com/blog/2026/04/doc-mcp-server/) | **Alta** para ESP32: referencia oficial; autenticación/configuración propias, no habilitar sin validación |
+| Bibliotecas y ejemplos | [Context7](https://github.com/upstash/context7) | **Alta**: documentación específica de bibliotecas, servicio externo y política de datos/cuota |
+| Pruebas HTML locales | [Microsoft Playwright MCP](https://github.com/microsoft/playwright-mcp) | **Media**: verificar configuradores, portales e interfaces maker; usar solo orígenes y perfiles de navegador autorizados |
+| Ficheros de proyecto | [Filesystem MCP](https://github.com/modelcontextprotocol/servers/tree/main/src/filesystem) | **Media**: solo en directorios autorizados; también ofrece herramientas de escritura, no asumir modo lectura |
+| Versionado de firmware | [GitHub MCP Server](https://github.com/github/github-mcp-server) | **Media**: PR/commits/issues; requiere autenticación por el usuario y tokens mínimos, no duplicar con integración propia |
+| Protocolos industriales | MCP de Modbus, MQTT, CAN, I²C, SPI y SCADA | **Investigación**: candidatos a auditar o adaptadores MS Robotika propios; no habilitar comandos sobre equipos reales por defecto |
 
 Cada nuevo preset tendrá **origen oficial, versión fijada, permisos
 declarados, instalación explícita, pruebas de integración, aislamiento por

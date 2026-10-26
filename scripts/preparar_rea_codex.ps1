@@ -8,6 +8,13 @@ foreach ($Exe in @("node", "npm", "npx", "codex")) {
     }
 }
 Write-Host "Node:" (& node --version)
+$NodeVersion = (& node --version).Trim() -replace "^v", ""
+$Parts = @($NodeVersion.Split("."))
+$Major = [int]$Parts[0]
+$Minor = [int]$Parts[1]
+$Patch = [int]$Parts[2]
+$Valid = (($Major -eq 22 -and (($Minor -gt 23) -or ($Minor -eq 23 -and $Patch -ge 4))) -or ($Major -eq 24 -and (($Minor -gt 22) -or ($Minor -eq 22 -and $Patch -ge 1))) -or ($Major -eq 26 -and (($Minor -gt 12) -or ($Minor -eq 12 -and $Patch -ge 1))))
+if (-not $Valid) { throw "REA necesita Node 22.23.4+, 24.22.1+ o 26.12.1+. Instala una versión admitida." }
 Write-Host "Codex:" (& codex --version)
 Write-Host "REA: $Paquete (tercero; comprobar origen antes de ejecutarlo)"
 Write-Host "Revisión del plan SIN modificar la cuenta:"
