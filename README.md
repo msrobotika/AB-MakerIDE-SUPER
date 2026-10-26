@@ -8,7 +8,7 @@
 
 La aplicación es open source, con [licencia MIT](LICENSE). **La IA es opcional y no es gratuita por incluir MakerIDE:** cada usuario vincula su propia cuenta y utiliza su cuota. Codex está probado en uso real por el autor. Claude Code, conectores de chat y Ollama siguen pendientes de validación equivalente.
 
-![Sesión nueva de MakerIDE RC3](docs/evidence/rc3/sesion-limpia-real.png)
+![RC4: carga CYD real verificada desde el IDE](docs/evidence/cyd-rc4/carga-desde-ide-real.png)
 
 ## Nuevo en RC4
 
@@ -51,3 +51,5 @@ La suite local RC4 pasa **294 de 299 pruebas unitarias**, con cinco omisiones po
 [Contribuir](CONTRIBUTING.md) · [Licencia MIT](LICENSE) · [Compartir pruebas de Linux y macOS](https://github.com/msrobotika/AB-MakerIDE-SUPER/discussions)
 
 [IA, cuentas y opción online con cuota gratuita](docs/IA_Y_CUOTAS.md).
+
+[Prueba real de carga manual CYD desde RC4](docs/evidence/cyd-rc4/README.md): respaldo comprobado, una carga desde la interfaz, cuatro hashes verificados, guardado con Ctrl+S y pantalla/táctil confirmados por el usuario.

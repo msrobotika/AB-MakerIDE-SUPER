@@ -1,6 +1,6 @@
 # Respuesta a la revisión RC4 · 26 octubre 2026
 
-Esta es una revisión de implementación y regresiones del propio proyecto, no una auditoría independiente ni una garantía de ausencia de fallos. No se han grabado placas para estas mejoras.
+Esta es una revisión de implementación y regresiones del propio proyecto, no una auditoría independiente ni una garantía de ausencia de fallos. Las pruebas de seguridad no graban placas. Además se realizó una carga CYD autorizada desde la interfaz para cerrar el fallo manual, documentada por separado.
 
 | Hallazgo | Cambio y comprobación |
 | --- | --- |
@@ -39,3 +39,5 @@ Los registros del incidente mostraron cargas con cuatro hashes verificados y sal
 Se corrige el análisis de porcentajes decimales de esptool (`92.8%`, `100.0%`) y se muestra el porcentaje del bloque actual, no el de toda la operación. Los reintentos no heredan evidencia del intento fallido. La carga manual solicita `--verify`, separa el resultado del grabador de la observación física y cierra su estado terminal. Las confirmaciones de funciones manuales se muestran en el IDE, sin depender de `window.confirm`.
 
 El servidor rechaza inmediatamente operaciones que se solapen con una carga o agente; no quedan en cola para ejecutarse después. La interfaz deshabilita monitor/envío/agente durante una operación manual. Los recorridos de cancelación, error de compilación, verificación ausente y peticiones concurrentes se comprueban sin hardware.
+
+La [prueba CYD física desde RC4](evidence/cyd-rc4/README.md) confirmó la corrección del recorrido manual con la aplicación instalada: carga verificada, consola cerrada, guardado y observación física del usuario.

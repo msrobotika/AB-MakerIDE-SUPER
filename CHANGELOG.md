@@ -13,6 +13,8 @@
 - Carga manual: corrección de decimales esptool y progreso por bloque, `--verify`, evidencia sin heredar fallos, aviso de juego serie en CYD y cierre explícito de consola. Confirmaciones dentro del IDE y exclusión inmediata de operaciones concurrentes sin encolarlas.
 - Gemini Flash/Flash-Lite añadidos al conector Google con clave propia, aviso de cuota/privacidad y alcance de propuesta de código, sin anunciar ejecución real ni agente Gemini CLI.
 
+- CYD probada desde la interfaz RC4: respaldo completo contrastado, una carga, cuatro hashes verificados, 141 s, guardado con Ctrl+S y confirmación del usuario de pantalla/táctil.
+
 ## 1.0.0-rc.3 · agente, sesión limpia y guardado manual · 25 octubre 2026
 
 - Cada apertura comienza con editor, chat y tarea vacíos; no recupera automáticamente sesiones o compilaciones. Se recuerdan las preferencias de IA por navegador. Los archivos operativos del agente siguen disponibles para recuperación explícita.

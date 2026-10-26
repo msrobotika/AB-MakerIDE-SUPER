@@ -30,3 +30,7 @@ Se introducen cadenas con HTML ejecutable en código, nombre de proyecto, catál
 Claude Code no se ha ejecutado con una cuenta real y su aprobación manual MCP se bloquea. Gemini API dispone de modelos configurables y pruebas de contrato/UI, pero falta una cuenta real para validar su respuesta; no se presenta como agente con herramientas. Linux/macOS en CI no equivale a pruebas físicas en esos equipos. Las evidencias anteriores de seis placas conservan su alcance original.
 
 El vídeo original se adjunta a Releases y desaparece del árbol actual. Sigue presente en commits y etiquetas anteriores: no se ha reescrito el historial.
+
+## Prueba física adicional desde el IDE
+
+La [carga CYD real desde RC4](../cyd-rc4/README.md) añade 13 comprobaciones del recorrido real: copia previa contrastada, una solicitud de carga desde el botón de la aplicación, cuatro bloques verificados, monitor serie real y proyecto guardado con Ctrl+S. La pantalla y el táctil fueron confirmados por el usuario por separado. No forma parte de los 196 casos controlados ni de la aceptación sin hardware.

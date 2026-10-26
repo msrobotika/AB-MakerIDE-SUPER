@@ -25,3 +25,5 @@ Local RC4 validation: **294 passing unit tests out of 299**, five platform/tool/
 This is a release candidate, physically validated on Windows. [Security policy](SECURITY.md) · [Contributing](CONTRIBUTING.md) · [Discussions](https://github.com/msrobotika/AB-MakerIDE-SUPER/discussions)
 
 [AI accounts and an online free-tier option](docs/IA_Y_CUOTAS.md).
+
+[Real RC4 manual CYD upload](docs/evidence/cyd-rc4/README.md): checked backup, one submission through the IDE, four verified images, Ctrl+S export and user-confirmed display/touch.

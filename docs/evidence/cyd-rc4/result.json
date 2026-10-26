@@ -1,0 +1,87 @@
+{
+  "scope": "Installed RC4, real Chromium interface and local server, real Arduino CLI compilation/upload on user-authorized CYD COM4. No intercepted requests, direct flash-writing command or AI call.",
+  "checks": [
+    {
+      "name": "installed interface reports RC4",
+      "passed": true
+    },
+    {
+      "name": "commercial CYD profile selected through the board catalog",
+      "passed": true
+    },
+    {
+      "name": "editor contains the approved LCD/touch source",
+      "passed": true
+    },
+    {
+      "name": "IDE asks to overwrite the authorized device",
+      "passed": true
+    },
+    {
+      "name": "normal IDE endpoint starts a real job",
+      "passed": true
+    },
+    {
+      "name": "job finishes without a second upload submission",
+      "passed": true
+    },
+    {
+      "name": "real uploader returns success and verified bytes",
+      "passed": true
+    },
+    {
+      "name": "uploaded editor revision and target match",
+      "passed": true
+    },
+    {
+      "name": "real esptool decimal progress closes at 100",
+      "passed": true
+    },
+    {
+      "name": "all four programmed images report a verified hash",
+      "passed": true
+    },
+    {
+      "name": "console includes final verified result",
+      "passed": true
+    },
+    {
+      "name": "project was saved with the IDE keyboard action",
+      "passed": true
+    },
+    {
+      "name": "real interface produced no JavaScript errors",
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "source_sha256": "9fda3a0583fa8e298eb29fadba6dec2363faeb39879081927ec98a435319d648",
+  "backup_sha256": "e2f5c4b695b4a189d6f19a5effc2c63613825fa637ea9376626e96a31efb1a70",
+  "verified_blocks": 4,
+  "serial_connected": true,
+  "serial_reports_calibration": true,
+  "firmware_ready_marker_observed": false,
+  "date": "2026-10-26",
+  "ide_version": "1.0.0-rc.4",
+  "port": "COM4",
+  "fqbn": "esp32:esp32:jczn_2432s028r",
+  "elapsed_seconds": 141.0,
+  "single_upload_submission": true,
+  "flash_backup_bytes": 4194304,
+  "independent_backup_check_bytes": 274320,
+  "failed_read_at_460800": "Read-only backup attempt failed with corrupt packet; complete backup and upload used 115200.",
+  "uploader_verification_requested": true,
+  "uploader_exit_code": 0,
+  "final_progress": 100,
+  "physical_confirmation": {
+    "source": "user_reply_in_chat",
+    "date": "2026-10-26",
+    "statement": "Sí, aparece el juego y responde al táctil",
+    "display_and_touch_confirmed": true,
+    "scope": "User confirmation after the three calibration crosses, including requested left/rotate/right/drop controls. Not an automated visual observation or a long-duration test."
+  },
+  "serial_markers": [
+    "MSR_CYD_START profile=ESP32-2432S028R display=ILI9341 touch=XPT2046 render=dirty_cells_v2",
+    "MSR_CYD_CALIBRATION point=1"
+  ]
+}
