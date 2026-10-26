@@ -2,7 +2,7 @@
 
 25 octubre 2026. Esta matriz distingue las pruebas de dispositivos concretos de los tests automatizados del IDE. No implica compatibilidad con todas las revisiones que comparten un nombre comercial o conversor USB.
 
-**Primera ronda:** cinco dispositivos registrados y [cerrados](CIERRE_PRUEBAS_2026-10-25.md). **RC2:** se incorpora una sexta prueba de CYD con autorización específica posterior.
+**Primera ronda:** cinco dispositivos registrados y [cerrados](archive/CIERRE_PRUEBAS_2026-10-25.md). **RC2:** se incorpora una sexta prueba de CYD con autorización específica posterior.
 
 | Dispositivo y perfil | Compilación y carga | Comprobación del periférico | Pendientes |
 | --- | --- | --- | --- |

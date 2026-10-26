@@ -1,0 +1,14 @@
+{
+  "name": "ab-makeride-super",
+  "private": true,
+  "scripts": {
+    "format": "prettier --write app.js frontend/ activity.js board_trials.js simulator.js index.html",
+    "format:check": "prettier --check app.js frontend/ activity.js board_trials.js simulator.js index.html",
+    "lint": "eslint app.js frontend/ activity.js board_trials.js simulator.js"
+  },
+  "devDependencies": {
+    "eslint": "10.13.0",
+    "globals": "17.13.0",
+    "prettier": "3.9.10"
+  }
+}

@@ -1,4 +1,4 @@
-# Trabajar con el agente y guardar el proyecto · RC3
+# Trabajar con el agente y guardar el proyecto · RC4
 
 Cada apertura empieza con editor, chat y tareas vacíos. El código de un borrador se conserva si el usuario lo guarda; no se restaura automáticamente al volver. Se recuerdan proveedor/modelo, CLI elegida, modo de permisos y preferencia de apertura del código generado. No se almacenan prompts ni claves API en esas preferencias. Las cuentas de Codex/Claude pertenecen a sus herramientas oficiales y los conectores de chat mantienen sus claves en memoria del servidor.
 
@@ -24,3 +24,7 @@ El código generado puede abrirse automáticamente si no has cambiado el origina
 Los ZIP se leen sin extraer rutas arbitrarias. Se rechazan enlaces, rutas ascendentes/absolutas, duplicados, ficheros ocultos y contenidos cifrados; se limitan a 128 archivos y 8 MB de proyecto. No se importan afirmaciones de compilación o grabación como evidencia nueva.
 
 Las sesiones operativas permanecen en `.makeride-data/AgentWorkspaces` para diagnóstico y descarga explícita; son un archivo de trabajo, no guardado automático del borrador del editor. Las copias de versiones anteriores se conservan y una migración no carga su código por sí sola. Las copias completas de flash siguen fuera de los proyectos públicos.
+
+## Herramientas MCP
+
+Las conexiones guardadas no se habilitan por sí solas. Codex solicita aprobación manual dentro del IDE; la aprobación automática se elige de forma explícita para una tarea. El modo MCP manual de Claude no está integrado y se bloquea antes de ejecutar. [Configuración, secretos y límites](MCP.md).

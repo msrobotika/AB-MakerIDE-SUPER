@@ -1,12 +1,13 @@
 """C++ grammar smoke tests against stubbed Arduino types (NOT a real Arduino build)."""
+
 from pathlib import Path
 import shutil
 import subprocess
 import tempfile
 import unittest
 
-ROOT=Path(__file__).resolve().parents[1]
-HEADER=r'''
+ROOT = Path(__file__).resolve().parents[1]
+HEADER = r"""
 #pragma once
 #include <cstdint>
 #include <string>
@@ -24,17 +25,33 @@ struct {void mode(int){};void disconnect(){};int scanNetworks(bool,bool){return 
 constexpr uint16_t ST77XX_RED=0xF800,ST77XX_GREEN=0x7E0,ST77XX_BLUE=0x001F,
 ST77XX_YELLOW=0xFFE0,ST77XX_CYAN=0x07FF,ST77XX_MAGENTA=0xF81F,ST77XX_BLACK=0,ST77XX_WHITE=0xFFFF;
 struct Adafruit_ST7789 {Adafruit_ST7789(int,int,int){};void init(int,int){};void setRotation(int){};void fillScreen(uint16_t){};void setTextColor(uint16_t){};void setTextSize(int){};void setCursor(int,int){};void print(const String&){};void drawFastHLine(int,int,int,uint16_t){};void fillRect(int,int,int,int,uint16_t){};void drawRect(int,int,int,int,uint16_t){};int width(){return 320;}int height(){return 170;}};
-'''
+"""
+
+
 class SketchSyntax(unittest.TestCase):
     def test_ideaspark_examples_cpp_grammar(self):
-        if not shutil.which('g++'):
-            self.skipTest('g++ no disponible; esto no comprueba Arduino Core')
+        if not shutil.which("g++"):
+            self.skipTest("g++ no disponible; esto no comprueba Arduino Core")
         with tempfile.TemporaryDirectory() as d:
-            p=Path(d)
-            for name in ('Arduino.h','SPI.h','WiFi.h','Adafruit_GFX.h','Adafruit_ST7789.h'):
-                (p/name).write_text(HEADER if name=='Arduino.h' else '#include "Arduino.h"\n')
-            for size in ('19','114'):
-                source=ROOT/'examples'/f'ideaspark_{size}_st7789.ino'
+            p = Path(d)
+            for name in ("Arduino.h", "SPI.h", "WiFi.h", "Adafruit_GFX.h", "Adafruit_ST7789.h"):
+                (p / name).write_text(HEADER if name == "Arduino.h" else '#include "Arduino.h"\n')
+            for size in ("19", "114"):
+                source = ROOT / "examples" / f"ideaspark_{size}_st7789.ino"
                 with self.subTest(size=size):
-                    result=subprocess.run(['g++','-std=c++17','-fsyntax-only','-x','c++','-I',str(p),str(source)],capture_output=True,text=True,timeout=30)
-                    self.assertEqual(result.returncode,0,result.stderr)
+                    result = subprocess.run(
+                        [
+                            "g++",
+                            "-std=c++17",
+                            "-fsyntax-only",
+                            "-x",
+                            "c++",
+                            "-I",
+                            str(p),
+                            str(source),
+                        ],
+                        capture_output=True,
+                        text=True,
+                        timeout=30,
+                    )
+                    self.assertEqual(result.returncode, 0, result.stderr)

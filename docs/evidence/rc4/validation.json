@@ -1,0 +1,848 @@
+{
+  "version": "1.0.0-rc.4",
+  "date": "2026-10-26",
+  "unit": {
+    "total": 299,
+    "passed": 294,
+    "skipped": 5,
+    "failures": 0
+  },
+  "browser": {
+    "total_checks": 196,
+    "flows": {
+      "agent_consent": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "total opens in-page dialog with focus",
+            "passed": true
+          },
+          {
+            "name": "blank consent cannot start",
+            "passed": true
+          },
+          {
+            "name": "incorrect consent cannot start",
+            "passed": true
+          },
+          {
+            "name": "cancel starts nothing and explains outcome",
+            "passed": true
+          },
+          {
+            "name": "Escape starts nothing",
+            "passed": true
+          },
+          {
+            "name": "consent resets each task",
+            "passed": true
+          },
+          {
+            "name": "exact consent enables start",
+            "passed": true
+          },
+          {
+            "name": "one total request reaches real validation",
+            "passed": true
+          },
+          {
+            "name": "backend creates completed total job",
+            "passed": true
+          },
+          {
+            "name": "read-only hides full-access input",
+            "passed": true
+          },
+          {
+            "name": "read-only start accepted before checking completion",
+            "passed": true
+          },
+          {
+            "name": "read-only request keeps permission scope",
+            "passed": true
+          },
+          {
+            "name": "dialog usable on mobile",
+            "passed": true
+          },
+          {
+            "name": "generated code automatically opens in editor",
+            "passed": true
+          },
+          {
+            "name": "original editor code can be restored within session",
+            "passed": true
+          },
+          {
+            "name": "save and open controls visible beside agent actions",
+            "passed": true
+          },
+          {
+            "name": "project download includes header and sketch",
+            "passed": true
+          },
+          {
+            "name": "manual save includes latest editor edits and auxiliaries",
+            "passed": true
+          },
+          {
+            "name": "saved source ZIP reopens as editable project",
+            "passed": true
+          },
+          {
+            "name": "opening saved ZIP never starts an agent",
+            "passed": true
+          },
+          {
+            "name": "continued task carries parent project reference",
+            "passed": true
+          },
+          {
+            "name": "continued backend receives auxiliary header",
+            "passed": true
+          },
+          {
+            "name": "editing during task prevents automatic overwrite",
+            "passed": true
+          },
+          {
+            "name": "manual open preserves competing edit in session undo",
+            "passed": true
+          },
+          {
+            "name": "automatic open can be disabled without losing generated project",
+            "passed": true
+          },
+          {
+            "name": "saved ino can be reopened with Importar",
+            "passed": true
+          },
+          {
+            "name": "importing another sketch clears old agent project reference",
+            "passed": true
+          },
+          {
+            "name": "radar opens in code editor without hardware action",
+            "passed": true
+          },
+          {
+            "name": "radar selects ESP32 instead of Uno",
+            "passed": true
+          },
+          {
+            "name": "Codex requires own account without included AI balance",
+            "passed": true
+          },
+          {
+            "name": "Claude is explicitly unvalidated experimental integration",
+            "passed": true
+          },
+          {
+            "name": "trial without a build records no tool evidence",
+            "passed": true
+          },
+          {
+            "name": "trial notebook survives reload",
+            "passed": true
+          },
+          {
+            "name": "compile does not automatically confirm physical result",
+            "passed": true
+          },
+          {
+            "name": "upload on different port is not attributed to selected target",
+            "passed": true
+          },
+          {
+            "name": "notebook export preserves separate tool and user observations",
+            "passed": true
+          },
+          {
+            "name": "lost server job preserves manual observation without inventing tool evidence",
+            "passed": true
+          },
+          {
+            "name": "another tab cannot be overwritten by stale notebook",
+            "passed": true
+          },
+          {
+            "name": "damaged notebook prevents overwriting original",
+            "passed": true
+          },
+          {
+            "name": "trial dialog fits mobile without horizontal scrolling",
+            "passed": true
+          },
+          {
+            "name": "no native-popup exceptions",
+            "passed": true
+          },
+          {
+            "name": "requested upload without verification remains pending in UI",
+            "passed": true
+          },
+          {
+            "name": "missing requested upload never turns robot green",
+            "passed": true
+          }
+        ],
+        "scope": "Real HTTP handler/consent validation/workspace; stub CLI worker. No hardware."
+      },
+      "connection_recovery": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "busy port visible and reconnect remains available",
+            "passed": true
+          },
+          {
+            "name": "busy open never retries automatically",
+            "passed": true
+          },
+          {
+            "name": "explicit connect reaches connected state",
+            "passed": true
+          },
+          {
+            "name": "USB read failure clears connected state",
+            "passed": true
+          },
+          {
+            "name": "disconnected send button is disabled",
+            "passed": true
+          },
+          {
+            "name": "read failure is shown as error",
+            "passed": true
+          },
+          {
+            "name": "selection and editor survive disconnect",
+            "passed": true
+          },
+          {
+            "name": "disconnect does not automatically open another transport",
+            "passed": true
+          },
+          {
+            "name": "failed write disconnects and transmits once",
+            "passed": true
+          },
+          {
+            "name": "failed send remains available for review",
+            "passed": true
+          },
+          {
+            "name": "new connection does not replay prior send",
+            "passed": true
+          },
+          {
+            "name": "explicit reconnection enables send",
+            "passed": true
+          },
+          {
+            "name": "new explicit send succeeds",
+            "passed": true
+          },
+          {
+            "name": "manual disconnect remains neutral",
+            "passed": true
+          },
+          {
+            "name": "opening IDE does not recover previous operation automatically",
+            "passed": true
+          },
+          {
+            "name": "opening IDE clears previous task inputs",
+            "passed": true
+          },
+          {
+            "name": "restart journal never turns successful",
+            "passed": true
+          },
+          {
+            "name": "interrupted operation is not labelled preparing",
+            "passed": true
+          },
+          {
+            "name": "restart preserves pending journal bytes",
+            "passed": true
+          },
+          {
+            "name": "reload clears draft and detects the present port",
+            "passed": true
+          },
+          {
+            "name": "reload does not reconnect",
+            "passed": true
+          },
+          {
+            "name": "no JavaScript errors",
+            "passed": true
+          },
+          {
+            "name": "no upload or agent request",
+            "passed": true
+          }
+        ],
+        "scope": "Real HTTP and Chromium; controlled COM999 transport and interrupted journal. No physical port, firmware upload or AI execution."
+      },
+      "simulator": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "startup without JavaScript errors",
+            "passed": true
+          },
+          {
+            "name": "simulator visible",
+            "passed": true
+          },
+          {
+            "name": "inert ADC and button controls removed",
+            "passed": true
+          },
+          {
+            "name": "new session starts with empty editor",
+            "passed": true
+          },
+          {
+            "name": "default Uno LED_BUILTIN recognized",
+            "passed": true
+          },
+          {
+            "name": "pause freezes virtual clock",
+            "passed": true
+          },
+          {
+            "name": "resume advances clock",
+            "passed": true
+          },
+          {
+            "name": "reset pauses at zero",
+            "passed": true
+          },
+          {
+            "name": "simulator never claims hardware success",
+            "passed": true
+          },
+          {
+            "name": "closing panel pauses simulation",
+            "passed": true
+          },
+          {
+            "name": "editing discards model immediately",
+            "passed": true
+          },
+          {
+            "name": "step moves exactly to next wait boundary",
+            "passed": true
+          },
+          {
+            "name": "LOW-first starts LOW",
+            "passed": true
+          },
+          {
+            "name": "virtual speed multiplier advances time",
+            "passed": true
+          },
+          {
+            "name": "step wraps to next cycle correctly",
+            "passed": true
+          },
+          {
+            "name": "three outputs represented together",
+            "passed": true
+          },
+          {
+            "name": "traffic sequence yellow at 1000ms",
+            "passed": true
+          },
+          {
+            "name": "board change discards stale model",
+            "passed": true
+          },
+          {
+            "name": "canvas profile follows Mega selection",
+            "passed": true
+          },
+          {
+            "name": "language change discards stale model",
+            "passed": true
+          },
+          {
+            "name": "MicroPython three-output sequence",
+            "passed": true
+          },
+          {
+            "name": "mobile panel fits viewport",
+            "passed": true
+          },
+          {
+            "name": "mobile step control usable",
+            "passed": true
+          },
+          {
+            "name": "unsupported code explains refusal and clears outputs",
+            "passed": true
+          },
+          {
+            "name": "unknown built-in LED is not inferred for ESP32",
+            "passed": true
+          },
+          {
+            "name": "no JavaScript errors",
+            "passed": true
+          },
+          {
+            "name": "no hardware or agent operations",
+            "passed": true
+          }
+        ],
+        "scope": "Real local HTTP and Chromium, isolated profile, controlled board catalog. No upload, serial connection or AI calls."
+      },
+      "auto_identity": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "one connected board replaces stale Uno profile",
+            "passed": true
+          },
+          {
+            "name": "one connected port replaces stale COM99",
+            "passed": true
+          },
+          {
+            "name": "startup ignores legacy draft code",
+            "passed": true
+          },
+          {
+            "name": "bridge is queried instead of treated as model",
+            "passed": true
+          },
+          {
+            "name": "display is still explicitly unknown",
+            "passed": true
+          },
+          {
+            "name": "manual deselection survives background discovery",
+            "passed": true
+          },
+          {
+            "name": "PC companion is opt-in",
+            "passed": true
+          },
+          {
+            "name": "screen profile does not come from USB",
+            "passed": true
+          },
+          {
+            "name": "CYD can be declared separately from chip",
+            "passed": true
+          },
+          {
+            "name": "new connection selects its own port and family",
+            "passed": true
+          },
+          {
+            "name": "reconnection does not replace the user source",
+            "passed": true
+          },
+          {
+            "name": "multiple ports never choose a random device",
+            "passed": true
+          },
+          {
+            "name": "manual port selection survives background discovery",
+            "passed": true
+          },
+          {
+            "name": "changing board leaves COM options attached",
+            "passed": true
+          },
+          {
+            "name": "explicit refresh queries selected port among several",
+            "passed": true
+          },
+          {
+            "name": "late chip result cannot undo manual selection even after return to same port",
+            "passed": true
+          },
+          {
+            "name": "CYD game opens as firmware in code editor",
+            "passed": true
+          },
+          {
+            "name": "CYD loader selects its profile without PC companion",
+            "passed": true
+          },
+          {
+            "name": "reload starts empty with no stale physical profile",
+            "passed": true
+          },
+          {
+            "name": "reload never grants a PC companion permission",
+            "passed": true
+          },
+          {
+            "name": "no uncaught JS errors",
+            "passed": true
+          }
+        ],
+        "scope": "Real local HTTP and Chromium. Mock chip query; no physical port, AI CLI or firmware upload."
+      },
+      "clean_start": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "provider and agent preference restored",
+            "passed": true
+          },
+          {
+            "name": "saved mode is a preference without execution",
+            "passed": true
+          },
+          {
+            "name": "opening IDE has neutral robot",
+            "passed": true
+          },
+          {
+            "name": "old tasks and results are not loaded",
+            "passed": true
+          },
+          {
+            "name": "editor starts empty despite legacy project",
+            "passed": true
+          },
+          {
+            "name": "legacy code remains recoverable without automatic loading",
+            "passed": true
+          },
+          {
+            "name": "old agent and build are not polled",
+            "passed": true
+          },
+          {
+            "name": "Codex chat routes to real task consent",
+            "passed": true
+          },
+          {
+            "name": "full access still requires explicit per-run consent",
+            "passed": true
+          },
+          {
+            "name": "chat does not invoke read-only cloud substitute",
+            "passed": true
+          },
+          {
+            "name": "task declares CYD profile to the agent",
+            "passed": true
+          },
+          {
+            "name": "Ctrl S explicitly downloads current code",
+            "passed": true
+          },
+          {
+            "name": "draft is not automatically stored in browser",
+            "passed": true
+          },
+          {
+            "name": "reopen clears unsaved code",
+            "passed": true
+          },
+          {
+            "name": "user can reopen explicitly saved code",
+            "passed": true
+          },
+          {
+            "name": "reopen clears task, chat and wizard",
+            "passed": true
+          },
+          {
+            "name": "reopen retains only AI preference from task controls",
+            "passed": true
+          },
+          {
+            "name": "AI preferences never contain prompts or API keys",
+            "passed": true
+          },
+          {
+            "name": "reopen does not grant PC companion permission",
+            "passed": true
+          },
+          {
+            "name": "no JavaScript errors",
+            "passed": true
+          }
+        ],
+        "scope": "Real HTTP and Chromium, controlled empty board catalog. No agent, cloud, serial or firmware execution."
+      },
+      "mcp": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "MCP is opt-in on fresh startup",
+            "passed": true
+          },
+          {
+            "name": "MCP automatic approvals default to off",
+            "passed": true
+          },
+          {
+            "name": "saving clears credential-bearing text area",
+            "passed": true
+          },
+          {
+            "name": "saved status never claims a working connection",
+            "passed": true
+          },
+          {
+            "name": "credentials not echoed to page",
+            "passed": true
+          },
+          {
+            "name": "configuration saved outside project folders",
+            "passed": true
+          },
+          {
+            "name": "saving starts no session",
+            "passed": true
+          },
+          {
+            "name": "configuration persists but task permission resets",
+            "passed": true
+          },
+          {
+            "name": "read-only task does not activate external MCP",
+            "passed": true
+          },
+          {
+            "name": "consent explicitly names selected MCP",
+            "passed": true
+          },
+          {
+            "name": "consent is required before starting",
+            "passed": true
+          },
+          {
+            "name": "authorized request enables MCP explicitly",
+            "passed": true
+          },
+          {
+            "name": "task request never transports MCP credentials",
+            "passed": true
+          },
+          {
+            "name": "reopen clears task and MCP activation",
+            "passed": true
+          },
+          {
+            "name": "no JavaScript errors",
+            "passed": true
+          },
+          {
+            "name": "Gemini online offers the documented Flash models",
+            "passed": true
+          },
+          {
+            "name": "free quota and chat-only scope are visible before configuration",
+            "passed": true
+          }
+        ],
+        "scope": "Real Chromium and HTTP. Controlled empty ports/catalog. MCP configuration only; no agent or MCP processes, cloud requests, or hardware."
+      },
+      "security": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "CSP has no unsafe-inline",
+            "passed": true
+          },
+          {
+            "name": "all feature modules loaded without JS errors",
+            "passed": true
+          },
+          {
+            "name": "static HTML has no inline styles",
+            "passed": true
+          },
+          {
+            "name": "code highlighter uses text nodes",
+            "passed": true
+          },
+          {
+            "name": "hostile board name is an option text",
+            "passed": true
+          },
+          {
+            "name": "project name survives render as a value",
+            "passed": true
+          },
+          {
+            "name": "terminal resize works under strict CSP",
+            "passed": true
+          },
+          {
+            "name": "simulation works with external CSS",
+            "passed": true
+          },
+          {
+            "name": "MCP approval defaults to manual",
+            "passed": true
+          },
+          {
+            "name": "task consent describes manual approvals",
+            "passed": true
+          },
+          {
+            "name": "no approval is sent automatically",
+            "passed": true
+          },
+          {
+            "name": "approval arguments render as inert text",
+            "passed": true
+          },
+          {
+            "name": "waiting for approval remains amber",
+            "passed": true
+          },
+          {
+            "name": "one explicit click answers exactly one request",
+            "passed": true
+          },
+          {
+            "name": "replay is rejected without another grant",
+            "passed": true
+          },
+          {
+            "name": "no hostile string executed",
+            "passed": true
+          },
+          {
+            "name": "no CSP violations during normal flows",
+            "passed": true
+          },
+          {
+            "name": "no JavaScript errors",
+            "passed": true
+          }
+        ],
+        "scope": "Real Chromium and HTTP. Fake Codex approval request/session, hostile catalog/project/code strings. No CLI, MCP server, serial or firmware execution."
+      },
+      "manual_build": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "serial-only game warns about black CYD screen",
+            "passed": true
+          },
+          {
+            "name": "manual upload opens in-page confirmation",
+            "passed": true
+          },
+          {
+            "name": "destination warning is inside hardware confirmation",
+            "passed": true
+          },
+          {
+            "name": "opening confirmation executes nothing",
+            "passed": true
+          },
+          {
+            "name": "Escape cancels without uploading",
+            "passed": true
+          },
+          {
+            "name": "uploader requests verification",
+            "passed": true
+          },
+          {
+            "name": "job reaches terminal state",
+            "passed": true
+          },
+          {
+            "name": "decimal uploader output reaches 100 percent",
+            "passed": true
+          },
+          {
+            "name": "uploaded revision matches editor bytes",
+            "passed": true
+          },
+          {
+            "name": "verified bytes do not imply runtime observation",
+            "passed": true
+          },
+          {
+            "name": "console renders final result",
+            "passed": true
+          },
+          {
+            "name": "physical test remains pending in interface",
+            "passed": true
+          },
+          {
+            "name": "verified upload scopes green status",
+            "passed": true
+          },
+          {
+            "name": "uploader requests verification",
+            "passed": true
+          },
+          {
+            "name": "zero exit alone does not mark bytes verified",
+            "passed": true
+          },
+          {
+            "name": "missing verification does not turn robot green",
+            "passed": true
+          },
+          {
+            "name": "compile failure prevents upload",
+            "passed": true
+          },
+          {
+            "name": "compile error is terminal and red",
+            "passed": true
+          },
+          {
+            "name": "uploader requests verification",
+            "passed": true
+          },
+          {
+            "name": "serial send and agent execution are disabled during upload",
+            "passed": true
+          },
+          {
+            "name": "busy endpoint rejects immediately: /api/serial/start",
+            "passed": true
+          },
+          {
+            "name": "busy endpoint rejects immediately: /api/agents/start",
+            "passed": true
+          },
+          {
+            "name": "cancel releases hardware lock and closes job",
+            "passed": true
+          },
+          {
+            "name": "cancel never claims verification",
+            "passed": true
+          },
+          {
+            "name": "blocked requests were never queued or executed",
+            "passed": true
+          },
+          {
+            "name": "manual import works without native dialogs",
+            "passed": true
+          },
+          {
+            "name": "all manual flows have no JS errors",
+            "passed": true
+          }
+        ],
+        "scope": "Real HTTP, jobs, journal and Chromium UI; controlled compile/upload outputs, COM999 only. No CLI, serial, firmware or AI execution."
+      }
+    }
+  },
+  "physical_scope": "Historical device tests remain separate. Any new CYD upload must be documented independently, not inferred from controlled tests."
+}

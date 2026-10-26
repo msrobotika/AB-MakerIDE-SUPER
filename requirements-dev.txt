@@ -1,0 +1,2 @@
+ruff==0.17.2
+playwright==1.56.0

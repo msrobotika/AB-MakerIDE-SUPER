@@ -1,30 +1,20 @@
-# Herramientas MCP en MakerIDE RC3
+# Herramientas MCP y permisos en MakerIDE RC4
 
-El panel **Conexiones MCP** admite servidores estándar **stdio** (un proceso local) y **Streamable HTTP**. No dependen de la marca del modelo: la conexión la establece el cliente MCP del agente. MakerIDE entrega la configuración a **Codex CLI** o **Claude Code**, con la cuenta y permisos de cada usuario. Los conectores de chat de Google, OpenRouter u Ollama no se convierten en agentes MCP por seleccionar un modelo.
+El panel admite **stdio** y **Streamable HTTP**. La conexión la establece el cliente MCP de Codex CLI o Claude Code, con la cuenta del usuario; seleccionar cualquier modelo de chat no le aporta ejecución MCP. La IA y sus herramientas no incluyen cuota gratuita de MakerIDE.
 
-## Configurar desde el IDE
+## Configurar y ejecutar
 
-1. Abre el panel MCP y pega la configuración `mcpServers` del servidor. Se admiten hasta 16 servidores; los nombres deben comenzar por una letra y usar letras, números, guion o guion bajo.
-2. Pulsa **Guardar conexiones**. Esto valida y guarda el formato; no descarga paquetes, inicia procesos ni verifica una conexión. Reemplaza la lista completa anterior. Para quitar todos, guarda `{"mcpServers": {}}`.
-3. Elige Codex o Claude Code y modo **Autónomo** o **Acceso total**. Marca **Usar los MCP configurados aquí en esta tarea**.
-4. Describe la tarea. La autorización muestra los servidores adicionales y permite usar sus herramientas durante esa ejecución sin nuevas aprobaciones interactivas de la CLI. Un servidor puede actuar fuera del directorio del proyecto. Acceso total conserva su autorización textual propia.
-5. Consulta el registro. Codex registra el servidor, herramienta y estado de sus llamadas estructuradas. Una llamada MCP correcta no acredita compilación, grabación ni funcionamiento físico. Un fallo MCP sin recuperación produce un resultado fallido aunque la CLI salga con código 0.
+1. Pega una configuración estándar `mcpServers` y pulsa **Guardar conexiones**. Valida el formato; no descarga, arranca ni comprueba los servidores. Reemplaza la lista completa; `{ "mcpServers": {} }` la vacía.
+2. Selecciona Codex y Autónomo o Acceso total. Marca **Usar los MCP configurados aquí en esta tarea**. Esta casilla y la de aprobación automática empiezan desactivadas en cada apertura.
+3. Con **aprobación manual** (predeterminada), Codex utiliza su app-server. La solicitud aparece en el IDE con servidor, descripción, argumentos y opciones disponibles. Revisa y pulsa **Autorizar esta vez** o **Rechazar**. No se concede aprobación para el resto de la sesión. Las respuestas caducadas o repetidas se rechazan.
+4. Si eliges **aprobar automáticamente**, la autorización inicial lo advierte y los MCP adicionales pueden actuar sin nuevas preguntas durante esa ejecución. Su alcance puede salir del proyecto: el permiso del MCP depende de su servidor y sus credenciales. Acceso total conserva además su confirmación textual.
+5. El registro conserva servidor/herramienta/estado de llamadas Codex. Una llamada MCP correcta no acredita compilación ni hardware. Un error de herramienta sin recuperar impide declarar éxito.
 
-Al abrir de nuevo el IDE, la lista guardada sigue disponible como configuración de IA; su casilla de uso vuelve a estar desactivada. No se guardan tareas ni código como parte de esta configuración. La configuración propia de la CLI también puede aportar MCP, plugins y políticas; desmarcar esta casilla solo omite los servidores adicionales de MakerIDE.
+**Claude Code sigue experimental.** Su modo MCP manual se bloquea antes de iniciar porque su protocolo de aprobaciones no está integrado. Puede seleccionarse su aprobación automática por tarea de forma explícita; la CLI, cuenta y ejecución real de Claude aún requieren validación. No se presenta como equivalente al recorrido probado de Codex.
 
-Ejemplo HTTP de documentación pública (introducirlo no conecta el servidor):
+Los formularios MCP con campos o flujos URL que no están implementados se rechazan sin enviar datos. No se automatizan inicios de sesión OAuth. Las solicitudes de permisos desconocidas se rechazan; no se amplía acceso por una respuesta genérica. Los argumentos excesivamente grandes para revisión tampoco se autorizan truncados.
 
-```json
-{
-  "mcpServers": {
-    "documentacion_openai": {
-      "url": "https://developers.openai.com/mcp"
-    }
-  }
-}
-```
-
-Para un servidor local, usa su ejecutable y argumentos separados:
+Ejemplo local (el ejecutable debe existir y ser de confianza):
 
 ```json
 {
@@ -37,21 +27,25 @@ Para un servidor local, usa su ejecutable y argumentos separados:
 }
 ```
 
-La configuración admite `env` para procesos locales y `headers` para HTTP. Las URLs necesitan HTTPS salvo loopback HTTP; no admiten credenciales, fragmentos ni parámetros de consulta. SSE antiguo, WebSocket y campos específicos de otros clientes no están implementados en este panel. Para esos casos, o para OAuth, utiliza la configuración y autenticación oficial del agente; MakerIDE no implementa un flujo OAuth propio.
+HTTP admite `url` y `headers`; stdio admite `command`, `args` y `env`. HTTPS es obligatorio excepto HTTP loopback. No se admiten secretos en URL, fragmentos o parámetros de consulta. No pongas claves en los argumentos. SSE antiguo y WebSocket no están implementados en este panel. La configuración propia de las CLI puede añadir herramientas, plugins y políticas: desmarcar la casilla de MakerIDE solo omite sus servidores adicionales, sin cambiar los archivos globales del usuario.
 
-## Credenciales y límites
+## Almacenamiento de secretos
 
-La configuración adicional se guarda en `.makeride-data/ai-settings/mcp.json` (o bajo `AB_MAKERIDE_DATA_DIR`), fuera del proyecto y de los ZIP exportados. Puede contener secretos: protege la cuenta Windows y esa carpeta. No es una caja fuerte cifrada. La respuesta del panel muestra solo nombres y transportes; no devuelve cabeceras, variables ni URLs.
+| Sistema | Persistencia |
+| --- | --- |
+| Windows | DPAPI vinculado al usuario que ejecuta MakerIDE. `.makeride-data/ai-settings/mcp.json` contiene un sobre cifrado, no los tokens. No es un cifrado compartido entre todos los usuarios del equipo. |
+| Linux/macOS con llavero compatible | La configuración vive en el llavero; el archivo guarda una referencia. Se admiten los backends de sistema de `keyring` para Keychain, SecretService o KWallet, no alternativas en texto plano. Puede requerirse desbloquear el llavero. |
+| Sin llavero seguro | La configuración nueva permanece solo en RAM y el panel informa de que no se conservará al reiniciar el servidor. No se crea un archivo en claro como alternativa. |
 
-Codex recibe cabeceras y valores de `env` mediante el entorno privado del proceso; estos valores no se insertan en sus argumentos. Dos servidores no pueden definir la misma variable con valores distintos. Claude recibe un JSON temporal privado, fuera de la carpeta del proyecto, que se elimina al finalizar. No pongas claves en los argumentos de un ejecutable ni en su URL. Los valores de cabeceras y variables configurados se ocultan del registro y respuesta de MakerIDE; un agente con acceso a herramientas sigue sujeto a su propia configuración y permisos.
+Una configuración antigua en texto plano se migra en su lugar al abrirla si hay un almacén seguro, sin crear otra copia en claro. Sin almacén, se conserva el archivo original y se bloquea su uso con un mensaje de migración; no se carga silenciosamente ni se elimina. El cifrado no puede retirar copias antiguas que el usuario haya guardado en otro lugar.
 
-Los servidores explícitos de Codex se marcan como requeridos: si no pueden inicializarse, la CLI debe fallar en lugar de continuar como si estuvieran disponibles. Los modos de solo consulta o edición de MakerIDE no habilitan estos servidores adicionales. No se cambian los archivos globales de Codex/Claude.
+Codex recibe valores sensibles en el entorno del proceso, no en sus argumentos. El JSON temporal de Claude contiene `${AB_MCP_...}` y los valores reales viajan por el entorno del hijo. Se crea fuera del proyecto, con `0600` en POSIX, y se retira al terminar. En Windows, `chmod` no equivale a una ACL POSIX; la protección persistente de los valores la aporta DPAPI. Los registros del IDE ocultan los secretos configurados. Un proceso o agente con los mismos permisos del usuario sigue pudiendo acceder a su entorno o a su cuenta: esto no es aislamiento de código hostil.
 
-## Qué se ha probado
+## Validación y límites
 
-- Configuración, protección del endpoint, guardado, autorización e inicio limpio mediante unidades y Chromium controlado.
-- **Codex instalado y cuenta real:** inicialización, descubrimiento y una llamada a una herramienta local stdio; el mismo recorrido mediante Streamable HTTP local con cabecera de autenticación, verificada por el servidor de prueba. Sin hardware ni firmware.
-- **Claude Code:** construcción de parámetros y configuración privada comprobadas con pruebas controladas. La CLI no estaba instalada en el equipo de validación; su cuenta, OAuth y ejecución real siguen pendientes.
-- No se certifican todos los servidores, plugins, modelos ni políticas de empresa. Un formato válido no demuestra que un servicio responda o que sus credenciales sean correctas.
+- Unidades y Chromium: política manual por defecto, selección automática explícita, aprobación de un solo uso, rechazo de repetición, texto hostil inerte, migración y ausencia de valores en el JSON temporal.
+- Windows real: cifrado/descifrado y migración DPAPI. Los llaveros POSIX se prueban con dobles controlados, no como validación física de todos los escritorios Linux/macOS.
+- Codex instalado/cuenta real: MCP stdio, descubrimiento y una llamada autorizada manualmente con marcador de respuesta. HTTP con autenticación fue probado en RC3; no se presenta como un nuevo ensayo manual HTTP de RC4.
+- Claude: construcción de configuración controlada; ejecución real pendiente. Sin hardware ni firmware en estas comprobaciones.
 
-Referencias: [MCP en Codex](https://learn.chatgpt.com/docs/extend/mcp), [MCP en Claude Code](https://code.claude.com/docs/en/mcp), [OpenAI Docs MCP](https://developers.openai.com/resources/docs-mcp).
+Referencias: [Codex app-server](https://learn.chatgpt.com/docs/app-server), [MCP en Codex](https://learn.chatgpt.com/docs/extend/mcp), [MCP y expansión de entorno en Claude](https://code.claude.com/docs/en/mcp), [DPAPI](https://learn.microsoft.com/en-us/windows/win32/api/dpapi/nf-dpapi-cryptprotectdata), [keyring](https://keyring.readthedocs.io/en/latest/).

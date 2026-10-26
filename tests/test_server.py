@@ -1,4 +1,5 @@
 """Hardware-free regression tests for AB MakerIDE's local bridge."""
+
 import http.client
 import importlib.util
 import json
@@ -11,6 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location("abmaker_server", ROOT / "server.py")
 ide = importlib.util.module_from_spec(spec)
 import sys
+
 sys.modules["abmaker_server"] = ide
 spec.loader.exec_module(ide)
 
@@ -56,20 +58,28 @@ class CoreTests(unittest.TestCase):
             ide.check_port("COM3; rm -rf /")
 
     def test_compile_no_cli_returns_not_ok(self):
-        with patch.object(ide, "arduino_cli", return_value=None), patch.object(ide.shutil, "which", return_value=None):
+        with (
+            patch.object(ide, "arduino_cli", return_value=None),
+            patch.object(ide.shutil, "which", return_value=None),
+        ):
             result = ide.compile_cpp("void setup(){}\nvoid loop(){}", "esp32:esp32:esp32")
             self.assertFalse(result["ok"])
             self.assertIn("no instalado", result["output"])
 
     def test_compile_uses_real_command_and_real_code(self):
         calls = []
+
         def fake_command(args, **kw):
             calls.append(args)
             sketch = Path(args[-1])
             self.assertTrue(sketch.exists())
             self.assertEqual((sketch / "sketch.ino").read_text(), "void setup(){}\nvoid loop(){}")
             return {"ok": True, "exit_code": 0, "output": "COMPILADO"}
-        with patch.object(ide.shutil, "which", return_value="/bin/arduino-cli"), patch.object(ide, "command_result", fake_command):
+
+        with (
+            patch.object(ide.shutil, "which", return_value="/bin/arduino-cli"),
+            patch.object(ide, "command_result", fake_command),
+        ):
             result = ide.compile_cpp("void setup(){}\nvoid loop(){}", "esp32:esp32:esp32")
         self.assertTrue(result["ok"])
         self.assertEqual(result["stage"], "compile")
@@ -77,12 +87,16 @@ class CoreTests(unittest.TestCase):
 
     def test_upload_compiles_then_uploads(self):
         calls = []
+
         def fake_command(args, **kw):
             calls.append(args)
             return {"ok": True, "exit_code": 0, "output": "OK"}
-        with patch.object(ide.shutil, "which", return_value="arduino-cli"), \
-             patch.object(ide, "scan_ports", return_value=[{"port": "COM7"}]), \
-             patch.object(ide, "command_result", fake_command):
+
+        with (
+            patch.object(ide.shutil, "which", return_value="arduino-cli"),
+            patch.object(ide, "scan_ports", return_value=[{"port": "COM7"}]),
+            patch.object(ide, "command_result", fake_command),
+        ):
             r = ide.compile_cpp("void setup(){}\nvoid loop(){}", "esp32:esp32:esp32", port="COM7")
         self.assertTrue(r["ok"])
         self.assertEqual(r["stage"], "upload")
@@ -91,30 +105,42 @@ class CoreTests(unittest.TestCase):
 
     def test_upload_does_not_execute_if_compile_fails(self):
         calls = []
+
         def fake_command(args, **kw):
             calls.append(args)
             return {"ok": False, "exit_code": 1, "output": "GCC ERROR"}
-        with patch.object(ide.shutil, "which", return_value="arduino-cli"), \
-             patch.object(ide, "scan_ports", return_value=[{"port": "COM7"}]), \
-             patch.object(ide, "command_result", fake_command):
+
+        with (
+            patch.object(ide.shutil, "which", return_value="arduino-cli"),
+            patch.object(ide, "scan_ports", return_value=[{"port": "COM7"}]),
+            patch.object(ide, "command_result", fake_command),
+        ):
             r = ide.compile_cpp("broken", "esp32:esp32:esp32", port="COM7")
         self.assertFalse(r["ok"])
         self.assertEqual(len(calls), 1)
 
     def test_micropython_missing_tool_is_failure(self):
-        with patch.object(ide, "scan_ports", return_value=[{"port": "COM5"}]), patch.object(ide, "arduino_cli", return_value=None), patch.object(ide.shutil, "which", return_value=None):
+        with (
+            patch.object(ide, "scan_ports", return_value=[{"port": "COM5"}]),
+            patch.object(ide, "arduino_cli", return_value=None),
+            patch.object(ide.shutil, "which", return_value=None),
+        ):
             r = ide.micropython_action("print('ok')", "COM5", deploy=True)
         self.assertFalse(r["ok"])
         self.assertEqual(r["stage"], "dependencies")
 
     def test_micropython_run_does_not_overwrite_flash(self):
         calls = []
+
         def fake_command(args, **kw):
             calls.append(args)
             return {"ok": True, "exit_code": 0, "output": "OK"}
-        with patch.object(ide, "scan_ports", return_value=[{"port": "COM5"}]), \
-             patch.object(ide.shutil, "which", return_value="mpremote"), \
-             patch.object(ide, "command_result", fake_command):
+
+        with (
+            patch.object(ide, "scan_ports", return_value=[{"port": "COM5"}]),
+            patch.object(ide.shutil, "which", return_value="mpremote"),
+            patch.object(ide, "command_result", fake_command),
+        ):
             r = ide.micropython_action("print('ok')", "COM5", deploy=False)
         self.assertTrue(r["ok"])
         self.assertIn("--no-follow", calls[0])
@@ -122,12 +148,16 @@ class CoreTests(unittest.TestCase):
 
     def test_micropython_deploy_uses_main_py(self):
         calls = []
+
         def fake_command(args, **kw):
             calls.append(args)
             return {"ok": True, "exit_code": 0, "output": "OK"}
-        with patch.object(ide, "scan_ports", return_value=[{"port": "COM5"}]), \
-             patch.object(ide.shutil, "which", return_value="mpremote"), \
-             patch.object(ide, "command_result", fake_command):
+
+        with (
+            patch.object(ide, "scan_ports", return_value=[{"port": "COM5"}]),
+            patch.object(ide.shutil, "which", return_value="mpremote"),
+            patch.object(ide, "command_result", fake_command),
+        ):
             r = ide.micropython_action("print('ok')", "COM5", deploy=True)
         self.assertTrue(r["ok"])
         self.assertEqual(calls[0][-1], ":main.py")
@@ -147,18 +177,33 @@ class CoreTests(unittest.TestCase):
         self.assertEqual(r["messages"][0]["text"], "linea 2")
 
     def test_scan_empty_without_tools(self):
-        with patch.object(ide, "arduino_cli", return_value=None), patch.object(ide.shutil, "which", return_value=None):
+        with (
+            patch.object(ide, "arduino_cli", return_value=None),
+            patch.object(ide.shutil, "which", return_value=None),
+        ):
             r = ide.scan_ports()
             self.assertIsInstance(r, list)
 
     def test_scan_arduino_cli_json(self):
-        data = {"detected_ports": [{"port": {"address": "COM8", "label": "USB Serial"},
-                "matching_boards": [{"name": "ESP32", "fqbn": "esp32:esp32:esp32"}]}]}
-        with patch.object(ide.shutil, "which", return_value="arduino-cli"), \
-             patch.object(ide, "command_result", return_value={"ok": True, "output": json.dumps(data)}):
+        data = {
+            "detected_ports": [
+                {
+                    "port": {"address": "COM8", "label": "USB Serial"},
+                    "matching_boards": [{"name": "ESP32", "fqbn": "esp32:esp32:esp32"}],
+                }
+            ]
+        }
+        with (
+            patch.object(ide.shutil, "which", return_value="arduino-cli"),
+            patch.object(
+                ide, "command_result", return_value={"ok": True, "output": json.dumps(data)}
+            ),
+        ):
             r = ide.scan_ports()
         self.assertIn("COM8", [x["port"] for x in r])
-        self.assertEqual([x for x in r if x["port"] == "COM8"][0]["boards"][0]["fqbn"], "esp32:esp32:esp32")
+        self.assertEqual(
+            [x for x in r if x["port"] == "COM8"][0]["boards"][0]["fqbn"], "esp32:esp32:esp32"
+        )
 
 
 class APITests(unittest.TestCase):
@@ -195,7 +240,7 @@ class APITests(unittest.TestCase):
     def test_health(self):
         code, result = self.call("GET", "/api/health")
         self.assertEqual(code, 200)
-        self.assertEqual(result["version"], "1.0.0-rc.3")
+        self.assertEqual(result["version"], (ROOT / "VERSION").read_text().strip())
 
     def test_serves_html(self):
         code, result = self.call("GET", "/")
@@ -203,13 +248,17 @@ class APITests(unittest.TestCase):
         self.assertIn("AB MakerIDE", result)
 
     def test_cannot_upload_without_explicit_confirmation(self):
-        status, data = self.call("POST", "/api/upload", {"lang": "cpp", "port": "COM3", "code": "bad"})
+        status, data = self.call(
+            "POST", "/api/upload", {"lang": "cpp", "port": "COM3", "code": "bad"}
+        )
         self.assertEqual(status, 400)
         self.assertFalse(data["ok"])
         self.assertIn("confirmación", data["error"])
 
     def test_cross_site_requests_blocked(self):
-        status, _ = self.call("POST", "/api/serial/stop", {}, headers={"Origin": "https://attacker.invalid"})
+        status, _ = self.call(
+            "POST", "/api/serial/stop", {}, headers={"Origin": "https://attacker.invalid"}
+        )
         self.assertEqual(status, 403)
 
     def test_host_header_blocked(self):

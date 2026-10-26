@@ -1,6 +1,6 @@
-# Sesiones nuevas en RC3
+# Sesiones nuevas en RC4
 
-RC3 abre el editor, el chat y la tarea vacíos. Guarda el código explícitamente con Guardar proyecto o Ctrl+S antes de cerrar si lo quieres conservar. Importar reabre JSON/INO/PY o ZIP con auxiliares. Solo se recuerdan automáticamente las preferencias de IA; los registros operativos pueden recuperarse mediante una acción explícita. Las credenciales CLI siguen en sus herramientas oficiales y las claves de chat permanecen en memoria del servidor.
+RC4 abre el editor, el chat y la tarea vacíos. Guarda el código explícitamente con Guardar proyecto o Ctrl+S antes de cerrar si lo quieres conservar. Importar reabre JSON/INO/PY o ZIP con auxiliares. Solo se recuerdan automáticamente las preferencias de IA; los registros operativos pueden recuperarse mediante una acción explícita. Las credenciales CLI siguen en sus herramientas oficiales y las claves de chat permanecen en memoria del servidor.
 
 El arranque también configura UTF-8 para evitar que una consola/redirección cp1252 de Windows detenga el servidor al imprimir su dirección. Los fallos de instalación y puertos ocupados siguen explicándose sin detener procesos ajenos.
 
@@ -48,3 +48,7 @@ Se ha ensayado una extracción nueva con espacios y `&` en su ruta y un entorno 
 Esto no acredita una máquina virtual recién instalada, otro PC, otro sistema operativo ni una desconexión física de USB. Los fallos de transporte se prueban de forma controlada sin abrir un puerto real. Las cinco pruebas físicas anteriores siguen documentadas por separado.
 
 Para diagnóstico técnico sin iniciar un servidor: `python launch.py --check --json --port 8770`. El resultado conserva errores obligatorios y avisos opcionales por separado. La preparación y el lanzador usan únicamente el entorno del proceso y la carpeta de esta instalación.
+
+## Linux, macOS y credenciales
+
+Consulta [preparación POSIX y permisos serie](LINUX_MACOS.md). La configuración MCP se protege con DPAPI o llavero compatible; [esta guía](MCP.md) explica la migración y la alternativa en RAM cuando no hay almacenamiento seguro.

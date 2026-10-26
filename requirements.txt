@@ -2,3 +2,4 @@
 # funcionan sin instalar estas bibliotecas Python (si existe arduino-cli).
 pyserial>=3.5,<4
 mpremote>=1.24,<2
+keyring>=25,<26

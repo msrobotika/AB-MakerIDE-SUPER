@@ -2,6 +2,7 @@
 # Pines numericos de ejemplo: no valida su disponibilidad fisica.
 from machine import Pin
 import time
+
 rojo = Pin(2, Pin.OUT)
 amarillo = Pin(4, Pin.OUT)
 verde = Pin(5, Pin.OUT)

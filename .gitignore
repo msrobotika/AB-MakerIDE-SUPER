@@ -17,3 +17,7 @@ secrets.json
 .env.*
 
 .makeride-data/
+node_modules/
+build/
+dist/
+*.egg-info/

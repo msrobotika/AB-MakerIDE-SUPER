@@ -46,3 +46,5 @@ test('changing target while reading evidence invalidates the context',()=>{
   assert.equal(book.sameContext(c,{...c}),true);
   for(const change of [{code:'editado'},{fqbn:'otro'},{port:'COM8'},{agent_project_id:'nuevo'}])assert.equal(book.sameContext(c,{...c,...change}),false);
 });
+
+test('export uses the application version supplied by the UI, never a hardcoded RC',()=>{const version=require('node:fs').readFileSync(require('node:path').join(__dirname,'../VERSION'),'utf8').trim();const record=book.makeRecord({...context,ide_version:version},result,'Fixture','not_checked','');assert.equal(record.ide_version,version);assert.equal(book.makeRecord(context,result,'Fixture','not_checked','').ide_version,'unknown');});

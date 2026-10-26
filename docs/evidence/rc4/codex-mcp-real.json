@@ -1,0 +1,26 @@
+{
+  "scope": "Installed Codex CLI and account, local stdio MCP fixture. No hardware or firmware operations.",
+  "successful_trial": {
+    "success": true,
+    "exit_code": 0,
+    "response": "Invocaré una sola vez la herramienta de prueba MCP, sin modificar el proyecto ni la placa.\n\n\nMSR_MCP_PROBE_OK",
+    "initialize_count": 1,
+    "tool_calls": 1,
+    "mcp_calls": {
+      "makeride_probe/makeride_probe": "completed"
+    },
+    "evidence": {
+      "board_signature": false,
+      "compiled": false,
+      "flash_verified": false
+    }
+  },
+  "subsequent_trial": {
+    "tool_calls": 1,
+    "mcp_calls": {
+      "makeride_probe/makeride_probe": "completed"
+    },
+    "task_success": false,
+    "limit": "Tool completed after one manual approval; account usage limit prevented the remaining turn. The task was correctly marked failed instead of claiming completion."
+  }
+}

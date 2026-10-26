@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 """AB MakerIDE local bridge. All hardware actions are explicit, never simulated."""
+
 from __future__ import annotations
 
 import argparse
 import ast
 from collections import deque
+from contextlib import contextmanager
 from dataclasses import asdict, dataclass
-from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
-import mimetypes
+import logging
 import os
 from pathlib import Path
 import re
@@ -23,24 +24,29 @@ import tempfile
 import threading
 from urllib.parse import parse_qs, urlsplit
 import webbrowser
-from jobs import JobManager, clean_terminal
-from cloud_agent import AgentService
-from hardware_lab import public_profiles, check as check_hardware, inspect_sketch
-from dependency_advisor import summarize, redact_secrets
-from agent_runtime import AgentJobManager
-from toolchain import arduino_cli
-from board_identity import identify as identify_board, read_firmware_identity
-from mcp_bridge import MCPSettings
+from ab_makeride.jobs import JobManager, clean_terminal
+from ab_makeride.cloud_agent import AgentService
+from ab_makeride.hardware_lab import public_profiles, check as check_hardware, inspect_sketch
+from ab_makeride.dependency_advisor import summarize
+from ab_makeride.agent_runtime import AgentJobManager
+from ab_makeride.toolchain import arduino_cli
+from ab_makeride.board_identity import identify as identify_board, read_firmware_identity
+from ab_makeride.mcp_bridge import MCPSettings
+from ab_makeride.version_info import VERSION
 
+LOGGER = logging.getLogger(__name__)
 ROOT = Path(__file__).resolve().parent
 MAX_BODY = 512 * 1024
 MAX_CODE = 300_000
 FQBN_RE = re.compile(r"^[a-zA-Z0-9_.-]+:[a-zA-Z0-9_.-]+:[a-zA-Z0-9_.-]+$")
 LIB_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9 _./+()'-]{0,120}$")
-PORT_RE = re.compile(r"^(?:COM[1-9][0-9]{0,3}|/dev/(?:tty[A-Za-z0-9_.-]+|cu\.[A-Za-z0-9_.-]+)|/dev/serial/by-id/[A-Za-z0-9_.-]+)$", re.IGNORECASE)
+PORT_RE = re.compile(
+    r"^(?:COM[1-9][0-9]{0,3}|/dev/(?:tty[A-Za-z0-9_.-]+|cu\.[A-Za-z0-9_.-]+)|/dev/serial/by-id/[A-Za-z0-9_.-]+)$",
+    re.IGNORECASE,
+)
 CATALOG_TTL = 180
 CATALOG_LOCK = threading.Lock()
-CATALOG_CACHE = {"until": 0., "result": None}
+CATALOG_CACHE = {"until": 0.0, "result": None}
 CORE_ID_RE = re.compile(r"^[A-Za-z0-9_.-]+:[A-Za-z0-9_.-]+$")
 
 
@@ -50,13 +56,27 @@ def _cli_json(arguments: list[str], timeout: int = 40) -> dict:
     if not executable:
         return {"ok": False, "error": "Arduino CLI no está disponible", "data": None}
     try:
-        p = subprocess.run([executable, *arguments], capture_output=True,
-                           text=True, encoding='utf-8', errors='replace', timeout=timeout,
-                           creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0))
+        p = subprocess.run(
+            [executable, *arguments],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            timeout=timeout,
+            creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
+        )
         if p.returncode:
-            return {"ok": False, "error": clean_terminal(p.stderr or p.stdout)[-1000:], "data": None}
+            return {
+                "ok": False,
+                "error": clean_terminal(p.stderr or p.stdout)[-1000:],
+                "data": None,
+            }
         if len(p.stdout.encode("utf-8")) > 48_000_000:
-            return {"ok": False, "error": "Arduino CLI devolvió más de 48 MB. Refina la búsqueda por modelo.", "data": None}
+            return {
+                "ok": False,
+                "error": "Arduino CLI devolvió más de 48 MB. Refina la búsqueda por modelo.",
+                "data": None,
+            }
         return {"ok": True, "error": "", "data": json.loads(p.stdout)}
     except (OSError, subprocess.TimeoutExpired, ValueError, TypeError) as e:
         return {"ok": False, "error": str(e)[:500], "data": None}
@@ -64,25 +84,27 @@ def _cli_json(arguments: list[str], timeout: int = 40) -> dict:
 
 def _normalize_boards(payload) -> list[dict]:
     """Admite formatos Arduino CLI antiguos y actuales; sin inventar FQBN."""
-    entries = payload if isinstance(payload, list) else (payload.get('boards', []) if isinstance(payload, dict) else [])
+    entries = (
+        payload
+        if isinstance(payload, list)
+        else (payload.get("boards", []) if isinstance(payload, dict) else [])
+    )
     if not isinstance(entries, list):
         return []
     choices = {}
     for b in entries:
         if not isinstance(b, dict):
             continue
-        fqbn = b.get('fqbn', '')
+        fqbn = b.get("fqbn", "")
         if not isinstance(fqbn, str) or not FQBN_RE.fullmatch(fqbn):
             continue
-        name = b.get('name') or fqbn
+        name = b.get("name") or fqbn
         if not isinstance(name, str):
             name = fqbn
-        platform = b.get('platform') or {}
-        vendor = platform.get('name', '') if isinstance(platform, dict) else ''
-        choices[fqbn] = {'fqbn': fqbn, 'name': name[:180], 'platform': str(vendor)[:120]}
-    return sorted(choices.values(), key=lambda b: (b['name'].casefold(), b['fqbn']))
-
-
+        platform = b.get("platform") or {}
+        vendor = platform.get("name", "") if isinstance(platform, dict) else ""
+        choices[fqbn] = {"fqbn": fqbn, "name": name[:180], "platform": str(vendor)[:120]}
+    return sorted(choices.values(), key=lambda b: (b["name"].casefold(), b["fqbn"]))
 
 
 def _boards_from_installed_cores(data_dir: Path | None = None) -> list[dict]:
@@ -95,169 +117,266 @@ def _boards_from_installed_cores(data_dir: Path | None = None) -> list[dict]:
     if data_dir is not None:
         roots.append(Path(data_dir))
     else:
-        override = os.environ.get('ARDUINO_DIRECTORIES_DATA')
+        override = os.environ.get("ARDUINO_DIRECTORIES_DATA")
         if override:
             roots.append(Path(override))
         else:
-            configured = _cli_json(['config', 'get', 'directories.data', '--json'])
-            value = configured.get('data')
+            configured = _cli_json(["config", "get", "directories.data", "--json"])
+            value = configured.get("data")
             if isinstance(value, dict):
-                value = value.get('directories.data')
+                value = value.get("directories.data")
             if isinstance(value, str) and value.strip():
                 roots.append(Path(value.strip()))
-        local = os.environ.get('LOCALAPPDATA') if not roots else None
+        local = os.environ.get("LOCALAPPDATA") if not roots else None
         if local:
-            roots.append(Path(local) / 'Arduino15')
+            roots.append(Path(local) / "Arduino15")
         if not roots:
-            roots.append(Path.home() / 'Library' / 'Arduino15' if sys.platform == 'darwin' else Path.home() / '.arduino15')
+            roots.append(
+                Path.home() / "Library" / "Arduino15"
+                if sys.platform == "darwin"
+                else Path.home() / ".arduino15"
+            )
     found = {}
     for base in roots:
-        parent = base / 'packages'
+        parent = base / "packages"
         if not parent.is_dir():
             continue
         # Bounded enumeration; avoid accidental path traversal or enormous trees.
         for vendor in list(parent.iterdir())[:256]:
-            if not vendor.is_dir() or not re.fullmatch(r'[A-Za-z0-9_.-]+', vendor.name):
+            if not vendor.is_dir() or not re.fullmatch(r"[A-Za-z0-9_.-]+", vendor.name):
                 continue
-            hardware = vendor / 'hardware'
+            hardware = vendor / "hardware"
             if not hardware.is_dir():
                 continue
             for architecture in list(hardware.iterdir())[:128]:
-                if not architecture.is_dir() or not re.fullmatch(r'[A-Za-z0-9_.-]+', architecture.name):
+                if not architecture.is_dir() or not re.fullmatch(
+                    r"[A-Za-z0-9_.-]+", architecture.name
+                ):
                     continue
-                versions = sorted(list(architecture.iterdir())[:64], key=lambda p: tuple((0, int(x)) if x.isdigit() else (1, x) for x in re.findall(r'\d+|\D+', p.name)), reverse=True)
+                versions = sorted(
+                    list(architecture.iterdir())[:64],
+                    key=lambda p: tuple(
+                        (0, int(x)) if x.isdigit() else (1, x)
+                        for x in re.findall(r"\d+|\D+", p.name)
+                    ),
+                    reverse=True,
+                )
                 for version in versions:
-                    boardfile = version / 'boards.txt'
+                    boardfile = version / "boards.txt"
                     if not version.is_dir() or not boardfile.is_file():
                         continue
                     try:
                         if boardfile.stat().st_size > 4_000_000:
                             continue
-                        lines = boardfile.read_text('utf-8', errors='replace').splitlines()
-                        hidden = {m[1] for line in lines if (m := re.match(r'^\s*([A-Za-z0-9_-]+)\.hide\s*=', line))}
+                        lines = boardfile.read_text("utf-8", errors="replace").splitlines()
+                        hidden = {
+                            m[1]
+                            for line in lines
+                            if (m := re.match(r"^\s*([A-Za-z0-9_-]+)\.hide\s*=", line))
+                        }
                         for line in lines:
-                            match = re.match(r'^\s*([A-Za-z0-9_-]+)\.name\s*=\s*(.*?)\s*$', line)
-                            if not match or not match[2] or match[2].startswith('#'):
+                            match = re.match(r"^\s*([A-Za-z0-9_-]+)\.name\s*=\s*(.*?)\s*$", line)
+                            if not match or not match[2] or match[2].startswith("#"):
                                 continue
                             board_id, name = match.groups()
                             if board_id in hidden:
                                 continue
-                            fqbn = f'{vendor.name}:{architecture.name}:{board_id}'
+                            fqbn = f"{vendor.name}:{architecture.name}:{board_id}"
                             if not FQBN_RE.fullmatch(fqbn):
                                 continue
-                            found[fqbn] = {'fqbn': fqbn, 'name': name[:180],
-                                           'platform': f'{vendor.name}:{architecture.name} (núcleo local)'}
+                            found[fqbn] = {
+                                "fqbn": fqbn,
+                                "name": name[:180],
+                                "platform": f"{vendor.name}:{architecture.name} (núcleo local)",
+                            }
                         break  # Do not mix retired definitions from older installed versions.
                     except (OSError, UnicodeError):
                         continue
-    return sorted(found.values(), key=lambda row: (row['name'].casefold(), row['fqbn']))
+    return sorted(found.values(), key=lambda row: (row["name"].casefold(), row["fqbn"]))
 
 
 def board_catalog(*, refresh=False) -> dict:
     import time
+
     with CATALOG_LOCK:
-        if not refresh and CATALOG_CACHE['result'] is not None and time.monotonic() < CATALOG_CACHE['until']:
-            return CATALOG_CACHE['result']
-        r = _cli_json(['board', 'listall', '--json'], timeout=45)
-        choices = _normalize_boards(r['data']) if r['ok'] else []
-        warning = ''
-        source = 'arduino-cli board listall'
+        if (
+            not refresh
+            and CATALOG_CACHE["result"] is not None
+            and time.monotonic() < CATALOG_CACHE["until"]
+        ):
+            return CATALOG_CACHE["result"]
+        r = _cli_json(["board", "listall", "--json"], timeout=45)
+        choices = _normalize_boards(r["data"]) if r["ok"] else []
+        warning = ""
+        source = "arduino-cli board listall"
         if not choices:
             # Fallback grounded in the installed core definitions, not guesses.
             choices = _boards_from_installed_cores()
             if choices:
-                source = 'boards.txt de núcleos instalados (recuperación)'
-                warning = (r['error'] or 'Arduino CLI no devolvió modelos; recuperados del núcleo instalado.')[:400]
-        result = {'ok': bool(choices), 'boards': choices,
-                  'error': '' if choices else (r['error'] or 'El catálogo está vacío. Comprueba los núcleos instalados.'),
-                  'warning': warning, 'source': source, 'scope': 'installed_cores',
-                  'count': len(choices)}
-        CATALOG_CACHE.update(until=time.monotonic() + (CATALOG_TTL if choices else 12), result=result)
+                source = "boards.txt de núcleos instalados (recuperación)"
+                warning = (
+                    r["error"]
+                    or "Arduino CLI no devolvió modelos; recuperados del núcleo instalado."
+                )[:400]
+        result = {
+            "ok": bool(choices),
+            "boards": choices,
+            "error": ""
+            if choices
+            else (r["error"] or "El catálogo está vacío. Comprueba los núcleos instalados."),
+            "warning": warning,
+            "source": source,
+            "scope": "installed_cores",
+            "count": len(choices),
+        }
+        CATALOG_CACHE.update(
+            until=time.monotonic() + (CATALOG_TTL if choices else 12), result=result
+        )
         return result
 
 
 def _catalog_page(items: list[dict], page: int = 1, limit: int = 40) -> dict:
     """Window over a local catalog; never return thousands of options to a selector."""
-    if not isinstance(page, int) or not isinstance(limit, int) or page < 1 or page > 100000 or limit < 1 or limit > 50:
-        raise ValueError('Paginación no válida')
+    if (
+        not isinstance(page, int)
+        or not isinstance(limit, int)
+        or page < 1
+        or page > 100000
+        or limit < 1
+        or limit > 50
+    ):
+        raise ValueError("Paginación no válida")
     total = len(items)
     start = (page - 1) * limit
-    return {'boards': items[start:start + limit], 'total': total,
-            'page': page, 'limit': limit, 'pages': (total + limit - 1)//limit}
+    return {
+        "boards": items[start : start + limit],
+        "total": total,
+        "page": page,
+        "limit": limit,
+        "pages": (total + limit - 1) // limit,
+    }
 
 
-def installed_board_search(query: str = '', *, page: int = 1, limit: int = 40) -> dict:
+def installed_board_search(query: str = "", *, page: int = 1, limit: int = 40) -> dict:
     """Search *installed* board definitions; independent of Boards Manager downloads."""
     if not isinstance(query, str) or len(query) > 80 or any(ord(c) < 32 for c in query):
-        raise ValueError('Búsqueda no válida')
+        raise ValueError("Búsqueda no válida")
     q = query.strip().casefold()
     catalog = board_catalog()
-    results = [b for b in catalog['boards']
-               if not q or q in (b['name']+' '+b['fqbn']+' '+b.get('platform','')).casefold()]
+    results = [
+        b
+        for b in catalog["boards"]
+        if not q or q in (b["name"] + " " + b["fqbn"] + " " + b.get("platform", "")).casefold()
+    ]
     page_result = _catalog_page(results, page, limit)
-    return {'ok': catalog['ok'], **page_result, 'source': catalog['source'],
-            'error': catalog['error'], 'warning': catalog.get('warning','')}
+    return {
+        "ok": catalog["ok"],
+        **page_result,
+        "source": catalog["source"],
+        "error": catalog["error"],
+        "warning": catalog.get("warning", ""),
+    }
 
 
 def board_search(query: str, *, page: int = 1, limit: int = 40) -> dict:
     """Explicit Boards Manager search. Query is an argument, never a shell string."""
-    if not isinstance(query, str) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9 ._+/-]{1,59}', query):
-        raise ValueError('Búsqueda no válida; usa nombre, fabricante o modelo.')
+    if not isinstance(query, str) or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9 ._+/-]{1,59}", query):
+        raise ValueError("Búsqueda no válida; usa nombre, fabricante o modelo.")
     _catalog_page([], page, limit)  # Validate pagination before invoking subprocess.
-    r = _cli_json(['board', 'search', query, '--json'], timeout=45)
-    if not r['ok']:
-        return {'ok': False, **_catalog_page([], page, limit), 'error': r['error']}
-    entries = r['data'] if isinstance(r['data'], list) else (r['data'].get('boards', []) if isinstance(r['data'], dict) else [])
+    r = _cli_json(["board", "search", query, "--json"], timeout=45)
+    if not r["ok"]:
+        return {"ok": False, **_catalog_page([], page, limit), "error": r["error"]}
+    entries = (
+        r["data"]
+        if isinstance(r["data"], list)
+        else (r["data"].get("boards", []) if isinstance(r["data"], dict) else [])
+    )
     if not isinstance(entries, list):
-        return {'ok': False, **_catalog_page([], page, limit), 'error': 'Arduino CLI devolvió un catálogo inválido.'}
-    installed = {b['fqbn'] for b in board_catalog()['boards']}
+        return {
+            "ok": False,
+            **_catalog_page([], page, limit),
+            "error": "Arduino CLI devolvió un catálogo inválido.",
+        }
+    installed = {b["fqbn"] for b in board_catalog()["boards"]}
     result = {}
     for b in entries:
-        if not isinstance(b, dict) or not FQBN_RE.fullmatch(str(b.get('fqbn',''))):
+        if not isinstance(b, dict) or not FQBN_RE.fullmatch(str(b.get("fqbn", ""))):
             continue
-        platform = b.get('platform') or {}
-        if not isinstance(platform, dict): platform = {}
-        core = platform.get('id', '')
-        result[b['fqbn']] = {'fqbn': b['fqbn'], 'name': str(b.get('name') or b['fqbn'])[:180],
-                           'core': core if isinstance(core, str) and CORE_ID_RE.fullmatch(core) else '',
-                           'installed': b['fqbn'] in installed,
-                           'platform': str(platform.get('name') or '')[:120]}
-    rows = sorted(result.values(), key=lambda row: (not row['installed'], row['name'].casefold(),row['fqbn']))
-    return {'ok': True, **_catalog_page(rows, page, limit), 'source': 'arduino-cli board search'}
-
+        platform = b.get("platform") or {}
+        if not isinstance(platform, dict):
+            platform = {}
+        core = platform.get("id", "")
+        result[b["fqbn"]] = {
+            "fqbn": b["fqbn"],
+            "name": str(b.get("name") or b["fqbn"])[:180],
+            "core": core if isinstance(core, str) and CORE_ID_RE.fullmatch(core) else "",
+            "installed": b["fqbn"] in installed,
+            "platform": str(platform.get("name") or "")[:120],
+        }
+    rows = sorted(
+        result.values(), key=lambda row: (not row["installed"], row["name"].casefold(), row["fqbn"])
+    )
+    return {"ok": True, **_catalog_page(rows, page, limit), "source": "arduino-cli board search"}
 
 
 def command_result(args: list[str], *, timeout: int = 150, cwd: str | None = None) -> dict:
     """Safe subprocess invocation: never uses shell=True."""
-    if args and args[0] == 'arduino-cli':
-        args = [arduino_cli() or 'arduino-cli', *args[1:]]
+    if args and args[0] == "arduino-cli":
+        args = [arduino_cli() or "arduino-cli", *args[1:]]
     try:
-        process = subprocess.run(args, capture_output=True, text=True, encoding="utf-8",
-                                 errors="replace", timeout=timeout, cwd=cwd,
-                                 creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0))
+        process = subprocess.run(
+            args,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            timeout=timeout,
+            cwd=cwd,
+            creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
+        )
         output = (process.stdout or "") + ("\n" + process.stderr if process.stderr else "")
-        return {"ok": process.returncode == 0, "exit_code": process.returncode,
-                "output": clean_terminal(output.strip())[-100_000:], "command": args[:1] + ["…"]}
+        return {
+            "ok": process.returncode == 0,
+            "exit_code": process.returncode,
+            "output": clean_terminal(output.strip())[-100_000:],
+            "command": args[:1] + ["…"],
+        }
     except FileNotFoundError:
-        return {"ok": False, "exit_code": None,
-                "output": f"Herramienta no instalada o fuera del PATH: {args[0]}", "command": args[:1]}
+        return {
+            "ok": False,
+            "exit_code": None,
+            "output": f"Herramienta no instalada o fuera del PATH: {args[0]}",
+            "command": args[:1],
+        }
     except subprocess.TimeoutExpired as e:
-        return {"ok": False, "exit_code": None,
-                "output": f"Tiempo de espera agotado ({timeout} s). Revisa la conexión.\n{str(e.stdout or '')[-3000:]}", "command": args[:1]}
+        return {
+            "ok": False,
+            "exit_code": None,
+            "output": f"Tiempo de espera agotado ({timeout} s). Revisa la conexión.\n{str(e.stdout or '')[-3000:]}",
+            "command": args[:1],
+        }
     except OSError as e:
-        return {"ok": False, "exit_code": None,
-                "output": f"Error ejecutando herramienta: {e}", "command": args[:1]}
+        return {
+            "ok": False,
+            "exit_code": None,
+            "output": f"Error ejecutando herramienta: {e}",
+            "command": args[:1],
+        }
 
 
 def installed_tools() -> dict:
     try:
         import serial  # noqa: F401
+
         pyserial = True
     except ImportError:
         pyserial = False
-    return {"arduino_cli": bool(arduino_cli()),
-            "mpremote": bool(shutil.which("mpremote")), "pyserial": pyserial,
-            "python": sys.version.split()[0]}
+    return {
+        "arduino_cli": bool(arduino_cli()),
+        "mpremote": bool(shutil.which("mpremote")),
+        "pyserial": pyserial,
+        "python": sys.version.split()[0],
+    }
 
 
 def scan_ports(*, diagnostics=False):
@@ -265,20 +384,29 @@ def scan_ports(*, diagnostics=False):
     errors = []
     try:
         from serial.tools import list_ports
+
         for p in list_ports.comports():
-            found[p.device] = {"port": p.device, "name": p.description,
-                               "vid": f"{p.vid:04X}" if p.vid is not None else None,
-                               "pid": f"{p.pid:04X}" if p.pid is not None else None,
-                               "boards": [], "serial_number": getattr(p, "serial_number", None)}
+            found[p.device] = {
+                "port": p.device,
+                "name": p.description,
+                "vid": f"{p.vid:04X}" if p.vid is not None else None,
+                "pid": f"{p.pid:04X}" if p.pid is not None else None,
+                "boards": [],
+                "serial_number": getattr(p, "serial_number", None),
+            }
     except (ImportError, OSError) as exc:
-        if not isinstance(exc, ImportError): errors.append('Enumeración serie: ' + str(exc)[:300])
+        if not isinstance(exc, ImportError):
+            errors.append("Enumeración serie: " + str(exc)[:300])
         pass
     # Puertos reales enumerados por Windows cuando pyserial/CLI no los muestran.
     # Registrar COM no implica reconocer la placa conectada.
     if sys.platform == "win32":
         try:
             import winreg
-            with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"HARDWARE\DEVICEMAP\SERIALCOMM") as registry:
+
+            with winreg.OpenKey(
+                winreg.HKEY_LOCAL_MACHINE, r"HARDWARE\DEVICEMAP\SERIALCOMM"
+            ) as registry:
                 index = 0
                 while True:
                     try:
@@ -287,12 +415,23 @@ def scan_ports(*, diagnostics=False):
                         break
                     index += 1
                     if isinstance(port, str) and PORT_RE.fullmatch(port):
-                        found.setdefault(port, {"port": port, "name": "Puerto COM de Windows (modelo desconocido)",
-                                                "vid": None, "pid": None, "boards": [], "serial_number": None})
+                        found.setdefault(
+                            port,
+                            {
+                                "port": port,
+                                "name": "Puerto COM de Windows (modelo desconocido)",
+                                "vid": None,
+                                "pid": None,
+                                "boards": [],
+                                "serial_number": None,
+                            },
+                        )
         except (ImportError, OSError):
             pass
     if arduino_cli():
-        result = command_result(["arduino-cli", "board", "list", "--json", "--discovery-timeout", "3s"], timeout=20)
+        result = command_result(
+            ["arduino-cli", "board", "list", "--json", "--discovery-timeout", "3s"], timeout=20
+        )
         if result["ok"]:
             try:
                 data = json.loads(result["output"])
@@ -303,31 +442,45 @@ def scan_ports(*, diagnostics=False):
                     if not isinstance(port, str) or not PORT_RE.fullmatch(port):
                         continue
                     boards = entry.get("matching_boards", entry.get("boards", [])) or []
-                    item = found.setdefault(port, {"port": port, "name": obj.get("label", port),
-                                                   "vid": None, "pid": None, "boards": [], "serial_number": None})
+                    item = found.setdefault(
+                        port,
+                        {
+                            "port": port,
+                            "name": obj.get("label", port),
+                            "vid": None,
+                            "pid": None,
+                            "boards": [],
+                            "serial_number": None,
+                        },
+                    )
                     props = obj.get("properties", {}) or {}
                     item["serial_number"] = item.get("serial_number") or props.get("serialNumber")
                     item["vid"] = item.get("vid") or props.get("vid")
                     item["pid"] = item.get("pid") or props.get("pid")
-                    item["boards"] = [{"name": b.get("name", "Desconocida"),
-                                        "fqbn": b.get("fqbn", "")} for b in boards if b.get("fqbn")]
+                    item["boards"] = [
+                        {"name": b.get("name", "Desconocida"), "fqbn": b.get("fqbn", "")}
+                        for b in boards
+                        if b.get("fqbn")
+                    ]
                     if not item["name"] or item["name"] == item["port"]:
                         item["name"] = obj.get("label", port)
             except (ValueError, AttributeError, TypeError) as exc:
-                errors.append('Respuesta de detección inválida: ' + str(exc)[:300])
+                errors.append("Respuesta de detección inválida: " + str(exc)[:300])
         else:
-            errors.append('Arduino CLI: ' + result.get('output', 'Detección fallida')[-600:])
+            errors.append("Arduino CLI: " + result.get("output", "Detección fallida")[-600:])
     else:
-        errors.append('Arduino CLI no está disponible; detección parcial del sistema.')
+        errors.append("Arduino CLI no está disponible; detección parcial del sistema.")
     ports = sorted(found.values(), key=lambda v: v["port"])
-    return {'ports': ports, 'scan_ok': not errors, 'scan_errors': errors} if diagnostics else ports
+    return {"ports": ports, "scan_ok": not errors, "scan_errors": errors} if diagnostics else ports
 
 
 def check_port(port: str) -> None:
     if not isinstance(port, str) or not PORT_RE.fullmatch(port):
         raise ValueError("Puerto serie no permitido.")
     if port not in {p["port"] for p in scan_ports()}:
-        raise ValueError("El puerto no aparece en los dispositivos detectados. Pulsa 'Buscar placas'.")
+        raise ValueError(
+            "El puerto no aparece en los dispositivos detectados. Pulsa 'Buscar placas'."
+        )
 
 
 def check_fqbn(fqbn: str) -> None:
@@ -344,11 +497,18 @@ def check_python_syntax(code: str) -> dict:
     check_code(code)
     try:
         ast.parse(code)
-        return {"ok": True, "output": "Sintaxis Python válida. No comprueba firmware ni APIs MicroPython.",
-                "mode": "syntax_only"}
+        return {
+            "ok": True,
+            "output": "Sintaxis Python válida. No comprueba firmware ni APIs MicroPython.",
+            "mode": "syntax_only",
+        }
     except SyntaxError as e:
-        return {"ok": False, "output": f"Error de sintaxis, línea {e.lineno}: {e.msg}",
-                "line": e.lineno, "mode": "syntax_only"}
+        return {
+            "ok": False,
+            "output": f"Error de sintaxis, línea {e.lineno}: {e.msg}",
+            "line": e.lineno,
+            "mode": "syntax_only",
+        }
 
 
 def compile_cpp(code: str, fqbn: str, *, port: str | None = None) -> dict:
@@ -358,8 +518,11 @@ def compile_cpp(code: str, fqbn: str, *, port: str | None = None) -> dict:
     if port:
         check_port(port)
     if not arduino_cli():
-        return {"ok": False, "output": "Arduino CLI no instalado. Consulta README.md.",
-                "stage": "dependencies"}
+        return {
+            "ok": False,
+            "output": "Arduino CLI no instalado. Consulta README.md.",
+            "stage": "dependencies",
+        }
     with tempfile.TemporaryDirectory(prefix="ab-makeride-") as workspace:
         root = Path(workspace)
         sketch = root / "sketch"
@@ -367,15 +530,35 @@ def compile_cpp(code: str, fqbn: str, *, port: str | None = None) -> dict:
         (sketch / "sketch.ino").write_text(code, encoding="utf-8")
         build = root / "build"
         build.mkdir()
-        first = command_result(["arduino-cli", "compile", "--fqbn", fqbn,
-                                "--output-dir", str(build), str(sketch)], timeout=240)
+        first = command_result(
+            ["arduino-cli", "compile", "--fqbn", fqbn, "--output-dir", str(build), str(sketch)],
+            timeout=240,
+        )
         if not first["ok"] or not port:
             return {**first, "stage": "compile", "real": True}
-        second = command_result(["arduino-cli", "upload", "-p", port,
-                                 "--fqbn", fqbn, "--input-dir", str(build),
-                                 str(sketch)], timeout=160)
-        return {**second, "stage": "upload", "real": True,
-                "output": ("COMPILACIÓN REAL:\n" + first["output"] + "\n\nCARGA REAL:\n" + second["output"])[-100_000:]}
+        second = command_result(
+            [
+                "arduino-cli",
+                "upload",
+                "--verify",
+                "-p",
+                port,
+                "--fqbn",
+                fqbn,
+                "--input-dir",
+                str(build),
+                str(sketch),
+            ],
+            timeout=160,
+        )
+        return {
+            **second,
+            "stage": "upload",
+            "real": True,
+            "output": (
+                "COMPILACIÓN REAL:\n" + first["output"] + "\n\nCARGA REAL:\n" + second["output"]
+            )[-100_000:],
+        }
 
 
 def micropython_action(code: str, port: str, *, deploy: bool) -> dict:
@@ -385,15 +568,26 @@ def micropython_action(code: str, port: str, *, deploy: bool) -> dict:
     if not checked["ok"]:
         return checked
     if not shutil.which("mpremote"):
-        return {"ok": False, "stage": "dependencies", "output": "mpremote no instalado. Consulta docs/INSTALACION.md; en Windows ejecuta PREPARAR_WINDOWS.bat y vuelve a iniciar el IDE."}
+        return {
+            "ok": False,
+            "stage": "dependencies",
+            "output": "mpremote no instalado. Consulta docs/INSTALACION.md; en Windows ejecuta PREPARAR_WINDOWS.bat y vuelve a iniciar el IDE.",
+        }
     with tempfile.TemporaryDirectory(prefix="ab-makeride-py-") as workspace:
         file = Path(workspace) / "main.py"
         file.write_text(code, encoding="utf-8")
         # run --no-follow executes from RAM without overwriting the board's main.py.
         # fs cp writes to the device; the UI must explicitly confirm this action.
-        args = (["mpremote", "connect", port, "fs", "cp", str(file), ":main.py"] if deploy else
-                ["mpremote", "connect", port, "run", "--no-follow", str(file)])
-        return {**command_result(args, timeout=90), "stage": "deploy" if deploy else "run", "real": True}
+        args = (
+            ["mpremote", "connect", port, "fs", "cp", str(file), ":main.py"]
+            if deploy
+            else ["mpremote", "connect", port, "run", "--no-follow", str(file)]
+        )
+        return {
+            **command_result(args, timeout=90),
+            "stage": "deploy" if deploy else "run",
+            "real": True,
+        }
 
 
 @dataclass
@@ -411,7 +605,7 @@ class SerialBridge:
         self._counter = 0
         self.port = None
         self.baud = None
-        self.error = ''
+        self.error = ""
 
     def _emit(self, text: str):
         with self._lock:
@@ -425,17 +619,19 @@ class SerialBridge:
         try:
             import serial
         except ImportError as e:
-            raise ValueError("Falta pyserial. Consulta docs/INSTALACION.md; en Windows ejecuta PREPARAR_WINDOWS.bat y vuelve a iniciar el IDE.") from e
+            raise ValueError(
+                "Falta pyserial. Consulta docs/INSTALACION.md; en Windows ejecuta PREPARAR_WINDOWS.bat y vuelve a iniciar el IDE."
+            ) from e
         self.close()
         try:
-            conn = serial.Serial(port, baudrate=baud, timeout=.2, write_timeout=2)
+            conn = serial.Serial(port, baudrate=baud, timeout=0.2, write_timeout=2)
         except (OSError, serial.SerialException) as e:
             self.error = f"No se pudo abrir {port}. Revisa si está ocupado o desconectado: {e}"
             raise ValueError(self.error) from e
         with self._lock:
             self._serial = conn
             self.port, self.baud = port, baud
-            self.error = ''
+            self.error = ""
         self._emit(f"[Sistema] Conexión serie real: {port} a {baud} baudios")
         self._thread = threading.Thread(target=self._reader, args=(conn,), daemon=True)
         self._thread.start()
@@ -449,11 +645,11 @@ class SerialBridge:
             self._serial = None
             self.port, self.baud = None, None
             self.error = reason
-            self._emit('[Sistema] Error de conexión serie: ' + reason)
+            self._emit("[Sistema] Error de conexión serie: " + reason)
         try:
             conn.close()
-        except Exception:
-            pass
+        except Exception as error:
+            LOGGER.warning("No se pudo cerrar la conexión serie (%s)", type(error).__name__)
 
     def _reader(self, conn):
         try:
@@ -465,29 +661,34 @@ class SerialBridge:
                             return
                         self._emit(data.decode("utf-8", errors="replace").rstrip("\r\n"))
         except Exception as e:
-            self._disconnected(conn, f'Lectura interrumpida; no se reconecta automáticamente: {e}')
+            LOGGER.warning("Lectura serie interrumpida (%s)", type(e).__name__)
+            self._disconnected(conn, f"Lectura interrumpida; no se reconecta automáticamente: {e}")
         finally:
-            self._disconnected(conn, 'El dispositivo cerró la conexión. Vuelve a conectar el monitor cuando esté disponible.')
+            self._disconnected(
+                conn,
+                "El dispositivo cerró la conexión. Vuelve a conectar el monitor cuando esté disponible.",
+            )
 
     def write(self, text: str) -> dict:
         if not isinstance(text, str) or len(text) > 2048:
             raise ValueError("Mensaje serie inválido.")
         try:
-            payload = text.encode('utf-8')
+            payload = text.encode("utf-8")
         except UnicodeEncodeError as e:
-            raise ValueError('Mensaje serie UTF-8 inválido.') from e
+            raise ValueError("Mensaje serie UTF-8 inválido.") from e
         with self._lock:
             conn = self._serial
             if conn is None:
                 raise ValueError("Monitor serie desconectado.")
             try:
                 if not conn.is_open:
-                    raise OSError('El puerto ya está cerrado.')
+                    raise OSError("El puerto ya está cerrado.")
                 written = conn.write(payload)
                 if written != len(payload):
-                    raise OSError('Escritura incompleta; resultado de envío desconocido.')
+                    raise OSError("Escritura incompleta; resultado de envío desconocido.")
             except Exception as e:
-                reason = f'Envío no confirmado; no se repite automáticamente: {e}'
+                LOGGER.warning("Envío serie no confirmado (%s)", type(e).__name__)
+                reason = f"Envío no confirmado; no se repite automáticamente: {e}"
                 self._disconnected(conn, reason)
                 raise ValueError(reason) from e
         return {"ok": True}
@@ -497,31 +698,56 @@ class SerialBridge:
             conn = self._serial
             self._serial = None
             self.port, self.baud = None, None
-            self.error = ''
+            self.error = ""
         if conn is not None:
             try:
                 conn.close()
-            except Exception:
-                pass
+            except Exception as error:
+                LOGGER.warning("No se pudo cerrar el monitor serie (%s)", type(error).__name__)
 
     def status(self, since: int = 0):
         with self._lock:
             connected = self._serial is not None and self._serial.is_open
             if self._serial is not None and not connected:
-                self._disconnected(self._serial, 'El puerto se ha cerrado. Reconecta el monitor explícitamente.')
+                self._disconnected(
+                    self._serial, "El puerto se ha cerrado. Reconecta el monitor explícitamente."
+                )
             messages = [asdict(m) for m in self._messages if m.id > since]
-            return {"ok": True, "connected": connected, "port": self.port if connected else None,
-                    "baud": self.baud if connected else None, "messages": messages[-300:],
-                    "last_id": self._counter, "error": self.error}
+            return {
+                "ok": True,
+                "connected": connected,
+                "port": self.port if connected else None,
+                "baud": self.baud if connected else None,
+                "messages": messages[-300:],
+                "last_id": self._counter,
+                "error": self.error,
+            }
 
 
 SERIAL = SerialBridge()
 HARDWARE_LOCK = threading.Lock()
-DATA_ROOT = Path(os.environ.get('AB_MAKERIDE_DATA_DIR', ROOT / '.makeride-data'))
-JOBS = JobManager(HARDWARE_LOCK, DATA_ROOT / 'BuildSessions')
+
+
+@contextmanager
+def hardware_operation():
+    """Reject overlap immediately; never queue an operation for a later device state."""
+    if not HARDWARE_LOCK.acquire(blocking=False):
+        raise ValueError(
+            "Hay otra operación de hardware activa; no se ha puesto esta acción en cola."
+        )
+    try:
+        if AGENT_JOBS._current and AGENT_JOBS._current.active:
+            raise ValueError("El agente está trabajando; espera antes de usar el hardware.")
+        yield
+    finally:
+        HARDWARE_LOCK.release()
+
+
+DATA_ROOT = Path(os.environ.get("AB_MAKERIDE_DATA_DIR", ROOT / ".makeride-data"))
+JOBS = JobManager(HARDWARE_LOCK, DATA_ROOT / "BuildSessions")
 AGENT = AgentService()
-AGENT_JOBS = AgentJobManager(DATA_ROOT / 'AgentWorkspaces')
-MCP_SETTINGS = MCPSettings(DATA_ROOT / 'ai-settings' / 'mcp.json')
+AGENT_JOBS = AgentJobManager(DATA_ROOT / "AgentWorkspaces")
+MCP_SETTINGS = MCPSettings(DATA_ROOT / "ai-settings" / "mcp.json")
 SESSION_KEY = secrets.token_urlsafe(32)
 BOARD_IDENTIFICATION_ENABLED = True
 
@@ -542,39 +768,39 @@ def libraries_list() -> dict:
 
 
 class IDEHandler(BaseHTTPRequestHandler):
-    server_version = "ABMakerIDE/1.0.0-rc.3"
+    server_version = "ABMakerIDE/" + VERSION
 
     def log_message(self, fmt, *args):
         print("[MakerIDE] " + fmt % args)
 
     def _trusted_request(self) -> bool:
-        hosts = self.headers.get_all('Host', [])
+        hosts = self.headers.get_all("Host", [])
         if len(hosts) != 1:
             return False
         host = hosts[0].lower()
         port = self.server.server_port
-        allowed = {f'127.0.0.1:{port}', f'localhost:{port}'}
+        allowed = {f"127.0.0.1:{port}", f"localhost:{port}"}
         if port == 80:
-            allowed.update(('127.0.0.1', 'localhost'))
+            allowed.update(("127.0.0.1", "localhost"))
         if host not in allowed:
             return False
         # Reject alternate authorities, schemes, credentials, paths and duplicate
         # headers. Other local web applications are different origins too.
         target = self.requestline.split()[1]
-        if not target.startswith('/') or target.startswith('//'):
+        if not target.startswith("/") or target.startswith("//"):
             return False
-        origins = self.headers.get_all('Origin', [])
+        origins = self.headers.get_all("Origin", [])
         if len(origins) > 1:
             return False
         if origins:
-            allowed_origins = {f'http://{host}'}
+            allowed_origins = {f"http://{host}"}
             if port == 80:
-                address = host.split(':', 1)[0]
-                allowed_origins.update((f'http://{address}', f'http://{address}:80'))
+                address = host.split(":", 1)[0]
+                allowed_origins.update((f"http://{address}", f"http://{address}:80"))
             if origins[0].lower() not in allowed_origins:
                 return False
-        sites = self.headers.get_all('Sec-Fetch-Site', [])
-        if len(sites) > 1 or (sites and sites[0] not in ('same-origin', 'none')):
+        sites = self.headers.get_all("Sec-Fetch-Site", [])
+        if len(sites) > 1 or (sites and sites[0] not in ("same-origin", "none")):
             return False
         return True
 
@@ -595,11 +821,13 @@ class IDEHandler(BaseHTTPRequestHandler):
             pass  # Browser reload/disconnect: never alter the underlying task.
 
     def _post_data(self, max_bytes=MAX_BODY):
-        types = self.headers.get_all('Content-Type', [])
-        if len(types) != 1 or types[0].split(';', 1)[0].strip().lower() != 'application/json':
+        types = self.headers.get_all("Content-Type", [])
+        if len(types) != 1 or types[0].split(";", 1)[0].strip().lower() != "application/json":
             raise ValueError("Content-Type debe ser application/json")
-        if len(self.headers.get_all('Content-Length', [])) != 1 or self.headers.get_all('Transfer-Encoding'):
-            raise ValueError('Encuadre de petición no permitido')
+        if len(self.headers.get_all("Content-Length", [])) != 1 or self.headers.get_all(
+            "Transfer-Encoding"
+        ):
+            raise ValueError("Encuadre de petición no permitido")
         try:
             n = int(self.headers.get("Content-Length", "0"))
         except ValueError as e:
@@ -616,7 +844,21 @@ class IDEHandler(BaseHTTPRequestHandler):
             return self._json(403, {"ok": False, "error": "Acceso restringido al equipo local"})
         parsed = urlsplit(self.path)
         if parsed.path == "/api/health":
-            return self._json(200, {"ok": True, "name": "AB MakerIDE · MS Robotika", "version": "1.0.0-rc.3", "mode": "local-real", "capabilities": ["agent-project-export", "agent-project-continuation", "agent-editor-open"]})
+            return self._json(
+                200,
+                {
+                    "ok": True,
+                    "name": "AB MakerIDE · MS Robotika",
+                    "version": VERSION,
+                    "mode": "local-real",
+                    "capabilities": [
+                        "agent-project-export",
+                        "agent-project-continuation",
+                        "agent-editor-open",
+                        "mcp-manual-approval",
+                    ],
+                },
+            )
         if parsed.path == "/api/session":
             return self._json(200, {"ok": True, "csrf": SESSION_KEY})
         if parsed.path == "/api/diagnostics":
@@ -625,73 +867,111 @@ class IDEHandler(BaseHTTPRequestHandler):
             return self._json(200, public_profiles())
         if parsed.path == "/api/boards":
             qs = parse_qs(parsed.query)
-            catalog = board_catalog(refresh=qs.get('refresh', ['0'])[0] == '1')
+            catalog = board_catalog(refresh=qs.get("refresh", ["0"])[0] == "1")
             # Initial payload intentionally bounded: the searchable catalog lives server-side.
             # The saved selected board is permitted when present in the installed catalog.
-            initial = catalog['boards'][:60]
-            selected = qs.get('selected', [''])[0]
-            if selected and FQBN_RE.fullmatch(selected) and not any(b['fqbn']==selected for b in initial):
-                selected_board = next((b for b in catalog['boards'] if b['fqbn']==selected), None)
-                if selected_board: initial.append(selected_board)
-            return self._json(200, {"ok": True, **scan_ports(diagnostics=True), "choices": initial,
-                                    "catalog_ok": catalog['ok'], "catalog_error": catalog['error'],
-                                    "catalog_source": catalog['source'], "catalog_warning": catalog.get('warning',''),
-                                    "catalog_count": len(catalog['boards']), "catalog_paged": True,
-                                    'identify_available': BOARD_IDENTIFICATION_ENABLED})
-        if parsed.path == '/api/board-catalog/installed':
+            initial = catalog["boards"][:60]
+            selected = qs.get("selected", [""])[0]
+            if (
+                selected
+                and FQBN_RE.fullmatch(selected)
+                and not any(b["fqbn"] == selected for b in initial)
+            ):
+                selected_board = next((b for b in catalog["boards"] if b["fqbn"] == selected), None)
+                if selected_board:
+                    initial.append(selected_board)
+            return self._json(
+                200,
+                {
+                    "ok": True,
+                    **scan_ports(diagnostics=True),
+                    "choices": initial,
+                    "catalog_ok": catalog["ok"],
+                    "catalog_error": catalog["error"],
+                    "catalog_source": catalog["source"],
+                    "catalog_warning": catalog.get("warning", ""),
+                    "catalog_count": len(catalog["boards"]),
+                    "catalog_paged": True,
+                    "identify_available": BOARD_IDENTIFICATION_ENABLED,
+                },
+            )
+        if parsed.path == "/api/board-catalog/installed":
             qs = parse_qs(parsed.query)
             try:
-                return self._json(200, installed_board_search(qs.get('query',[''])[0],
-                                    page=int(qs.get('page',['1'])[0]), limit=int(qs.get('limit',['40'])[0])))
+                return self._json(
+                    200,
+                    installed_board_search(
+                        qs.get("query", [""])[0],
+                        page=int(qs.get("page", ["1"])[0]),
+                        limit=int(qs.get("limit", ["40"])[0]),
+                    ),
+                )
             except ValueError as error:
-                return self._json(400, {'ok': False, 'error': str(error)})
-        if parsed.path == '/api/board-catalog/search':
+                return self._json(400, {"ok": False, "error": str(error)})
+        if parsed.path == "/api/board-catalog/search":
             qs = parse_qs(parsed.query)
             try:
-                return self._json(200, board_search(qs.get('query', [''])[0],
-                                    page=int(qs.get('page',['1'])[0]), limit=int(qs.get('limit',['40'])[0])))
+                return self._json(
+                    200,
+                    board_search(
+                        qs.get("query", [""])[0],
+                        page=int(qs.get("page", ["1"])[0]),
+                        limit=int(qs.get("limit", ["40"])[0]),
+                    ),
+                )
             except ValueError as error:
-                return self._json(400, {'ok': False, 'error': str(error)})
+                return self._json(400, {"ok": False, "error": str(error)})
         if parsed.path == "/api/ai/status":
             return self._json(200, AGENT.status())
         if parsed.path == "/api/agents/status":
             return self._json(200, AGENT_JOBS.status_overview())
-        if parsed.path == '/api/mcp/status':
+        if parsed.path == "/api/mcp/status":
             try:
                 return self._json(200, MCP_SETTINGS.status())
-            except (ValueError, OSError):
-                return self._json(400, {'ok': False, 'error': 'Configuración MCP no disponible; reemplázala desde el panel.'})
-        if parsed.path == '/api/agents/history':
-            return self._json(200, {'ok': True, 'recent': AGENT_JOBS.history(12)})
-        if parsed.path == '/api/agents/project.zip':
-            job_id = parse_qs(parsed.query).get('id', [''])[0]
+            except ValueError as error:
+                return self._json(400, {"ok": False, "error": str(error)})
+            except OSError as error:
+                LOGGER.warning("MCP settings unavailable: %s", type(error).__name__)
+                return self._json(
+                    400,
+                    {
+                        "ok": False,
+                        "error": "Configuración MCP no disponible; reemplázala desde el panel.",
+                    },
+                )
+        if parsed.path == "/api/agents/history":
+            return self._json(200, {"ok": True, "recent": AGENT_JOBS.history(12)})
+        if parsed.path == "/api/agents/project.zip":
+            job_id = parse_qs(parsed.query).get("id", [""])[0]
             try:
                 payload = AGENT_JOBS.export_project(job_id)
             except (ValueError, OSError) as error:
-                return self._json(400, {'ok': False, 'error': str(error)})
+                return self._json(400, {"ok": False, "error": str(error)})
             self.send_response(200)
-            self.send_header('Content-Type', 'application/zip')
-            self.send_header('Content-Disposition', f'attachment; filename="MakerIDE-{job_id[:8]}.zip"')
-            self.send_header('Content-Length', str(len(payload)))
-            self.send_header('Cache-Control', 'no-store')
-            self.send_header('X-Content-Type-Options', 'nosniff')
+            self.send_header("Content-Type", "application/zip")
+            self.send_header(
+                "Content-Disposition", f'attachment; filename="MakerIDE-{job_id[:8]}.zip"'
+            )
+            self.send_header("Content-Length", str(len(payload)))
+            self.send_header("Cache-Control", "no-store")
+            self.send_header("X-Content-Type-Options", "nosniff")
             self.end_headers()
             self.wfile.write(payload)
             return
         if parsed.path == "/api/agents/poll":
             q = parse_qs(parsed.query)
             try:
-                since = int(q.get('since', ['0'])[0])
-                return self._json(200, AGENT_JOBS.get(q.get('id', [''])[0], since))
+                since = int(q.get("since", ["0"])[0])
+                return self._json(200, AGENT_JOBS.get(q.get("id", [""])[0], since))
             except (ValueError, TypeError) as err:
-                return self._json(400, {'ok': False, 'error': str(err)})
+                return self._json(400, {"ok": False, "error": str(err)})
         if parsed.path == "/api/jobs/status":
             args = parse_qs(parsed.query)
             try:
-                since = max(0, int(args.get('since', ['0'])[0]))
-                return self._json(200, JOBS.status(args.get('id', [''])[0], since))
+                since = max(0, int(args.get("since", ["0"])[0]))
+                return self._json(200, JOBS.status(args.get("id", [""])[0], since))
             except ValueError as e:
-                return self._json(400, {'ok': False, 'error': str(e)})
+                return self._json(400, {"ok": False, "error": str(e)})
         if parsed.path == "/api/libraries":
             return self._json(200, libraries_list())
         if parsed.path == "/api/serial/poll":
@@ -700,32 +980,58 @@ class IDEHandler(BaseHTTPRequestHandler):
             except ValueError:
                 since = 0
             return self._json(200, SERIAL.status(since))
-        if parsed.path in ('/examples/Blink_Uno.ino', '/examples/uno_r3_diagnostico.ino',
-                           '/examples/esp32cam_ai_thinker_test.ino', '/examples/ideaspark_19_st7789.ino',
-                           '/examples/ideaspark_114_st7789.ino', '/examples/ideaspark_114_radar.ino', '/examples/cyd_28_bloques_tactil.ino'):
-            source = (ROOT / parsed.path.lstrip('/')).read_bytes()
+        if parsed.path in (
+            "/examples/Blink_Uno.ino",
+            "/examples/uno_r3_diagnostico.ino",
+            "/examples/esp32cam_ai_thinker_test.ino",
+            "/examples/ideaspark_19_st7789.ino",
+            "/examples/ideaspark_114_st7789.ino",
+            "/examples/ideaspark_114_radar.ino",
+            "/examples/cyd_28_bloques_tactil.ino",
+        ):
+            source = (ROOT / parsed.path.lstrip("/")).read_bytes()
             self.send_response(200)
-            self.send_header('Content-Type', 'text/plain; charset=utf-8')
-            self.send_header('Cache-Control', 'no-store')
-            self.send_header('X-Content-Type-Options', 'nosniff')
-            self.send_header('Content-Length', str(len(source)))
+            self.send_header("Content-Type", "text/plain; charset=utf-8")
+            self.send_header("Cache-Control", "no-store")
+            self.send_header("X-Content-Type-Options", "nosniff")
+            self.send_header("Content-Length", str(len(source)))
             self.end_headers()
             return self.wfile.write(source)
-        if parsed.path in ('/simulator.js', '/app.js', '/activity.js', '/board_trials.js'):
-            raw = (ROOT / parsed.path.lstrip('/')).read_bytes()
+        if parsed.path in (
+            "/simulator.js",
+            "/app.js",
+            "/activity.js",
+            "/board_trials.js",
+        ) or re.fullmatch(r"/frontend/[a-z][a-z0-9_-]*\.(?:js|css)", parsed.path):
+            resource = ROOT / parsed.path.lstrip("/")
+            if not resource.is_file() or resource.is_symlink():
+                return self._json(404, {"ok": False, "error": "Recurso desconocido"})
+            raw = resource.read_bytes()
             self.send_response(200)
-            self.send_header('Content-Type', 'application/javascript; charset=utf-8')
-            self.send_header('Cache-Control', 'no-store')
-            self.send_header('X-Content-Type-Options', 'nosniff')
-            self.send_header('Content-Length', str(len(raw)))
+            self.send_header(
+                "Content-Type",
+                ("text/css" if resource.suffix == ".css" else "application/javascript")
+                + "; charset=utf-8",
+            )
+            self.send_header("Cache-Control", "no-store")
+            self.send_header("X-Content-Type-Options", "nosniff")
+            self.send_header("Content-Length", str(len(raw)))
             self.end_headers()
             return self.wfile.write(raw)
         if parsed.path not in ("/", "/index.html"):
             return self._json(404, {"ok": False, "error": "Recurso desconocido"})
-        data = (ROOT / "index.html").read_bytes()
+        data = (
+            (ROOT / "index.html")
+            .read_text(encoding="utf-8")
+            .replace("__IDE_VERSION__", VERSION)
+            .encode("utf-8")
+        )
         self.send_response(200)
         self.send_header("Content-Type", "text/html; charset=utf-8")
-        self.send_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self'; img-src 'self' data:; object-src 'none'; frame-ancestors 'none'")
+        self.send_header(
+            "Content-Security-Policy",
+            "default-src 'none'; script-src 'self'; style-src 'self'; style-src-attr 'none'; connect-src 'self'; img-src 'self' data:; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'",
+        )
         self.send_header("X-Content-Type-Options", "nosniff")
         self.send_header("Cross-Origin-Resource-Policy", "same-origin")
         self.send_header("Referrer-Policy", "no-referrer")
@@ -742,155 +1048,236 @@ class IDEHandler(BaseHTTPRequestHandler):
         # A malicious tab on a foreign origin cannot read the per-run token.
         # This prevents blind HTML form/JS requests from writing firmware, changing
         # providers, or installing libraries even when Origin headers are absent.
-        tokens = self.headers.get_all('X-AB-Session', [])
-        if len(tokens) != 1 or not hmac.compare_digest(tokens[0].encode('utf-8'), SESSION_KEY.encode('ascii')):
-            return self._json(403, {'ok': False, 'error': 'Sesión local no autorizada. Recarga MakerIDE.'})
+        tokens = self.headers.get_all("X-AB-Session", [])
+        if len(tokens) != 1 or not hmac.compare_digest(
+            tokens[0].encode("utf-8"), SESSION_KEY.encode("ascii")
+        ):
+            return self._json(
+                403, {"ok": False, "error": "Sesión local no autorizada. Recarga MakerIDE."}
+            )
         try:
             p = urlsplit(self.path).path
-            d = self._post_data(max_bytes=11_000_000 if p=='/api/projects/import' else MAX_BODY)
-            if p == '/api/mcp/config':
+            d = self._post_data(max_bytes=11_000_000 if p == "/api/projects/import" else MAX_BODY)
+            if p == "/api/mcp/config":
                 if AGENT_JOBS._current and AGENT_JOBS._current.active:
-                    raise ValueError('Espera a que termine el agente para cambiar los MCP.')
+                    raise ValueError("Espera a que termine el agente para cambiar los MCP.")
                 result = MCP_SETTINGS.save(d)
-            elif p == '/api/projects/import':
-                encoded=d.get('archive')
-                if not isinstance(encoded,str) or len(encoded)>10_800_000:
-                    raise ValueError('ZIP de fuentes demasiado grande.')
-                try:archive=base64.b64decode(encoded,validate=True)
-                except ValueError as error:raise ValueError('ZIP codificado inválido.') from error
-                result=AGENT_JOBS.import_project(archive)
-            elif p == '/api/agents/project/export':
-                payload=AGENT_JOBS.export_project(d.get('job_id'),d.get('code'))
-                self.send_response(200)
-                self.send_header('Content-Type','application/zip')
-                self.send_header('Content-Disposition','attachment; filename="MakerIDE-proyecto.zip"')
-                self.send_header('Content-Length',str(len(payload)))
-                self.send_header('Cache-Control','no-store')
-                self.send_header('X-Content-Type-Options','nosniff')
-                self.end_headers();self.wfile.write(payload);return
-            elif p == '/api/boards/identify':
-                if not BOARD_IDENTIFICATION_ENABLED:
-                    raise ValueError('Identificación no disponible en este servidor.')
-                current = AGENT_JOBS._current
-                if (current and current.active) or SERIAL.status()['connected'] or not HARDWARE_LOCK.acquire(blocking=False):
-                    return self._json(200, {'ok': True, 'status': 'busy', 'message': 'Identificación aplazada: hay una tarea o monitor activo. No se interrumpe.'})
+            elif p == "/api/projects/import":
+                encoded = d.get("archive")
+                if not isinstance(encoded, str) or len(encoded) > 10_800_000:
+                    raise ValueError("ZIP de fuentes demasiado grande.")
                 try:
-                    result = identify_board(scan_ports(), board_catalog()['boards'], d.get('port', ''), firmware_reader=read_firmware_identity)
+                    archive = base64.b64decode(encoded, validate=True)
+                except ValueError as error:
+                    raise ValueError("ZIP codificado inválido.") from error
+                result = AGENT_JOBS.import_project(archive)
+            elif p == "/api/agents/project/export":
+                payload = AGENT_JOBS.export_project(d.get("job_id"), d.get("code"))
+                self.send_response(200)
+                self.send_header("Content-Type", "application/zip")
+                self.send_header(
+                    "Content-Disposition", 'attachment; filename="MakerIDE-proyecto.zip"'
+                )
+                self.send_header("Content-Length", str(len(payload)))
+                self.send_header("Cache-Control", "no-store")
+                self.send_header("X-Content-Type-Options", "nosniff")
+                self.end_headers()
+                self.wfile.write(payload)
+                return
+            elif p == "/api/boards/identify":
+                if not BOARD_IDENTIFICATION_ENABLED:
+                    raise ValueError("Identificación no disponible en este servidor.")
+                current = AGENT_JOBS._current
+                if (
+                    (current and current.active)
+                    or SERIAL.status()["connected"]
+                    or not HARDWARE_LOCK.acquire(blocking=False)
+                ):
+                    return self._json(
+                        200,
+                        {
+                            "ok": True,
+                            "status": "busy",
+                            "message": "Identificación aplazada: hay una tarea o monitor activo. No se interrumpe.",
+                        },
+                    )
+                try:
+                    result = identify_board(
+                        scan_ports(),
+                        board_catalog()["boards"],
+                        d.get("port", ""),
+                        firmware_reader=read_firmware_identity,
+                    )
                 finally:
                     HARDWARE_LOCK.release()
             elif p == "/api/agents/start":
-                use_mcp = d.get('use_mcp', False)
+                use_mcp = d.get("use_mcp", False)
                 if type(use_mcp) is not bool:
-                    raise ValueError('Selección MCP inválida.')
+                    raise ValueError("Selección MCP inválida.")
                 configuration = MCP_SETTINGS.load() if use_mcp else None
-                if use_mcp and not configuration['mcpServers']:
-                    raise ValueError('Guarda al menos un servidor MCP antes de activarlo.')
-                result = AGENT_JOBS.start(
-                    provider=d.get('provider'), mode=d.get('mode'),
-                    prompt=d.get('prompt'), code=d.get('code'),
-                    lang=d.get('lang'), fqbn=d.get('fqbn'),
-                    confirmed=d.get('confirm'), full_consent=d.get('full_consent', ''), port=d.get('port', ''),
-                    parent_job_id=d.get('parent_job_id', ''),
-                    hardware_profile=d.get('hardware_profile', 'board-unspecified'), allow_pc_ui=d.get('allow_pc_ui', False),
-                    mcp_config=configuration,
+                if use_mcp and not configuration["mcpServers"]:
+                    raise ValueError("Guarda al menos un servidor MCP antes de activarlo.")
+                with hardware_operation():
+                    result = AGENT_JOBS.start(
+                        provider=d.get("provider"),
+                        mode=d.get("mode"),
+                        prompt=d.get("prompt"),
+                        code=d.get("code"),
+                        lang=d.get("lang"),
+                        fqbn=d.get("fqbn"),
+                        confirmed=d.get("confirm"),
+                        full_consent=d.get("full_consent", ""),
+                        port=d.get("port", ""),
+                        parent_job_id=d.get("parent_job_id", ""),
+                        hardware_profile=d.get("hardware_profile", "board-unspecified"),
+                        allow_pc_ui=d.get("allow_pc_ui", False),
+                        mcp_config=configuration,
+                        mcp_auto_approve=d.get("mcp_auto_approve", False),
+                    )
+            elif p == "/api/agents/approve":
+                result = AGENT_JOBS.approve(
+                    d.get("job_id"), d.get("approval_id"), d.get("decision"), d.get("answers")
                 )
             elif p == "/api/agents/cancel":
-                result = AGENT_JOBS.cancel(d.get('job_id'))
+                result = AGENT_JOBS.cancel(d.get("job_id"))
             elif p == "/api/hardware/check":
-                result = check_hardware(d.get('profile', ''), d.get('connections', []), wifi=d.get('wifi', False))
+                result = check_hardware(
+                    d.get("profile", ""), d.get("connections", []), wifi=d.get("wifi", False)
+                )
             elif p == "/api/hardware/sketch":
-                result = inspect_sketch(d.get('profile', ''), d.get('code'))
+                result = inspect_sketch(d.get("profile", ""), d.get("code"))
             elif p == "/api/advisor/check":
-                code = d.get('code')
+                code = d.get("code")
                 check_code(code)
-                check_fqbn(d.get('fqbn', 'esp32:esp32:esp32'))
+                check_fqbn(d.get("fqbn", "esp32:esp32:esp32"))
                 # Installed libs data is never supplied by the browser.
                 inv = libraries_list()
                 installed = []
-                if inv.get('ok'):
-                    installed = [(x.get('library', x) or {}).get('name', '') for x in inv.get('libraries', []) if isinstance(x, dict)]
-                result = summarize(code, installed, fqbn=d.get('fqbn', ''), error_output=d.get('diagnostics', '')[:10000] if isinstance(d.get('diagnostics', ''), str) else '')
-                result['inventory_available'] = bool(inv.get('ok'))
-                if not inv.get('ok'):
-                    for r in result['recommendations']:
-                        r['installed'] = None
-                        r['action'] = 'check_installation'
+                if inv.get("ok"):
+                    installed = [
+                        (x.get("library", x) or {}).get("name", "")
+                        for x in inv.get("libraries", [])
+                        if isinstance(x, dict)
+                    ]
+                result = summarize(
+                    code,
+                    installed,
+                    fqbn=d.get("fqbn", ""),
+                    error_output=d.get("diagnostics", "")[:10000]
+                    if isinstance(d.get("diagnostics", ""), str)
+                    else "",
+                )
+                result["inventory_available"] = bool(inv.get("ok"))
+                if not inv.get("ok"):
+                    for r in result["recommendations"]:
+                        r["installed"] = None
+                        r["action"] = "check_installation"
             elif p == "/api/ai/reset":
                 result = AGENT.clear_keys()
             elif p == "/api/ai/config":
-                result = AGENT.configure(d.get('provider'), d.get('model', ''), d.get('key', ''))
+                result = AGENT.configure(d.get("provider"), d.get("model", ""), d.get("key", ""))
             elif p == "/api/ai/chat":
-                result = AGENT.chat(d.get('prompt'), code=d.get('code', ''),
-                                    lang=d.get('lang', 'cpp'), fqbn=d.get('fqbn', ''),
-                                    test=d.get('test', False) is True)
-            elif p == '/api/jobs/start':
-                if d.get('lang') != 'cpp':
-                    raise ValueError('Progreso asíncrono disponible solo para C++ por ahora.')
-                code, fqbn = d.get('code'), d.get('fqbn')
+                result = AGENT.chat(
+                    d.get("prompt"),
+                    code=d.get("code", ""),
+                    lang=d.get("lang", "cpp"),
+                    fqbn=d.get("fqbn", ""),
+                    test=d.get("test", False) is True,
+                )
+            elif p == "/api/jobs/start":
+                if AGENT_JOBS._current and AGENT_JOBS._current.active:
+                    raise ValueError("El agente está trabajando; no se ha iniciado otra operación.")
+                if d.get("lang") != "cpp":
+                    raise ValueError("Progreso asíncrono disponible solo para C++ por ahora.")
+                code, fqbn = d.get("code"), d.get("fqbn")
                 check_code(code)
                 check_fqbn(fqbn)
-                port = d.get('port') if d.get('action') == 'upload' else None
-                if d.get('action') not in ('compile', 'upload'):
-                    raise ValueError('Acción desconocida.')
-                if d.get('action') == 'upload':
-                    if d.get('confirm') is not True:
-                        raise ValueError('La grabación requiere confirmación explícita.')
+                port = d.get("port") if d.get("action") == "upload" else None
+                if d.get("action") not in ("compile", "upload"):
+                    raise ValueError("Acción desconocida.")
+                if d.get("action") == "upload":
+                    if d.get("confirm") is not True:
+                        raise ValueError("La grabación requiere confirmación explícita.")
                     check_port(port)
                     SERIAL.close()
                 if not arduino_cli():
-                    raise ValueError('Arduino CLI no instalado o fuera de PATH.')
-                project_id = d.get('agent_project_id', '')
+                    raise ValueError("Arduino CLI no instalado o fuera de PATH.")
+                project_id = d.get("agent_project_id", "")
                 project_files = AGENT_JOBS.project_files(project_id)[1] if project_id else {}
-                result = JOBS.start(code, fqbn, port, upload_speed=d.get('upload_speed', 115200), retry_slow=d.get('retry_slow', False), request_id=d.get('request_id'), project_files=project_files, agent_project_id=project_id)
-            elif p == '/api/jobs/cancel':
-                result = JOBS.cancel(d.get('job_id', ''))
-            elif p == '/api/libraries/search':
-                query = d.get('query', '')
-                if not isinstance(query, str) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9 +._-]{1,65}', query):
-                    raise ValueError('Búsqueda inválida. Solo nombre de librería, sin comandos.')
-                result = command_result(['arduino-cli', 'lib', 'search', query, '--no-color'], timeout=45)
-            elif p == '/api/terminal/command':
-                action = d.get('action')
+                result = JOBS.start(
+                    code,
+                    fqbn,
+                    port,
+                    upload_speed=d.get("upload_speed", 115200),
+                    retry_slow=d.get("retry_slow", False),
+                    request_id=d.get("request_id"),
+                    project_files=project_files,
+                    agent_project_id=project_id,
+                )
+            elif p == "/api/jobs/cancel":
+                result = JOBS.cancel(d.get("job_id", ""))
+            elif p == "/api/libraries/search":
+                query = d.get("query", "")
+                if not isinstance(query, str) or not re.fullmatch(
+                    r"[A-Za-z0-9][A-Za-z0-9 +._-]{1,65}", query
+                ):
+                    raise ValueError("Búsqueda inválida. Solo nombre de librería, sin comandos.")
+                result = command_result(
+                    ["arduino-cli", "lib", "search", query, "--no-color"], timeout=45
+                )
+            elif p == "/api/terminal/command":
+                action = d.get("action")
                 commands = {
-                    'version': ['arduino-cli', 'version'],
-                    'ports': ['arduino-cli', 'board', 'list'],
-                    'cores': ['arduino-cli', 'core', 'list'],
-                    'libraries': ['arduino-cli', 'lib', 'list'],
-                    'esp32_details': ['arduino-cli', 'board', 'details', '-b', 'esp32:esp32:esp32'],
+                    "version": ["arduino-cli", "version"],
+                    "ports": ["arduino-cli", "board", "list"],
+                    "cores": ["arduino-cli", "core", "list"],
+                    "libraries": ["arduino-cli", "lib", "list"],
+                    "esp32_details": ["arduino-cli", "board", "details", "-b", "esp32:esp32:esp32"],
                 }
                 if action not in commands:
-                    raise ValueError('Comando no permitido. Usa los comandos guiados.')
-                with HARDWARE_LOCK:
-                    result = command_result([*commands[action], '--no-color'], timeout=30)
-            elif p == '/api/terminal/install-core':
-                core = d.get('core')
-                if d.get('confirm') is not True:
-                    raise ValueError('Instalar núcleos requiere confirmación explícita.')
+                    raise ValueError("Comando no permitido. Usa los comandos guiados.")
+                with hardware_operation():
+                    result = command_result([*commands[action], "--no-color"], timeout=30)
+            elif p == "/api/terminal/install-core":
+                core = d.get("core")
+                if d.get("confirm") is not True:
+                    raise ValueError("Instalar núcleos requiere confirmación explícita.")
                 if not isinstance(core, str) or not CORE_ID_RE.fullmatch(core):
-                    raise ValueError('Identificador de núcleo no permitido.')
-                if core not in ('esp32:esp32', 'arduino:avr', 'esp8266:esp8266'):
-                    response = _cli_json(['core', 'search', core, '--json'])
-                    platforms = response['data'] if isinstance(response['data'], list) else (
-                        response['data'].get('platforms', []) if isinstance(response['data'], dict) else [])
-                    if not response['ok'] or not any(isinstance(p, dict) and p.get('id') == core for p in platforms):
-                        raise ValueError('Este núcleo no consta en el índice de Arduino CLI.')
-                if d.get('confirm') is not True:
-                    raise ValueError('Instalar núcleos requiere confirmación explícita.')
-                with HARDWARE_LOCK:
-                    result = command_result(['arduino-cli', 'core', 'install', core, '--no-color'], timeout=1200)
+                    raise ValueError("Identificador de núcleo no permitido.")
+                if core not in ("esp32:esp32", "arduino:avr", "esp8266:esp8266"):
+                    response = _cli_json(["core", "search", core, "--json"])
+                    platforms = (
+                        response["data"]
+                        if isinstance(response["data"], list)
+                        else (
+                            response["data"].get("platforms", [])
+                            if isinstance(response["data"], dict)
+                            else []
+                        )
+                    )
+                    if not response["ok"] or not any(
+                        isinstance(p, dict) and p.get("id") == core for p in platforms
+                    ):
+                        raise ValueError("Este núcleo no consta en el índice de Arduino CLI.")
+                if d.get("confirm") is not True:
+                    raise ValueError("Instalar núcleos requiere confirmación explícita.")
+                with hardware_operation():
+                    result = command_result(
+                        ["arduino-cli", "core", "install", core, "--no-color"], timeout=1200
+                    )
             elif p == "/api/verify":
                 lang = d.get("lang", "cpp")
                 if lang == "py":
                     result = check_python_syntax(d.get("code"))
                 elif lang == "cpp":
-                    with HARDWARE_LOCK:
+                    with hardware_operation():
                         result = compile_cpp(d.get("code"), d.get("fqbn"))
                 else:
                     raise ValueError("Lenguaje desconocido")
             elif p == "/api/upload":
                 if d.get("confirm") is not True:
                     raise ValueError("La grabación requiere confirmación explícita.")
-                with HARDWARE_LOCK:
+                with hardware_operation():
                     SERIAL.close()
                     if d.get("lang") == "cpp":
                         result = compile_cpp(d.get("code"), d.get("fqbn"), port=d.get("port"))
@@ -899,7 +1286,7 @@ class IDEHandler(BaseHTTPRequestHandler):
                     else:
                         raise ValueError("Lenguaje desconocido")
             elif p == "/api/micropython/run":
-                with HARDWARE_LOCK:
+                with hardware_operation():
                     SERIAL.close()
                     result = micropython_action(d.get("code"), d.get("port"), deploy=False)
             elif p == "/api/libraries/install":
@@ -908,16 +1295,17 @@ class IDEHandler(BaseHTTPRequestHandler):
                     raise ValueError("Nombre de librería no permitido")
                 if d.get("confirm") is not True:
                     raise ValueError("Instalar librería requiere confirmación")
-                with HARDWARE_LOCK:
+                with hardware_operation():
                     result = command_result(["arduino-cli", "lib", "install", name], timeout=240)
             elif p == "/api/serial/start":
-                with HARDWARE_LOCK:
+                with hardware_operation():
                     result = SERIAL.start(d.get("port"), int(d.get("baud", 115200)))
             elif p == "/api/serial/stop":
                 SERIAL.close()
                 result = {"ok": True}
             elif p == "/api/serial/send":
-                result = SERIAL.write(d.get("text", ""))
+                with hardware_operation():
+                    result = SERIAL.write(d.get("text", ""))
             else:
                 return self._json(404, {"ok": False, "error": "Acción no encontrada"})
             return self._json(200, result)
@@ -929,8 +1317,9 @@ class IDEHandler(BaseHTTPRequestHandler):
 
 
 def main():
-    for stream in (sys.stdout,sys.stderr):
-        if hasattr(stream,'reconfigure'):stream.reconfigure(encoding='utf-8',errors='backslashreplace')
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(encoding="utf-8", errors="backslashreplace")
     parser = argparse.ArgumentParser(description="AB MakerIDE · MS Robotika — puente local")
     parser.add_argument("--port", type=int, default=8770)
     parser.add_argument("--no-browser", action="store_true")
@@ -939,12 +1328,16 @@ def main():
         server = ThreadingHTTPServer(("127.0.0.1", args.port), IDEHandler)
     except OSError as exc:
         print(f"No se ha podido abrir el puerto {args.port}: {exc}", file=sys.stderr, flush=True)
-        print("Comprueba si hay otro MakerIDE abierto. Cierra el servidor anterior y reintenta.", file=sys.stderr, flush=True)
+        print(
+            "Comprueba si hay otro MakerIDE abierto. Cierra el servidor anterior y reintenta.",
+            file=sys.stderr,
+            flush=True,
+        )
         raise SystemExit(2)
-    print(f"AB MakerIDE v1.0.0-rc.3 SUPER (LOCAL) → http://127.0.0.1:{args.port}", flush=True)
+    print(f"AB MakerIDE v{VERSION} SUPER (LOCAL) → http://127.0.0.1:{args.port}", flush=True)
     print("No se usan placas simuladas como si fueran reales.", flush=True)
     if not args.no_browser:
-        threading.Timer(.6, lambda: webbrowser.open(f"http://127.0.0.1:{args.port}")).start()
+        threading.Timer(0.6, lambda: webbrowser.open(f"http://127.0.0.1:{args.port}")).start()
     try:
         server.serve_forever()
     except KeyboardInterrupt:

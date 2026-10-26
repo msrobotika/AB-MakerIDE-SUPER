@@ -1,8 +1,8 @@
-# AB MakerIDE SUPER 1.0.0-rc.3 · MS Robotika
+# AB MakerIDE SUPER 1.0.0-rc.4 · MS Robotika
 
 [![Comprobaciones](https://github.com/msrobotika/AB-MakerIDE-SUPER/actions/workflows/checks.yml/badge.svg)](https://github.com/msrobotika/AB-MakerIDE-SUPER/actions/workflows/checks.yml) [![Licencia MIT](https://img.shields.io/badge/licencia-MIT-blue.svg)](LICENSE)
 
-**[Descargar RC3](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/tag/v1.0.0-rc.3)** · [Comunicar un fallo](https://github.com/msrobotika/AB-MakerIDE-SUPER/issues/new/choose) · [Proyectos y pruebas de placas](https://github.com/msrobotika/AB-MakerIDE-SUPER/discussions) · [English](README.en.md)
+**[Descargar RC4](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/tag/v1.0.0-rc.4)** · [Comunicar un fallo](https://github.com/msrobotika/AB-MakerIDE-SUPER/issues/new/choose) · [Proyectos y pruebas de placas](https://github.com/msrobotika/AB-MakerIDE-SUPER/discussions) · [English](README.en.md)
 
 **Un editor con agente para crear firmware de Arduino, ESP32 y MicroPython.** Pide el proyecto desde el chat, trabaja con el código en el editor y distingue cada resultado: código, compilación, carga verificada y observación física.
 
@@ -10,15 +10,16 @@ La aplicación es open source, con [licencia MIT](LICENSE). **La IA es opcional 
 
 ![Sesión nueva de MakerIDE RC3](docs/evidence/rc3/sesion-limpia-real.png)
 
-## Nuevo en RC3
+## Nuevo en RC4
 
-- Cada apertura empieza con **editor, chat y tarea vacíos**. Se recuerdan las preferencias de IA; las tareas anteriores no se recuperan ni ejecutan automáticamente.
-- **Guardar proyecto o Ctrl+S** descarga el trabajo cuando tú lo decides. Un proyecto de agente se guarda como ZIP con el código actual y sus auxiliares; Importar vuelve a abrirlo sin ejecutar hardware. Los borradores y el deshacer de la sesión quedan en RAM.
-- El chat Codex/Claude abre una tarea real y su autorización, en lugar de sustituir la ejecución por una respuesta de consulta. El perfil físico y una referencia de pantalla/táctil acompañan al agente.
-- Codex utiliza eventos JSONL: las evidencias proceden de la salida de comandos completados con código 0. Citar una frase de verificación en código o en un mensaje no convierte la tarea en una grabación correcta.
-- Si pides cargar y no consta verificación, el resultado queda **pendiente**, aunque la CLI termine con salida 0. Una recuperación nunca repite una grabación.
-- La CYD puede informar de su perfil mediante un marcador conocido del firmware. No es una lectura independiente del controlador LCD ni identificación universal por CH340.
-- **Panel MCP:** configuración estándar de servidores stdio y Streamable HTTP para los agentes CLI, activación explícita por tarea y registro de llamadas de Codex. Ambos transportes se han probado con el Codex instalado y servidores locales controlados; Claude Code sigue pendiente de ejecución real. [Conectar herramientas MCP](docs/MCP.md).
+- **MCP manual por defecto en Codex.** Cada solicitud aparece en el IDE con sus argumentos y necesita una decisión. La aprobación automática es una opción visible, desactivada al abrir y limitada a esa ejecución. Claude Code conserva su estado experimental y bloquea el modo MCP manual hasta integrar sus aprobaciones nativas. [Permisos y compatibilidad](docs/MCP.md).
+- **Credenciales protegidas:** DPAPI del usuario en Windows; llavero del sistema en Linux/macOS con backend compatible. Sin llavero no se crean nuevos archivos en texto plano: la configuración nueva vive solo en RAM y el panel lo indica. El JSON temporal de Claude contiene referencias a variables, no sus valores.
+- **Frontend en módulos ES**, código formateado y sin asignaciones a `innerHTML`. Estilos externos y CSP sin `unsafe-inline`, con `style-src-attr 'none'`. [Arquitectura y desarrollo](docs/DESARROLLO.md).
+- **VERSION es la fuente de la versión** del servidor, interfaz y cuadernos de prueba. Ruff, ESLint, Prettier, Dependabot e integridad SHA-256 forman parte de CI.
+- Servicios Python en `ab_makeride/`, tests por funcionalidad y documentos históricos en `docs/archive/`. El vídeo original pasa a los adjuntos de Releases; no se reescribe el historial Git.
+- Preparación y arranque equivalentes en Linux/macOS, más CI en macOS. [Instalación y permisos serie](docs/LINUX_MACOS.md). La validación física sigue siendo en Windows.
+
+Se conservan el **inicio vacío**, el guardado manual con **Ctrl+S**, la importación del proyecto y la separación entre compilación, carga verificada y observación física. Recuperar un registro no repite una grabación.
 
 [Flujo del agente, guardado y límites](docs/PROYECTOS_DEL_AGENTE.md) · [Identificación](docs/IDENTIFICACION_AUTOMATICA.md) · [Cambios](CHANGELOG.md)
 
@@ -41,10 +42,12 @@ Hay pruebas físicas documentadas de **seis dispositivos concretos**: radar Idea
 
 [Matriz de hardware](docs/MATRIZ_HARDWARE.md) · [Radar](docs/evidence/radar-ideaspark/README.md) · [Cámara](docs/evidence/esp32cam/README.md) · [MicroPython](docs/evidence/wroom-micropython/README.md) · [Nano](docs/evidence/arduino-nano/README.md) · [Mega](docs/evidence/arduino-mega/README.md) · [Bloques CYD](docs/evidence/cyd/README.md)
 
-La suite local RC3 pasa **277 pruebas unitarias de 281**, con cuatro omitidas por g++/privilegios de enlaces simbólicos. Los seis flujos de interfaz suman **148 comprobaciones**. También se ha probado el Codex CLI instalado, el recorrido del chat real en modo de lectura y herramientas MCP locales, sin hardware. Las pruebas controladas de navegador no se presentan como cargas físicas. [Resultados y alcance](docs/evidence/rc3/README.md).
+La suite local RC4 pasa **294 de 299 pruebas unitarias**, con cinco omisiones por herramientas/privilegios/plataforma. Los ocho flujos de navegador suman **196 comprobaciones**. Se incluyen pruebas de inyección y CSP, una aprobación MCP con el Codex instalado y una compilación real Uno sin grabación. [Resultados y límites](docs/evidence/rc4/README.md) · [Respuesta punto por punto a la revisión](docs/AUDITORIA_RC4.md).
 
-**Estado: candidato de lanzamiento, validado físicamente en Windows.** CI ejecuta unidades en Windows y Linux y navegador en Chromium; no acredita por sí sola instalación interactiva, controladores USB ni hardware de Linux/macOS.
+**Estado: candidato de lanzamiento, validado físicamente en Windows.** CI ejecuta unidades en Windows, Ubuntu y macOS y navegador en Chromium; no acredita por sí sola instalación interactiva, controladores USB ni hardware de Linux/macOS.
 
 [Seguridad local](SECURITY.md): loopback, Host/Origin exactos, token por proceso y límites de rutas/archivos. Los permisos del agente son los de su CLI; el modo supervisado no constituye un sandbox del sistema operativo.
 
 [Contribuir](CONTRIBUTING.md) · [Licencia MIT](LICENSE) · [Compartir pruebas de Linux y macOS](https://github.com/msrobotika/AB-MakerIDE-SUPER/discussions)
+
+[IA, cuentas y opción online con cuota gratuita](docs/IA_Y_CUOTAS.md).

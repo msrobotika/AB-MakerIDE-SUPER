@@ -16,6 +16,14 @@ El token es una defensa frente a peticiones cruzadas del navegador, no una contr
 
 Las comprobaciones de rutas bloquean enlaces preexistentes. No son una garantía frente a un proceso con los mismos permisos que altere el sistema de archivos de manera concurrente. Para ejecutar código o agentes no confiables, utiliza aislamiento del sistema operativo.
 
+## Endurecimiento RC4
+
+La CSP permite scripts y estilos propios, sin `unsafe-inline`; bloquea atributos de estilo, objetos, framing y formularios externos. El frontend no asigna HTML a partir de cadenas; texto de código, catálogos, proyectos y autorizaciones se inserta como nodos o propiedades. Los cambios numéricos de tamaño/progreso usan CSSOM y se comprueban en Chromium con registro de violaciones CSP.
+
+Los MCP adicionales de Codex requieren aprobación manual por defecto. Aprobar automáticamente exige selección explícita por tarea. Las credenciales persistentes utilizan DPAPI del usuario Windows o un llavero seguro; sin llavero no se escribe una nueva copia en claro. Los archivos temporales de Claude contienen referencias de entorno. [Política, migración y límites](docs/MCP.md).
+
+Los bloques amplios de excepción en HTTP, transporte serie y trabajos registran el tipo y la operación, sin incluir el contenido de comandos, proyectos ni credenciales. Se conservan donde el servidor necesita responder o cerrar recursos ante fallos de controladores externos.
+
 ## Revisión y pruebas
 
 La [revisión del 25 de octubre de 2026](docs/evidence/local-security/README.md) incluye peticiones HTTP reales, directorios temporales, una unión NTFS real en Windows y pruebas controladas de interfaz. No es una auditoría independiente ni una certificación de ausencia de vulnerabilidades. Los resultados de cada revisión en GitHub se pueden consultar en [Comprobaciones](https://github.com/msrobotika/AB-MakerIDE-SUPER/actions/workflows/checks.yml).

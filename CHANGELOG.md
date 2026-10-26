@@ -1,5 +1,18 @@
 # Cambios
 
+## 1.0.0-rc.4 · permisos MCP, credenciales y mantenibilidad · 26 octubre 2026
+
+- Codex MCP pide aprobación manual por defecto mediante su app-server y el panel del IDE. Cada respuesta es de un solo uso; rechazar, cancelar o recuperar no concede permisos ni repite llamadas. La aprobación automática exige selección explícita por tarea. Se bloquea MCP manual de Claude hasta disponer de integración nativa.
+- Configuración MCP cifrada con DPAPI del usuario Windows o guardada en un llavero compatible; alternativa solo en RAM sin persistencia de secretos. Migración de configuración antigua únicamente con almacén seguro. JSON temporal de Claude con referencias a variables y modo privado en POSIX.
+- `app.js` pasa a ser un punto de entrada pequeño; doce módulos ES por función más bootstrap. Eliminados los siete sinks `innerHTML`; texto, nodos DOM y clases CSS. CSP sin estilos inline y con atributos de estilo bloqueados.
+- Versión de ejecución central en VERSION, incluidos los cuadernos de placas. Servicios en `ab_makeride/`, tests con nombres funcionales y documentación histórica archivada.
+- Ruff, ESLint, Prettier, lockfile npm, Dependabot y manifiesto obligatorio en CI. Finales de línea definidos para que los hashes coincidan entre plataformas. Registros de excepciones amplias con tipo y contexto, sin volcar credenciales.
+- Preparación/arranque Linux y macOS con entorno privado; macOS añadido a CI y guía de permisos serie. Sin nuevas afirmaciones de pruebas físicas fuera de Windows.
+- Vídeo original trasladado a Releases y retirado del árbol actual. Los commits antiguos se conservan sin reescritura.
+
+- Carga manual: corrección de decimales esptool y progreso por bloque, `--verify`, evidencia sin heredar fallos, aviso de juego serie en CYD y cierre explícito de consola. Confirmaciones dentro del IDE y exclusión inmediata de operaciones concurrentes sin encolarlas.
+- Gemini Flash/Flash-Lite añadidos al conector Google con clave propia, aviso de cuota/privacidad y alcance de propuesta de código, sin anunciar ejecución real ni agente Gemini CLI.
+
 ## 1.0.0-rc.3 · agente, sesión limpia y guardado manual · 25 octubre 2026
 
 - Cada apertura comienza con editor, chat y tarea vacíos; no recupera automáticamente sesiones o compilaciones. Se recuerdan las preferencias de IA por navegador. Los archivos operativos del agente siguen disponibles para recuperación explícita.
@@ -96,7 +109,7 @@
 
 ## Base RC1
 
-Catálogo real paginado, modelo separado de puerto, estados de trabajo verificables, recuperación de sesiones y resultados, protección ante pestañas en conflicto y pruebas locales. [Informe de la base RC1 y sus límites](docs/RELEASE_RC1.md).
+Catálogo real paginado, modelo separado de puerto, estados de trabajo verificables, recuperación de sesiones y resultados, protección ante pestañas en conflicto y pruebas locales. [Informe de la base RC1 y sus límites](docs/archive/RELEASE_RC1.md).
 
 ## Antes de v1.0 estable
 

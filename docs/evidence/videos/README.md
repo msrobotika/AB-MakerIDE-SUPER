@@ -1,6 +1,6 @@
 # Vídeo de evidencia aportado por el usuario · 25 de octubre de 2026
 
-Original: [video_2026-10-25_00-52-16.mp4](video_2026-10-25_00-52-16.mp4). Se conserva sin edición, con audio original.
+Original: [video_2026-10-25_00-52-16.mp4](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/download/v1.0.0-rc.4/video_2026-10-25_00-52-16.mp4). Se conserva sin edición, con audio original.
 
 - Duración: 36.79 segundos. Resolución: 1280 × 720. Tamaño: 15,074,247 bytes.
 - SHA-256: `d64e193912803be5691b960c2e3e2245dca10b5a957425a4d50059f1646e7423`.
