@@ -60,6 +60,9 @@
     "frontend/styles.css": "3fe7c955b686226c5b41e9807aa011777e9364d56d52507442f35a6761aea247",
     "tests/test_agent_activity.mjs": "db667a855ccb59f0c8ebc526efb35854f5a0e670399263f39671a029373a8437",
     "tests/browser_agent_consent.py": "c617e45cad708efdb64bbfbbbaeb41b36ff2dd25a0e6b00e3b7f8895796a0595",
-    ".github/workflows/checks.yml": "ae5a0e68c35a45ecb42b056420951c4aec64108126f42ca986bc3f434394f105"
+    ".github/workflows/checks.yml": "ae5a0e68c35a45ecb42b056420951c4aec64108126f42ca986bc3f434394f105",
+    ".github/workflows/agent-center-polish-once.yml": "deleted",
+    ".github/workflows/agent-center-manifest-once.yml": "deleted",
+    ".github/workflows/agent-center-format-once.yml": "deleted"
   }
 }
