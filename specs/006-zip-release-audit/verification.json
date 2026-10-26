@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "convergence": "converged",
+  "requirements": [
+    {
+      "id": "FR-001",
+      "result": "passed",
+      "notes": "Readmes ES/EN separan el juego histórico realmente probado del código actual renombrado.",
+      "evidence": [
+        "README.md",
+        "README.en.md",
+        "docs/evidence/cyd-space-invaders/README.md"
+      ]
+    },
+    {
+      "id": "FR-002",
+      "result": "passed",
+      "notes": "Auditoría offline de ZIP sin extracción: CRC, SHA256, rutas, manifest, licencias y ejemplo.",
+      "evidence": [
+        "scripts/audit_distribution.py",
+        "docs/AUDITORIA_DISTRIBUCION_RC4.md"
+      ]
+    },
+    {
+      "id": "FR-003",
+      "result": "passed",
+      "notes": "Fixtures ZIP positivo y adversos para comprobar auditor por unittest; CI decidirá su estado de ejecución.",
+      "evidence": [
+        "tests/test_distribution_archive.py",
+        "tests/run_isolated.py",
+        ".github/workflows/checks.yml"
+      ]
+    },
+    {
+      "id": "FR-004",
+      "result": "passed",
+      "notes": "Release RC4 sigue como no auditada; #11 bloquea certificación; licencias externas precisadas, sin publicar.",
+      "evidence": [
+        "docs/RELEASE_POLICY.md",
+        "THIRD_PARTY_NOTICES.md",
+        "docs/AUDITORIA_DISTRIBUCION_RC4.md"
+      ]
+    }
+  ],
+  "changed_files": {
+    "scripts/audit_distribution.py": "62f2c11a083958b75424f8f06c2cca1710627fcf3bb84790b041d336db9936c5",
+    "tests/test_distribution_archive.py": "36ace3ac858d34ccd9f444fb64d788f09ed9358d68020e9925822a9f12f3272b"
+  }
+}
