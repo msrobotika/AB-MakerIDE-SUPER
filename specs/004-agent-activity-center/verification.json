@@ -66,6 +66,7 @@
     ".github/workflows/agent-center-manifest-once.yml": "deleted",
     ".github/workflows/agent-center-format-once.yml": "deleted",
     ".github/workflows/agent-activity-screens-once.yml": "deleted",
-    ".github/workflows/agent-center-final-capture-once.yml": "deleted"
+    ".github/workflows/agent-center-final-capture-once.yml": "deleted",
+    ".github/workflows/rc4-agent-gallery-once.yml": "deleted"
   }
 }
