@@ -133,7 +133,7 @@ def main():
                         page.locator("#mcpCatalogRemove").click()
                         page.wait_for_function(
                             "(name)=>!document.querySelector('#mcpStatus').textContent.includes(name)",
-                            candidate,
+                            arg=candidate,
                         )
                     check(
                         "removing all templates leaves no hidden MCP and no sessions",
