@@ -52,11 +52,11 @@
     }
   ],
   "changed_files": {
-    "ab_makeride/mcp_catalog.py": "924ac2390285537e04ed2469cfb1f147931552a6c7e702ed41c648c45f1832e6",
+    "ab_makeride/mcp_catalog.py": "6ba3b2ad07a1ff7d1f827b99a19454387fd71cc203420c645463ed55ef216bb7",
     "frontend/agent.js": "bd310422e45bef91c55cc4aa67494dc51a848970bbc3217c5f01ac94d1b314f1",
     "index.html": "ae3c1670df0c714b1ea44560b15254b1be53dd6dea8d919ee0ae5de53cc3ca18",
-    "server.py": "f735f95d4ad4713baab91071ea44682ca965f33506715ad9f5f699c536c4d55e",
+    "server.py": "5d5b23c327fe2ae5a68073ef65ba406c61b1cc28a27aeb70a9d3a2e8155ec208",
     "tests/browser_mcp.py": "38555270604a32af12103e65aeebb8f019d4de5163b984d8200dc12bc63710aa",
-    "tests/test_mcp_catalog.py": "5fb5f9a1386f9f0ac68e9a7a4f016fa96f94e443d265a3da92cc8470078b3c7c"
+    "tests/test_mcp_catalog.py": "fdb1d6879ab3cb6883812b4c825b46c1bacbbacc18d174d75766267baa7f0f02"
   }
 }
