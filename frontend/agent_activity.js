@@ -171,10 +171,13 @@ export function define(context) {
     }
     if (files.length > 8) result.append($('small', '', 'Más archivos en los resultados.'));
     if (run?.outcome) result.append($('p', 'agent-flow-note', context.reportAgentOutcome(run)));
-    result.append(action('Revisar código / diferencias', () => {
+    result.append(action('Ver diferencias (sin aplicar)', () => {
       openWorkbench();
-      context.$('#agentOpenCode').click();
-    }, !run?.diff || !run?.modified_code));
+      const candidates = context.$('#chatLog .agent-diff');
+      const latest = candidates[candidates.length - 1];
+      if (latest) latest.scrollIntoView({ block: 'nearest' });
+      else context.toast('Todavía no se han cargado diferencias revisables.');
+    }, !run?.diff));
     root.append(result);
 
     const timeline = $('section', 'agent-flow-card');
