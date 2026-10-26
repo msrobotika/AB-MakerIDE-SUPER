@@ -1,4 +1,5 @@
 """Inspect a MakerIDE ZIP offline before publication, without extracting files."""
+
 import argparse
 import hashlib
 import json
@@ -8,9 +9,14 @@ import stat
 import zipfile
 
 REQUIRED = {
-    "README.md", "README.en.md", "LICENSE", "VERSION",
-    "THIRD_PARTY_NOTICES.md", ".specify/UPSTREAM_LICENSE",
-    ".specify/UPSTREAM.md", "MANIFEST_SHA256.txt",
+    "README.md",
+    "README.en.md",
+    "LICENSE",
+    "VERSION",
+    "THIRD_PARTY_NOTICES.md",
+    ".specify/UPSTREAM_LICENSE",
+    ".specify/UPSTREAM.md",
+    "MANIFEST_SHA256.txt",
     "examples/defensa_orbital/defensa_orbital.ino",
     "examples/defensa_orbital/DefensaOrbital.h",
     "examples/defensa_orbital/CYDFrame.h",
@@ -33,14 +39,21 @@ def audit_zip(path, expected_sha256=None):
             errors.append("El SHA256 del ZIP no coincide con el esperado")
         with zipfile.ZipFile(path) as archive:
             infos = archive.infolist()
-            if not infos or len(infos) > 3000 or sum(i.file_size for i in infos) > 256 * 1024 * 1024:
+            if (
+                not infos
+                or len(infos) > 3000
+                or sum(i.file_size for i in infos) > 256 * 1024 * 1024
+            ):
                 errors.append("ZIP vacio o con volumen excesivo")
             valid = []
             seen = set()
             for item in infos:
                 name = item.filename
                 if (
-                    not name or name.startswith("/") or "\\" in name or ":" in name
+                    not name
+                    or name.startswith("/")
+                    or "\\" in name
+                    or ":" in name
                     or any(p in ("", ".", "..") for p in name.rstrip("/").split("/"))
                     or item.flag_bits & 1
                 ):
@@ -59,15 +72,17 @@ def audit_zip(path, expected_sha256=None):
                 errors.append("Debe existir una sola carpeta raiz")
             root = next(iter(roots)) if len(roots) == 1 else None
             files = {
-                "/".join(parts[1:]): item for item, parts in valid
+                "/".join(parts[1:]): item
+                for item, parts in valid
                 if root and len(parts) > 1 and parts[0] == root and not item.is_dir()
             }
             report["files"] = len(files)
             missing = sorted(REQUIRED - files.keys())
             if missing:
                 errors.append("Documentos obligatorios ausentes: " + ", ".join(missing))
-            if any(PurePosixPath(p).name.lower() in ("arduino-cli", "arduino-cli.exe")
-                   for p in files):
+            if any(
+                PurePosixPath(p).name.lower() in ("arduino-cli", "arduino-cli.exe") for p in files
+            ):
                 errors.append("Arduino CLI empaquetada: revisar licencia GPL")
             if any(p.startswith("examples/cyd_space_invaders/") for p in files):
                 errors.append("Nombre historico del videojuego en ejemplos vigentes")
@@ -91,7 +106,10 @@ def audit_zip(path, expected_sha256=None):
                 if set(recorded) != set(files) - {"MANIFEST_SHA256.txt"}:
                     errors.append("Archivos y manifiesto interno diferentes")
                 for name, digest in recorded.items():
-                    if name in files and hashlib.sha256(archive.read(files[name])).hexdigest() != digest:
+                    if (
+                        name in files
+                        and hashlib.sha256(archive.read(files[name])).hexdigest() != digest
+                    ):
                         errors.append("SHA256 interno erroneo: " + name)
             example = "examples/defensa_orbital/defensa_orbital.ino"
             if example in files:
