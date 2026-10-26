@@ -1068,9 +1068,7 @@ class IDEHandler(BaseHTTPRequestHandler):
                     raise ValueError("Espera a que termine el agente para cambiar los MCP.")
                 if not isinstance(d, dict) or set(d) != {"id", "action"}:
                     raise ValueError("Indica id y acción del catálogo.")
-                result = MCP_SETTINGS.save(
-                    change_preset(MCP_SETTINGS.load(), d["id"], d["action"])
-                )
+                result = MCP_SETTINGS.save(change_preset(MCP_SETTINGS.load(), d["id"], d["action"]))
             elif p == "/api/projects/import":
                 encoded = d.get("archive")
                 if not isinstance(encoded, str) or len(encoded) > 10_800_000:
