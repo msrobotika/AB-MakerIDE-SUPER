@@ -409,6 +409,51 @@
                 Conecta servidores Streamable HTTP o procesos locales stdio a Codex y Claude Code.
                 Los proveedores de chat no ejecutan MCP. Cada agente usa tu propia cuenta.
               </p>
+              <section class="boxinfo" aria-label="Catálogo de MCP Maker opcionales">
+                <strong>Catálogo Maker · integración opcional</strong>
+                <p class="agent-guide">
+                  Ningún MCP se instala ni ejecuta al abrir este catálogo. REA analiza
+                  software/firmware autorizado; no lee placas por sí mismo.
+                </p>
+                <label
+                  >Herramienta<select id="mcpCatalogSelect" class="selector">
+                    <option value="rea">REA 6.8.0 · ingeniería inversa de firmware</option>
+                    <option value="espressif_docs">Espressif Docs · OAuth pendiente</option>
+                    <option value="kicad">KiCad PCB · revisión pendiente</option>
+                  </select>
+                </label>
+                <div class="agentactions">
+                  <button id="mcpCatalogAdd" class="action small" type="button">
+                    Añadir REA al IDE
+                  </button>
+                  <button id="mcpCatalogRemove" class="action small ghost" type="button">
+                    Quitar REA del IDE
+                  </button>
+                </div>
+                <p id="mcpCatalogNote" class="agent-guide" role="status">
+                  Selecciona una herramienta y revisa sus requisitos.
+                </p>
+                <p class="agent-guide">
+                  <a
+                    href="https://github.com/morluto/rea"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >REA oficial</a
+                  >
+                  · <a
+                    href="https://developer.espressif.com/blog/2026/04/doc-mcp-server/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Espressif MCP</a
+                  >
+                  · <a
+                    href="https://github.com/Seeed-Studio/kicad-mcp-server"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >KiCad MCP</a
+                  >
+                </p>
+              </section>
               <label
                 >Configuración JSON · mcpServers<textarea
                   id="mcpConfig"

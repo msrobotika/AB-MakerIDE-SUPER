@@ -31,3 +31,7 @@ Comprobar los **bytes exactos** del paquete, dependencias internas, recursos vis
 ## Versión descargable anterior a esta revisión
 
 La RC4 pública precede al inventario completo de este documento. **Sus bytes no se han auditado aquí.** No confundir las atribuciones de `main` con el contenido histórico de la descarga. [Estado y procedimiento](docs/AUDITORIA_DISTRIBUCION_RC4.md) · [bloqueante #11](https://github.com/msrobotika/AB-MakerIDE-SUPER/issues/11).
+
+## REA (Reverse Engineer Anything)
+
+Servidor MCP de terceros por [morluto/rea](https://github.com/morluto/rea), paquete npm `rea-agents`. El catálogo referencia una versión exacta (**6.8.0**) para instalación separada y voluntaria, pero **no distribuye** su código, binarios, herramientas Ghidra/Hopper/IDA ni cuentas. Consultar su licencia, condiciones y dependencias de la versión específica antes de redistribuir; MakerIDE no concede licencia sobre ellas ni presenta afiliación.

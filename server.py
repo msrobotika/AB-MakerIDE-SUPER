@@ -32,6 +32,7 @@ from ab_makeride.agent_runtime import AgentJobManager
 from ab_makeride.toolchain import arduino_cli
 from ab_makeride.board_identity import identify as identify_board, read_firmware_identity
 from ab_makeride.mcp_bridge import MCPSettings
+from ab_makeride.mcp_catalog import change_preset
 from ab_makeride.version_info import VERSION
 
 LOGGER = logging.getLogger(__name__)
@@ -1062,6 +1063,14 @@ class IDEHandler(BaseHTTPRequestHandler):
                 if AGENT_JOBS._current and AGENT_JOBS._current.active:
                     raise ValueError("Espera a que termine el agente para cambiar los MCP.")
                 result = MCP_SETTINGS.save(d)
+            elif p == "/api/mcp/preset":
+                if AGENT_JOBS._current and AGENT_JOBS._current.active:
+                    raise ValueError("Espera a que termine el agente para cambiar los MCP.")
+                if not isinstance(d, dict) or set(d) != {"id", "action"}:
+                    raise ValueError("Indica id y acción del catálogo.")
+                result = MCP_SETTINGS.save(
+                    change_preset(MCP_SETTINGS.load(), d["id"], d["action"])
+                )
             elif p == "/api/projects/import":
                 encoded = d.get("archive")
                 if not isinstance(encoded, str) or len(encoded) > 10_800_000:

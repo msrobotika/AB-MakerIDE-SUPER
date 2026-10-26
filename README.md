@@ -26,6 +26,8 @@ La aplicación es open source, con [licencia MIT](LICENSE). **AB MakerIDE SUPER 
 
 **Publicaciones congeladas:** el desarrollo continúa mediante PR y pruebas; no se crearán lanzamientos cada día. La RC4 es **un candidato, no una versión estable**. [Política estricta de publicación](docs/RELEASE_POLICY.md) · [Índice de documentación vigente](docs/README.md). En la página pública de Releases solo se mantiene RC4. Se conservan los commits históricos y su trazabilidad.
 
+**Catálogo MCP Maker (rama `main` posterior a RC4):** REA para análisis autorizado de firmware como opción voluntaria, y referencias documentadas a Espressif/PCB. [Alcance y configuración personal de Codex](docs/CATALOGO_MCP_MAKER.md). **No disponible en la descarga histórica RC4**, ni se inicia servidor alguno automáticamente. La prueba de conexión real queda pendiente.
+
 ## Centro de actividad IA · integrado en la descarga actual de RC4
 
 Una pestaña **✧ en la barra izquierda** permite seguir el trabajo real de Codex y Claude Code: estado y permisos de la tarea, eventos recibidos, evidencias de compilación/grabación, archivos informados, aprobaciones pendientes y acceso a las diferencias del editor. No se muestran tareas simuladas ni se modifica el sistema de consentimiento. [Cómo funciona y qué verifica](docs/CENTRO_ACTIVIDAD_IA.md).

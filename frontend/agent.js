@@ -225,6 +225,8 @@ export function define(context) {
     context.$('#execAllowPC').disabled = working;
     context.$('#execUseMCP').disabled = working;
     context.$('#mcpSave').disabled = working;
+    context.$('#mcpCatalogAdd').disabled = working;
+    context.$('#mcpCatalogRemove').disabled = working;
     context.$('#execAutoMCP').disabled = working;
   };
   context.resetAgentStages = function resetAgentStages() {
@@ -608,6 +610,34 @@ export function initialize(context) {
       context.toast(e instanceof SyntaxError ? 'JSON MCP no válido' : e.message);
     }
   };
+  context.$('#mcpCatalogSelect').onchange = () => {
+    const id = context.$('#mcpCatalogSelect').value;
+    const supported = id === 'rea';
+    context.$('#mcpCatalogAdd').disabled = !supported || context.state.agentWorking;
+    context.$('#mcpCatalogRemove').disabled = !supported || context.state.agentWorking;
+    context.$('#mcpCatalogNote').textContent = supported
+      ? 'REA 6.8.0: registro opcional; no se descarga ni se conecta al añadirlo. La primera tarea autorizada podría descargarlo mediante npx.'
+      : 'Referencia para evaluación: requiere integración, autenticación y pruebas. No se instalará.';
+  };
+  context.$('#mcpCatalogSelect').onchange();
+  context.changeMakerMCP = async function changeMakerMCP(action) {
+    if (context.state.agentWorking) return context.toast('Espera a que termine el agente');
+    const id = context.$('#mcpCatalogSelect').value;
+    if (id !== 'rea') return context.toast('Solo REA tiene plantilla validada.');
+    try {
+      await context.request('/api/mcp/preset', { id, action });
+      await context.refreshMCP();
+      context.toast(
+        action === 'add'
+          ? 'REA configurado, NO instalado ni conectado. Revisa Node, licencia y permisos.'
+          : 'REA retirado del catálogo del IDE; Codex personal no se ha modificado.',
+      );
+    } catch (e) {
+      context.toast(e.message);
+    }
+  };
+  context.$('#mcpCatalogAdd').onclick = () => context.changeMakerMCP('add');
+  context.$('#mcpCatalogRemove').onclick = () => context.changeMakerMCP('remove');
   context.$('#agentWorkbench').addEventListener('toggle', () => {
     if (context.$('#agentWorkbench').open) context.refreshAgentCLIs();
   });
