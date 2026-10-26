@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "convergence": "converged",
+  "requirements": [
+    {
+      "id": "FR-001",
+      "result": "passed",
+      "notes": "Botón propio en el rail y diseño original.",
+      "evidence": [
+        "index.html",
+        "frontend/styles.css",
+        "frontend/workspace.js"
+      ]
+    },
+    {
+      "id": "FR-002",
+      "result": "passed",
+      "notes": "Estado y evidencias proceden de snapshots CLI reales, sin progreso inventado.",
+      "evidence": [
+        "frontend/agent_observer.js",
+        "frontend/agent.js"
+      ]
+    },
+    {
+      "id": "FR-003",
+      "result": "passed",
+      "notes": "La ejecución reutiliza el diálogo de consentimiento, permisos y detención.",
+      "evidence": [
+        "frontend/agent.js",
+        "tests/browser_agent_consent.py"
+      ]
+    },
+    {
+      "id": "FR-004",
+      "result": "passed",
+      "notes": "El historial se consulta y recupera desde el servidor sin relanzar comandos.",
+      "evidence": [
+        "frontend/agent.js",
+        "frontend/agent_observer.js"
+      ]
+    },
+    {
+      "id": "FR-005",
+      "result": "passed",
+      "notes": "Pruebas unitarias y navegador conectadas a CI.",
+      "evidence": [
+        "tests/test_agent_observer.mjs",
+        "tests/browser_agent_consent.py",
+        ".github/workflows/checks.yml"
+      ]
+    },
+    {
+      "id": "FR-006",
+      "result": "passed",
+      "notes": "Este cambio no crea ninguna Release, solo revisión PR.",
+      "evidence": [
+        "docs/AGENT_ACTIVITY.md",
+        "docs/RELEASE_POLICY.md"
+      ]
+    }
+  ],
+  "changed_files": {
+    ".github/workflows/checks.yml": "cb047bd9ccba0cf2076e90e39e27e6668dcb0dee7835b7d19e002627e160b398",
+    "frontend/agent.js": "9dd47746077d695d3c13fb1fa65bfc2312145ae081dd2f6be00a09e3faf00b7c",
+    "frontend/agent_observer.js": "4aa2b45f362c4f3bf1b06ea43d3378e67ae9bb66940e97712674cb4a2fe8492f",
+    "frontend/bootstrap.js": "e7abc9ccf7617917cb86c5714b536eb859269db53c16abce33bfb05f8bdda77c",
+    "frontend/styles.css": "5e96515a6d7bf48e78357918f8b8cf21d38a9d25ad0997fe5ff99c18e8c64232",
+    "frontend/workspace.js": "c06cf55021b429ed579b386cbe3d15805aef13bdf0d37c86f234aa1d670ba47a",
+    "index.html": "5118bdd93c27ef4ce63cacf85749fb1d6a20dafc451e4d66c1a4854b6a78cc2b",
+    "tests/browser_agent_consent.py": "c7d34c802a36e8136b020d81ab6924afb29a9aca018ac9dd4b2216af1246175b",
+    "tests/test_agent_observer.mjs": "2ca00d7b282b88c1e9117bda3217d21b6c689de6ace14ab8bb9af8bbd6670487"
+  }
+}

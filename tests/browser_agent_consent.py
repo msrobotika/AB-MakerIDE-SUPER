@@ -159,11 +159,20 @@ def main():
                     page.wait_for_function(
                         '()=>document.querySelector("#activityState") && document.querySelector("#activityPhases")'
                     )
-                    print(json.dumps({
-                        "observer_initial_state": page.locator("#activityState").inner_text(),
-                        "observer_initial_phases": page.locator("#activityPhases").inner_text(),
-                        "observer_page_errors": report["page_errors"],
-                    }, ensure_ascii=False))
+                    print(
+                        json.dumps(
+                            {
+                                "observer_initial_state": page.locator(
+                                    "#activityState"
+                                ).inner_text(),
+                                "observer_initial_phases": page.locator(
+                                    "#activityPhases"
+                                ).inner_text(),
+                                "observer_page_errors": report["page_errors"],
+                            },
+                            ensure_ascii=False,
+                        )
+                    )
                     check(
                         "agent activity sidebar opens without fake progress",
                         page.locator("#activityState").inner_text() == "Sin sesión"

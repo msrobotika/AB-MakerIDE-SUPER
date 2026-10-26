@@ -155,7 +155,10 @@ export function define(context) {
       ' terminó; NO consta compilación o grabación verificadas. Revisa los archivos creados y continúa la tarea.'
     );
   };
-  context.recoverAgentSession = async function recoverAgentSession(silent = false, requestedId = '') {
+  context.recoverAgentSession = async function recoverAgentSession(
+    silent = false,
+    requestedId = '',
+  ) {
     if (context.agentRunState.active) return;
     const stored = context.lastAgentId;
     try {
@@ -716,8 +719,19 @@ export function initialize(context) {
       context.agentRunState.last = 0;
       context.agentRunState.lastLang = context.state.lang;
       context.rememberAgent(r.job_id);
-      context.observeAgentSnapshot({ job_id: r.job_id, provider, mode, active: true,
-        task_summary: task.slice(0, 180), elapsed: 0, events: [], evidence: {} }, true);
+      context.observeAgentSnapshot(
+        {
+          job_id: r.job_id,
+          provider,
+          mode,
+          active: true,
+          task_summary: task.slice(0, 180),
+          elapsed: 0,
+          events: [],
+          evidence: {},
+        },
+        true,
+      );
       context.$('#agentResumeMessage').textContent =
         'Trabajo iniciado. Puedes recuperar esta sesión si cierras la pestaña.';
       context.showLog(
