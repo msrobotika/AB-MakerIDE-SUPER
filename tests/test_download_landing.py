@@ -7,10 +7,7 @@ ZIP_RC4 = (
     "https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/download/"
     "v1.0.0-rc.4/AB-MakerIDE-SUPER-1.0.0-rc.4-IA-actualizada.zip"
 )
-SOURCE = (
-    "https://github.com/msrobotika/AB-MakerIDE-SUPER/archive/"
-    "refs/heads/main.zip"
-)
+SOURCE = "https://github.com/msrobotika/AB-MakerIDE-SUPER/archive/refs/heads/main.zip"
 FILES = ["README.md", "README.en.md", "docs/DESCARGAS_Y_VERSIONES.md"]
 
 for filename in FILES:
