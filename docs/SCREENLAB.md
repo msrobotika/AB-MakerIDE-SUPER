@@ -29,3 +29,7 @@ Cambiar el perfil recoloca los objetos para que quepan: verifica el resultado vi
 Pruebas de modelo, validación de archivos, generador de C++, UI Chromium, exportación, estabilidad y CI. No se declara compilación firmware de ScreenLab en la placa física, soporte probado en LVGL 9, autoconfiguración automática de drivers, rendimiento validado, táctil calibrado, ni instalador nuevo. Para uso industrial se requiere especificación de arquitectura, memoria, latencia, seguridad y prueba física.
 
 Fase siguiente: perfil de BSP explícito y comprobado, integración de LVGL en proyectos generados, acciones de widget vinculadas a variables/sensores, simulación de estados con datos, import/export de pantallas múltiples, comparación foto-vs-diseño y ensayo en tu CYD/IdeaSpark con autorización.
+
+## Evidencias visuales publicadas
+
+[Captura CYD 320×240](evidence/screenlab/screenlab-cyd-real.png) · [Captura IdeaSpark 240×135](evidence/screenlab/screenlab-ideaspark-real.png) · [Informe, procedencia y hashes](evidence/screenlab/README.md). Imágenes de Chromium real con placa controlada, no grabación TFT física.

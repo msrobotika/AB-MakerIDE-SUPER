@@ -7,3 +7,4 @@
 - [x] Prueba Node + prueba real Chromium sin placa ni red externa.
 - [x] Manual con límites explícitos y pruebas reales diferenciadas.
 - [x] Manifiesto y comprobación Spec Kit preparados, sin Release.
+- [x] Dos capturas auténticas CYD/IdeaSpark incorporadas a README, con huellas, report y procedencia CI; sin interpretar navegador como hardware.

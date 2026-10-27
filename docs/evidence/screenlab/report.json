@@ -1,0 +1,38 @@
+{
+  "checks": [
+    {
+      "name": "ScreenLab opens as advanced modal",
+      "passed": true
+    },
+    {
+      "name": "two initial controls are visible",
+      "passed": true
+    },
+    {
+      "name": "bar is added",
+      "passed": true
+    },
+    {
+      "name": "dragging moves and persists the component",
+      "passed": true
+    },
+    {
+      "name": "real IdeaSpark landscape design profile",
+      "passed": true
+    },
+    {
+      "name": "code generator outputs explicit LVGL UI only",
+      "passed": true
+    },
+    {
+      "name": "no sketch was overwritten",
+      "passed": true
+    },
+    {
+      "name": "no device/agent operation invoked",
+      "passed": true
+    }
+  ],
+  "page_errors": [],
+  "hardware_actions": []
+}
