@@ -64,6 +64,14 @@ function template() {
           <label>Alto<input id="slH" class="input" type="number" min="12" step="1"/></label>
         </div>
         <label id="slValueBox">Valor de barra (0–100)<input id="slValue" class="input" type="number" min="0" max="100"/></label>
+        <strong>AB MotionLab · animación</strong>
+        <label>Movimiento<select id="slMotion" class="selector">
+          <option value="none">Sin animación</option>
+          <option value="fade-in">Aparecer suavemente</option>
+          <option value="slide-in">Deslizar desde izquierda</option>
+          <option value="pulse">Pulso de anchura</option>
+        </select></label>
+        <label>Duración (ms)<input id="slDuration" class="input" type="number" min="200" max="5000" step="100"/></label>
         <button id="slDelete" class="action small ghost" type="button">Eliminar componente</button>
       </div>
     </aside>
@@ -72,6 +80,7 @@ function template() {
     <button id="slSaveJSON" class="action small" type="button">↓ Proyecto .json</button>
     <button id="slImport" class="action small" type="button">↑ Importar diseño</button>
     <input id="slFile" type="file" accept=".json,application/json" hidden />
+    <button id="slPreviewMotion" class="action small ghost" type="button">▶ Vista previa animada</button>
     <button id="slGenerate" class="action small primary" type="button">Generar código LVGL</button>
     <button id="slSaveHeader" class="action small" type="button">↓ Código .h</button>
     <small id="slStatus" role="status" aria-live="polite"></small>
@@ -137,9 +146,12 @@ export function initialize(context) {
       ['slW', v.width],
       ['slH', v.height],
       ['slValue', v.value],
+      ['slMotion', v.motion ?? 'none'],
+      ['slDuration', v.durationMs ?? 900],
     ])
       el(id).value = String(value);
     el('slValueBox').hidden = v.type !== 'bar';
+    el('slDuration').disabled = (v.motion ?? 'none') === 'none';
   };
   function render() {
     const spec = PROFILES[project.profile];
@@ -311,14 +323,49 @@ export function initialize(context) {
     ['slW', 'width'],
     ['slH', 'height'],
     ['slValue', 'value'],
+    ['slMotion', 'motion'],
+    ['slDuration', 'durationMs'],
   ]) {
     el(id).addEventListener('change', (event) => {
-      const value = ['text', 'color'].includes(field)
+      const value = ['text', 'color', 'motion'].includes(field)
         ? event.target.value
         : Number(event.target.value);
       edit(field, value);
     });
   }
+  el('slPreviewMotion').onclick = () => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      status('Vista previa detenida: el sistema prefiere movimiento reducido.');
+      return;
+    }
+    let active = 0;
+    for (const v of project.widgets) {
+      const motion = v.motion ?? 'none';
+      if (motion === 'none') continue;
+      const node = [...el('slCanvas').children].find(
+        (item) => Number(item.dataset.widgetId) === v.id,
+      );
+      if (!node || typeof node.animate !== 'function') continue;
+      const frames =
+        motion === 'fade-in'
+          ? [{ opacity: 0 }, { opacity: 1 }]
+          : motion === 'slide-in'
+            ? [{ transform: 'translateX(-16px)' }, { transform: 'translateX(0)' }]
+            : [{ transform: 'scaleX(0.85)' }, { transform: 'scaleX(1)' }];
+      node.getAnimations().forEach((animation) => animation.cancel());
+      node.animate(frames, {
+        duration: v.durationMs ?? 900,
+        easing: 'ease-in-out',
+        iterations: 1,
+      });
+      active++;
+    }
+    status(
+      active
+        ? active + ' animaciones previsualizadas en navegador; salida LVGL separada.'
+        : 'Asigna una animación a un componente antes de previsualizar.',
+    );
+  };
   el('slDelete').onclick = deleteSelected;
   el('slUndo').onclick = () => {
     if (!undo.length) return;
