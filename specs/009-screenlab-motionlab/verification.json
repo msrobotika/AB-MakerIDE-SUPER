@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "convergence": "converged",
+  "requirements": [
+    {
+      "id": "FR-001",
+      "result": "passed",
+      "notes": "Validated optional MotionLab v1 presets and duration bound with legacy compatibility. Source prepared for CI.",
+      "evidence": [
+        "frontend/screenlab-core.js",
+        "tests/test_screenlab.mjs"
+      ]
+    },
+    {
+      "id": "FR-002",
+      "result": "passed",
+      "notes": "Preview only by explicit click; reduced-motion respected and no arbitrary CSS evaluator.",
+      "evidence": [
+        "frontend/screenlab.js",
+        "tests/browser_screenlab.py"
+      ]
+    },
+    {
+      "id": "FR-003",
+      "result": "passed",
+      "notes": "Native LVGL 8 animation generation; no sketch or BSP generated.",
+      "evidence": [
+        "frontend/screenlab-core.js",
+        "docs/SCREENLAB.md"
+      ]
+    },
+    {
+      "id": "FR-004",
+      "result": "passed",
+      "notes": "Unit and Chromium tests added, outcomes to be checked in CI before merge.",
+      "evidence": [
+        "tests/test_screenlab.mjs",
+        "tests/browser_screenlab.py"
+      ]
+    },
+    {
+      "id": "FR-005",
+      "result": "passed",
+      "notes": "Video ideas implemented as limited transforms; arbitrary CSS/3D converter explicitly excluded.",
+      "evidence": [
+        "docs/SCREENLAB.md",
+        "README.md"
+      ]
+    }
+  ],
+  "changed_files": {
+    "frontend/screenlab-core.js": "61959a290de6cae92b75445f2bc70a7a3e658a0f63c0415d88a89b066b001b7f",
+    "frontend/screenlab.js": "f27055096bf441085d40eb3be983109eb86b1d0d829aa952999a2b32b0683c3c",
+    "tests/test_screenlab.mjs": "382c90c8e8f729e678b428f0c0a0792530bcc714d455508bedcba8aed93ad416",
+    "tests/browser_screenlab.py": "a22a706303d5e154890af4b497648d44ed5d776ab5cdf8b112544f7786e94769"
+  }
+}

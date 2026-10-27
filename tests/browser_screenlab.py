@@ -98,8 +98,20 @@ def main():
                     "real IdeaSpark landscape design profile",
                     "240×135" in page.locator("#slCanvasInfo").inner_text(),
                 )
+                page.locator("#slMotion").select_option("pulse")
+                page.locator("#slDuration").fill("800")
+                page.locator("#slDuration").dispatch_event("change")
+                page.locator("#slPreviewMotion").click()
+                check(
+                    "MotionLab preview runs only after explicit click",
+                    "animaciones previsualizadas" in page.locator("#slStatus").inner_text(),
+                )
                 page.locator("#slGenerate").click()
                 code = page.locator("#slCode").input_value()
+                check(
+                    "MotionLab outputs LVGL 8 animation, not CSS engine",
+                    "lv_anim_set_time" in code and "lv_anim_start" in code,
+                )
                 check(
                     "code generator outputs explicit LVGL UI only",
                     "lv_bar_create" in code

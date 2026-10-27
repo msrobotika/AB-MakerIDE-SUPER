@@ -65,3 +65,45 @@ test('reject malformed, oversized, overlapping IDs, out-of-bounds or code-like o
   assert.throws(() => addWidget(base, 'script'));
   assert.throws(() => moveWidget(base, 10000, 1, 2));
 });
+
+test('MotionLab exports LVGL native animations, not browser CSS runtime', () => {
+  for (const [preset, expected] of [
+    ['fade-in', 'ab_screenlab_opacity'],
+    ['slide-in', 'lv_obj_set_x'],
+    ['pulse', 'lv_obj_set_width'],
+  ]) {
+    const design = createProject();
+    design.widgets[0].motion = preset;
+    design.widgets[0].durationMs = 1100;
+    const code = generateLvgl(design);
+    assert.ok(code.includes('lv_anim_init('));
+    assert.ok(code.includes('lv_anim_set_time(&sl_motion_1, 1100);'));
+    assert.ok(code.includes(expected));
+    assert.ok(!code.includes('CSS') && !code.includes('requestAnimationFrame'));
+  }
+});
+test('motion constraints reject unsafe JSON values and huge durations', () => {
+  const design = createProject();
+  const checks = [
+    { motion: 'url(javascript:)' },
+    { motion: 'rotate3d' },
+    { durationMs: 8000000 },
+    { durationMs: -1 },
+    { durationMs: 33.33 },
+    { durationMs: '1000' },
+  ];
+  for (const invalid of checks) {
+    design.widgets[0] = { ...createProject().widgets[0], ...invalid };
+    assert.throws(() => validateProject(design), Error);
+  }
+});
+test('old ScreenLab JSON without animation fields remains compatible', () => {
+  const old = createProject();
+  old.widgets.forEach((v) => {
+    delete v.motion;
+    delete v.durationMs;
+  });
+  assert.equal(validateProject(old), old);
+  const code = generateLvgl(old);
+  assert.ok(!code.includes('lv_anim_start('));
+});

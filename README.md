@@ -59,6 +59,8 @@ Se conservan el **inicio vacío**, el guardado manual con **Ctrl+S**, la importa
 
 Desde **⋯ Herramientas → AB ScreenLab · Pantallas**, se abre el estudio de interfaces embebidas sin interrumpir el editor de firmware. Incluye un lienzo con componentes arrastrables, edición de propiedades, diseño reversible, perfiles iniciales **CYD 320×240** e **IdeaSpark 240×135**, importar/exportar JSON y una cabecera de construcción de interfaz para **LVGL 8.x**. [Manual de ScreenLab](docs/SCREENLAB.md).
 
+**AB MotionLab (rama de desarrollo):** efectos de aparición, desplazamiento y pulso con vista previa voluntaria y exportación a animaciones **nativas LVGL 8.x**. No convierte CSS libre ni gráficos 3D; [alcance técnico](docs/SCREENLAB.md#ab-motionlab--animaciones-ligeras-inspiradas-en-css-fase-r1-experimental).
+
 **No es un firmware grabable directamente.** La cabecera generada requiere un entorno LVGL 8.x y un BSP compatible que configure bus SPI, pantalla, táctil, backlight, memoria y loop de LVGL. El perfil define únicamente tamaño/orientación de diseño; no asigna pines ni certifica hardware. El desarrollo está en código fuente más reciente, **no** en el ZIP RC4 histórico.
 
 ### Capturas reales de AB ScreenLab · rama de desarrollo, no ZIP RC4
