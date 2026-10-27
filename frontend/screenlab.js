@@ -8,6 +8,7 @@ import {
   resizeProfile,
   validateProject,
 } from './screenlab-core.js';
+import { generateArduinoSketch } from './screenlab-sketch.js';
 
 const STORE = 'ab-makeride-screenlab-v1';
 function downloadFile(name, content, type) {
@@ -83,6 +84,8 @@ function template() {
     <button id="slPreviewMotion" class="action small ghost" type="button">▶ Vista previa animada</button>
     <button id="slGenerate" class="action small primary" type="button">Generar código LVGL</button>
     <button id="slSaveHeader" class="action small" type="button">↓ Código .h</button>
+    <button id="slSketchDownload" class="action small" type="button">↓ Sketch completo .ino</button>
+    <button id="slSketchEditor" class="action small ghost" type="button">Abrir sketch en editor</button>
     <small id="slStatus" role="status" aria-live="polite"></small>
   </div>
   <details class="sl-source-panel"><summary>Ver código generado (LVGL 8.x)</summary>
@@ -433,6 +436,55 @@ export function initialize(context) {
       status('Cabecera descargada. Requiere LVGL 8.x y driver externo: NO es firmware completo.');
     } catch (error) {
       status(error.message);
+    }
+  };
+  el('slSketchDownload').onclick = () => {
+    try {
+      const source = generateArduinoSketch(project);
+      const name = project.profile === 'ideaspark' ? 'ScreenLabIdeaSpark' : 'ScreenLabCYD';
+      downloadFile(name + '.ino', source, 'text/plain');
+      status('Sketch Adafruit descargado: revisa versión de placa, librerías y pines antes de compilar.');
+    } catch (error) {
+      status('Sketch no exportado: ' + error.message);
+    }
+  };
+  el('slSketchEditor').onclick = async () => {
+    if (context.state.busy || context.agentRunState?.active || context.state.agentWorking)
+      return status('Termina primero la compilación o la tarea del agente.');
+    if (context.storageConflict)
+      return status('Hay conflicto de almacenamiento: exporta y resuelve el borrador primero.');
+    try {
+      const source = generateArduinoSketch(project);
+      if (!String(context.state.fqbn).startsWith('esp32:esp32:')) {
+        status('Selecciona una placa ESP32 y su núcleo Arduino antes de cargar este sketch.');
+        return;
+      }
+      const ok = await context.confirmAction(
+        '¿Sustituir el sketch actual por este firmware ScreenLab? Guardaré copia del editor. ' +
+          'NO se compilará ni grabará automáticamente; confirma el pinout de tu pantalla.',
+      );
+      if (!ok) return;
+      const backup = {
+        date: new Date().toISOString(),
+        lang: context.state.lang,
+        code: context.$('#code').value,
+      };
+      context.draftBackups.unshift(backup);
+      context.draftBackups = context.draftBackups.slice(0, 7);
+      context.rememberAgentProject('');
+      context.state.files.cpp = source;
+      context.state.name =
+        project.profile === 'ideaspark' ? 'ScreenLabIdeaSpark' : 'ScreenLabCYD';
+      context.setPhysicalProfile(project.profile === 'ideaspark' ? 'ideaspark-114' : 'esp32-cyd-28');
+      context.setLang('cpp', false);
+      context.$('#code').value = source;
+      context.updateHL();
+      context.save();
+      context.renderSidebar();
+      dialog.close();
+      context.toast('Sketch en editor, copia guardada. Instala librerías y pulsa Compilar; NO se ha grabado.');
+    } catch (error) {
+      status('No se ha cambiado el sketch: ' + error.message);
     }
   };
   const viewportObserver = new ResizeObserver(() => {
