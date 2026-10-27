@@ -61,6 +61,16 @@ Desde **⋯ Herramientas → AB ScreenLab · Pantallas**, se abre el estudio de 
 
 **No es un firmware grabable directamente.** La cabecera generada requiere un entorno LVGL 8.x y un BSP compatible que configure bus SPI, pantalla, táctil, backlight, memoria y loop de LVGL. El perfil define únicamente tamaño/orientación de diseño; no asigna pines ni certifica hardware. El desarrollo está en código fuente más reciente, **no** en el ZIP RC4 histórico.
 
+### Capturas reales de AB ScreenLab · rama de desarrollo, no ZIP RC4
+
+Estas capturas se han generado automáticamente **con Chromium real y placas simuladas por perfiles de pantalla**, sin una ESP32 conectada. No son fotografías ni pruebas del firmware físico.
+
+[![ScreenLab CYD — editor visual de 320×240](docs/evidence/screenlab/screenlab-cyd-real.png)](docs/evidence/screenlab/screenlab-cyd-real.png)
+
+[![ScreenLab IdeaSpark — lienzo, propiedades y generador LVGL](docs/evidence/screenlab/screenlab-ideaspark-real.png)](docs/evidence/screenlab/screenlab-ideaspark-real.png)
+
+[Procedencia, SHA-256 y reporte de pruebas](docs/evidence/screenlab/README.md).
+
 ## Empezar en Windows
 
 1. Extrae el ZIP en una carpeta nueva y conserva tus versiones y archivos anteriores.

@@ -1,2 +1,2 @@
-# Convergencia
-La entrega de diseño/edición/importación/exportación queda lista para revisión por CI. No es acreditación de compatibilidad LVGL hardware ni captura/simulación eléctrica real. La batería de CI debe estar verde antes de integración; prueba de hardware y nuevo paquete distribuidos quedan pendientes.
+# Convergencia R1 ScreenLab
+La función de diseño visual e intercambio JSON y el generador LVGL 8.x están fusionados (PR #15, `dfb7feb278f8170b53bd2f17e198983cd4e05567`). La CI de main fue completamente verde: https://github.com/msrobotika/AB-MakerIDE-SUPER/actions/runs/40428203094. Se incorporan dos capturas reales de Chromium y el reporte, generados en https://github.com/msrobotika/AB-MakerIDE-SUPER/actions/runs/40441275739. No se ha probado firmware ScreenLab cargado en CYD/IdeaSpark, ni hardware/driver/táctil LVGL, ni se ha publicado nueva Release. R2/R3 de hardware quedan expresamente abiertos en issue #14.

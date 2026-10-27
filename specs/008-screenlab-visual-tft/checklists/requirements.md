@@ -8,3 +8,4 @@
 - [x] Prueba navegador crea barra, arrastra, cambia perfil, genera y captura pantalla.
 - [x] Tests Node cubren escape, límites y modelos.
 - [x] Sin publicación ni atribución falsa de pruebas físicas.
+- [x] La galería del repositorio enlaza PNG auténticos y el reporte reproducible.
