@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "convergence": "converged",
+  "requirements": [
+    {
+      "id": "FR-001",
+      "result": "passed",
+      "notes": "Dos fuentes .ino generadas únicamente mediante perfiles documentados, sin conectar hardware.",
+      "evidence": [
+        "frontend/screenlab-sketch.js",
+        "scripts/export_screenlab_pilot.mjs"
+      ]
+    },
+    {
+      "id": "FR-002",
+      "result": "passed",
+      "notes": "Render estático Adafruit GFX; efectos y perfiles sin soporte se rechazan explícitamente.",
+      "evidence": [
+        "frontend/screenlab-sketch.js",
+        "tests/test_screenlab_sketch.mjs"
+      ]
+    },
+    {
+      "id": "FR-003",
+      "result": "passed",
+      "notes": "Transferencia al editor limitada a ESP32, copia anterior y consentimiento, sin grabación automática.",
+      "evidence": [
+        "frontend/screenlab.js",
+        "tests/browser_screenlab.py"
+      ]
+    },
+    {
+      "id": "FR-004",
+      "result": "passed",
+      "notes": "Pruebas Node, Chromium y workflow de compilación CLI creados, resultado externo a comprobar.",
+      "evidence": [
+        ".github/workflows/checks.yml",
+        ".github/workflows/screenlab-arduino-compile.yml",
+        "tests/test_screenlab_sketch.mjs"
+      ]
+    },
+    {
+      "id": "FR-005",
+      "result": "passed",
+      "notes": "Límites físicos honestos y ausencia de nueva Release; manifiesto preparado.",
+      "evidence": [
+        "docs/SCREENLAB.md",
+        "README.md",
+        "specs/010-screenlab-arduino-sketch/analysis.md"
+      ]
+    }
+  ],
+  "changed_files": {
+    "frontend/screenlab-sketch.js": "918bf999099eb5ae15fb8206be2673ae99400716f59d44beed31ac0f3e676a67",
+    "frontend/screenlab.js": "868a579a0517e7c90e75ba058d43a020ed772e80101c98daca14db52a836d14d",
+    "tests/test_screenlab_sketch.mjs": "1241720b7c8a502ca8e027219d7f06bd6a14ed7930cced8064eab79a8d062c36",
+    "tests/browser_screenlab.py": "c679b117ef9db31526664f5f7e69fffc55e5ddf8325e8cb1696f013ec1ea4b51",
+    "scripts/export_screenlab_pilot.mjs": "6f3ee63d71dd1eb5feac531664bdde74096d29406542c2931f46ae48314e7a09",
+    ".github/workflows/checks.yml": "23163707d2ce03c0a1bc71a7b8da619d3d38ad514597a209da080c387dd691b4",
+    ".github/workflows/screenlab-arduino-compile.yml": "37ee8e46d2316aa8d9a4fcbdd0e0d8673d0300648bd87955346ebe895b57f48d"
+  }
+}
