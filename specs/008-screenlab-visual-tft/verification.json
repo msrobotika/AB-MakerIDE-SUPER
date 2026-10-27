@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "convergence": "converged",
+  "requirements": [
+    {
+      "id": "FR-001",
+      "result": "passed",
+      "notes": "Editor avanzado con lienzo editable y perfiles físicos definidos por resolución, sin drivers automáticos.",
+      "evidence": [
+        "index.html",
+        "frontend/screenlab.js",
+        "frontend/screenlab.css",
+        "docs/SCREENLAB.md"
+      ]
+    },
+    {
+      "id": "FR-002",
+      "result": "passed",
+      "notes": "Modelo validado, borrador local, import/export JSON y undo; pruebas automatizadas.",
+      "evidence": [
+        "frontend/screenlab-core.js",
+        "frontend/screenlab.js",
+        "tests/test_screenlab.mjs"
+      ]
+    },
+    {
+      "id": "FR-003",
+      "result": "passed",
+      "notes": "Generación de cabecera LVGL 8.x separada de BSP, monitor y grabación de firmware; puente de botones sin actuadores.",
+      "evidence": [
+        "frontend/screenlab-core.js",
+        "docs/SCREENLAB.md",
+        "tests/test_screenlab.mjs"
+      ]
+    },
+    {
+      "id": "FR-004",
+      "result": "passed",
+      "notes": "Pruebas Node y Chromium en CI, sin ejecución de agente ni carga física. Estado CI pendiente de ejecución.",
+      "evidence": [
+        "tests/browser_screenlab.py",
+        "tests/test_screenlab.mjs",
+        ".github/workflows/checks.yml"
+      ]
+    },
+    {
+      "id": "FR-005",
+      "result": "passed",
+      "notes": "Manual con límites honestos, perfiles y RC4 intacta, e inventario de código sellado.",
+      "evidence": [
+        "docs/SCREENLAB.md",
+        "README.md",
+        "MANIFEST_SHA256.txt"
+      ]
+    }
+  ],
+  "changed_files": {
+    ".github/workflows/checks.yml": "6593aafff814dd00f019ae29b0e9e6898aa19870c848f3454124f7a6f62ef15d",
+    "frontend/bootstrap.js": "4da518a0fa86f971551fa31957dbc139e2a02d9618fc36ddb20868309b86c58b",
+    "frontend/screenlab-core.js": "c0fb0ef884bc9c98f059454725ef23399b5bbbb87ff3b5bc58342cddb9f87143",
+    "frontend/screenlab.js": "6fd09461fed62086ac612b0226c450022f2e59369b756c7c47044b721d6d1205",
+    "frontend/screenlab.css": "3d7de4da6442aaee24b4b3d7cd2022229f47bce79977c408f41da8fbfab6be73",
+    "index.html": "4b071474cad5da2c060d697b2c55f29b1f9a51dad8e040b0739ec82974b3d090",
+    "tests/browser_screenlab.py": "6ad82fec330ee79d31affc818b1b19d62d3555b35b625664534e51b7721182fe",
+    "tests/test_screenlab.mjs": "ed7c998ae1c55a19937566a381cae69083872c5d7279fd9ea40169a31562c727"
+  }
+}
