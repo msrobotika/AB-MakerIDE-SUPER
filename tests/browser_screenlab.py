@@ -13,6 +13,8 @@ sys.path.insert(0, str(ROOT))
 
 from playwright.sync_api import sync_playwright
 import server
+from ab_makeride.agent_runtime import AgentJobManager
+from ab_makeride.mcp_bridge import MCPSettings
 
 
 def main():
@@ -37,6 +39,8 @@ def main():
 
     with (
         tempfile.TemporaryDirectory() as tmp,
+        patch.object(server, "AGENT_JOBS", AgentJobManager(Path(tmp) / "sessions")),
+        patch.object(server, "MCP_SETTINGS", MCPSettings(Path(tmp) / "private" / "mcp.json")),
         patch.object(server, "board_catalog", return_value=catalog),
         patch.object(server, "scan_ports", ports),
         patch.object(server, "BOARD_IDENTIFICATION_ENABLED", False),
@@ -60,6 +64,9 @@ def main():
 
                 page.route("**/api/**", guard)
                 page.goto("http://127.0.0.1:" + str(http.server_port), wait_until="domcontentloaded")
+                page.wait_for_function(
+                    "() => typeof document.querySelector('#showScreenLab').onclick === 'function'"
+                )
                 page.locator("#extraTools summary").click()
                 page.locator("#showScreenLab").click()
                 dlg = page.locator("#screenLabDialog")
