@@ -6,13 +6,23 @@ import { generateArduinoSketch, rgb565 } from '../frontend/screenlab-sketch.js';
 test('IdeaSpark sketch has documented pins, rotation and safe boot', () => {
   const code = generateArduinoSketch(addWidget(createProject('ideaspark'), 'bar'));
   for (const term of [
-    '#include <Arduino.h>', '#include <Adafruit_ST7789.h>',
-    'SL_CLK = 18', 'SL_MOSI = 23', 'SL_CS = 15',
-    'SL_DC = 2', 'SL_RST = 4', 'SL_BL = 32',
-    'tft.init(135, 240);', 'tft.setRotation(1);',
-    'tft.drawRect(', 'tft.fillRect(', 'void setup()', 'void loop()',
+    '#include <Arduino.h>',
+    '#include <Adafruit_ST7789.h>',
+    'SL_CLK = 18',
+    'SL_MOSI = 23',
+    'SL_CS = 15',
+    'SL_DC = 2',
+    'SL_RST = 4',
+    'SL_BL = 32',
+    'tft.init(135, 240);',
+    'tft.setRotation(1);',
+    'tft.drawRect(',
+    'tft.fillRect(',
+    'void setup()',
+    'void loop()',
     'SCREENLAB_STATIC_READY profile=ideaspark touch=OFF',
-  ]) assert.ok(code.includes(term), term);
+  ])
+    assert.ok(code.includes(term), term);
   assert.equal(code.includes('lvgl.h'), false);
   assert.equal(code.includes('XPT2046_Touchscreen.h'), false);
   assert.equal(code.includes('WiFi.h'), false);
@@ -27,7 +37,8 @@ test('CYD sketch uses separate HSPI and never enables touch or SD', () => {
     'pinMode(5, OUTPUT);',
     'digitalWrite(5, HIGH);',
     'pinMode(21, OUTPUT);',
-  ]) assert.ok(code.includes(token), token);
+  ])
+    assert.ok(code.includes(token), token);
   assert.ok(!code.includes('touch.begin('));
   assert.ok(!code.includes('SD.begin('));
 });
@@ -66,7 +77,8 @@ test('RGB888 palette is converted exactly to Adafruit RGB565', () => {
     ['#0000ff', '0x001F'],
     ['#ffffff', '0xFFFF'],
     ['#000000', '0x0000'],
-  ]) assert.equal(rgb565(source), expected);
+  ])
+    assert.equal(rgb565(source), expected);
   assert.throws(() => rgb565('0xff0000'), /RGB888/);
   assert.throws(() => rgb565('#xyzxyz'), /RGB888/);
   const design = createProject('ideaspark');
