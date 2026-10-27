@@ -3,6 +3,7 @@
 Run from the repository root on a Windows x64 CI runner. No Arduino CLI or
 vendor SDK is bundled or installed; no hardware accesses occur at build time.
 """
+
 from pathlib import Path
 import subprocess
 import sys

@@ -1,4 +1,5 @@
 """Windows standalone entrypoint: keep user data outside the uninstallable program folder."""
+
 import os
 from pathlib import Path
 
