@@ -30,8 +30,12 @@ def main():
             raise AssertionError(name)
 
     catalog = {
-        "ok": True, "boards": [{"fqbn": "arduino:avr:uno", "name": "Arduino Uno"}],
-        "count": 1, "source": "CONTROLLED", "error": "", "warning": "",
+        "ok": True,
+        "boards": [{"fqbn": "arduino:avr:uno", "name": "Arduino Uno"}],
+        "count": 1,
+        "source": "CONTROLLED",
+        "error": "",
+        "warning": "",
     }
 
     def ports(*, diagnostics=False):
@@ -63,10 +67,13 @@ def main():
                         route.continue_()
 
                 page.route("**/api/**", guard)
-                page.goto("http://127.0.0.1:" + str(http.server_port), wait_until="domcontentloaded")
+                page.goto(
+                    "http://127.0.0.1:" + str(http.server_port), wait_until="domcontentloaded"
+                )
                 page.wait_for_function(
                     "() => typeof document.querySelector('#showScreenLab').onclick === 'function'"
                 )
+                previous_sketch = page.locator("#code").input_value()
                 page.locator("#extraTools summary").click()
                 page.locator("#showScreenLab").click()
                 dlg = page.locator("#screenLabDialog")
@@ -99,7 +106,7 @@ def main():
                 )
                 check(
                     "no sketch was overwritten",
-                    "Prueba minima para Arduino Uno" in page.locator("#code").input_value(),
+                    page.locator("#code").input_value() == previous_sketch,
                 )
                 page.screenshot(path=str(args.outputs / "screenlab-ideaspark-real.png"), full_page=True)
                 check("no device/agent operation invoked", not report["hardware_actions"])
