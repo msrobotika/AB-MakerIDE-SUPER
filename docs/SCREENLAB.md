@@ -33,3 +33,14 @@ Fase siguiente: perfil de BSP explícito y comprobado, integración de LVGL en p
 ## Evidencias visuales publicadas
 
 [Captura CYD 320×240](evidence/screenlab/screenlab-cyd-real.png) · [Captura IdeaSpark 240×135](evidence/screenlab/screenlab-ideaspark-real.png) · [Informe, procedencia y hashes](evidence/screenlab/README.md). Imágenes de Chromium real con placa controlada, no grabación TFT física.
+
+## AB MotionLab — animaciones ligeras inspiradas en CSS (fase R1 experimental)
+
+La captura del vídeo aportado explica la conversión de CSS en gráficos para ESP32. ScreenLab puede evitar almacenar secuencias de bitmaps para **efectos simples** y expresar sus movimientos como animaciones nativas de LVGL 8.x:
+
+- Seleccionar un componente en ScreenLab y escoger **Aparecer**, **Deslizar** o **Pulso de anchura**; duración acotada **200–5000 ms**. **Sin animación** sigue siendo el valor predeterminado.
+- Pulsar **Vista previa animada** para ejecutar el movimiento **solo en el navegador**; respeta `prefers-reduced-motion`.
+- Exportar la cabecera .h e integrar una aplicación propia con LVGL 8.x. El generador produce `lv_anim_t`, `lv_anim_set_var`, `lv_anim_set_values`, `lv_anim_set_time` y `lv_anim_start`. La ejecución es de una pasada al construir la UI, sin procesos en segundo plano.
+- Los proyectos antiguos `ab-screenlab-v1` sin campos de animación siguen válidos. Solo se aceptan nombres de preset conocidos y duraciones enteras acotadas; no se evalúa CSS/JS importado.
+
+**Limitaciones:** esto **no convierte CSS arbitrario, elementos 3D ni vídeos a firmware** y la previsualización no demuestra render idéntico a TFT. Se necesita el BSP/driver y prueba de memoria/velocidad reales. El siguiente módulo deberá convertir gráficos CSS complejos **fuera del ESP32**, con navegador sin red, fotogramas propios, RGB565/paleta, deduplicación, presupuesto de flash/RAM y opciones de almacenamiento externo. Un frame completo CYD RGB565 320×240 ocupa 153.600 bytes antes de compresión; diez frames ocuparían 1.536.000 bytes. En IdeaSpark 240×135 ocupa 64.800 bytes por frame. No copiar recursos del vídeo ni marcas/gráficos de terceros. El motor de animación LVGL 8.4 está documentado por [LVGL Open](https://lvgl.io/docs/open/8.4/overview/animation).
