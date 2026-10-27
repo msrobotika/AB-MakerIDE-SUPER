@@ -101,14 +101,17 @@ def main():
                 code = page.locator("#slCode").input_value()
                 check(
                     "code generator outputs explicit LVGL UI only",
-                    "lv_bar_create" in code and "lv_obj_add_event_cb" in code
+                    "lv_bar_create" in code
+                    and "lv_obj_add_event_cb" in code
                     and "No display/touch driver included" in code,
                 )
                 check(
                     "no sketch was overwritten",
                     page.locator("#code").input_value() == previous_sketch,
                 )
-                page.screenshot(path=str(args.outputs / "screenlab-ideaspark-real.png"), full_page=True)
+                page.screenshot(
+                    path=str(args.outputs / "screenlab-ideaspark-real.png"), full_page=True
+                )
                 check("no device/agent operation invoked", not report["hardware_actions"])
                 browser.close()
         finally:
