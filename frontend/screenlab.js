@@ -91,7 +91,9 @@ export function initialize(context) {
   const dialog = document.querySelector('#screenLabDialog');
   dialog.innerHTML = template(); // Static audited markup; never interpolate user strings.
   const el = (id) => dialog.querySelector('#' + id);
-  const status = (message) => { el('slStatus').textContent = message; };
+  const status = (message) => {
+    el('slStatus').textContent = message;
+  };
   let project;
   try {
     const stored = localStorage.getItem(STORE);
@@ -123,12 +125,20 @@ export function initialize(context) {
   const props = () => {
     const v = project.widgets.find((item) => item.id === selected);
     el('slProps').hidden = !v;
-    el('slPickHint').textContent = v ? 'Componente ' + v.id + ' · ' + v.type : 'Selecciona un componente';
+    el('slPickHint').textContent = v
+      ? 'Componente ' + v.id + ' · ' + v.type
+      : 'Selecciona un componente';
     if (!v) return;
     for (const [id, value] of [
-      ['slText', v.text], ['slColor', v.color], ['slX', v.x],
-      ['slY', v.y], ['slW', v.width], ['slH', v.height], ['slValue', v.value],
-    ]) el(id).value = String(value);
+      ['slText', v.text],
+      ['slColor', v.color],
+      ['slX', v.x],
+      ['slY', v.y],
+      ['slW', v.width],
+      ['slH', v.height],
+      ['slValue', v.value],
+    ])
+      el(id).value = String(value);
     el('slValueBox').hidden = v.type !== 'bar';
   };
   function render() {
@@ -138,8 +148,9 @@ export function initialize(context) {
     el('slProfile').value = project.profile;
     el('slName').value = project.name;
     el('slBackground').value = project.background;
-    el('slCanvasInfo').textContent = spec.width + '×' + spec.height + ' px · ' + project.widgets.length + ' componentes';
-    scale = Math.min(2, (Math.max(280, el('slStage').parentElement.clientWidth - 40)) / spec.width);
+    el('slCanvasInfo').textContent =
+      spec.width + '×' + spec.height + ' px · ' + project.widgets.length + ' componentes';
+    scale = Math.min(2, Math.max(280, el('slStage').parentElement.clientWidth - 40) / spec.width);
     stage.style.width = spec.width * scale + 'px';
     stage.style.height = spec.height * scale + 'px';
     canvas.style.width = spec.width + 'px';
@@ -180,8 +191,20 @@ export function initialize(context) {
         node.setPointerCapture(event.pointerId);
         const onMove = (e) => {
           const specNow = PROFILES[project.profile];
-          lastX = Math.max(0, Math.min(specNow.width - v.width, Math.round((origin.px + (e.clientX - origin.x) / scale) / 4) * 4));
-          lastY = Math.max(0, Math.min(specNow.height - v.height, Math.round((origin.py + (e.clientY - origin.y) / scale) / 4) * 4));
+          lastX = Math.max(
+            0,
+            Math.min(
+              specNow.width - v.width,
+              Math.round((origin.px + (e.clientX - origin.x) / scale) / 4) * 4,
+            ),
+          );
+          lastY = Math.max(
+            0,
+            Math.min(
+              specNow.height - v.height,
+              Math.round((origin.py + (e.clientY - origin.y) / scale) / 4) * 4,
+            ),
+          );
           node.style.left = lastX + 'px';
           node.style.top = lastY + 'px';
         };
@@ -249,7 +272,12 @@ export function initialize(context) {
   el('slName').addEventListener('change', (e) => {
     const next = structuredClone(project);
     next.name = e.target.value;
-    try { changes(next); } catch (error) { status(error.message); render(); }
+    try {
+      changes(next);
+    } catch (error) {
+      status(error.message);
+      render();
+    }
   });
   el('slBackground').addEventListener('change', (e) => {
     const next = structuredClone(project);
@@ -257,8 +285,12 @@ export function initialize(context) {
     changes(next);
   });
   el('slProfile').addEventListener('change', (e) => {
-    try { changes(resizeProfile(project, e.target.value)); }
-    catch (error) { status(error.message); render(); }
+    try {
+      changes(resizeProfile(project, e.target.value));
+    } catch (error) {
+      status(error.message);
+      render();
+    }
   });
   dialog.querySelectorAll('[data-sl-add]').forEach((button) => {
     button.onclick = () => {
@@ -266,15 +298,24 @@ export function initialize(context) {
         const next = addWidget(project, button.dataset.slAdd);
         selected = next.widgets.at(-1).id;
         changes(next);
-      } catch (error) { status(error.message); }
+      } catch (error) {
+        status(error.message);
+      }
     };
   });
   for (const [id, field] of [
-    ['slText', 'text'], ['slColor', 'color'], ['slX', 'x'], ['slY', 'y'],
-    ['slW', 'width'], ['slH', 'height'], ['slValue', 'value'],
+    ['slText', 'text'],
+    ['slColor', 'color'],
+    ['slX', 'x'],
+    ['slY', 'y'],
+    ['slW', 'width'],
+    ['slH', 'height'],
+    ['slValue', 'value'],
   ]) {
     el(id).addEventListener('change', (event) => {
-      const value = ['text', 'color'].includes(field) ? event.target.value : Number(event.target.value);
+      const value = ['text', 'color'].includes(field)
+        ? event.target.value
+        : Number(event.target.value);
       edit(field, value);
     });
   }
@@ -288,12 +329,21 @@ export function initialize(context) {
     persist();
   };
   el('slReset').onclick = async () => {
-    if (!(await context.confirmAction('¿Crear un diseño nuevo? Exporta primero el JSON actual si quieres conservarlo.'))) return;
+    if (
+      !(await context.confirmAction(
+        '¿Crear un diseño nuevo? Exporta primero el JSON actual si quieres conservarlo.',
+      ))
+    )
+      return;
     selected = null;
     changes(createProject(project.profile));
   };
   el('slSaveJSON').onclick = () => {
-    downloadFile('ab-screenlab-design.json', JSON.stringify(project, null, 2) + '\n', 'application/json');
+    downloadFile(
+      'ab-screenlab-design.json',
+      JSON.stringify(project, null, 2) + '\n',
+      'application/json',
+    );
     status('Diseño JSON exportado. Puedes volver a importarlo.');
   };
   el('slImport').onclick = () => el('slFile').click();
@@ -304,11 +354,18 @@ export function initialize(context) {
     try {
       if (file.size > 200000) throw Error('Archivo JSON demasiado grande');
       const next = validateProject(JSON.parse(await file.text()));
-      if (!(await context.confirmAction('¿Abrir el diseño importado? Se conservará un deshacer local.'))) return;
+      if (
+        !(await context.confirmAction(
+          '¿Abrir el diseño importado? Se conservará un deshacer local.',
+        ))
+      )
+        return;
       selected = null;
       changes(structuredClone(next));
       status('Proyecto ScreenLab importado y validado.');
-    } catch (error) { status('Importación rechazada: ' + error.message); }
+    } catch (error) {
+      status('Importación rechazada: ' + error.message);
+    }
   };
   el('slGenerate').onclick = () => {
     try {
@@ -316,7 +373,9 @@ export function initialize(context) {
       el('slCode').value = generated;
       el('slCode').closest('details').open = true;
       status('Cabecera LVGL generada. Integra el driver y táctil antes de compilar o grabar.');
-    } catch (error) { status(error.message); }
+    } catch (error) {
+      status(error.message);
+    }
   };
   el('slSaveHeader').onclick = () => {
     try {
@@ -325,7 +384,9 @@ export function initialize(context) {
       el('slCode').value = source;
       downloadFile('ab_screenlab_ui.h', source, 'text/plain');
       status('Cabecera descargada. Requiere LVGL 8.x y driver externo: NO es firmware completo.');
-    } catch (error) { status(error.message); }
+    } catch (error) {
+      status(error.message);
+    }
   };
   const viewportObserver = new ResizeObserver(() => {
     if (dialog.open) render();

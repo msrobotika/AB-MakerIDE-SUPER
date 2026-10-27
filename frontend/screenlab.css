@@ -10,7 +10,9 @@
   background: #0e1a27;
   box-shadow: 0 20px 90px #000c;
 }
-.screenlab-dialog::backdrop { background: #020810d9; }
+.screenlab-dialog::backdrop {
+  background: #020810d9;
+}
 .screenlab-dialog .sl-head {
   display: flex;
   justify-content: space-between;
@@ -20,70 +22,196 @@
   background: #142b3d;
   border-bottom: 1px solid #315368;
 }
-.screenlab-dialog .sl-head strong { font-size: 20px; }
-.screenlab-dialog .sl-head p { font-size: 12px; margin: 4px 0 0; color: #a5c1d4; }
+.screenlab-dialog .sl-head strong {
+  font-size: 20px;
+}
+.screenlab-dialog .sl-head p {
+  font-size: 12px;
+  margin: 4px 0 0;
+  color: #a5c1d4;
+}
 .screenlab-dialog .sl-toolbar {
-  display: flex; align-items: end; flex-wrap: wrap; gap: 12px;
-  padding: 12px 18px; border-bottom: 1px solid #294357;
+  display: flex;
+  align-items: end;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 12px 18px;
+  border-bottom: 1px solid #294357;
 }
-.screenlab-dialog label { display: grid; gap: 4px; color: #b3cedc; font-size: 12px; }
-.screenlab-dialog .sl-toolbar label:nth-child(2) { min-width: 180px; flex: 1; }
-.screenlab-dialog .sl-toolbar .selector { max-width: 270px; }
-.screenlab-dialog input[type='color'] { height: 33px; width: 62px; border: 0; background: transparent; cursor: pointer; }
+.screenlab-dialog label {
+  display: grid;
+  gap: 4px;
+  color: #b3cedc;
+  font-size: 12px;
+}
+.screenlab-dialog .sl-toolbar label:nth-child(2) {
+  min-width: 180px;
+  flex: 1;
+}
+.screenlab-dialog .sl-toolbar .selector {
+  max-width: 270px;
+}
+.screenlab-dialog input[type='color'] {
+  height: 33px;
+  width: 62px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
 .screenlab-dialog .sl-editor {
-  display: grid; grid-template-columns: 155px minmax(280px, 1fr) 205px;
-  gap: 12px; padding: 12px 16px; min-height: 320px;
+  display: grid;
+  grid-template-columns: 155px minmax(280px, 1fr) 205px;
+  gap: 12px;
+  padding: 12px 16px;
+  min-height: 320px;
 }
-.screenlab-dialog .sl-palette, .screenlab-dialog .sl-properties {
-  background: #142535; border: 1px solid #304658; border-radius: 8px;
-  padding: 12px; display: flex; flex-direction: column; gap: 10px; min-width: 0;
+.screenlab-dialog .sl-palette,
+.screenlab-dialog .sl-properties {
+  background: #142535;
+  border: 1px solid #304658;
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
 }
-.screenlab-dialog .sl-properties label input { width: 100%; box-sizing: border-box; }
-.screenlab-dialog .sl-palette p, .screenlab-dialog .sl-warning {
-  font-size: 11px; color: #a1bacb; line-height: 1.5;
+.screenlab-dialog .sl-properties label input {
+  width: 100%;
+  box-sizing: border-box;
 }
-.screenlab-dialog .sl-coordinates { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.screenlab-dialog .sl-palette p,
+.screenlab-dialog .sl-warning {
+  font-size: 11px;
+  color: #a1bacb;
+  line-height: 1.5;
+}
+.screenlab-dialog .sl-coordinates {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
 .screenlab-dialog .sl-workspace {
-  display: flex; flex-direction: column; border: 1px solid #304658;
-  border-radius: 9px; padding: 12px; background: #101d2b; min-width: 0;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #304658;
+  border-radius: 9px;
+  padding: 12px;
+  background: #101d2b;
+  min-width: 0;
 }
-.screenlab-dialog .sl-canvas-header { display: flex; justify-content: space-between; gap: 6px; font-size: 12px; }
-.screenlab-dialog .sl-canvas-header small { color: #9ebacd; }
+.screenlab-dialog .sl-canvas-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  font-size: 12px;
+}
+.screenlab-dialog .sl-canvas-header small {
+  color: #9ebacd;
+}
 .screenlab-dialog .sl-viewport {
-  margin-top: 12px; min-height: 255px; flex: 1; display: flex; justify-content: center;
-  align-items: center; overflow: auto; background-color: #0c1622;
+  margin-top: 12px;
+  min-height: 255px;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: auto;
+  background-color: #0c1622;
   background-image: radial-gradient(#314659 1px, transparent 1px);
-  background-size: 15px 15px; border-radius: 8px;
+  background-size: 15px 15px;
+  border-radius: 8px;
 }
-.screenlab-dialog .sl-stage { flex: 0 0 auto; position: relative; }
+.screenlab-dialog .sl-stage {
+  flex: 0 0 auto;
+  position: relative;
+}
 .screenlab-dialog .sl-canvas {
-  position: absolute; top: 0; left: 0; transform-origin: top left;
-  overflow: hidden; box-shadow: 0 0 0 3px #425974, 0 8px 30px #0008;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: top left;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 3px #425974,
+    0 8px 30px #0008;
 }
 .screenlab-dialog .sl-widget {
-  position: absolute; box-sizing: border-box; font: bold 13px system-ui;
-  text-align: center; border: 1px solid #d0efff44; border-radius: 5px;
-  cursor: grab; touch-action: none; user-select: none; overflow: hidden;
+  position: absolute;
+  box-sizing: border-box;
+  font: bold 13px system-ui;
+  text-align: center;
+  border: 1px solid #d0efff44;
+  border-radius: 5px;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  overflow: hidden;
 }
-.screenlab-dialog .sl-widget:active { cursor: grabbing; }
-.screenlab-dialog .sl-widget.selected { outline: 2px solid #ffda69; outline-offset: 1px; z-index: 2; }
-.screenlab-dialog .sl-label { text-align: left; border: 0; border-radius: 0; font-size: 15px; }
-.screenlab-dialog .sl-panel { border: 2px solid #b1c5d266; }
-.screenlab-dialog .sl-bar { background: #324454 !important; padding: 3px; }
-.screenlab-dialog .sl-bar-fill { background: #5cf5b0; display: block; height: 100%; border-radius: 3px; }
+.screenlab-dialog .sl-widget:active {
+  cursor: grabbing;
+}
+.screenlab-dialog .sl-widget.selected {
+  outline: 2px solid #ffda69;
+  outline-offset: 1px;
+  z-index: 2;
+}
+.screenlab-dialog .sl-label {
+  text-align: left;
+  border: 0;
+  border-radius: 0;
+  font-size: 15px;
+}
+.screenlab-dialog .sl-panel {
+  border: 2px solid #b1c5d266;
+}
+.screenlab-dialog .sl-bar {
+  background: #324454 !important;
+  padding: 3px;
+}
+.screenlab-dialog .sl-bar-fill {
+  background: #5cf5b0;
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+}
 .screenlab-dialog .sl-exports {
-  display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
-  padding: 10px 16px; border-top: 1px solid #294357;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  padding: 10px 16px;
+  border-top: 1px solid #294357;
 }
-.screenlab-dialog .sl-exports small { color: #a4c4d4; flex: 1; min-width: 190px; }
-.screenlab-dialog .sl-source-panel { margin: 0 16px 14px; font-size: 12px; }
+.screenlab-dialog .sl-exports small {
+  color: #a4c4d4;
+  flex: 1;
+  min-width: 190px;
+}
+.screenlab-dialog .sl-source-panel {
+  margin: 0 16px 14px;
+  font-size: 12px;
+}
 .screenlab-dialog .sl-source-panel textarea {
-  margin-top: 6px; min-height: 115px; font-family: monospace;
-  white-space: pre; width: 100%; box-sizing: border-box;
+  margin-top: 6px;
+  min-height: 115px;
+  font-family: monospace;
+  white-space: pre;
+  width: 100%;
+  box-sizing: border-box;
 }
 @media (max-width: 790px) {
-  .screenlab-dialog .sl-editor { grid-template-columns: 1fr; }
-  .screenlab-dialog .sl-palette { flex-direction: row; flex-wrap: wrap; }
-  .screenlab-dialog .sl-properties { display: block; }
-  .screenlab-dialog .sl-viewport { min-height: 250px; }
+  .screenlab-dialog .sl-editor {
+    grid-template-columns: 1fr;
+  }
+  .screenlab-dialog .sl-palette {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .screenlab-dialog .sl-properties {
+    display: block;
+  }
+  .screenlab-dialog .sl-viewport {
+    min-height: 250px;
+  }
 }

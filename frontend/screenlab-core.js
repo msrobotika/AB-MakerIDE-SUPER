@@ -11,14 +11,25 @@ const textSafe = (s) => String(s ?? '').slice(0, 64);
 const round = (n) => Math.round(n);
 const colorOk = (x) => /^#[0-9a-fA-F]{6}$/.test(x);
 const make = (id, type, x, y, width, height, text, color) => ({
-  id, type, x, y, width, height, text, color, value: 50,
+  id,
+  type,
+  x,
+  y,
+  width,
+  height,
+  text,
+  color,
+  value: 50,
 });
 export function createProject(profile = 'cyd') {
   if (!PROFILES[profile]) throw Error('Perfil no disponible');
   const w = PROFILES[profile].width;
   return {
-    format: 'ab-screenlab-v1', version: 1, profile,
-    name: 'Mi panel Maker', background: '#122238',
+    format: 'ab-screenlab-v1',
+    version: 1,
+    profile,
+    name: 'Mi panel Maker',
+    background: '#122238',
     widgets: [
       make(1, 'label', 12, 10, Math.min(200, w - 24), 32, 'MS ROBOTIKA', '#77e0ff'),
       make(2, 'button', 12, 58, Math.min(136, w - 24), 42, 'ARRANCAR', '#138b77'),
@@ -55,8 +66,7 @@ export function validateProject(p) {
     assertNumber(v.height, 12, spec.height);
     if (v.x + v.width > spec.width || v.y + v.height > spec.height)
       throw Error('Componente fuera de la pantalla');
-    if (typeof v.text !== 'string' || v.text.length > 64)
-      throw Error('Texto demasiado largo');
+    if (typeof v.text !== 'string' || v.text.length > 64) throw Error('Texto demasiado largo');
     if (!colorOk(v.color)) throw Error('Color inválido');
     assertNumber(v.value, 0, 100);
   }
@@ -103,8 +113,12 @@ export function addWidget(p, type) {
 }
 const cString = (s) =>
   '"' +
-  s.replaceAll('\\', '\\\\').replaceAll('"', '\\"').replaceAll('\n', '\\n')
-    .replaceAll('\r', '').replaceAll('\t', ' ') +
+  s
+    .replaceAll('\\', '\\\\')
+    .replaceAll('"', '\\"')
+    .replaceAll('\n', '\\n')
+    .replaceAll('\r', '')
+    .replaceAll('\t', ' ') +
   '"';
 export function generateLvgl(p) {
   validateProject(p);
@@ -135,22 +149,40 @@ export function generateLvgl(p) {
   ];
   for (const v of p.widgets) {
     const node = 'sl_' + v.id;
-    const ct = v.type === 'button' ? 'lv_btn_create' : v.type === 'bar' ? 'lv_bar_create' : v.type === 'panel' ? 'lv_obj_create' : 'lv_label_create';
+    const ct =
+      v.type === 'button'
+        ? 'lv_btn_create'
+        : v.type === 'bar'
+          ? 'lv_bar_create'
+          : v.type === 'panel'
+            ? 'lv_obj_create'
+            : 'lv_label_create';
     out.push('  lv_obj_t *' + node + ' = ' + ct + '(parent);');
     out.push('  lv_obj_set_pos(' + node + ', ' + v.x + ', ' + v.y + ');');
     out.push('  lv_obj_set_size(' + node + ', ' + v.width + ', ' + v.height + ');');
     if (v.type === 'label') {
       out.push('  lv_label_set_text(' + node + ', ' + cString(v.text) + ');');
-      out.push('  lv_obj_set_style_text_color(' + node + ', lv_color_hex(0x' + v.color.slice(1) + '), 0);');
+      out.push(
+        '  lv_obj_set_style_text_color(' + node + ', lv_color_hex(0x' + v.color.slice(1) + '), 0);',
+      );
     } else {
-      out.push('  lv_obj_set_style_bg_color(' + node + ', lv_color_hex(0x' + v.color.slice(1) + '), 0);');
+      out.push(
+        '  lv_obj_set_style_bg_color(' + node + ', lv_color_hex(0x' + v.color.slice(1) + '), 0);',
+      );
       if (v.type === 'button') {
         out.push('  lv_obj_t *txt_' + v.id + ' = lv_label_create(' + node + ');');
         out.push('  lv_label_set_text(txt_' + v.id + ', ' + cString(v.text) + ');');
         out.push('  lv_obj_center(txt_' + v.id + ');');
-        out.push('  lv_obj_add_event_cb(' + node + ', ab_screenlab_clicked, LV_EVENT_CLICKED, reinterpret_cast<void *>(static_cast<intptr_t>(' + v.id + ')));');
+        out.push(
+          '  lv_obj_add_event_cb(' +
+            node +
+            ', ab_screenlab_clicked, LV_EVENT_CLICKED, reinterpret_cast<void *>(static_cast<intptr_t>(' +
+            v.id +
+            ')));',
+        );
       }
-      if (v.type === 'bar') out.push('  lv_bar_set_value(' + node + ', ' + v.value + ', LV_ANIM_OFF);');
+      if (v.type === 'bar')
+        out.push('  lv_bar_set_value(' + node + ', ' + v.value + ', LV_ANIM_OFF);');
     }
   }
   out.push('}', '');
