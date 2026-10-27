@@ -103,3 +103,13 @@ jobs:
       - run: python tests/browser_screenlab.py --outputs work/screenlab-ci
       - run: python tests/browser_security.py --outputs work/security-ci
       - run: python tests/browser_manual_build.py --outputs work/manual-build-ci
+      - name: Preserve genuine ScreenLab Chromium screenshot
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenlab-chromium-${{ github.run_id }}
+          path: |
+            work/screenlab-ci/screenlab-ideaspark-real.png
+            work/screenlab-ci/report.json
+          if-no-files-found: warn
+          retention-days: 30
