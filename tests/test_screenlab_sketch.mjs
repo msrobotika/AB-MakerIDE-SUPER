@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createProject, addWidget } from '../frontend/screenlab-core.js';
-import { generateArduinoSketch } from '../frontend/screenlab-sketch.js';
+import { generateArduinoSketch, rgb565 } from '../frontend/screenlab-sketch.js';
 
 test('IdeaSpark sketch has documented pins, rotation and safe boot', () => {
   const code = generateArduinoSketch(addWidget(createProject('ideaspark'), 'bar'));
@@ -57,4 +57,23 @@ test('generated sketch remains independent of state and deterministic', () => {
   const snapshot = JSON.stringify(p);
   assert.equal(generateArduinoSketch(p), generateArduinoSketch(p));
   assert.equal(JSON.stringify(p), snapshot);
+});
+
+test('RGB888 palette is converted exactly to Adafruit RGB565', () => {
+  for (const [source, expected] of [
+    ['#ff0000', '0xF800'],
+    ['#00ff00', '0x07E0'],
+    ['#0000ff', '0x001F'],
+    ['#ffffff', '0xFFFF'],
+    ['#000000', '0x0000'],
+  ]) assert.equal(rgb565(source), expected);
+  assert.throws(() => rgb565('0xff0000'), /RGB888/);
+  assert.throws(() => rgb565('#xyzxyz'), /RGB888/);
+  const design = createProject('ideaspark');
+  design.background = '#ff0000';
+  design.widgets[0].color = '#00ff00';
+  const code = generateArduinoSketch(design);
+  assert.ok(code.includes('tft.fillScreen(0xF800);'));
+  assert.ok(code.includes('tft.setTextColor(0x07E0);'));
+  assert.ok(!code.includes('tft.fillScreen(0xFF0000);'));
 });
