@@ -33,6 +33,7 @@ jobs:
         with:
           python-version: '3.13'
       - run: python tests/manifest.py
+      - run: python tests/test_download_landing.py
       - uses: actions/setup-node@v7
         with:
           node-version: '22'

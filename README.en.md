@@ -4,6 +4,19 @@
 
 **Release freeze:** code changes are reviewed as pull requests. No daily public releases; RC4 is a **pre-release, not stable software**. [Release governance](docs/RELEASE_POLICY.md) · [Current documentation index](docs/README.md).
 
+## ⬇️ Download and choose the right edition
+
+| Goal | Direct download | Included |
+| --- | --- | --- |
+| **Try the published RC4 candidate** | **[⬇ Download RC4 portable ZIP](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/download/v1.0.0-rc.4/AB-MakerIDE-SUPER-1.0.0-rc.4-IA-actualizada.zip)** | RC4 editor and AI activity. **Does not include later ScreenLab, MotionLab or MCP catalogue.** |
+| **Evaluate the newest development features** | **[⬇ Download latest development source ZIP (main)](https://github.com/msrobotika/AB-MakerIDE-SUPER/archive/refs/heads/main.zip)** | ScreenLab, MotionLab, optional MCP catalogue and CYD/IdeaSpark Arduino sketch export. **Source snapshot, not a tested installer/release artifact.** |
+
+**There is no published Windows `.exe`/`.msi` installer.** The RC4 portable ZIP requires **Python 3.10+**; extract into its own folder and run **`INICIAR_WINDOWS.bat`**. Arduino CLI/board cores and any optional serial tools are separate dependencies. Do not mix files between RC4 and `main`. The published RC4 package still has a [distribution audit blocker](https://github.com/msrobotika/AB-MakerIDE-SUPER/issues/11); a future Windows installer is tracked in [#19](https://github.com/msrobotika/AB-MakerIDE-SUPER/issues/19).
+
+[**Spanish step-by-step download/feature guide**](docs/DESCARGAS_Y_VERSIONES.md) · [Installation guide](docs/INSTALACION.md)
+
+![ScreenLab development UI in Chromium — not a physical TFT capture](docs/evidence/screenlab/screenlab-ideaspark-real.png)
+
 ## Real RC4 screenshots
 
 The images below are from **the actual Windows RC4 application** running against the documented CYD ESP32 board, not promotional mockups.

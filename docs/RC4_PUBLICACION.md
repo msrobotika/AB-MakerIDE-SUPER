@@ -2,6 +2,12 @@
 
 **MS ROBOTIKA — IDE local, código abierto (MIT).** Versión candidata (*pre-release*), publicada el 26 de octubre de 2026. **No es una edición estable** ni garantiza compatibilidad universal con cualquier placa. El tag `v1.0.0-rc.4` conserva su fuente e historial originales. El **ZIP vigente de esta misma Release** se actualizó con el Centro de Actividad IA; no representa una validación física nueva.
 
+## Descarga directa de RC4
+
+**[⬇ Descargar RC4 para Windows (.zip portátil)](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/download/v1.0.0-rc.4/AB-MakerIDE-SUPER-1.0.0-rc.4-IA-actualizada.zip)** · [Instalación paso a paso](INSTALACION.md)
+
+Este ZIP no es un instalador `.exe`/`.msi`: requiere Python 3.10+ y `INICIAR_WINDOWS.bat`. **No contiene ScreenLab, MotionLab ni los sketches de pantalla R2A**, que están solo en [`main`](https://github.com/msrobotika/AB-MakerIDE-SUPER) como código de desarrollo. [Diferencias entre descargas](DESCARGAS_Y_VERSIONES.md). La auditoría del ZIP publicado [#11](https://github.com/msrobotika/AB-MakerIDE-SUPER/issues/11) sigue abierta.
+
 ## Capturas reales de la aplicación RC4
 
 [![AB MakerIDE RC4 — editor, grabación real y verificación](https://raw.githubusercontent.com/msrobotika/AB-MakerIDE-SUPER/v1.0.0-rc.4/docs/evidence/cyd-rc4/carga-desde-ide-real.png)](https://github.com/msrobotika/AB-MakerIDE-SUPER/blob/v1.0.0-rc.4/docs/evidence/cyd-rc4/carga-desde-ide-real.png)

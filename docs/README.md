@@ -6,6 +6,7 @@ La edición mantenida es **1.0.0-rc.4 (candidato de lanzamiento)**. Antes de ins
 
 | Necesidad | Guía |
 | --- | --- |
+| **Descargas: RC4 frente al código actualizado, y estado del instalador** | **[DESCARGAS_Y_VERSIONES.md](DESCARGAS_Y_VERSIONES.md)** |
 | Instalación y recuperación | [INSTALACION.md](INSTALACION.md) |
 | Primeros pasos en Windows | [PRUEBAS_EN_WINDOWS.md](PRUEBAS_EN_WINDOWS.md) |
 | Linux y macOS | [LINUX_MACOS.md](LINUX_MACOS.md) |
