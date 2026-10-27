@@ -7,7 +7,6 @@ export const PROFILES = Object.freeze({
 });
 export const TYPES = Object.freeze(['label', 'button', 'bar', 'panel']);
 const WIDGET_LIMIT = 40;
-const textSafe = (s) => String(s ?? '').slice(0, 64);
 const round = (n) => Math.round(n);
 const colorOk = (x) => /^#[0-9a-fA-F]{6}$/.test(x);
 const make = (id, type, x, y, width, height, text, color) => ({
