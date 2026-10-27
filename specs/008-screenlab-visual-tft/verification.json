@@ -65,7 +65,7 @@
     "frontend/screenlab.js": "6fd09461fed62086ac612b0226c450022f2e59369b756c7c47044b721d6d1205",
     "frontend/screenlab.css": "3d7de4da6442aaee24b4b3d7cd2022229f47bce79977c408f41da8fbfab6be73",
     "index.html": "4b071474cad5da2c060d697b2c55f29b1f9a51dad8e040b0739ec82974b3d090",
-    "tests/browser_screenlab.py": "c495753412c764050db238f1f4998a7b571eaedeaf3000da8ddbfaf625959f65",
+    "tests/browser_screenlab.py": "29962ab6c6cee6597dc8a6d20168811b675ee48bb6bb945d5275761248d1f3c2",
     "tests/test_screenlab.mjs": "ed7c998ae1c55a19937566a381cae69083872c5d7279fd9ea40169a31562c727",
     "docs/evidence/screenlab/report.json": "c94f20fdcce8a6c7a78c6960675a1c474ae18ef7de9769b7d1fc5c49618ef875"
   }

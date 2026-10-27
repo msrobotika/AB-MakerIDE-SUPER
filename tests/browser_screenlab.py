@@ -79,9 +79,7 @@ def main():
                 dlg = page.locator("#screenLabDialog")
                 check("ScreenLab opens as advanced modal", dlg.evaluate("(el) => el.open"))
                 check("two initial controls are visible", page.locator(".sl-widget").count() == 2)
-                page.screenshot(
-                    path=str(args.outputs / "screenlab-cyd-real.png"), full_page=True
-                )
+                page.screenshot(path=str(args.outputs / "screenlab-cyd-real.png"), full_page=True)
                 page.locator('[data-sl-add="bar"]').click()
                 check("bar is added", page.locator(".sl-bar").count() == 1)
                 widget = page.locator(".sl-bar")
