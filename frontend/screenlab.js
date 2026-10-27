@@ -392,5 +392,5 @@ export function initialize(context) {
     if (dialog.open) render();
   });
   viewportObserver.observe(el('slStage').parentElement);
-  render();
+  // Lazy render: no ScreenLab styles or widgets before the user opens it.
 }
