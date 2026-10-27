@@ -1,7 +1,6 @@
 // AB ScreenLab: editable visual TFT UI. Optional and isolated from sketches.
 import {
   PROFILES,
-  TYPES,
   addWidget,
   createProject,
   generateLvgl,
@@ -89,7 +88,8 @@ export function define(context) {
 }
 export function initialize(context) {
   const dialog = document.querySelector('#screenLabDialog');
-  dialog.innerHTML = template(); // Static audited markup; never interpolate user strings.
+  const parsed = new DOMParser().parseFromString(template(), 'text/html');
+  dialog.replaceChildren(...parsed.body.childNodes); // Static markup, never user text.
   const el = (id) => dialog.querySelector('#' + id);
   const status = (message) => {
     el('slStatus').textContent = message;
