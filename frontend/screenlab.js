@@ -443,7 +443,9 @@ export function initialize(context) {
       const source = generateArduinoSketch(project);
       const name = project.profile === 'ideaspark' ? 'ScreenLabIdeaSpark' : 'ScreenLabCYD';
       downloadFile(name + '.ino', source, 'text/plain');
-      status('Sketch Adafruit descargado: revisa versión de placa, librerías y pines antes de compilar.');
+      status(
+        'Sketch Adafruit descargado: revisa versión de placa, librerías y pines antes de compilar.',
+      );
     } catch (error) {
       status('Sketch no exportado: ' + error.message);
     }
@@ -473,16 +475,19 @@ export function initialize(context) {
       context.draftBackups = context.draftBackups.slice(0, 7);
       context.rememberAgentProject('');
       context.state.files.cpp = source;
-      context.state.name =
-        project.profile === 'ideaspark' ? 'ScreenLabIdeaSpark' : 'ScreenLabCYD';
-      context.setPhysicalProfile(project.profile === 'ideaspark' ? 'ideaspark-114' : 'esp32-cyd-28');
+      context.state.name = project.profile === 'ideaspark' ? 'ScreenLabIdeaSpark' : 'ScreenLabCYD';
+      context.setPhysicalProfile(
+        project.profile === 'ideaspark' ? 'ideaspark-114' : 'esp32-cyd-28',
+      );
       context.setLang('cpp', false);
       context.$('#code').value = source;
       context.updateHL();
       context.save();
       context.renderSidebar();
       dialog.close();
-      context.toast('Sketch en editor, copia guardada. Instala librerías y pulsa Compilar; NO se ha grabado.');
+      context.toast(
+        'Sketch en editor, copia guardada. Instala librerías y pulsa Compilar; NO se ha grabado.',
+      );
     } catch (error) {
       status('No se ha cambiado el sketch: ' + error.message);
     }

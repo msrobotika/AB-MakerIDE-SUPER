@@ -51,8 +51,8 @@
     }
   ],
   "changed_files": {
-    "frontend/screenlab-sketch.js": "918bf999099eb5ae15fb8206be2673ae99400716f59d44beed31ac0f3e676a67",
-    "frontend/screenlab.js": "868a579a0517e7c90e75ba058d43a020ed772e80101c98daca14db52a836d14d",
+    "frontend/screenlab-sketch.js": "dbefb52d0b6b0d7be31dda19b680407214527e87cc5723e749e7e682e23aae7b",
+    "frontend/screenlab.js": "2dac93b0d342a27992c990b874aba23bfe75970ce17c2d2411e18ec93792e1a2",
     "tests/test_screenlab_sketch.mjs": "1241720b7c8a502ca8e027219d7f06bd6a14ed7930cced8064eab79a8d062c36",
     "tests/browser_screenlab.py": "c679b117ef9db31526664f5f7e69fffc55e5ddf8325e8cb1696f013ec1ea4b51",
     "scripts/export_screenlab_pilot.mjs": "6f3ee63d71dd1eb5feac531664bdde74096d29406542c2931f46ae48314e7a09",

@@ -8,12 +8,7 @@ function literal(text, limit) {
   const ascii = text.normalize('NFKD').replace(/[\u0300-\u036f]/g, '');
   const cropped = [...ascii].map((c) => (/[\x20-\x7E]/.test(c) ? c : '?')).join('');
   return (
-    '"' +
-    cropped
-      .slice(0, Math.max(0, limit))
-      .replaceAll('\\', '\\\\')
-      .replaceAll('"', '\\"') +
-    '"'
+    '"' + cropped.slice(0, Math.max(0, limit)).replaceAll('\\', '\\\\').replaceAll('"', '\\"') + '"'
   );
 }
 
@@ -89,19 +84,27 @@ export function generateArduinoSketch(design) {
       code.push('  tft.setCursor(' + (x + 2) + ', ' + (y + 2) + ');');
       code.push('  tft.print(' + safeText + ');');
     } else if (type === 'button') {
-      code.push('  tft.fillRoundRect(' + [x, y, w, h, Math.min(7, Math.floor(h / 4)), tint].join(', ') + ');');
-      code.push('  tft.drawRoundRect(' + [x, y, w, h, Math.min(7, Math.floor(h / 4)), '0xFFFFFF'].join(', ') + ');');
+      code.push(
+        '  tft.fillRoundRect(' +
+          [x, y, w, h, Math.min(7, Math.floor(h / 4)), tint].join(', ') +
+          ');',
+      );
+      code.push(
+        '  tft.drawRoundRect(' +
+          [x, y, w, h, Math.min(7, Math.floor(h / 4)), '0xFFFFFF'].join(', ') +
+          ');',
+      );
       code.push('  tft.setTextColor(0xFFFFFF);');
       code.push('  tft.setTextSize(1);');
-      code.push('  tft.setCursor(' + (x + 2) + ', ' + (y + Math.max(2, Math.floor((h - 8) / 2))) + ');');
+      code.push(
+        '  tft.setCursor(' + (x + 2) + ', ' + (y + Math.max(2, Math.floor((h - 8) / 2))) + ');',
+      );
       code.push('  tft.print(' + safeText + ');');
     } else if (type === 'bar') {
       code.push('  tft.fillRect(' + [x, y, w, h, '0x294455'].join(', ') + ');');
       if (value > 0) {
         code.push(
-          '  tft.fillRect(' +
-            [x, y, Math.floor((w * value) / 100), h, tint].join(', ') +
-            ');',
+          '  tft.fillRect(' + [x, y, Math.floor((w * value) / 100), h, tint].join(', ') + ');',
         );
       }
       code.push('  tft.drawRect(' + [x, y, w, h, '0xFFFFFF'].join(', ') + ');');
