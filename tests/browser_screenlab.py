@@ -117,16 +117,10 @@ def main():
                     "MotionLab preview runs only after explicit click",
                     "animaciones previsualizadas" in page.locator("#slStatus").inner_text(),
                 )
-                with page.expect_download() as second_export:
-                    page.locator("#slSketchDownload").click()
+                page.locator("#slSketchDownload").click()
                 check(
-                    "IdeaSpark sketch downloads as standalone Arduino source",
-                    second_export.value.suggested_filename == "ScreenLabIdeaSpark.ino",
-                )
-                page.locator("#slSketchEditor").click()
-                check(
-                    "wrong active FQBN blocks replacing Arduino sketch",
-                    page.locator("#code").input_value() == previous_sketch,
+                    "MotionLab cannot be silently discarded by the static sketch exporter",
+                    "desactiva MotionLab" in page.locator("#slStatus").inner_text(),
                 )
                 page.locator("#slGenerate").click()
                 code = page.locator("#slCode").input_value()
@@ -146,6 +140,18 @@ def main():
                 )
                 page.screenshot(
                     path=str(args.outputs / "screenlab-ideaspark-real.png"), full_page=True
+                )
+                page.locator("#slMotion").select_option("none")
+                with page.expect_download() as second_export:
+                    page.locator("#slSketchDownload").click()
+                check(
+                    "IdeaSpark sketch downloads as standalone Arduino source",
+                    second_export.value.suggested_filename == "ScreenLabIdeaSpark.ino",
+                )
+                page.locator("#slSketchEditor").click()
+                check(
+                    "wrong active FQBN blocks replacing Arduino sketch",
+                    page.locator("#code").input_value() == previous_sketch,
                 )
                 check("no device/agent operation invoked", not report["hardware_actions"])
                 browser.close()
