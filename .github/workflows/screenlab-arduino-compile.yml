@@ -1,0 +1,61 @@
+name: ScreenLab — compilación Arduino real (solo código generado)
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - frontend/screenlab-sketch.js
+      - frontend/screenlab.js
+      - scripts/export_screenlab_pilot.mjs
+      - tests/test_screenlab_sketch.mjs
+      - .github/workflows/screenlab-arduino-compile.yml
+
+permissions:
+  contents: read
+
+jobs:
+  compile:
+    name: Compile TFT on ESP32 (no flash)
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      ARDUINO_BOARD_MANAGER_ADDITIONAL_URLS: https://espressif.github.io/arduino-esp32/package_esp32_index.json
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+      - uses: arduino/setup-arduino-cli@v2
+        with:
+          version: '1.5.1'
+      - name: Prepare external libraries and pinned ESP32 core
+        shell: bash
+        run: |
+          arduino-cli core update-index
+          arduino-cli core install esp32:esp32@3.3.12
+          arduino-cli lib install "Adafruit GFX Library" "Adafruit BusIO" "Adafruit ILI9341" "Adafruit ST7735 and ST7789 Library"
+          arduino-cli core list
+          arduino-cli lib list
+      - name: Generate real sketches from ScreenLab model
+        run: |
+          node --test tests/test_screenlab_sketch.mjs
+          node scripts/export_screenlab_pilot.mjs work/screenlab-compile
+      - name: Compile both screen hardware profiles (NO connected boards)
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p work/screenlab-compile/logs
+          for p in ScreenLabIdeaSpark ScreenLabCYD; do
+            arduino-cli compile --fqbn esp32:esp32:esp32 --warnings all \
+              "work/screenlab-compile/$p" 2>&1 | tee "work/screenlab-compile/logs/$p.txt"
+          done
+      - name: Retain real compiler logs as audit evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenlab-esp32-compiler-${{ github.run_id }}
+          path: work/screenlab-compile/logs/*.txt
+          if-no-files-found: warn
+          retention-days: 30

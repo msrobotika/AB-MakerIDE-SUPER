@@ -61,6 +61,8 @@ Desde **⋯ Herramientas → AB ScreenLab · Pantallas**, se abre el estudio de 
 
 **AB MotionLab (rama de desarrollo):** efectos de aparición, desplazamiento y pulso con vista previa voluntaria y exportación a animaciones **nativas LVGL 8.x**. No convierte CSS libre ni gráficos 3D; [alcance técnico](docs/SCREENLAB.md#ab-motionlab--animaciones-ligeras-inspiradas-en-css-fase-r1-experimental).
 
+**Nuevo piloto ScreenLab R2A (código posterior a RC4):** también permite exportar un **sketch Arduino .ino estático** para IdeaSpark ST7789 o CYD ILI9341, con drivers Adafruit y pines de los perfiles documentados. No hay táctil ni acciones eléctricas, y los efectos MotionLab no se descartan silenciosamente. [Requisitos, límites y compilación](docs/SCREENLAB.md#piloto-r2a--sketch-arduino-completo-para-pantalla-estática).
+
 **No es un firmware grabable directamente.** La cabecera generada requiere un entorno LVGL 8.x y un BSP compatible que configure bus SPI, pantalla, táctil, backlight, memoria y loop de LVGL. El perfil define únicamente tamaño/orientación de diseño; no asigna pines ni certifica hardware. El desarrollo está en código fuente más reciente, **no** en el ZIP RC4 histórico.
 
 ### Capturas reales de AB ScreenLab · rama de desarrollo, no ZIP RC4

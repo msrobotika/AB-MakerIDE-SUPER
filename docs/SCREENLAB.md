@@ -44,3 +44,41 @@ La captura del vídeo aportado explica la conversión de CSS en gráficos para E
 - Los proyectos antiguos `ab-screenlab-v1` sin campos de animación siguen válidos. Solo se aceptan nombres de preset conocidos y duraciones enteras acotadas; no se evalúa CSS/JS importado.
 
 **Limitaciones:** esto **no convierte CSS arbitrario, elementos 3D ni vídeos a firmware** y la previsualización no demuestra render idéntico a TFT. Se necesita el BSP/driver y prueba de memoria/velocidad reales. El siguiente módulo deberá convertir gráficos CSS complejos **fuera del ESP32**, con navegador sin red, fotogramas propios, RGB565/paleta, deduplicación, presupuesto de flash/RAM y opciones de almacenamiento externo. Un frame completo CYD RGB565 320×240 ocupa 153.600 bytes antes de compresión; diez frames ocuparían 1.536.000 bytes. En IdeaSpark 240×135 ocupa 64.800 bytes por frame. No copiar recursos del vídeo ni marcas/gráficos de terceros. El motor de animación LVGL 8.4 está documentado por [LVGL Open](https://lvgl.io/docs/open/8.4/overview/animation).
+
+## Piloto R2A — sketch Arduino completo para pantalla estática
+
+En **AB ScreenLab** hay dos nuevas opciones: **Descargar sketch completo .ino** y
+**Abrir sketch en editor**. El generador usa los mismos controladores y pinouts
+documentados en los ejemplos físicos de MakerIDE:
+
+- **IdeaSpark 1,14" ST7789:** SCLK18/MOSI23/CS15/DC2/RST4/BL32,
+  `tft.init(135,240)`, rotación 1 → 240×135.
+- **CYD ESP32-2432S028R ILI9341:** HSPI CLK14/MISO12/MOSI13/CS15,
+  DC2/RST sin cablear, BL21, SD CS5 deseleccionada y rotación 1 → 320×240.
+  **No se instala ni usa el táctil XPT2046 en este piloto.**
+
+Estas salidas usan **Arduino ESP32 + Adafruit GFX + Adafruit ST7789 o ILI9341**,
+sin necesidad de LVGL. Son proyectos de **imagen estática** con etiquetas,
+fondos, botones visuales, barras y contenedores. Los botones **no responden al
+tacto**, ni mandan señales GPIO, ni permiten operar maquinaria. Cualquier
+animación MotionLab activa impide exportar el sketch estático para que no se
+pierda funcionalidad en silencio; para esas escenas conserva la exportación
+LVGL 8.x a `.h`.
+
+**Ruta reproducible de compilación**: ejecutar
+`node scripts/export_screenlab_pilot.mjs work/screenlab-pilot`, instalar el
+núcleo `esp32:esp32`, Adafruit GFX, BusIO y la biblioteca de pantalla
+correspondiente; compilar la carpeta `ScreenLabIdeaSpark` o
+`ScreenLabCYD` con `arduino-cli compile --fqbn esp32:esp32:esp32`.
+La CI especial [screenlab-arduino-compile.yml](../.github/workflows/screenlab-arduino-compile.yml)
+usa un núcleo ESP32 versionado y conserva el resultado de la compilación.
+**Solo una compilación realizada y exitosa permite declarar firmware compilado.**
+
+Pulsar **Abrir sketch en editor** exige un FQBN ESP32 seleccionado, un
+consentimiento explícito y copia del sketch previo; no compila ni graba ni
+reconfigura automáticamente el USB. Verifica la variante de PCB y todos los
+GPIO **antes de autorizar posteriormente una grabación**, con respaldo del
+firmware anterior cuando proceda. No hay pruebas físicas de este firmware
+generado ni prueba táctil. Los caracteres fuera de la fuente ASCII básica
+de Adafruit se convierten o sustituyen, por lo que se recomienda texto ASCII
+en este primer piloto.
