@@ -2,6 +2,21 @@
 
 [![Comprobaciones](https://github.com/msrobotika/AB-MakerIDE-SUPER/actions/workflows/checks.yml/badge.svg)](https://github.com/msrobotika/AB-MakerIDE-SUPER/actions/workflows/checks.yml) [![Licencia MIT](https://img.shields.io/badge/licencia-MIT-blue.svg)](LICENSE)
 
+## ⬇️ Descargas y qué versión elegir
+
+| Quiero… | Enlace directo | ¿Qué contiene? |
+| --- | --- | --- |
+| **Usar el candidato público RC4** | **[⬇ Descargar AB MakerIDE SUPER RC4 — ZIP portátil](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/download/v1.0.0-rc.4/AB-MakerIDE-SUPER-1.0.0-rc.4-IA-actualizada.zip)** | Editor, actividad IA y funciones verificadas de RC4. **NO incluye ScreenLab, MotionLab ni el catálogo MCP posterior.** |
+| **Probar las mejoras más recientes** | **[⬇ Descargar código de desarrollo actualizado — ZIP de main](https://github.com/msrobotika/AB-MakerIDE-SUPER/archive/refs/heads/main.zip)** | **ScreenLab**, **MotionLab**, catálogo MCP y exportación de sketches Arduino CYD/IdeaSpark. **No es instalador ni una Release probada como paquete completo.** |
+
+**Importante:** actualmente **NO existe instalador de Windows `.exe` o `.msi` publicado**. El ZIP RC4 requiere **Python 3.10+**, extraer la carpeta y ejecutar **`INICIAR_WINDOWS.bat`**; para serie/MicroPython se ofrece `PREPARAR_WINDOWS.bat`. Arduino CLI y el núcleo/librerías del dispositivo se instalan aparte. El ZIP de `main` contiene el código más nuevo, pero es una **instantánea cambiante para pruebas**, no un reemplazo certificado de RC4. **No mezcles archivos entre versiones.**
+
+**[📖 Guía: cuál descargar, instalación paso a paso y qué incluye realmente](docs/DESCARGAS_Y_VERSIONES.md)** · [Auditoría RC4 aún abierta](https://github.com/msrobotika/AB-MakerIDE-SUPER/issues/11) · [Instalador Windows pendiente](https://github.com/msrobotika/AB-MakerIDE-SUPER/issues/19).
+
+**Vista del diseñador de pantallas disponible en el código de desarrollo (captura Chromium, no TFT físico):**
+
+[![AB ScreenLab — lienzo CYD en MakerIDE, edición de elementos](docs/evidence/screenlab/screenlab-cyd-real.png)](docs/evidence/screenlab/screenlab-cyd-real.png)
+
 **[Única candidata pública: RC4 (pre-release)](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/tag/v1.0.0-rc.4)** · [Comunicar un fallo](https://github.com/msrobotika/AB-MakerIDE-SUPER/issues/new/choose) · [Proyectos y pruebas de placas](https://github.com/msrobotika/AB-MakerIDE-SUPER/discussions) · [English](README.en.md)
 
 **Un editor con agente para crear firmware de Arduino, ESP32 y MicroPython.** Pide el proyecto desde el chat, trabaja con el código en el editor y distingue cada resultado: código, compilación, carga verificada y observación física.
@@ -63,7 +78,7 @@ Desde **⋯ Herramientas → AB ScreenLab · Pantallas**, se abre el estudio de 
 
 **Nuevo piloto ScreenLab R2A (código posterior a RC4):** también permite exportar un **sketch Arduino .ino estático** para IdeaSpark ST7789 o CYD ILI9341, con drivers Adafruit y pines de los perfiles documentados. No hay táctil ni acciones eléctricas, y los efectos MotionLab no se descartan silenciosamente. [Requisitos, límites y compilación](docs/SCREENLAB.md#piloto-r2a--sketch-arduino-completo-para-pantalla-estática).
 
-**No es un firmware grabable directamente.** La cabecera generada requiere un entorno LVGL 8.x y un BSP compatible que configure bus SPI, pantalla, táctil, backlight, memoria y loop de LVGL. El perfil define únicamente tamaño/orientación de diseño; no asigna pines ni certifica hardware. El desarrollo está en código fuente más reciente, **no** en el ZIP RC4 histórico.
+**Hay dos exportadores diferentes.** La cabecera **LVGL 8.x (.h)** sigue siendo solo interfaz, por lo que necesita BSP, controlador, memoria y aplicación anfitriona; **no es un firmware autónomo**. El sketch **Arduino (.ino)** es un programa estático completo para las revisiones CYD/IdeaSpark documentadas y **se ha compilado en CI**, pero aún **no se ha grabado ni verificado físicamente ese firmware generado**, ni dispone de táctil o efectos MotionLab. Ambas mejoras están únicamente en el código posterior a RC4. No se certifican otras variantes de placa.
 
 ### Capturas reales de AB ScreenLab · rama de desarrollo, no ZIP RC4
 

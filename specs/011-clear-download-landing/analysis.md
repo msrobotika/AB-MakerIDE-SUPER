@@ -1,0 +1,6 @@
+# Análisis de distribución y experiencia de usuario
+GitHub confirma solo una Release: prerelease `v1.0.0-rc.4`, con activo `AB-MakerIDE-SUPER-1.0.0-rc.4-IA-actualizada.zip` (7.107.080 bytes). No figura instalador .exe/.msi, y la única Release precede a ScreenLab/MotionLab y a la exportación Arduino R2A en main. El contenido binario byte-a-byte del ZIP RC4 **no** ha sido auditado; #11 permanece bloqueante. Una URL directa exacta a un activo conocido es legítima, pero no implica auditoría o certificación jurídica.
+
+El ZIP fuente `main.zip` es dinámico; el arranque por BAT exige Python 3.10+ y no está empaquetado como aplicación autónoma. Por eso el CTA de código actual no se anuncia como instalador ni Release. Mantener una carpeta por versión y evitar sobreescrituras protege proyectos. El Sketch Arduino exportado en main se ha compilado en CI, no se ha visto ese firmware en una pantalla física; la cabecera LVGL es UI-only. No se modifican binarios de terceros ni se crean Releases o etiquetas.
+
+Criterio de aceptación: portada claramente distinguible, enlaces directos exactos, ausencia de afirmaciones de instalador inexistente, prueba automatizada en CI y procedencia explícita de captura de ScreenLab como Chromium, no placa. Una captura o el estado CI no sustituyen auditoría de distribución ni instalación limpia en Windows.

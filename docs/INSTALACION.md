@@ -4,6 +4,15 @@ RC4 abre el editor, el chat y la tarea vacíos. Guarda el código explícitament
 
 El arranque también configura UTF-8 para evitar que una consola/redirección cp1252 de Windows detenga el servidor al imprimir su dirección. Los fallos de instalación y puertos ocupados siguen explicándose sin detener procesos ajenos.
 
+## Descarga: RC4 portátil o funciones nuevas de desarrollo
+
+**No existe actualmente un instalador `.exe` o `.msi`.** Las dos opciones son:
+
+- **[Descargar ZIP portátil RC4](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/download/v1.0.0-rc.4/AB-MakerIDE-SUPER-1.0.0-rc.4-IA-actualizada.zip)**: contiene el programa de RC4 y el Centro de Actividad IA; no contiene ScreenLab/MotionLab ni el generador reciente de sketches de pantalla. Es una pre-release con auditoría de distribución pendiente [#11](https://github.com/msrobotika/AB-MakerIDE-SUPER/issues/11).
+- **[Descargar código `main` con ScreenLab/MotionLab](https://github.com/msrobotika/AB-MakerIDE-SUPER/archive/refs/heads/main.zip)**: para probar las mejoras desarrolladas, no un instalador ni un paquete certificado. Extraer en una carpeta **nueva y distinta**.
+
+[Tabla de diferencias y opciones de descarga](DESCARGAS_Y_VERSIONES.md). `INICIAR_WINDOWS.bat` arranca el editor local con Python 3.10+; `PREPARAR_WINDOWS.bat` instala solo las dependencias opcionales en una `.venv` de esta carpeta. Ni uno ni otro instalan Arduino CLI ni las librerías de pantalla. No mezclar ni sustituir carpetas sin exportar primero los proyectos.
+
 # Instalación y recuperación en Windows
 
 ## Primer arranque
