@@ -2,7 +2,15 @@
 // This is a separate rendering backend from LVGL. NEVER reads or flashes a device.
 import { bounds, validateProject } from './screenlab-core.js';
 
-const pcolor = (hex) => '0x' + hex.slice(1).toUpperCase();
+// Convert CSS RGB888 into 16-bit RGB565 required by Adafruit GFX TFT drivers.
+export function rgb565(hex) {
+  if (!/^#[0-9a-fA-F]{6}$/.test(hex)) throw Error('Color RGB888 inválido');
+  const red = Number.parseInt(hex.slice(1, 3), 16) >> 3;
+  const green = Number.parseInt(hex.slice(3, 5), 16) >> 2;
+  const blue = Number.parseInt(hex.slice(5, 7), 16) >> 3;
+  return '0x' + ((red << 11) | (green << 5) | blue).toString(16).toUpperCase().padStart(4, '0');
+}
+const pcolor = rgb565;
 function literal(text, limit) {
   // Adafruit's built-in 5x7 font covers printable ASCII, not Unicode.
   const ascii = text.normalize('NFKD').replace(/[\u0300-\u036f]/g, '');
@@ -101,7 +109,7 @@ export function generateArduinoSketch(design) {
       );
       code.push('  tft.print(' + safeText + ');');
     } else if (type === 'bar') {
-      code.push('  tft.fillRect(' + [x, y, w, h, '0x294455'].join(', ') + ');');
+      code.push('  tft.fillRect(' + [x, y, w, h, pcolor('#294455')].join(', ') + ');');
       if (value > 0) {
         code.push(
           '  tft.fillRect(' + [x, y, Math.floor((w * value) / 100), h, tint].join(', ') + ');',
