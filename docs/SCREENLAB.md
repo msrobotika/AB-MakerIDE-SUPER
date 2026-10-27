@@ -57,6 +57,10 @@ documentados en los ejemplos físicos de MakerIDE:
   DC2/RST sin cablear, BL21, SD CS5 deseleccionada y rotación 1 → 320×240.
   **No se instala ni usa el táctil XPT2046 en este piloto.**
 
+Los colores CSS del editor se convierten explícitamente de **RGB888 a RGB565**,
+que es el formato de 16 bits esperado por estas pantallas, sin truncar los
+valores de 24 bits. La conversión se verifica con rojo/verde/azul/blanco/negro.
+
 Estas salidas usan **Arduino ESP32 + Adafruit GFX + Adafruit ST7789 o ILI9341**,
 sin necesidad de LVGL. Son proyectos de **imagen estática** con etiquetas,
 fondos, botones visuales, barras y contenedores. Los botones **no responden al
