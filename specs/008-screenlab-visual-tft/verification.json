@@ -55,13 +55,13 @@
     }
   ],
   "changed_files": {
-    ".github/workflows/checks.yml": "4b3750eba4018168706bb5840a89ad3a8c9e56d13a3be0ca9165a6044cb47528",
+    ".github/workflows/checks.yml": "6593aafff814dd00f019ae29b0e9e6898aa19870c848f3454124f7a6f62ef15d",
     "frontend/bootstrap.js": "4da518a0fa86f971551fa31957dbc139e2a02d9618fc36ddb20868309b86c58b",
     "frontend/screenlab-core.js": "f07dc8ab68125548c863fc4aa066b3e962fa4935d8373a785497e9bf1c02e49e",
     "frontend/screenlab.js": "0936f76fbae5089467f8aef4b5b8d829f1f6ab0ddae2c4a39fc2767513dfb361",
     "frontend/screenlab.css": "3d7de4da6442aaee24b4b3d7cd2022229f47bce79977c408f41da8fbfab6be73",
     "index.html": "4b071474cad5da2c060d697b2c55f29b1f9a51dad8e040b0739ec82974b3d090",
-    "tests/browser_screenlab.py": "d3cd942d768bdfcfc16fea2c18040eba54edbaccc8f36049f4a4b94501e8049d",
+    "tests/browser_screenlab.py": "6ad82fec330ee79d31affc818b1b19d62d3555b35b625664534e51b7721182fe",
     "tests/test_screenlab.mjs": "ed7c998ae1c55a19937566a381cae69083872c5d7279fd9ea40169a31562c727"
   }
 }
