@@ -54,7 +54,7 @@
     "frontend/screenlab-sketch.js": "8de7a7aea969db007fa3b26fc0e8fb33f492602b68c3b54858d4232277e4f743",
     "frontend/screenlab.js": "2dac93b0d342a27992c990b874aba23bfe75970ce17c2d2411e18ec93792e1a2",
     "tests/test_screenlab_sketch.mjs": "5ab36435096db4874c80be5945adedbe52db694a33cfd9308004533affdf3f16",
-    "tests/browser_screenlab.py": "c679b117ef9db31526664f5f7e69fffc55e5ddf8325e8cb1696f013ec1ea4b51",
+    "tests/browser_screenlab.py": "8618e8b05fdffba87be8baf8756471789dcf71aaae5bee8656d2de7b0ac19ebe",
     "scripts/export_screenlab_pilot.mjs": "6f3ee63d71dd1eb5feac531664bdde74096d29406542c2931f46ae48314e7a09",
     ".github/workflows/checks.yml": "23163707d2ce03c0a1bc71a7b8da619d3d38ad514597a209da080c387dd691b4",
     ".github/workflows/screenlab-arduino-compile.yml": "37ee8e46d2316aa8d9a4fcbdd0e0d8673d0300648bd87955346ebe895b57f48d"
