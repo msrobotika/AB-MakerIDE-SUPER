@@ -1,0 +1,172 @@
+name: Construir instalador Windows (pruebas verificables)
+
+on:
+  push:
+    branches:
+      - "feat/windows-installer-*"
+    paths:
+      - "installer/**"
+      - ".github/workflows/windows-installer.yml"
+  pull_request:
+    paths:
+      - "installer/**"
+      - ".github/workflows/windows-installer.yml"
+      - "launch.py"
+      - "server.py"
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["Comprobaciones"]
+    types: [completed]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: win-installer-${{ github.event.workflow_run.head_sha || github.sha }}
+  cancel-in-progress: false
+
+jobs:
+  windows:
+    name: Empaquetar, instalar, arrancar y desinstalar (Windows x64)
+    if: >-
+      github.event_name != 'workflow_run' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.head_branch == 'main' &&
+       contains(github.event.workflow_run.head_commit.message, '[publish-installer]'))
+    runs-on: windows-latest
+    timeout-minutes: 30
+    outputs:
+      sha: ${{ steps.meta.outputs.sha }}
+      build_label: ${{ steps.meta.outputs.build_label }}
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Build identity
+        id: meta
+        shell: pwsh
+        run: |
+          $sha = (git rev-parse HEAD).Trim()
+          $short = $sha.Substring(0, 10)
+          "sha=$sha" >> $env:GITHUB_OUTPUT
+          "build_label=dev-$short" >> $env:GITHUB_OUTPUT
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          architecture: x64
+      - name: Prepare pinned freezer and optional serial/key storage
+        shell: pwsh
+        run: |
+          python -m pip install --disable-pip-version-check "pyinstaller==6.16.0" "pyserial==3.5"
+          python -m pip freeze | Out-File -FilePath installer/dependency-versions.txt -Encoding utf8
+      - name: Create standalone app
+        shell: pwsh
+        run: python installer/build_windows.py
+      - name: Smoke-test standalone binary before installation
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $env:AB_MAKERIDE_DATA_DIR = Join-Path $env:RUNNER_TEMP "makeride-smoke-data"
+          $exe = Join-Path $PWD "dist/AB-MakerIDE-SUPER/AB-MakerIDE-SUPER.exe"
+          & $exe --check --json --port 49171 | Set-Content -Path installer/smoke-standalone.json -Encoding utf8
+          if ($LASTEXITCODE -ne 0) { throw "Fallo --check de PyInstaller: $LASTEXITCODE" }
+          $report = Get-Content installer/smoke-standalone.json -Raw | ConvertFrom-Json
+          if ($report.ok -ne $true) { throw "Diagnostico de app no conforme" }
+      - name: Install Inno Setup 6
+        shell: pwsh
+        run: |
+          choco install innosetup --yes --no-progress
+          if ($LASTEXITCODE -ne 0) { throw "No se ha instalado Inno Setup" }
+      - name: Compile setup
+        shell: pwsh
+        run: |
+          $compiler = Join-Path "${env:ProgramFiles(x86)}" "Inno Setup 6/ISCC.exe"
+          if (-not (Test-Path $compiler)) { throw "ISCC.exe no encontrado" }
+          & $compiler "/DBuildLabel=${{ steps.meta.outputs.build_label }}" "installer/windows.iss"
+          if ($LASTEXITCODE -ne 0) { throw "Falló ISCC" }
+      - name: Install, serve HTTP and uninstall without removing user data
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $installer = (Get-ChildItem "installer/out/*-Setup.exe" | Select-Object -First 1).FullName
+          if (-not $installer) { throw "Instalador ausente" }
+          $target = Join-Path $env:RUNNER_TEMP "MakerIDE Test Installation"
+          $env:AB_MAKERIDE_DATA_DIR = Join-Path $env:RUNNER_TEMP "makeride-user-data"
+          New-Item -ItemType Directory -Force $env:AB_MAKERIDE_DATA_DIR | Out-Null
+          "user projects must survive" | Set-Content (Join-Path $env:AB_MAKERIDE_DATA_DIR "user-preservation.txt")
+          $install = Start-Process -FilePath $installer -ArgumentList "/VERYSILENT", "/SUPPRESSMSGBOXES", "/NORESTART", "/DIR=`"$target`"" -Wait -PassThru
+          if ($install.ExitCode -ne 0) { throw "Instalador: $($install.ExitCode)" }
+          $exe = Join-Path $target "AB-MakerIDE-SUPER.exe"
+          if (-not (Test-Path $exe)) { throw "No se ha instalado el programa" }
+          & $exe --check --json --port 49173 | Set-Content "installer/smoke-installed.json" -Encoding utf8
+          if ($LASTEXITCODE -ne 0) { throw "No arranca el exe instalado" }
+          $process = Start-Process -FilePath $exe -ArgumentList "--no-browser", "--port", "49174" -PassThru
+          try {
+            $ready = $false
+            for ($i = 0; $i -lt 20; $i++) {
+              Start-Sleep -Seconds 1
+              try {
+                $r = Invoke-WebRequest "http://127.0.0.1:49174/" -UseBasicParsing -TimeoutSec 2
+                if ($r.StatusCode -eq 200 -and $r.Content -match "AB MakerIDE") { $ready = $true; break }
+              } catch { }
+              if ($process.HasExited) { throw "Servidor cerrado durante el smoke-test" }
+            }
+            if (-not $ready) { throw "HTTP local no ha respondido correctamente" }
+          } finally {
+            if (-not $process.HasExited) { Stop-Process -Id $process.Id -Force }
+          }
+          $uninstaller = Join-Path $target "unins000.exe"
+          if (-not (Test-Path $uninstaller)) { throw "Falta desinstalador" }
+          $uninstall = Start-Process -FilePath $uninstaller -ArgumentList "/VERYSILENT", "/SUPPRESSMSGBOXES", "/NORESTART" -Wait -PassThru
+          if ($uninstall.ExitCode -ne 0) { throw "Desinstalacion: $($uninstall.ExitCode)" }
+          if (-not (Test-Path (Join-Path $env:AB_MAKERIDE_DATA_DIR "user-preservation.txt"))) { throw "Se perdieron datos del usuario" }
+          if (Test-Path $exe) { throw "El ejecutable permanece tras desinstalar" }
+      - name: Verify hashes and publish CI artifact
+        shell: pwsh
+        run: |
+          $setup = (Get-ChildItem "installer/out/*-Setup.exe" | Select-Object -First 1)
+          if (-not $setup) { throw "Setup no encontrado" }
+          $sha = (Get-FileHash $setup.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+          "$sha  $($setup.Name)" | Set-Content "installer/out/SHA256SUMS.txt" -Encoding ascii
+          Copy-Item "installer/dependency-versions.txt" "installer/out/dependency-versions.txt"
+          Copy-Item "installer/smoke-standalone.json" "installer/out/smoke-standalone.json"
+          Copy-Item "installer/smoke-installed.json" "installer/out/smoke-installed.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: makeride-windows-installer-${{ steps.meta.outputs.build_label }}
+          path: installer/out/
+          if-no-files-found: warn
+          retention-days: 30
+
+  publish:
+    name: Publish direct public download only after approved marker and green checks
+    needs: windows
+    if: >-
+      github.event_name == 'workflow_run' &&
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'main' &&
+      contains(github.event.workflow_run.head_commit.message, '[publish-installer]')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: makeride-windows-installer-${{ needs.windows.outputs.build_label }}
+          path: installer
+      - name: Publish unsigned TEST pre-release, immutable commit identity
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          COMMIT: ${{ needs.windows.outputs.sha }}
+          LABEL: ${{ needs.windows.outputs.build_label }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          TAG="windows-test-$LABEL"
+          gh release create "$TAG" installer/* --prerelease --target "$COMMIT" \
+            --title "AB MakerIDE SUPER · Instalador Windows TEST ($LABEL)" \
+            --notes "Instalador SIN FIRMA de pruebas para Windows x64, empaquetado desde commit $COMMIT. CI: instalacion silenciosa, diagnostico, servidor HTTP y desinstalacion verificadas en runner Windows. No es RC4 historica ni prueba de hardware real. Python incluido; Arduino CLI/core, Codex/Claude y mpremote externos cuando se requieran. SHA-256 adjunto. No sustituye un instalador firmado ni valida todos los PC." 

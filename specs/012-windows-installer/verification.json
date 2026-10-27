@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "convergence": "converged",
+  "requirements": [
+    {
+      "id": "FR-001",
+      "result": "passed",
+      "notes": "Empaquetado autocontenido parametrizado y comprobación del binario en Windows.",
+      "evidence": [
+        "installer/build_windows.py",
+        "installer/entrypoint.py"
+      ]
+    },
+    {
+      "id": "FR-002",
+      "result": "passed",
+      "notes": "Esquema por usuario sin elevación y datos en LocalAppData; smoke de desinstalación.",
+      "evidence": [
+        "installer/windows.iss",
+        "installer/entrypoint.py"
+      ]
+    },
+    {
+      "id": "FR-003",
+      "result": "passed",
+      "notes": "Prueba Windows de --check, HTTP local, instalación y retención de archivo; SHA al final.",
+      "evidence": [
+        ".github/workflows/windows-installer.yml"
+      ]
+    },
+    {
+      "id": "FR-004",
+      "result": "passed",
+      "notes": "workflow_run limitado por checks verdes, main y marcador; PR no publica.",
+      "evidence": [
+        ".github/workflows/windows-installer.yml",
+        "docs/RELEASE_POLICY.md"
+      ]
+    },
+    {
+      "id": "FR-005",
+      "result": "passed",
+      "notes": "Manual específico de instalador y avisos sobre terceros/firma/limitaciones.",
+      "evidence": [
+        "installer/README.md",
+        "THIRD_PARTY_NOTICES.md"
+      ]
+    }
+  ],
+  "changed_files": {
+    ".github/workflows/windows-installer.yml": "3063eb31c373602b59732b87e69a5b721cebe7e57e6ceef37d3fd5cd498560ed",
+    "installer/build_windows.py": "7354b21860f3144071d9474e357266891f5d57205855e7dc9a3e784485661b13",
+    "installer/entrypoint.py": "2862b0822d0862fc497f335714acb9b26d3dbbd1673f7e4e7aa61f92d5c9120f",
+    "installer/windows.iss": "2e7b303afb8382b216ef0fe93971985d8b6635cf2ec45321d98d38747397c2c4",
+    "tests/specification_gate.py": "4c87fb448a23c60d8b18f66013df9a4c92af48a0f4a4c67c05eb8f4d897710a6"
+  }
+}

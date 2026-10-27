@@ -10,19 +10,27 @@
 | **Adafruit ILI9341** | Biblioteca de pantalla externa. | Verificar la licencia del archivo/version efectivamente instalado: su README upstream indica MIT y otras referencias BSD. Conservar los avisos originales. [Fuente](https://github.com/adafruit/Adafruit_ILI9341). |
 | **XPT2046 Touchscreen** | Biblioteca externa de Paul Stoffregen para el panel táctil. | Permiso estilo MIT; requiere conservar aviso y mención de financiación según [cabecera upstream](https://github.com/PaulStoffregen/XPT2046_Touchscreen/blob/master/XPT2046_Touchscreen.h). |
 | **GitHub Spec Kit** | Scripts/plantillas scaffolding incluidos en `.specify/` y `.agents/`. | MIT, © GitHub, Inc. Ver [licencia original](.specify/UPSTREAM_LICENSE) y [procedencia](.specify/UPSTREAM.md). |
-| **pyserial, mpremote, keyring** | Instalación opcional mediante pip en `.venv` privada. No se entregan paquetes/ruedas en el ZIP fuente. | Consultar licencias e inventario del entorno resuelto al distribuir binarios. |
+| **CPython 3.13 (Windows TEST)** | Runtime integrado en el ejecutable Windows de pruebas; el ZIP de código fuente RC4 no lo contenía. Se adjunta la licencia en `third_party_licenses/python/`. | PSF License, [Python Software Foundation](https://docs.python.org/3/license.html). |
+| **pyserial 3.5** | Biblioteca de monitor serie integrada en Windows TEST (en el ZIP fuente se instala opcionalmente). Se incluye el aviso BSD-3-Clause oficial en `third_party_licenses/pyserial/`. | pyserial: BSD-3-Clause (aviso del titular). Las dependencias concretas se relacionan en `dependency-versions.txt` del paquete de pruebas. |
+| **mpremote** | No integrado; herramienta MicroPython opcional externa. | Licencia y dependencias de la versión que instale el usuario. |
+| **PyInstaller 6.16.0** | Congelador de la aplicación; su bootloader queda integrado en el ejecutable TEST. | GPL-2.0-or-later con [excepción del bootloader](https://github.com/pyinstaller/pyinstaller/blob/develop/COPYING.txt). |
+| **Inno Setup 6** | Compilador del instalador Windows; su código de instalación se distribuye en el setup TEST. | [Inno Setup License](https://github.com/jrsoftware/issrc/blob/main/license.txt) © Jordan Russell y Martijn Laan. Para uso comercial, revisar la [política de licencias](https://jrsoftware.org/ishelp/topic_purchase.htm). |
 | **Ruff, Playwright, ESLint, Prettier** | Herramientas de CI/desarrollo, no parte del paquete de ejecución. | Titulares y licencias originales de cada proveedor. |
 | **Codex CLI, Claude Code, Gemini, Ollama** | Integraciones opcionales externas, instalación, cuentas y cuotas del usuario. | Sus condiciones, licencias y marcas; sin patrocinio declarado. |
 
 ## Alcance de MIT y GPL-3.0
 
-MakerIDE propio: [MIT](LICENSE). Arduino CLI: **GPL-3.0 externo** según su titular; no se distribuye ni enlaza su código en este proyecto. Ejecutarlo por CLI **no garantiza por sí solo** la ausencia de obligaciones según las circunstancias de derivación, vinculación, distribución o uso comercial. **No incluir la CLI, núcleos ni bibliotecas dentro de nuevas descargas/instaladores sin evaluación jurídica y de licencias previa.** Revisar cada compilación de firmware, pues puede incorporar licencias de bibliotecas y núcleos externas. Referencia primaria: [README Arduino CLI](https://github.com/arduino/arduino-cli).
+MakerIDE propio: [MIT](LICENSE). Arduino CLI: **GPL-3.0 externo** según su titular; no se distribuye ni enlaza su código en este proyecto. Ejecutarlo por CLI **no garantiza por sí solo** la ausencia de obligaciones según las circunstancias de derivación, vinculación, distribución o uso comercial. **No incluir Arduino CLI, sus núcleos ni bibliotecas de firmware dentro de nuevas descargas/instaladores sin evaluación jurídica y de licencias previa.** Revisar cada compilación de firmware, pues puede incorporar licencias de bibliotecas y núcleos externas. Referencia primaria: [README Arduino CLI](https://github.com/arduino/arduino-cli).
 
 ## Marcas y terceros
 
 **AB MakerIDE SUPER** es un producto propio, independiente y no oficial de MS Robotika. No existe alianza, certificación ni respaldo de Arduino, Espressif, Adafruit, OpenAI, Anthropic, Google, Microsoft, GitHub ni franquicias de videojuegos. Arduino® es marca de Arduino S.r.l. Solo emplear los nombres de empresas ajenas como referencia a compatibilidad o proveedor, nunca sus logos como identidad. Normas: [Arduino trademarks](https://www.arduino.cc/en/trademark/).
 
 La versión en desarrollo del ejemplo arcade se denomina **Defensa Orbital**, `examples/defensa_orbital/`. Los logs y el tag `v1.0.0-rc.4` mantienen nombres técnicos antiguos **exclusivamente como evidencia histórica**; no se reescriben hashes ni se finge equivalencia del firmware corregido.
+
+## Windows TEST: distribución distinta del ZIP histórico
+
+El instalador Windows de pruebas integra CPython y pyserial, con los componentes transitivos necesarios. En Windows MakerIDE protege la configuración mediante DPAPI nativo sin requerir keyring. Los avisos originales del código fuente no autorizan asumir que todos esos componentes faltan del instalador. El resultado final debe auditarse contra el fichero de versiones resueltas y los archivos de licencia incluidos; la prueba de CI no acredita por sí sola cumplimiento jurídico.
 
 ## Antes de publicar
 
