@@ -92,6 +92,54 @@ def main():
                     page.locator("#mcpStatus").get_by_text(
                         "Sin MCP configurados", exact=False
                     ).wait_for()
+                    page.locator("#mcpCatalogSelect").select_option("rea")
+                    page.locator("#mcpCatalogAdd").click()
+                    page.wait_for_function(
+                        '()=>document.querySelector("#mcpStatus").textContent.includes("rea")'
+                    )
+                    check(
+                        "REA can be configured without launching the package",
+                        "rea" in [s["name"] for s in server.MCP_SETTINGS.status()["servers"]]
+                        and not list((Path(temp) / "sessions").glob("sesion-*")),
+                    )
+                    page.locator("#mcpCatalogSelect").select_option("context7")
+                    page.locator("#mcpCatalogAdd").click()
+                    page.wait_for_function(
+                        '()=>document.querySelector("#mcpStatus").textContent.includes("context7")'
+                    )
+                    check(
+                        "adding Context7 preserves REA",
+                        {"rea", "context7"}.issubset(
+                            {s["name"] for s in server.MCP_SETTINGS.status()["servers"]}
+                        ),
+                    )
+                    page.locator("#mcpCatalogSelect").select_option("playwright")
+                    page.locator("#mcpCatalogAdd").click()
+                    page.wait_for_function(
+                        '()=>document.querySelector("#mcpStatus").textContent.includes("playwright")'
+                    )
+                    check(
+                        "three presets can coexist without starting a tool",
+                        len(server.MCP_SETTINGS.status()["servers"]) == 3
+                        and not list((Path(temp) / "sessions").glob("sesion-*")),
+                    )
+                    page.locator("#mcpCatalogSelect").select_option("embedded_debug")
+                    check(
+                        "hardware-dependent unverified MCP is disabled",
+                        page.locator("#mcpCatalogAdd").is_disabled(),
+                    )
+                    for candidate in ("playwright", "context7", "rea"):
+                        page.locator("#mcpCatalogSelect").select_option(candidate)
+                        page.locator("#mcpCatalogRemove").click()
+                        page.wait_for_function(
+                            "(name)=>!document.querySelector('#mcpStatus').textContent.includes(name)",
+                            arg=candidate,
+                        )
+                    check(
+                        "removing all templates leaves no hidden MCP and no sessions",
+                        server.MCP_SETTINGS.status()["servers"] == []
+                        and not list((Path(temp) / "sessions").glob("sesion-*")),
+                    )
                     config = {
                         "mcpServers": {
                             "local_docs": {

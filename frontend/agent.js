@@ -225,6 +225,8 @@ export function define(context) {
     context.$('#execAllowPC').disabled = working;
     context.$('#execUseMCP').disabled = working;
     context.$('#mcpSave').disabled = working;
+    context.$('#mcpCatalogAdd').disabled = working;
+    context.$('#mcpCatalogRemove').disabled = working;
     context.$('#execAutoMCP').disabled = working;
   };
   context.resetAgentStages = function resetAgentStages() {
@@ -608,6 +610,46 @@ export function initialize(context) {
       context.toast(e instanceof SyntaxError ? 'JSON MCP no válido' : e.message);
     }
   };
+  context.$('#mcpCatalogSelect').onchange = () => {
+    const id = context.$('#mcpCatalogSelect').value;
+    const options = {
+      rea: 'REA 6.8.0 · firmware y binarios. Requiere Node compatible y proveedor de análisis. Primera ejecución autorizada puede descargar paquete.',
+      context7:
+        'Context7 · documentación de bibliotecas mediante HTTPS externo. Puede aplicar límites de uso y necesita clave para mayores cuotas.',
+      playwright:
+        'Playwright MCP 0.0.83 · prueba HTML en navegador aislado. Requiere navegador Chromium local. Agente con permiso puede visitar sitios externos.',
+    };
+    const supported = Object.hasOwn(options, id);
+    context.$('#mcpCatalogAdd').disabled = !supported || context.state.agentWorking;
+    context.$('#mcpCatalogRemove').disabled = !supported || context.state.agentWorking;
+    context.$('#mcpCatalogAdd').textContent = supported
+      ? 'Añadir ' + context.$('#mcpCatalogSelect').selectedOptions[0].textContent.split(' · ')[0]
+      : 'No disponible';
+    context.$('#mcpCatalogRemove').textContent = supported ? 'Quitar integración' : 'No disponible';
+    context.$('#mcpCatalogNote').textContent = supported
+      ? options[id] + ' Guardar no lo instala, no inicia procesos ni comprueba la conexión.'
+      : 'Candidato en evaluación: sin comando verificado ni botón de instalación. No hay conexión real.';
+  };
+  context.$('#mcpCatalogSelect').onchange();
+  context.changeMakerMCP = async function changeMakerMCP(action) {
+    if (context.state.agentWorking) return context.toast('Espera a que termine el agente');
+    const id = context.$('#mcpCatalogSelect').value;
+    if (!['rea', 'context7', 'playwright'].includes(id))
+      return context.toast('No hay integración verificada para este candidato.');
+    try {
+      await context.request('/api/mcp/preset', { id, action });
+      await context.refreshMCP();
+      context.toast(
+        action === 'add'
+          ? 'MCP configurado, NO instalado ni conectado. Revisa requisitos y permisos.'
+          : 'MCP retirado del catálogo del IDE; Codex personal no se ha modificado.',
+      );
+    } catch (e) {
+      context.toast(e.message);
+    }
+  };
+  context.$('#mcpCatalogAdd').onclick = () => context.changeMakerMCP('add');
+  context.$('#mcpCatalogRemove').onclick = () => context.changeMakerMCP('remove');
   context.$('#agentWorkbench').addEventListener('toggle', () => {
     if (context.$('#agentWorkbench').open) context.refreshAgentCLIs();
   });

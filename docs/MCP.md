@@ -1,5 +1,7 @@
 # Herramientas MCP y permisos en MakerIDE RC4
 
+**Nuevo catálogo opcional:** [REA y candidatos MCP Maker](CATALOGO_MCP_MAKER.md). Añadir REA fusiona la plantilla sin alterar los demás MCP, pero no instala ni ejecuta el paquete ni modifica la cuenta personal de Codex. Otros servidores son solo candidatos documentados.
+
 El panel admite **stdio** y **Streamable HTTP**. La conexión la establece el cliente MCP de Codex CLI o Claude Code, con la cuenta del usuario; seleccionar cualquier modelo de chat no le aporta ejecución MCP. La IA y sus herramientas no incluyen cuota gratuita de MakerIDE.
 
 ## Configurar y ejecutar
