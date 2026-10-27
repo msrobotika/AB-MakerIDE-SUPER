@@ -4,7 +4,6 @@ Run from the repository root on a Windows x64 CI runner. No Arduino CLI or
 vendor SDK is bundled or installed; no hardware accesses occur at build time.
 """
 
-from importlib import metadata
 from pathlib import Path
 import subprocess
 import sys
@@ -76,20 +75,10 @@ def main():
     if not python_license.is_file():
         raise SystemExit("Falta la licencia PSF del intérprete Python empaquetado.")
     cmd += ["--add-data", f"{python_license};third_party_licenses/python"]
-    for distribution_name in ("pyserial", "keyring"):
-        distribution = metadata.distribution(distribution_name)
-        candidates = [
-            distribution.locate_file(item)
-            for item in distribution.files or ()
-            if Path(str(item)).name.casefold() in {"license", "license.txt", "license.md"}
-        ]
-        license_files = [path for path in candidates if path.is_file()]
-        if not license_files:
-            raise SystemExit(f"Falta licencia en wheel de {distribution_name}.")
-        cmd += [
-            "--add-data",
-            f"{license_files[0]};third_party_licenses/{distribution_name}",
-        ]
+    serial_license = ROOT / "installer" / "licenses" / "pyserial-LICENSE.txt"
+    if not serial_license.is_file():
+        raise SystemExit("Falta aviso legal de pyserial.")
+    cmd += ["--add-data", f"{serial_license};third_party_licenses/pyserial"]
     cmd += ["--add-data", f"{UPSTREAM};.specify", str(ROOT / "installer" / "entrypoint.py")]
     subprocess.run(cmd, check=True, cwd=ROOT)
     exe = ROOT / "dist" / "AB-MakerIDE-SUPER" / "AB-MakerIDE-SUPER.exe"

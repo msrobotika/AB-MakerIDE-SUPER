@@ -48,8 +48,8 @@
     }
   ],
   "changed_files": {
-    ".github/workflows/windows-installer.yml": "f3da3cae5fcf4e63de6eb66679b737a9a02d51970fe3288d91f798b57bb6a80e",
-    "installer/build_windows.py": "c1a3b62c4b584ebace10b6e774c45ec5f0645b8750adb151d0922b418c201195",
+    ".github/workflows/windows-installer.yml": "3063eb31c373602b59732b87e69a5b721cebe7e57e6ceef37d3fd5cd498560ed",
+    "installer/build_windows.py": "7354b21860f3144071d9474e357266891f5d57205855e7dc9a3e784485661b13",
     "installer/entrypoint.py": "2862b0822d0862fc497f335714acb9b26d3dbbd1673f7e4e7aa61f92d5c9120f",
     "installer/windows.iss": "2e7b303afb8382b216ef0fe93971985d8b6635cf2ec45321d98d38747397c2c4",
     "tests/specification_gate.py": "4c87fb448a23c60d8b18f66013df9a4c92af48a0f4a4c67c05eb8f4d897710a6"

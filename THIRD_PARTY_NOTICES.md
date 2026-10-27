@@ -11,7 +11,7 @@
 | **XPT2046 Touchscreen** | Biblioteca externa de Paul Stoffregen para el panel táctil. | Permiso estilo MIT; requiere conservar aviso y mención de financiación según [cabecera upstream](https://github.com/PaulStoffregen/XPT2046_Touchscreen/blob/master/XPT2046_Touchscreen.h). |
 | **GitHub Spec Kit** | Scripts/plantillas scaffolding incluidos en `.specify/` y `.agents/`. | MIT, © GitHub, Inc. Ver [licencia original](.specify/UPSTREAM_LICENSE) y [procedencia](.specify/UPSTREAM.md). |
 | **CPython 3.13 (Windows TEST)** | Runtime integrado en el ejecutable Windows de pruebas; el ZIP de código fuente RC4 no lo contenía. Se adjunta la licencia en `third_party_licenses/python/`. | PSF License, [Python Software Foundation](https://docs.python.org/3/license.html). |
-| **pyserial 3.5 y keyring 25.6.0** | Bibliotecas integradas en el ejecutable Windows TEST; en el ZIP fuente original se instalaban mediante pip por el usuario. Se incluyen sus archivos de licencia reales en `third_party_licenses/`. | pyserial: licencia BSD-style de su distribución. keyring: MIT ([PyPI versión exacta](https://pypi.org/project/keyring/25.6.0/)). Las dependencias transitivas concretas se relacionan en `dependency-versions.txt` del paquete de pruebas. |
+| **pyserial 3.5** | Biblioteca de monitor serie integrada en Windows TEST (en el ZIP fuente se instala opcionalmente). Se incluye el aviso BSD-3-Clause oficial en `third_party_licenses/pyserial/`. | pyserial: BSD-3-Clause (aviso del titular). Las dependencias concretas se relacionan en `dependency-versions.txt` del paquete de pruebas. |
 | **mpremote** | No integrado; herramienta MicroPython opcional externa. | Licencia y dependencias de la versión que instale el usuario. |
 | **PyInstaller 6.16.0** | Congelador de la aplicación; su bootloader queda integrado en el ejecutable TEST. | GPL-2.0-or-later con [excepción del bootloader](https://github.com/pyinstaller/pyinstaller/blob/develop/COPYING.txt). |
 | **Inno Setup 6** | Compilador del instalador Windows; su código de instalación se distribuye en el setup TEST. | [Inno Setup License](https://github.com/jrsoftware/issrc/blob/main/license.txt) © Jordan Russell y Martijn Laan. Para uso comercial, revisar la [política de licencias](https://jrsoftware.org/ishelp/topic_purchase.htm). |
@@ -30,7 +30,7 @@ La versión en desarrollo del ejemplo arcade se denomina **Defensa Orbital**, `e
 
 ## Windows TEST: distribución distinta del ZIP histórico
 
-El instalador Windows de pruebas integra CPython, pyserial, keyring y componentes transitivos. Los avisos originales del código fuente no autorizan asumir que todos esos componentes faltan del instalador. El resultado final debe auditarse contra el fichero de versiones resueltas y los archivos de licencia incluidos; la prueba de CI no acredita por sí sola cumplimiento jurídico.
+El instalador Windows de pruebas integra CPython y pyserial, con los componentes transitivos necesarios. En Windows MakerIDE protege la configuración mediante DPAPI nativo sin requerir keyring. Los avisos originales del código fuente no autorizan asumir que todos esos componentes faltan del instalador. El resultado final debe auditarse contra el fichero de versiones resueltas y los archivos de licencia incluidos; la prueba de CI no acredita por sí sola cumplimiento jurídico.
 
 ## Antes de publicar
 

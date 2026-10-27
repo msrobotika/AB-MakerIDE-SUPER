@@ -59,7 +59,7 @@ jobs:
       - name: Prepare pinned freezer and optional serial/key storage
         shell: pwsh
         run: |
-          python -m pip install --disable-pip-version-check "pyinstaller==6.16.0" "pyserial==3.5" "keyring==25.6.0"
+          python -m pip install --disable-pip-version-check "pyinstaller==6.16.0" "pyserial==3.5"
           python -m pip freeze | Out-File -FilePath installer/dependency-versions.txt -Encoding utf8
       - name: Create standalone app
         shell: pwsh
