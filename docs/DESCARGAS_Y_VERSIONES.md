@@ -1,21 +1,28 @@
 # Descargas y versiones — AB MakerIDE SUPER
 
-Actualizado: **27 de octubre de 2026**. Esta página separa deliberadamente una **descarga publicada** de una **instantánea del código en desarrollo**, para no confundir al usuario con versiones que aún no han sido empaquetadas y ensayadas.
+Actualizado: **27 de octubre de 2026**. Hay **dos pre-releases diferenciadas**: un instalador Windows TEST con el código de desarrollo actualizado y la RC4 histórica portátil. También está disponible el ZIP dinámico de fuentes.
 
 ## Descargar
 
-| Edición | Enlace | Estado real |
+| Edición | Enlace | Estado |
 | --- | --- | --- |
-| **RC4 (prerelease)** | **[Descargar RC4 — ZIP portátil para Windows](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/download/v1.0.0-rc.4/AB-MakerIDE-SUPER-1.0.0-rc.4-IA-actualizada.zip)** | Archivo publicado de aprox. 7,1 MB; requiere Python 3.10+; no es instalador EXE/MSI. |
-| **Desarrollo más reciente** | **[Descargar código fuente `main` en ZIP](https://github.com/msrobotika/AB-MakerIDE-SUPER/archive/refs/heads/main.zip)** | Instantánea del repositorio, cambia al avanzar el desarrollo; **no es versión empaquetada ni aval de instalación limpia**. |
+| **Windows TEST x64 (.exe)** | **[DESCARGAR INSTALADOR WINDOWS](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/download/windows-test-dev-025dd26e85/AB-MakerIDE-SUPER-Windows-x64-dev-025dd26e85-Setup.exe)** | **16,4 MB, Python integrado**. Instalación/arranque/desinstalación verificados mediante CI sobre el commit `025dd26e85d790640f5593b0ffd223267cef8f22`. Sin firma digital y sin pruebas físicas nuevas de placas. |
+| **RC4 histórica (ZIP portátil)** | [Descargar RC4](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/download/v1.0.0-rc.4/AB-MakerIDE-SUPER-1.0.0-rc.4-IA-actualizada.zip) | Necesita Python 3.10+, no incluye ScreenLab/MotionLab posteriores; auditoría de distribución #11 pendiente. |
+| **Código de desarrollo main.zip** | [Descargar fuentes](https://github.com/msrobotika/AB-MakerIDE-SUPER/archive/refs/heads/main.zip) | Código fuente cambiante; no es un instalador autónomo. |
 
-También puedes consultar [la única Release pública](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/tag/v1.0.0-rc.4), [`main`](https://github.com/msrobotika/AB-MakerIDE-SUPER/tree/main) y su [CI](https://github.com/msrobotika/AB-MakerIDE-SUPER/actions/workflows/checks.yml).
+La [Release de Windows TEST](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/tag/windows-test-dev-025dd26e85) publica el instalador, su `SHA256SUMS.txt`, inventario de dependencias y evidencias de arranque. Puede aparecer un aviso de Windows SmartScreen porque **no está firmado**. No se anuncian pruebas físicas del firmware generado que no se hayan realizado.
 
-**No existe todavía instalador `.exe`/`.msi` publicado.** Prepararlo y probarlo está registrado en la [incidencia #19](https://github.com/msrobotika/AB-MakerIDE-SUPER/issues/19). No confundir un `.bat` para iniciar el programa con un instalador autónomo.
+## Instalación Windows TEST (sugerida a probadores)
+
+1. Descarga **[AB MakerIDE SUPER Setup.exe](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/download/windows-test-dev-025dd26e85/AB-MakerIDE-SUPER-Windows-x64-dev-025dd26e85-Setup.exe)** y ejecútalo.
+2. Instala para tu usuario, sin permisos de administrador; abre AB MakerIDE SUPER desde Inicio.
+3. Conserva abierta la consola de diagnósticos mientras utilizas el IDE en el navegador local.
+4. El editor, simulador y diseñador ScreenLab no requieren instalar Python. Para **compilar o grabar Arduino/ESP32** sí necesitas Arduino CLI, el núcleo de placa y bibliotecas compatibles instalados aparte. Los proveedores IA usan tus herramientas y cuentas.
+5. Exporta/guarda tus proyectos de código. Los registros/datos operativos van a `%LOCALAPPDATA%\\MS Robotika\\AB MakerIDE SUPER` y no se borran automáticamente al desinstalar.
 
 ## Qué funcionalidades verás
 
-| Función | ZIP RC4 | Código actual en `main` |
+| Función | ZIP RC4 | Windows TEST y código de desarrollo en `main` |
 | --- | --- | --- |
 | Editor Arduino/MicroPython, simulador, compilación y serie | Sí, según dependencias externas | Sí, con cambios posteriores |
 | Centro de Actividad IA en barra izquierda | Sí, ZIP RC4 actualizado | Sí |
@@ -23,7 +30,7 @@ También puedes consultar [la única Release pública](https://github.com/msrobo
 | Animaciones **AB MotionLab**, presets y preview | **No** | **Sí** |
 | Catálogo MCP Maker con REA, Context7 y Playwright configurables | **No** | **Sí, con conexión real de terceros pendiente de validar** |
 | Exportación de sketch estático `.ino` CYD/IdeaSpark mediante Adafruit GFX | **No** | **Sí: compilación en CI, hardware de ese sketch no probado** |
-| Instalador autónomo `.exe`/`.msi` | **No** | **No** |
+| Instalador autónomo `.exe`/`.msi` | **No** | **Sí, instalador Windows TEST `.exe`, sin firma** |
 
 El exportador `.h` LVGL necesita una aplicación/driver compatibles. El exportador estático `.ino` sí produce un sketch compilable, pero no aporta táctil, animaciones ni control de actuadores y **no hay observación física de ese firmware generado**. No atribuir las pruebas del juego o radar de RC4 al nuevo exportador.
 
@@ -36,7 +43,7 @@ El exportador `.h` LVGL necesita una aplicación/driver compatibles. El exportad
 5. Para compilar/grabar proyectos Arduino, instala **Arduino CLI**, el **núcleo** de la placa y las bibliotecas usadas en el firmware. La cuenta IA es opcional, propia y con su cuota.
 6. Exporta tus proyectos antes de cerrar o cambiar de carpeta y revisa los requisitos para grabar hardware real en la [guía de instalación](INSTALACION.md).
 
-## Probar ScreenLab y MotionLab sin Release nueva
+## Alternativa: probar ScreenLab y MotionLab desde el código fuente
 
 1. Descarga `main.zip` desde el segundo enlace; extrae en una **carpeta diferente** a RC4. No sobreescribas archivos de la carpeta RC4 ni los proyectos anteriores.
 2. Confirma la presencia de `frontend/screenlab.js`, `frontend/screenlab-sketch.js` y `INICIAR_WINDOWS.bat` en esa copia. Ejecuta el lanzador con Python 3.10+.
@@ -48,4 +55,4 @@ El ZIP `main.zip` se genera dinámicamente por GitHub. **No tiene una huella de 
 
 ## Advertencias de distribución
 
-La [incidencia #11](https://github.com/msrobotika/AB-MakerIDE-SUPER/issues/11) requiere auditar el ZIP RC4 real, sus licencias, atribuciones y ejemplo histórico. No está cerrada. La [política de Release](RELEASE_POLICY.md) impide publicar un binario nuevo automáticamente por cada cambio en `main`. Hasta completar esas verificaciones, el botón de descarga pública conduce **honestamente a RC4**, no a una versión posterior inventada.
+La [incidencia #11](https://github.com/msrobotika/AB-MakerIDE-SUPER/issues/11) audita exclusivamente el ZIP RC4 histórico; no se ha sustituido ni se han reinterpretado sus pruebas físicas. La [política de publicaciones](RELEASE_POLICY.md) exige QA y control de la distribución. La Windows TEST se publicó tras CI multiplataforma, smoke test del ejecutable e instalación/desinstalación Windows. **No certifica compatibilidad con cualquier PC, pantalla o placa.** Una nueva modificación en `main` no actualiza por sí sola el instalador; la referencia reproducible es el commit de su Release.

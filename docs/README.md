@@ -1,12 +1,12 @@
 # Documentación vigente · AB MakerIDE SUPER
 
-La edición mantenida es **1.0.0-rc.4 (candidato de lanzamiento)**. Antes de instalar consulta el [README del proyecto](../README.md) y [guía de instalación](INSTALACION.md). No se consideran estables las funciones pendientes de validación física.
+Hay un **instalador Windows TEST** de la revisión de desarrollo `025dd26e85` y una **RC4 histórica portátil**. Ninguna es una versión estable. Antes de instalar consulta el [README del proyecto](../README.md) y [guía de instalación](INSTALACION.md). No se consideran estables las funciones pendientes de validación física.
 
 ## Documentación activa
 
 | Necesidad | Guía |
 | --- | --- |
-| **Descargas: RC4 frente al código actualizado, y estado del instalador** | **[DESCARGAS_Y_VERSIONES.md](DESCARGAS_Y_VERSIONES.md)** |
+| **Descargas: instalador Windows TEST, RC4 histórica y código actualizado** | **[DESCARGAS_Y_VERSIONES.md](DESCARGAS_Y_VERSIONES.md)** |
 | Instalación y recuperación | [INSTALACION.md](INSTALACION.md) |
 | Primeros pasos en Windows | [PRUEBAS_EN_WINDOWS.md](PRUEBAS_EN_WINDOWS.md) |
 | Linux y macOS | [LINUX_MACOS.md](LINUX_MACOS.md) |

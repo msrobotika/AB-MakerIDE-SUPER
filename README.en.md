@@ -1,19 +1,24 @@
 # AB MakerIDE SUPER · MS Robotika
 
-[![Checks](https://github.com/msrobotika/AB-MakerIDE-SUPER/actions/workflows/checks.yml/badge.svg)](https://github.com/msrobotika/AB-MakerIDE-SUPER/actions/workflows/checks.yml) · [MIT](LICENSE) · [Recommended candidate: RC4 only](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/tag/v1.0.0-rc.4) · [Spanish documentation](README.md)
+[![Checks](https://github.com/msrobotika/AB-MakerIDE-SUPER/actions/workflows/checks.yml/badge.svg)](https://github.com/msrobotika/AB-MakerIDE-SUPER/actions/workflows/checks.yml) · [MIT](LICENSE) · [Windows installer TEST](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/tag/windows-test-dev-025dd26e85) · [Spanish documentation](README.md)
 
-**Release freeze:** code changes are reviewed as pull requests. No daily public releases; RC4 is a **pre-release, not stable software**. [Release governance](docs/RELEASE_POLICY.md) · [Current documentation index](docs/README.md).
+**Release governance:** changes are reviewed as pull requests; the Windows TEST installer and historical RC4 are **pre-releases, not stable software**. [Release governance](docs/RELEASE_POLICY.md) · [Current documentation index](docs/README.md).
 
-## ⬇️ Download and choose the right edition
+## ⬇️ Download AB MakerIDE SUPER for Windows
 
-| Goal | Direct download | Included |
+**[⬇ DOWNLOAD WINDOWS x64 INSTALLER (.exe) — TEST BUILD](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/download/windows-test-dev-025dd26e85/AB-MakerIDE-SUPER-Windows-x64-dev-025dd26e85-Setup.exe)** · **[Release details, checksums and test evidence](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/tag/windows-test-dev-025dd26e85)**
+
+Real 16.4 MB installer with **embedded Python**, built from source commit `025dd26e85d790640f5593b0ffd223267cef8f22`. GitHub Actions verified installation, local HTTP startup and uninstall on Windows while preserving test user data. **Unsigned test build**, not an official stable release or hardware compatibility certification. Windows SmartScreen may warn about an unsigned executable.
+
+| Edition | Direct download | Scope |
 | --- | --- | --- |
-| **Try the published RC4 candidate** | **[⬇ Download RC4 portable ZIP](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/download/v1.0.0-rc.4/AB-MakerIDE-SUPER-1.0.0-rc.4-IA-actualizada.zip)** | RC4 editor and AI activity. **Does not include later ScreenLab, MotionLab or MCP catalogue.** |
-| **Evaluate the newest development features** | **[⬇ Download latest development source ZIP (main)](https://github.com/msrobotika/AB-MakerIDE-SUPER/archive/refs/heads/main.zip)** | ScreenLab, MotionLab, optional MCP catalogue and CYD/IdeaSpark Arduino sketch export. **Source snapshot, not a tested installer/release artifact.** |
+| **Windows TEST installer (try current features)** | **[Download Setup.exe](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/download/windows-test-dev-025dd26e85/AB-MakerIDE-SUPER-Windows-x64-dev-025dd26e85-Setup.exe)** | ScreenLab, MotionLab, optional MCP catalogue, editor and Arduino CYD/IdeaSpark sketch generator. Hardware flashing requires external tools and real testing. |
+| Historical RC4 portable | [Download RC4 ZIP](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/download/v1.0.0-rc.4/AB-MakerIDE-SUPER-1.0.0-rc.4-IA-actualizada.zip) | Original RC4; **does not include later ScreenLab, MotionLab or MCP catalogue**. Requires Python 3.10+ and `INICIAR_WINDOWS.bat`. Historical distribution audit [#11](https://github.com/msrobotika/AB-MakerIDE-SUPER/issues/11) is still open. |
+| Latest source snapshot | [Download main.zip](https://github.com/msrobotika/AB-MakerIDE-SUPER/archive/refs/heads/main.zip) | Moving development source; not an independently tested installer. |
 
-**There is no published Windows `.exe`/`.msi` installer.** The RC4 portable ZIP requires **Python 3.10+**; extract into its own folder and run **`INICIAR_WINDOWS.bat`**. Arduino CLI/board cores and any optional serial tools are separate dependencies. Do not mix files between RC4 and `main`. The published RC4 package still has a [distribution audit blocker](https://github.com/msrobotika/AB-MakerIDE-SUPER/issues/11); a future Windows installer is tracked in [#19](https://github.com/msrobotika/AB-MakerIDE-SUPER/issues/19).
+**Install:** download the Windows Setup.exe, run the per-user installer and open AB MakerIDE SUPER from Start. Python is included for **this Windows installer**. A diagnostic console stays open while the local browser app runs at `127.0.0.1:8770`. **Arduino CLI, board cores, optional AI providers and their accounts remain external.** Keep/backup projects; the installer keeps operational data in `%LOCALAPPDATA%\\MS Robotika\\AB MakerIDE SUPER`. Do not mix the historical RC4 files and TEST installer.
 
-[**Spanish step-by-step download/feature guide**](docs/DESCARGAS_Y_VERSIONES.md) · [Installation guide](docs/INSTALACION.md)
+[Download and feature guide (Spanish)](docs/DESCARGAS_Y_VERSIONES.md) · [Installation guide](docs/INSTALACION.md) · [Installer CI](https://github.com/msrobotika/AB-MakerIDE-SUPER/actions/workflows/windows-installer.yml)
 
 ![ScreenLab development UI in Chromium — not a physical TFT capture](docs/evidence/screenlab/screenlab-ideaspark-real.png)
 
@@ -39,7 +44,7 @@ RC4 opens with an **empty editor, chat and task**. AI preferences are remembered
 
 Codex/Claude chat now routes to a real task with its execution consent. The selected physical profile and a local LCD/touch reference accompany the agent. Codex evidence is read from successful completed command events, not from quoted code or assistant claims. If an upload was requested but verification is absent, the task remains incomplete even when the CLI exits with zero. A known firmware marker can report a CYD profile; it is not independent LCD detection and USB bridges do not establish a commercial model.
 
-On Windows, install Python 3.10+, extract to a new folder and open INICIAR_WINDOWS.bat (default http://127.0.0.1:8770). PREPARAR_WINDOWS.bat prepares optional serial/MicroPython dependencies in that copy's private venv. Arduino builds also need Arduino CLI and the board core. Preserve existing installations and files. [Installation guide](docs/INSTALACION.md).
+For the historical RC4 portable ZIP, install Python 3.10+, extract to a new folder and open INICIAR_WINDOWS.bat (default http://127.0.0.1:8770). PREPARAR_WINDOWS.bat prepares optional serial/MicroPython dependencies in that copy's private venv. Arduino builds also need Arduino CLI and the board core. Preserve existing installations and files. [Installation guide](docs/INSTALACION.md).
 
 The currently maintained example is [Defensa Orbital](examples/defensa_orbital/defensa_orbital.ino); it **has not received a fresh physical test**. The historic RC4 hardware evidence applies only to the original recorded firmware. Six specific physical devices are documented: IdeaSpark radar, ESP32-CAM, WROOM/MicroPython, Nano, Mega and CYD. The CYD [retro arcade-style space shooter demonstration](docs/evidence/cyd-space-invaders/README.md) includes two matching flash backups, a complete build, four verified upload blocks and a serial marker; the user subsequently confirmed the game. It does not establish every screen revision, touch control or long-duration scenario. [Hardware matrix](docs/MATRIZ_HARDWARE.md).
 

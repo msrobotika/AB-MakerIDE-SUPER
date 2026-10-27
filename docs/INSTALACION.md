@@ -4,18 +4,27 @@ RC4 abre el editor, el chat y la tarea vacíos. Guarda el código explícitament
 
 El arranque también configura UTF-8 para evitar que una consola/redirección cp1252 de Windows detenga el servidor al imprimir su dirección. Los fallos de instalación y puertos ocupados siguen explicándose sin detener procesos ajenos.
 
-## Descarga: RC4 portátil o funciones nuevas de desarrollo
+## Descargas actuales
 
-**No existe actualmente un instalador `.exe` o `.msi`.** Las dos opciones son:
+**[Descargar instalador Windows x64 TEST (.exe)](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/download/windows-test-dev-025dd26e85/AB-MakerIDE-SUPER-Windows-x64-dev-025dd26e85-Setup.exe)** — Python integrado, instalación para usuario actual, pruebas automáticas de instalación, arranque HTTP y desinstalación superadas en el commit `025dd26e85d790640f5593b0ffd223267cef8f22`. No hay firma Authenticode ni pruebas físicas nuevas del exportador; puede aparecer SmartScreen.
 
-- **[Descargar ZIP portátil RC4](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/download/v1.0.0-rc.4/AB-MakerIDE-SUPER-1.0.0-rc.4-IA-actualizada.zip)**: contiene el programa de RC4 y el Centro de Actividad IA; no contiene ScreenLab/MotionLab ni el generador reciente de sketches de pantalla. Es una pre-release con auditoría de distribución pendiente [#11](https://github.com/msrobotika/AB-MakerIDE-SUPER/issues/11).
-- **[Descargar código `main` con ScreenLab/MotionLab](https://github.com/msrobotika/AB-MakerIDE-SUPER/archive/refs/heads/main.zip)**: para probar las mejoras desarrolladas, no un instalador ni un paquete certificado. Extraer en una carpeta **nueva y distinta**.
+**[Descargar ZIP portátil RC4 histórico](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/download/v1.0.0-rc.4/AB-MakerIDE-SUPER-1.0.0-rc.4-IA-actualizada.zip)** — requiere Python 3.10+ y `INICIAR_WINDOWS.bat`; mantiene la auditoría #11 pendiente. **[Descargar código fuente actualizado main.zip](https://github.com/msrobotika/AB-MakerIDE-SUPER/archive/refs/heads/main.zip)** — copia mutable para desarrollo, no instalador.
 
-[Tabla de diferencias y opciones de descarga](DESCARGAS_Y_VERSIONES.md). `INICIAR_WINDOWS.bat` arranca el editor local con Python 3.10+; `PREPARAR_WINDOWS.bat` instala solo las dependencias opcionales en una `.venv` de esta carpeta. Ni uno ni otro instalan Arduino CLI ni las librerías de pantalla. No mezclar ni sustituir carpetas sin exportar primero los proyectos.
+[Elegir edición y consultar diferencias](DESCARGAS_Y_VERSIONES.md) · [Release instalador Windows TEST](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/tag/windows-test-dev-025dd26e85) · [Manual técnico del instalador](../installer/README.md).
+
+## Usar el instalador Windows TEST
+
+1. Descarga `AB-MakerIDE-SUPER-Windows-x64-dev-025dd26e85-Setup.exe` desde el enlace directo y ejecútalo.
+2. Sigue el asistente; no necesitas Python instalado ni permisos de administrador. Abre **AB MakerIDE SUPER** desde Inicio.
+3. Mantén la consola de diagnóstico abierta mientras el servidor del IDE está en uso. El navegador abre la interfaz local en `http://127.0.0.1:8770`.
+4. Instala Arduino CLI, el núcleo de la placa y bibliotecas externas solo si necesitas compilar o grabar firmware Arduino; las cuentas/agentes IA son opcionales y externos.
+5. Los datos operativos se guardan bajo `%LOCALAPPDATA%\\MS Robotika\\AB MakerIDE SUPER` y se conservan tras desinstalar. **Guarda/exporta tus proyectos antes de cerrar**, pues los borradores pueden estar solo en RAM.
+
+No mezcles las carpetas y recursos de la edición RC4 con el nuevo instalador. Esta validación automatizada no constituye una prueba física de un ESP32 ni confirma Windows SmartScreen en todas las máquinas.
 
 # Instalación y recuperación en Windows
 
-## Primer arranque
+## Primer arranque — ZIP RC4 portátil
 
 1. Extrae el ZIP completo en una carpeta propia. Conserva las versiones anteriores y tus proyectos; no mezcles los archivos de dos versiones.
 2. Necesitas Python 3.10 o posterior. Si falta, el lanzador lo indica; puedes obtenerlo desde [python.org](https://www.python.org/downloads/windows/).
