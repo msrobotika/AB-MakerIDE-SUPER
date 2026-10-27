@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "convergence": "converged",
+  "requirements": [
+    {
+      "id": "FR-001",
+      "result": "passed",
+      "notes": "README ES/EN show direct public RC4 asset and changing development source ZIP; links match observed GitHub release.",
+      "evidence": [
+        "README.md",
+        "README.en.md",
+        "docs/DESCARGAS_Y_VERSIONES.md"
+      ]
+    },
+    {
+      "id": "FR-002",
+      "result": "passed",
+      "notes": "No .exe/.msi release claims, explicitly distinguishes RC4 from later features and source-only development.",
+      "evidence": [
+        "README.md",
+        "README.en.md",
+        "docs/DESCARGAS_Y_VERSIONES.md",
+        "docs/RELEASE_POLICY.md"
+      ]
+    },
+    {
+      "id": "FR-003",
+      "result": "passed",
+      "notes": "Installation manual, index and RC4 page agree on Python, BAT launcher, external Arduino requirements and feature scope.",
+      "evidence": [
+        "docs/INSTALACION.md",
+        "docs/RC4_PUBLICACION.md",
+        "docs/DESCARGAS_Y_VERSIONES.md",
+        "README.md"
+      ]
+    },
+    {
+      "id": "FR-004",
+      "result": "passed",
+      "notes": "Cross-platform source regression checks canonical release/source URLs, labels, installer disclosure and discoverability. CI outcome independently required.",
+      "evidence": [
+        "tests/test_download_landing.py",
+        ".github/workflows/checks.yml"
+      ]
+    },
+    {
+      "id": "FR-005",
+      "result": "passed",
+      "notes": "RC4 archived binary unchanged, #11 audit remains pending and Windows installer issue #19 created, Spec Kit 011 and hashes accounted for.",
+      "evidence": [
+        "docs/RELEASE_POLICY.md",
+        "docs/DESCARGAS_Y_VERSIONES.md",
+        "specs/011-clear-download-landing/convergence.md"
+      ]
+    }
+  ],
+  "changed_files": {
+    ".github/workflows/checks.yml": "b266105766ff4e4793d0cdda6457cdbbfceebcffb1fa940a79eac1a3e5ee703b",
+    "tests/test_download_landing.py": "4c322a76f5cadaebde7e0eaa92345d7ce87f29a522376522123e5487c922a576"
+  }
+}
