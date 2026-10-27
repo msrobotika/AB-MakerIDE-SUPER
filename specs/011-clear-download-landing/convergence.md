@@ -1,0 +1,2 @@
+# Convergencia
+Portada y guías resuelven el problema de descubrimiento: botones de descarga separados para RC4 portable y código reciente, sin afirmar instalador inexistente o características RC4 falsas. La prueba de enlaces comprueba cobertura documental, no accede a red ni valida el ZIP. CI de PR determinará el cierre técnico. El instalador autónomo y auditoría RC4 siguen abiertos, sin nueva Release.
