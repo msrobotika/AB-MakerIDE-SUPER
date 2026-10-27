@@ -58,7 +58,7 @@
     ".github/workflows/checks.yml": "6593aafff814dd00f019ae29b0e9e6898aa19870c848f3454124f7a6f62ef15d",
     "frontend/bootstrap.js": "4da518a0fa86f971551fa31957dbc139e2a02d9618fc36ddb20868309b86c58b",
     "frontend/screenlab-core.js": "c0fb0ef884bc9c98f059454725ef23399b5bbbb87ff3b5bc58342cddb9f87143",
-    "frontend/screenlab.js": "56397ba1533c5ee8a1d31d49ba8c3fef3713bae68f5a20cc9729604e13dd4b01",
+    "frontend/screenlab.js": "6fd09461fed62086ac612b0226c450022f2e59369b756c7c47044b721d6d1205",
     "frontend/screenlab.css": "3d7de4da6442aaee24b4b3d7cd2022229f47bce79977c408f41da8fbfab6be73",
     "index.html": "4b071474cad5da2c060d697b2c55f29b1f9a51dad8e040b0739ec82974b3d090",
     "tests/browser_screenlab.py": "6ad82fec330ee79d31affc818b1b19d62d3555b35b625664534e51b7721182fe",
