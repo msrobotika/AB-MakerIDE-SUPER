@@ -55,6 +55,12 @@ Se conservan el **inicio vacío**, el guardado manual con **Ctrl+S**, la importa
 
 [Flujo del agente, guardado y límites](docs/PROYECTOS_DEL_AGENTE.md) · [Identificación](docs/IDENTIFICACION_AUTOMATICA.md) · [Cambios](CHANGELOG.md)
 
+## AB ScreenLab · diseño visual de pantallas (código posterior a RC4)
+
+Desde **⋯ Herramientas → AB ScreenLab · Pantallas**, se abre el estudio de interfaces embebidas sin interrumpir el editor de firmware. Incluye un lienzo con componentes arrastrables, edición de propiedades, diseño reversible, perfiles iniciales **CYD 320×240** e **IdeaSpark 240×135**, importar/exportar JSON y una cabecera de construcción de interfaz para **LVGL 8.x**. [Manual de ScreenLab](docs/SCREENLAB.md).
+
+**No es un firmware grabable directamente.** La cabecera generada requiere un entorno LVGL 8.x y un BSP compatible que configure bus SPI, pantalla, táctil, backlight, memoria y loop de LVGL. El perfil define únicamente tamaño/orientación de diseño; no asigna pines ni certifica hardware. El desarrollo está en código fuente más reciente, **no** en el ZIP RC4 histórico.
+
 ## Empezar en Windows
 
 1. Extrae el ZIP en una carpeta nueva y conserva tus versiones y archivos anteriores.

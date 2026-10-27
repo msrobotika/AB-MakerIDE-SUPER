@@ -6,6 +6,7 @@
     <meta name="theme-color" content="#0a1019" />
     <title>AB MakerIDE SUPER __IDE_VERSION__ · MS Robotika</title>
     <link rel="stylesheet" href="/frontend/styles.css" />
+    <link rel="stylesheet" href="/frontend/screenlab.css" />
   </head>
   <body data-right="none">
     <div class="app">
@@ -63,6 +64,13 @@
             </button>
             <button id="showLab" class="action small ghost" title="Revisar conexiones y perfiles">
               Conexiones GPIO
+            </button>
+            <button
+              id="showScreenLab"
+              class="action small ghost"
+              title="Diseñar interfaces TFT en el modo avanzado"
+            >
+              AB ScreenLab · Pantallas
             </button>
             <button
               id="showTrials"
@@ -722,6 +730,7 @@
         </div>
       </form>
     </dialog>
+    <dialog id="screenLabDialog" class="screenlab-dialog" aria-labelledby="slTitle"></dialog>
     <dialog id="boardCatalog" class="board-picker" aria-labelledby="catalogTitle">
       <div class="picker-head">
         <div>
