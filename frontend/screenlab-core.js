@@ -6,6 +6,7 @@ export const PROFILES = Object.freeze({
   generic: Object.freeze({ name: 'Genérica · sin validar', width: 320, height: 240 }),
 });
 export const TYPES = Object.freeze(['label', 'button', 'bar', 'panel']);
+export const MOTIONS = Object.freeze(['none', 'fade-in', 'slide-in', 'pulse']);
 const WIDGET_LIMIT = 40;
 const round = (n) => Math.round(n);
 const colorOk = (x) => /^#[0-9a-fA-F]{6}$/.test(x);
@@ -19,6 +20,8 @@ const make = (id, type, x, y, width, height, text, color) => ({
   text,
   color,
   value: 50,
+  motion: 'none',
+  durationMs: 900,
 });
 export function createProject(profile = 'cyd') {
   if (!PROFILES[profile]) throw Error('Perfil no disponible');
@@ -68,6 +71,8 @@ export function validateProject(p) {
     if (typeof v.text !== 'string' || v.text.length > 64) throw Error('Texto demasiado largo');
     if (!colorOk(v.color)) throw Error('Color inválido');
     assertNumber(v.value, 0, 100);
+    if (!MOTIONS.includes(v.motion ?? 'none')) throw Error('Animación no admitida');
+    assertNumber(v.durationMs ?? 900, 200, 5000);
   }
   return p;
 }
@@ -140,6 +145,9 @@ export function generateLvgl(p) {
     'static void ab_screenlab_set_tap_handler(ab_screenlab_tap_t handler) {',
     '  ab_screenlab_tap = handler;',
     '}',
+    'static void ab_screenlab_opacity(void *target, int32_t value) {',
+    '  lv_obj_set_style_opa(static_cast<lv_obj_t *>(target), static_cast<lv_opa_t>(value), 0);',
+    '}',
     'static void ab_screenlab_build(lv_obj_t *parent) {',
     '  // Design canvas: ' + spec.width + ' x ' + spec.height + ' px (' + p.profile + ')',
     '  lv_obj_set_size(parent, ' + spec.width + ', ' + spec.height + ');',
@@ -182,6 +190,31 @@ export function generateLvgl(p) {
       }
       if (v.type === 'bar')
         out.push('  lv_bar_set_value(' + node + ', ' + v.value + ', LV_ANIM_OFF);');
+    }
+    const motion = v.motion ?? 'none';
+    if (motion !== 'none') {
+      const anim = 'sl_motion_' + v.id;
+      const cb =
+        motion === 'fade-in'
+          ? 'ab_screenlab_opacity'
+          : motion === 'slide-in'
+            ? 'lv_obj_set_x'
+            : 'lv_obj_set_width';
+      const start =
+        motion === 'fade-in'
+          ? 0
+          : motion === 'slide-in'
+            ? Math.max(0, v.x - 16)
+            : Math.max(12, v.width - 12);
+      const end = motion === 'fade-in' ? 255 : motion === 'slide-in' ? v.x : v.width;
+      out.push('  lv_anim_t ' + anim + ';');
+      out.push('  lv_anim_init(&' + anim + ');');
+      out.push('  lv_anim_set_var(&' + anim + ', ' + node + ');');
+      out.push('  lv_anim_set_exec_cb(&' + anim + ', (lv_anim_exec_xcb_t)' + cb + ');');
+      out.push('  lv_anim_set_values(&' + anim + ', ' + start + ', ' + end + ');');
+      out.push('  lv_anim_set_time(&' + anim + ', ' + (v.durationMs ?? 900) + ');');
+      out.push('  lv_anim_set_path_cb(&' + anim + ', lv_anim_path_ease_in_out);');
+      out.push('  lv_anim_start(&' + anim + ');');
     }
   }
   out.push('}', '');
