@@ -1,23 +1,28 @@
-# AB MakerIDE SUPER 1.0.0-rc.4 · MS Robotika
+# AB MakerIDE SUPER · MS Robotika
 
 [![Comprobaciones](https://github.com/msrobotika/AB-MakerIDE-SUPER/actions/workflows/checks.yml/badge.svg)](https://github.com/msrobotika/AB-MakerIDE-SUPER/actions/workflows/checks.yml) [![Licencia MIT](https://img.shields.io/badge/licencia-MIT-blue.svg)](LICENSE)
 
-## ⬇️ Descargas y qué versión elegir
+## ⬇️ Descargar AB MakerIDE SUPER para Windows
 
-| Quiero… | Enlace directo | ¿Qué contiene? |
+**[⬇️ DESCARGAR INSTALADOR WINDOWS x64 (.exe) — VERSIÓN TEST](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/download/windows-test-dev-025dd26e85/AB-MakerIDE-SUPER-Windows-x64-dev-025dd26e85-Setup.exe)** · **[Página de la Release y SHA-256](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/tag/windows-test-dev-025dd26e85)**
+
+Instalador real de 16,4 MB, **con Python incluido**, publicado desde el commit `025dd26e85d790640f5593b0ffd223267cef8f22`. Instalación y desinstalación sin privilegios de administrador; probado en Windows mediante GitHub Actions: arranque del ejecutable, respuesta HTTP local y preservación de datos. **Versión de pruebas sin firma digital**: Windows SmartScreen puede advertirlo. No hay certificación física del firmware en placas para este paquete.
+
+| Edición | Descarga directa | Alcance |
 | --- | --- | --- |
-| **Usar el candidato público RC4** | **[⬇ Descargar AB MakerIDE SUPER RC4 — ZIP portátil](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/download/v1.0.0-rc.4/AB-MakerIDE-SUPER-1.0.0-rc.4-IA-actualizada.zip)** | Editor, actividad IA y funciones verificadas de RC4. **NO incluye ScreenLab, MotionLab ni el catálogo MCP posterior.** |
-| **Probar las mejoras más recientes** | **[⬇ Descargar código de desarrollo actualizado — ZIP de main](https://github.com/msrobotika/AB-MakerIDE-SUPER/archive/refs/heads/main.zip)** | **ScreenLab**, **MotionLab**, catálogo MCP y exportación de sketches Arduino CYD/IdeaSpark. **No es instalador ni una Release probada como paquete completo.** |
+| **Windows TEST (recomendada para probar la interfaz actual)** | **[Descargar instalador .exe](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/download/windows-test-dev-025dd26e85/AB-MakerIDE-SUPER-Windows-x64-dev-025dd26e85-Setup.exe)** | ScreenLab, MotionLab, catálogo MCP, editor, exportador Arduino CYD/IdeaSpark; la compatibilidad de hardware debe verificarse por separado. |
+| RC4 histórica portátil | [Descargar ZIP RC4](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/download/v1.0.0-rc.4/AB-MakerIDE-SUPER-1.0.0-rc.4-IA-actualizada.zip) | RC4 original sin ScreenLab/MotionLab; requiere Python 3.10+ y `INICIAR_WINDOWS.bat`. Auditoría histórica [#11](https://github.com/msrobotika/AB-MakerIDE-SUPER/issues/11) abierta. |
+| Código fuente más reciente | [Descargar main.zip](https://github.com/msrobotika/AB-MakerIDE-SUPER/archive/refs/heads/main.zip) | Fuente mutable del repositorio, no es instalador ni binario certificado. |
 
-**Importante:** actualmente **NO existe instalador de Windows `.exe` o `.msi` publicado**. El ZIP RC4 requiere **Python 3.10+**, extraer la carpeta y ejecutar **`INICIAR_WINDOWS.bat`**; para serie/MicroPython se ofrece `PREPARAR_WINDOWS.bat`. Arduino CLI y el núcleo/librerías del dispositivo se instalan aparte. El ZIP de `main` contiene el código más nuevo, pero es una **instantánea cambiante para pruebas**, no un reemplazo certificado de RC4. **No mezcles archivos entre versiones.**
+**Uso del instalador:** descarga el `.exe`, ejecútalo, instala con el asistente y abre **AB MakerIDE SUPER** desde el menú Inicio. Se ejecuta localmente en `127.0.0.1:8770` y mantiene una consola para diagnósticos. **Arduino CLI y núcleos/librerías de placas no están incluidos**; los asistentes de IA requieren herramientas/cuentas propias. Los datos operativos del instalador se conservan en `%LOCALAPPDATA%\\MS Robotika\\AB MakerIDE SUPER`. Guarda/exporta tus proyectos antes de cerrar. No mezcles los archivos de RC4 con la edición TEST.
 
-**[📖 Guía: cuál descargar, instalación paso a paso y qué incluye realmente](docs/DESCARGAS_Y_VERSIONES.md)** · [Auditoría RC4 aún abierta](https://github.com/msrobotika/AB-MakerIDE-SUPER/issues/11) · [Instalador Windows pendiente](https://github.com/msrobotika/AB-MakerIDE-SUPER/issues/19).
+[Guía de descargas y diferencias](docs/DESCARGAS_Y_VERSIONES.md) · [Instalación detallada](docs/INSTALACION.md) · [Pruebas reales del instalador en CI](https://github.com/msrobotika/AB-MakerIDE-SUPER/actions/workflows/windows-installer.yml) · [Reportar fallo](https://github.com/msrobotika/AB-MakerIDE-SUPER/issues).
 
 **Vista del diseñador de pantallas disponible en el código de desarrollo (captura Chromium, no TFT físico):**
 
 [![AB ScreenLab — lienzo CYD en MakerIDE, edición de elementos](docs/evidence/screenlab/screenlab-cyd-real.png)](docs/evidence/screenlab/screenlab-cyd-real.png)
 
-**[Única candidata pública: RC4 (pre-release)](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/tag/v1.0.0-rc.4)** · [Comunicar un fallo](https://github.com/msrobotika/AB-MakerIDE-SUPER/issues/new/choose) · [Proyectos y pruebas de placas](https://github.com/msrobotika/AB-MakerIDE-SUPER/discussions) · [English](README.en.md)
+**[Windows TEST, descarga actual](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/tag/windows-test-dev-025dd26e85)** · [Comunicar un fallo](https://github.com/msrobotika/AB-MakerIDE-SUPER/issues/new/choose) · [Proyectos y pruebas de placas](https://github.com/msrobotika/AB-MakerIDE-SUPER/discussions) · [English](README.en.md)
 
 **Un editor con agente para crear firmware de Arduino, ESP32 y MicroPython.** Pide el proyecto desde el chat, trabaja con el código en el editor y distingue cada resultado: código, compilación, carga verificada y observación física.
 
@@ -39,7 +44,7 @@ Estas imágenes proceden de la **aplicación RC4 en Windows con una placa CYD ES
 
 La aplicación es open source, con [licencia MIT](LICENSE). **AB MakerIDE SUPER es independiente y no oficial**: utiliza Arduino CLI instalada por separado por cada usuario. Arduino® es marca de Arduino S.r.l.; no existe afiliación ni respaldo. [Licencias y avisos de terceros](THIRD_PARTY_NOTICES.md) · [Política de marcas](docs/MARCAS_Y_LICENCIAS.md). **La IA es opcional y no es gratuita por incluir MakerIDE:** cada usuario vincula su propia cuenta y utiliza su cuota. Codex está probado en uso real por el autor. Claude Code, conectores de chat y Ollama siguen pendientes de validación equivalente.
 
-**Publicaciones congeladas:** el desarrollo continúa mediante PR y pruebas; no se crearán lanzamientos cada día. La RC4 es **un candidato, no una versión estable**. [Política estricta de publicación](docs/RELEASE_POLICY.md) · [Índice de documentación vigente](docs/README.md). En la página pública de Releases solo se mantiene RC4. Se conservan los commits históricos y su trazabilidad.
+**Publicaciones congeladas:** el desarrollo continúa mediante PR y pruebas; no se crearán lanzamientos cada día. La RC4 es **un candidato, no una versión estable**. [Política estricta de publicación](docs/RELEASE_POLICY.md) · [Índice de documentación vigente](docs/README.md). La edición Windows TEST es una pre-release separada; RC4 permanece como descarga histórica con su trazabilidad.
 
 **Catálogo MCP Maker (rama `main` posterior a RC4):** REA para análisis autorizado de firmware como opción voluntaria, y referencias documentadas a Espressif/PCB. [Alcance y configuración personal de Codex](docs/CATALOGO_MCP_MAKER.md). **No disponible en la descarga histórica RC4**, ni se inicia servidor alguno automáticamente. La prueba de conexión real queda pendiente.
 

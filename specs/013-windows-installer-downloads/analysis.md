@@ -1,0 +1,2 @@
+# Análisis
+Se verificó una Release pública Windows TEST con Setup.exe, SHA256SUMS.txt y smoke tests adjuntos. El código contiene ScreenLab/MotionLab frente al antiguo ZIP RC4. No se certifica uso de una placa por el simple arranque del instalador. El instalador sin firma y Arduino CLI externo se identifican abiertamente. Los enlaces de código fuente apuntan a `main` mutable; el ejecutable referencia un SHA de commit fijo. Se mantiene el bloqueante histórico #11. La documentación es el único ámbito de esta mejora.

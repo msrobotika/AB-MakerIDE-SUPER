@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "convergence": "converged",
+  "requirements": [
+    {
+      "id": "FR-001",
+      "result": "passed",
+      "notes": "Release y setup referenciados por enlace exacto en portadas bilingües; validación estática de URL.",
+      "evidence": [
+        "README.md",
+        "README.en.md",
+        "tests/test_download_landing.py"
+      ]
+    },
+    {
+      "id": "FR-002",
+      "result": "passed",
+      "notes": "Tabla de edición TEST y de RC4 histórica, diferencias de características y código main.",
+      "evidence": [
+        "docs/DESCARGAS_Y_VERSIONES.md",
+        "README.md"
+      ]
+    },
+    {
+      "id": "FR-003",
+      "result": "passed",
+      "notes": "Guía instalación, cuentas opcionales, CLI, firma y datos privados al margen de carpeta programa.",
+      "evidence": [
+        "docs/INSTALACION.md",
+        "docs/README.md"
+      ]
+    },
+    {
+      "id": "FR-004",
+      "result": "passed",
+      "notes": "Prueba estática en la CI y huella SHA de archivo técnico de test.",
+      "evidence": [
+        "tests/test_download_landing.py",
+        "MANIFEST_SHA256.txt"
+      ]
+    }
+  ],
+  "changed_files": {
+    "tests/test_download_landing.py": "d71af03c8d3385f3fb3061de2db94a153098a282da932d391e016ee2eca7f99b"
+  }
+}
