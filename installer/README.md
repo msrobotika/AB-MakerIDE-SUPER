@@ -8,7 +8,7 @@ reutiliza ni altera el ZIP histórico `v1.0.0-rc.4`.
 GitHub Actions ejecuta `.github/workflows/windows-installer.yml` en un runner
 `windows-latest`: Python 3.13 x64, PyInstaller 6.16.0, pyserial 3.5,
 keyring 25.6.0 e Inno Setup 6, descargados en el runner. El instalador
-incluye intérprete y librerías de ejecución para el editor local. Se entrega
+incluye intérprete y librerías de ejecución para el editor local. Se incorporan copias de las licencias de CPython, pyserial y keyring en `third_party_licenses/`. Se entrega
 **sin firma Authenticode** y puede activar SmartScreen. No se instala ninguna
 herramienta o core de placa, no se graba firmware ni se autoriza IA.
 
