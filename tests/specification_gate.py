@@ -33,6 +33,7 @@ TECHNICAL_SUFFIXES = {
     ".html",
     ".css",
     ".json",
+    ".iss",
     ".toml",
     ".yml",
     ".yaml",

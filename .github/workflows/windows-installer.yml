@@ -96,7 +96,7 @@ jobs:
           $env:AB_MAKERIDE_DATA_DIR = Join-Path $env:RUNNER_TEMP "makeride-user-data"
           New-Item -ItemType Directory -Force $env:AB_MAKERIDE_DATA_DIR | Out-Null
           "user projects must survive" | Set-Content (Join-Path $env:AB_MAKERIDE_DATA_DIR "user-preservation.txt")
-          $install = Start-Process -FilePath $installer -ArgumentList "/VERYSILENT", "/SUPPRESSMSGBOXES", "/NORESTART", "/DIR=$target" -Wait -PassThru
+          $install = Start-Process -FilePath $installer -ArgumentList "/VERYSILENT", "/SUPPRESSMSGBOXES", "/NORESTART", "/DIR=`"$target`"" -Wait -PassThru
           if ($install.ExitCode -ne 0) { throw "Instalador: $($install.ExitCode)" }
           $exe = Join-Path $target "AB-MakerIDE-SUPER.exe"
           if (-not (Test-Path $exe)) { throw "No se ha instalado el programa" }

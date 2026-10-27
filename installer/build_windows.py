@@ -9,10 +9,23 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = [
-    "launch.py", "server.py", "index.html", "app.js", "activity.js",
-    "simulator.js", "board_trials.js", "VERSION",
-    "README.md", "README.en.md", "LICENSE", "THIRD_PARTY_NOTICES.md",
-    "requirements.txt", "frontend", "examples", "docs", "ab_makeride",
+    "launch.py",
+    "server.py",
+    "index.html",
+    "app.js",
+    "activity.js",
+    "simulator.js",
+    "board_trials.js",
+    "VERSION",
+    "README.md",
+    "README.en.md",
+    "LICENSE",
+    "THIRD_PARTY_NOTICES.md",
+    "requirements.txt",
+    "frontend",
+    "examples",
+    "docs",
+    "ab_makeride",
 ]
 UPSTREAM = ROOT / ".specify" / "UPSTREAM_LICENSE"
 
@@ -26,16 +39,31 @@ def main():
     if not UPSTREAM.is_file():
         raise SystemExit("Falta la atribución de licencia de Spec Kit.")
     cmd = [
-        sys.executable, "-m", "PyInstaller", "--noconfirm", "--clean",
-        "--onedir", "--console", "--contents-directory", ".",
-        "--name", "AB-MakerIDE-SUPER",
-        "--distpath", str(ROOT / "dist"),
-        "--workpath", str(ROOT / "build" / "pyinstaller"),
-        "--specpath", str(ROOT / "build"),
-        "--paths", str(ROOT),
-        "--hidden-import", "serial",
-        "--hidden-import", "serial.tools.list_ports",
-        "--collect-submodules", "keyring.backends",
+        sys.executable,
+        "-m",
+        "PyInstaller",
+        "--noconfirm",
+        "--clean",
+        "--onedir",
+        "--console",
+        "--contents-directory",
+        ".",
+        "--name",
+        "AB-MakerIDE-SUPER",
+        "--distpath",
+        str(ROOT / "dist"),
+        "--workpath",
+        str(ROOT / "build" / "pyinstaller"),
+        "--specpath",
+        str(ROOT / "build"),
+        "--paths",
+        str(ROOT),
+        "--hidden-import",
+        "serial",
+        "--hidden-import",
+        "serial.tools.list_ports",
+        "--collect-submodules",
+        "keyring.backends",
     ]
     for name in DATA:
         source = ROOT / name
