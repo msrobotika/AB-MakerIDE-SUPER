@@ -93,6 +93,17 @@ def main():
                 check("dragging moves and persists the component", new_x != old_x)
                 page.locator("#slText").fill("Ancho de banda")
                 page.locator("#slText").dispatch_event("change")
+                with page.expect_download() as first_export:
+                    page.locator("#slSketchDownload").click()
+                raw_download = first_export.value
+                check(
+                    "CYD sketch downloads without a connected board",
+                    raw_download.suggested_filename == "ScreenLabCYD.ino",
+                )
+                check(
+                    "download never triggers compilation/upload",
+                    not report["hardware_actions"],
+                )
                 page.locator("#slProfile").select_option("ideaspark")
                 check(
                     "real IdeaSpark landscape design profile",
@@ -105,6 +116,11 @@ def main():
                 check(
                     "MotionLab preview runs only after explicit click",
                     "animaciones previsualizadas" in page.locator("#slStatus").inner_text(),
+                )
+                page.locator("#slSketchDownload").click()
+                check(
+                    "MotionLab cannot be silently discarded by the static sketch exporter",
+                    "desactiva MotionLab" in page.locator("#slStatus").inner_text(),
                 )
                 page.locator("#slGenerate").click()
                 code = page.locator("#slCode").input_value()
@@ -124,6 +140,18 @@ def main():
                 )
                 page.screenshot(
                     path=str(args.outputs / "screenlab-ideaspark-real.png"), full_page=True
+                )
+                page.locator("#slMotion").select_option("none")
+                with page.expect_download() as second_export:
+                    page.locator("#slSketchDownload").click()
+                check(
+                    "IdeaSpark sketch downloads as standalone Arduino source",
+                    second_export.value.suggested_filename == "ScreenLabIdeaSpark.ino",
+                )
+                page.locator("#slSketchEditor").click()
+                check(
+                    "wrong active FQBN blocks replacing Arduino sketch",
+                    page.locator("#code").input_value() == previous_sketch,
                 )
                 check("no device/agent operation invoked", not report["hardware_actions"])
                 browser.close()

@@ -40,6 +40,7 @@ jobs:
       - run: python tests/run_isolated.py
       - run: node --test tests/test_agent_activity.mjs
       - run: node --test tests/test_screenlab.mjs
+      - run: node --test tests/test_screenlab_sketch.mjs
       - run: node --check app.js
       - run: node --check activity.js
       - run: node --check simulator.js
