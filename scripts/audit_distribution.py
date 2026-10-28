@@ -47,6 +47,7 @@ def audit_zip(path, expected_sha256=None):
                 errors.append("ZIP vacio o con volumen excesivo")
             valid = []
             seen = set()
+            windows_paths = {}
             for item in infos:
                 name = item.filename
                 if (
@@ -66,7 +67,23 @@ def audit_zip(path, expected_sha256=None):
                     errors.append("Ruta duplicada")
                     continue
                 seen.add(name)
-                valid.append((item, PurePosixPath(name).parts))
+                parts = PurePosixPath(name).parts
+                ambiguous = False
+                for depth in range(1, len(parts) + 1):
+                    spelling = "/".join(parts[:depth])
+                    kind = "directory" if depth < len(parts) or item.is_dir() else "file"
+                    # Conservative alias guard for Windows distribution. Check
+                    # implicit parents too, without extracting any ZIP contents.
+                    previous = windows_paths.setdefault(spelling.casefold(), (spelling, kind))
+                    if previous != (spelling, kind):
+                        errors.append(
+                            "Rutas ambiguas en Windows: " + previous[0] + " / " + spelling
+                        )
+                        ambiguous = True
+                        break
+                if ambiguous:
+                    continue
+                valid.append((item, parts))
             roots = {parts[0] for _, parts in valid if parts}
             if len(roots) != 1:
                 errors.append("Debe existir una sola carpeta raiz")

@@ -1,0 +1,2879 @@
+{
+  "archive": "AB-MakerIDE-SUPER-1.0.0-rc.4-IA-actualizada.zip",
+  "bytes": 7107080,
+  "sha256": "2337121a9709b1371a4cd910073521b4d93632dc35a2b16bce831cbf9bba2862",
+  "crc": "all entries passed",
+  "files": [
+    {
+      "path": "AB-MakerIDE-SUPER/.agents/skills/speckit-analyze/SKILL.md",
+      "bytes": 12044,
+      "crc32": "91a87208",
+      "sha256": "6c06b7a690a319da258f6ca1c62ceb23aa8f19c6c380c59e61939495ee1ef6fc",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/.agents/skills/speckit-checklist/SKILL.md",
+      "bytes": 22661,
+      "crc32": "72cd0873",
+      "sha256": "69729233def9234d28d6ce091db76f26a47cf9157977b29f71fe15495ba0c3ad",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/.agents/skills/speckit-clarify/SKILL.md",
+      "bytes": 19712,
+      "crc32": "f45d1e4d",
+      "sha256": "7ab48fad700cef290edb7328f0d4c603d657aae6dad546e1857333539548a25f",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/.agents/skills/speckit-constitution/SKILL.md",
+      "bytes": 10523,
+      "crc32": "7766381d",
+      "sha256": "628cad1d27156f346d43593e5eddf18e996deef5e5335a799b9f37b1cb6513b8",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/.agents/skills/speckit-converge/SKILL.md",
+      "bytes": 13464,
+      "crc32": "a69c7009",
+      "sha256": "659940932e01db844fe788a9216112e734a82a7b97c00da569757dac0a544dc6",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/.agents/skills/speckit-implement/SKILL.md",
+      "bytes": 13090,
+      "crc32": "d69894d0",
+      "sha256": "2bad0c1ab373694fe7cf2ce2571c03a469c440c257bf7607d2b0d42aba2324ed",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/.agents/skills/speckit-plan/SKILL.md",
+      "bytes": 8242,
+      "crc32": "df5da02a",
+      "sha256": "39ac3c74bc727d001b620488d064687d9bd98446953441d77cf3719acc580cd4",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/.agents/skills/speckit-specify/SKILL.md",
+      "bytes": 18638,
+      "crc32": "437ffdfa",
+      "sha256": "a505028de7f6489878696d6656c7d057f3a66119ebb8c0cc82d69fabb7b344ff",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/.agents/skills/speckit-tasks/SKILL.md",
+      "bytes": 11585,
+      "crc32": "a6702498",
+      "sha256": "e9a08900e74f31089926f110bc70b57beb568c7155626e25df70d2192df1475f",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/.agents/skills/speckit-taskstoissues/SKILL.md",
+      "bytes": 8644,
+      "crc32": "9fe43d84",
+      "sha256": "a20d5f4ce0c8ed16ee8483c6b371a45db7b60c236b199e3c90708215000cec91",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/.gitattributes",
+      "bytes": 88,
+      "crc32": "e175a4de",
+      "sha256": "009a6b9f29c15d9267a000655ab34a98ab05949cbed3d805dae908f3398eb616",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/.github/ISSUE_TEMPLATE/bug_report.md",
+      "bytes": 529,
+      "crc32": "a0a3be85",
+      "sha256": "d5ce56c1c90b76c45aeb0597b5ee1f94d21525e871a83b6eaccb90ae9930940f",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/.github/ISSUE_TEMPLATE/feature_request.md",
+      "bytes": 286,
+      "crc32": "c3549cb0",
+      "sha256": "11b5606b602908d54fc6bdcfc4720ef8bf40ac4607888900d05d30493eae2a22",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/.github/PULL_REQUEST_TEMPLATE.md",
+      "bytes": 777,
+      "crc32": "d4890e07",
+      "sha256": "e4475af7bba54776510c01b2f933aabeaa0fe3df17481b269ccf89eb948ba693",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/.github/dependabot.yml",
+      "bytes": 719,
+      "crc32": "f96a5495",
+      "sha256": "4218c4ab24a20b19d0fb273be718f2fe2f63c76536c0fb1d9125f3805d2a8f01",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/.github/workflows/checks.yml",
+      "bytes": 3412,
+      "crc32": "b9ab6371",
+      "sha256": "ae5a0e68c35a45ecb42b056420951c4aec64108126f42ca986bc3f434394f105",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/.gitignore",
+      "bytes": 385,
+      "crc32": "d1663c6e",
+      "sha256": "fac41b709934e6dfcb318bc6519f46021c8653250ff976d6f27a8e801ace00ae",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/.prettierrc.json",
+      "bytes": 65,
+      "crc32": "30d68450",
+      "sha256": "d71efe6acf7dbe6b63c6a2764e6637edcba29ea3b68e36a405c1a18e339395f7",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/.specify/.gitignore",
+      "bytes": 586,
+      "crc32": "0b6a7f8b",
+      "sha256": "0a61c5378b0bb2e0f85babff99c8b166f2170a2c12378cd17d929aa19296ec88",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/.specify/UPSTREAM.md",
+      "bytes": 1154,
+      "crc32": "1353fc9e",
+      "sha256": "bdcb9ca4c2872ec561b440c2ab10bc199513e52bdf4df241fd15c6c69992751f",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/.specify/UPSTREAM_LICENSE",
+      "bytes": 1060,
+      "crc32": "0ea40ce8",
+      "sha256": "2510b446bc1f0cf9702453075d20cd88631e20e5642658edb7325d9c1eb534f7",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/.specify/init-options.json",
+      "bytes": 195,
+      "crc32": "bcbbd156",
+      "sha256": "080346beed26c749132692de2fcd87eb86c82eabb71ea6a96b1999eddc5a4d6a",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/.specify/integration.json",
+      "bytes": 404,
+      "crc32": "4f5d7c06",
+      "sha256": "d43d9dcee50ff1da33f584afddb38f082e17218f76b1e770b1da966af138202a",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/.specify/integrations/codex.manifest.json",
+      "bytes": 1283,
+      "crc32": "fcc71072",
+      "sha256": "77bca4688f88906259f83a2d54dfd385f7a17c9a99e304f21e278e3816ab0483",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/.specify/integrations/speckit.manifest.json",
+      "bytes": 2214,
+      "crc32": "a06161ef",
+      "sha256": "e3b77c2499a4cd0a5951469abe1815e796eb31b39bccccbc13fa13fe29afead8",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/.specify/memory/.constitution-template.json",
+      "bytes": 103,
+      "crc32": "abd57182",
+      "sha256": "8fc4b39294bae0c10d59547ad7d415b6f0e890d656cbf7171dd567f4e9054711",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/.specify/memory/constitution.md",
+      "bytes": 3760,
+      "crc32": "c2708d0a",
+      "sha256": "ac25c4914a20281fc75ca772a99947baa3380b83101027577b3e090c624db529",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/.specify/memory/quality-gate.json",
+      "bytes": 65,
+      "crc32": "e199ea93",
+      "sha256": "5fb1eca2584457e8676eaa08f894e0970167f845f27d969a854ca63390f05a75",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/.specify/scripts/powershell/check-prerequisites.ps1",
+      "bytes": 7085,
+      "crc32": "8513b7b6",
+      "sha256": "f48e586b57cc049ea83ade5acecb466f861aee4fb444dab54bbafc813222da10",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/.specify/scripts/powershell/common.ps1",
+      "bytes": 35317,
+      "crc32": "50065d10",
+      "sha256": "54b59523b13fd8f884ff8b6b4e74fded922cdcc884965ff720392ca64ec1aa47",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/.specify/scripts/powershell/create-new-feature.ps1",
+      "bytes": 14876,
+      "crc32": "473539fe",
+      "sha256": "481c7368541a816b1679e5ed65fa9e5aea84b09f8be3a02ff8a340e3b48dd58a",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/.specify/scripts/powershell/resolve-template.ps1",
+      "bytes": 889,
+      "crc32": "1c59ebf7",
+      "sha256": "e49c565a09902e4ebd4b5a51c4e014d5067fdee5b1592f15cb44ef31f430d745",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/.specify/scripts/powershell/setup-plan.ps1",
+      "bytes": 3062,
+      "crc32": "9cca17d0",
+      "sha256": "5939ef98418e8dc8cc722ef53ba359fc814f3d2a9fd7620f04e8d145a7041f1a",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/.specify/scripts/powershell/setup-tasks.ps1",
+      "bytes": 3977,
+      "crc32": "88e81ab6",
+      "sha256": "a1a5002280b3016e5f5b150719eb5442b8505abf325ef266139becde2c070d33",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/.specify/scripts/python/check_prerequisites.py",
+      "bytes": 9759,
+      "crc32": "fb39294f",
+      "sha256": "367e0e7cf8d384167aa60d2a99ba8d40ef9ca1e49b8a35f3ec44c9c759416600",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/.specify/scripts/python/common.py",
+      "bytes": 27039,
+      "crc32": "80914447",
+      "sha256": "ae2331bc1fd4da497c4e3a36076f7239ae2d2a7766de89bdc2b59711eb9a84b5",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/.specify/scripts/python/create_new_feature.py",
+      "bytes": 16014,
+      "crc32": "552d1aa3",
+      "sha256": "bbea1d8d3c3275fccb4fb02c40a244446657385caf72211c1853376ca78f7295",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/.specify/scripts/python/resolve_template.py",
+      "bytes": 1776,
+      "crc32": "4aaa097b",
+      "sha256": "9e383c7f1e4cdbb2367e390457d5f47839bf96ca76451be87bd89465e638c2f3",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/.specify/scripts/python/setup_plan.py",
+      "bytes": 3749,
+      "crc32": "ebd1b4fd",
+      "sha256": "3738fbdc16a1418a12079c974208123c815866fc0401060e9c41a37d2c8e9eaa",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/.specify/scripts/python/setup_tasks.py",
+      "bytes": 5952,
+      "crc32": "1ca7be15",
+      "sha256": "124a0a2ea5f213edf90c01b34d9f68d2609b20d1a1964c06106ed91ccb490ae1",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/.specify/templates/checklist-template.md",
+      "bytes": 2033,
+      "crc32": "d01da60f",
+      "sha256": "70bbc48e884fab372ffb09e83e78ff983e28b69caebf8cd9964a02b6836683ac",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/.specify/templates/constitution-template.md",
+      "bytes": 2346,
+      "crc32": "1ac0737b",
+      "sha256": "ce7549540fa45543cca797a150201d868e64495fdff39dc38246fb17bd4024b3",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/.specify/templates/plan-template.md",
+      "bytes": 3682,
+      "crc32": "d113879e",
+      "sha256": "a828ad6206526574ab3fc99be6d0154588cb1c9774c5919d71b81ab5b2dbffa0",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/.specify/templates/spec-template.md",
+      "bytes": 4556,
+      "crc32": "76a4d794",
+      "sha256": "3945437fc35cd30a5b2bf7beea680337c3516826d3efa5a6b92c4a7eca1ba28e",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/.specify/templates/tasks-template.md",
+      "bytes": 9171,
+      "crc32": "92289d26",
+      "sha256": "b0f527d41e546af0c31903e04f9b20965b6b497b573792198f663a64ce128863",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/.specify/workflows/speckit/workflow.yml",
+      "bytes": 2118,
+      "crc32": "1da98611",
+      "sha256": "177761c5e7df28126beea043b5cb45aeaf7958090c022dc11ac71399422fcfbc",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/.specify/workflows/workflow-registry.json",
+      "bytes": 369,
+      "crc32": "3cda212b",
+      "sha256": "7bb1d75a12c033ba697c04778c42f4fc835da934997c4cbe033715cf0c888039",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/AGENTS.md",
+      "bytes": 2793,
+      "crc32": "60db8c9c",
+      "sha256": "d51e8bec99a58a3893404a2e7b8130c923db67492dcb570f2bd8be354f4c9c03",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/CHANGELOG.md",
+      "bytes": 13605,
+      "crc32": "499ed6bb",
+      "sha256": "44a8646aceb9957c33c5e3e8ab3685c4af7e4bb9bb81ad4812d629a0890da138",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/CONTRIBUTING.md",
+      "bytes": 3030,
+      "crc32": "dc574a07",
+      "sha256": "7874f78708425811ba781738d339cad61c5b1b1a1e6c24dc5f89eb7f519452bc",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/INICIAR_WINDOWS.bat",
+      "bytes": 811,
+      "crc32": "100e0aea",
+      "sha256": "eecc0bd6d1a916a055d9ffe0edf578c67a857f8447c9cf95a8e0c8667af7597f",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/INICIAR_WINDOWS_8771.bat",
+      "bytes": 59,
+      "crc32": "89c4f0ae",
+      "sha256": "e69abb84d54c1d5e289dcaaa11c798ad1fe9710dcb65e6f2ec6b15f40242bab6",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/LICENSE",
+      "bytes": 1068,
+      "crc32": "b2f540fb",
+      "sha256": "c53f7234475ac1c1293e7672a346cb4b3db4e8930cc862e8a1db0ada3f90f070",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/MANIFEST_SHA256.txt",
+      "bytes": 41981,
+      "crc32": "7ac4c7cc",
+      "sha256": "ad165c3d7165e92f7ab635deeb7a6f49e98381845628e225fb1f8b4697b6de2a",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/PREPARAR_WINDOWS.bat",
+      "bytes": 536,
+      "crc32": "99a6cc1e",
+      "sha256": "1a27bcd8c2dc503e6ba2f3c4382d8f70731e18a2df76016788539eccc300bd68",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/PRUEBAS_WINDOWS.bat",
+      "bytes": 161,
+      "crc32": "2bae2e57",
+      "sha256": "88b6765ab802bc733b5b22185b862fda5b72c7f0a12301a5155db28396f72b0a",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/README.en.md",
+      "bytes": 5619,
+      "crc32": "0531e8cf",
+      "sha256": "d6b57b2a079d1218c8e2990b943b95d8ef3c001e8333f6f1e7f0bd234bb720da",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/README.md",
+      "bytes": 10083,
+      "crc32": "a70bfc74",
+      "sha256": "0025a17aeb011ac99099e15eff5b8c30d73864670e59e0380c606ec8f530c780",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/SECURITY.md",
+      "bytes": 4376,
+      "crc32": "d78baf83",
+      "sha256": "75871999323d889e739177a259cc18a16676ff37b37c2fb0bc4353af83cc6ffa",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/VERIFICAR_WINDOWS.bat",
+      "bytes": 404,
+      "crc32": "ed781a01",
+      "sha256": "e2204c91deb9a37a7e79b7ea6f2c4e91999f934bb291a2c7562a741c451cae4d",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/VERSION",
+      "bytes": 11,
+      "crc32": "c1c68f1e",
+      "sha256": "88ea7d36adb579694883db250b37e012ebf9dfcb5938032d92cc5b843a548a11",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/ab_makeride/__init__.py",
+      "bytes": 81,
+      "crc32": "54b4a7d3",
+      "sha256": "459083f5b340bbc99407eebf4a412e7ca873c743c43817262de03b875c9b7727",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/ab_makeride/agent_projects.py",
+      "bytes": 8652,
+      "crc32": "30122bd8",
+      "sha256": "b976456ebab313070f0b712b6dbd2da5c2cd4f6a0e91076769a4c2f9fd889c0b",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/ab_makeride/agent_runtime.py",
+      "bytes": 56512,
+      "crc32": "84784778",
+      "sha256": "f9499f5f020a2a77bc94059b5f695d966eeb46c0826c669cb687adea913dccef",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/ab_makeride/board_identity.py",
+      "bytes": 8564,
+      "crc32": "730aa341",
+      "sha256": "683d8bfa05c62f48aa3fbde15c17f4d6ced5203d8f296b31c3c3647d79bd9839",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/ab_makeride/cli_agents.py",
+      "bytes": 5002,
+      "crc32": "6279ea82",
+      "sha256": "08b4984fefabcd2e2b73c6b564d0e174444047d85e752ba313565c5b706a8e9b",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/ab_makeride/cloud_agent.py",
+      "bytes": 11305,
+      "crc32": "d56650fd",
+      "sha256": "4d3bb3ebed5ed9a70e37cf5bcc776e1ac5c202b040c8a3af884b5bbdd31c2daa",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/ab_makeride/codex_session.py",
+      "bytes": 10933,
+      "crc32": "2b06921b",
+      "sha256": "45fdb1083541e18cb5d41c36ab2b4d9ace66e18ba8115b53f14b7cfdbcb44fe0",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/ab_makeride/dependency_advisor.py",
+      "bytes": 7314,
+      "crc32": "095bc9ed",
+      "sha256": "de895b8c0ff25b8dffe0207eadfe10d769b281e25044c95cf9d9019e055d5a53",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/ab_makeride/hardware_lab.py",
+      "bytes": 9275,
+      "crc32": "cc8d24c2",
+      "sha256": "f04cecf5c1b46dde76ee2afa942379595fcebf65b74e5d368fc4689af657a947",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/ab_makeride/jobs.py",
+      "bytes": 21337,
+      "crc32": "0550937e",
+      "sha256": "7fc791ce36c45dfe688688d00d6be8e873a1b967a415c83db8e1d476cb60f0b7",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/ab_makeride/mcp_bridge.py",
+      "bytes": 8479,
+      "crc32": "da07f242",
+      "sha256": "c140b6b7136d497660feca5d2891bb83faf9166f551ceb70898b51aa1f5506ec",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/ab_makeride/secret_store.py",
+      "bytes": 6937,
+      "crc32": "aa0834d8",
+      "sha256": "7a09f86657f77dae02dce548abb84b1308e8a7edddc78f575915c38cfe95f808",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/ab_makeride/toolchain.py",
+      "bytes": 648,
+      "crc32": "b9c3caa7",
+      "sha256": "31cec98b99ca1b9ac7b47b8e9fcb18cf848754ef5d00b2e0f04f30c4bbc6689b",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/ab_makeride/version_info.py",
+      "bytes": 204,
+      "crc32": "f2d71e8b",
+      "sha256": "450ad6b6ee2dd7b04a48431805b1442c59f14770dab87233e3108e132450c51a",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/activity.js",
+      "bytes": 3288,
+      "crc32": "d27194d9",
+      "sha256": "13fff62f01caf7a825cf25a8f1c54cdb34096a714bfa6885241eb16dd7df2009",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/app.js",
+      "bytes": 295,
+      "crc32": "f54466ce",
+      "sha256": "711b1851e5a13e0e293ff4e88f7cc6ce25a5bd68d083c84eabdf8266ad5f0f6f",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/board_trials.js",
+      "bytes": 9043,
+      "crc32": "1ba8b993",
+      "sha256": "f9586a004055a9ce1ee42ba390a7d933c4c6329f821a8ebf18073a7b21289ea3",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/AUDITORIA_RC4.md",
+      "bytes": 4912,
+      "crc32": "05d37320",
+      "sha256": "52beeb76417d7ff9a79fbc8c536edbc031aadcd1bfd06ebf32f654245eabe16d",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/CENTRO_ACTIVIDAD_IA.md",
+      "bytes": 2846,
+      "crc32": "ab000e4c",
+      "sha256": "f1ef77c3670a3cc8a92bdfca93cd5c33b60bde9808d704449aa8bbd8df6ff6ed",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/DESARROLLO.md",
+      "bytes": 3467,
+      "crc32": "7cd912f8",
+      "sha256": "cfc0039edf36b0218c6b4cac893c0ecde82d805560762061d7d8ce6a84d5ef13",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/IA_Y_CUOTAS.md",
+      "bytes": 3060,
+      "crc32": "f4483792",
+      "sha256": "02ec6049ced475b365ace69c4fe7e47a97671d57bd71c17522041ef92bea9cdc",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/IDENTIFICACION_AUTOMATICA.md",
+      "bytes": 5224,
+      "crc32": "7278b55b",
+      "sha256": "6a113b82b39968a283a7a07f9c654f2c32a59319a38d0a3dc41cc6179d931c62",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/INSTALACION.md",
+      "bytes": 6655,
+      "crc32": "19eafafc",
+      "sha256": "48e0aa708e8bf26dbfb00e81a4247940d7af001fa2bc815b012648bc35d7286e",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/LINUX_MACOS.md",
+      "bytes": 3320,
+      "crc32": "46486810",
+      "sha256": "e8dd22ca5af5e13fad552999bc35422d5c2f0f5c2877f97029d22cff2b86f1ea",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/MATRIZ_HARDWARE.md",
+      "bytes": 5215,
+      "crc32": "1f2a49f8",
+      "sha256": "94e2746414b0e5c9771e445514dd69b046d169eb2e6c4591cf0af9aefa3c354d",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/MCP.md",
+      "bytes": 5797,
+      "crc32": "b59d64b1",
+      "sha256": "9e460deed2e04c17d1182174446acdffeba5e89c7cd389ce5e9e55804e956cbd",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/PROYECTOS_DEL_AGENTE.md",
+      "bytes": 4136,
+      "crc32": "bdcaab74",
+      "sha256": "9d55f61b08df1968617d4ed3b258fc821b9225b1df8f8426a8d1c48cb024fc84",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/PRUEBAS_DE_PLACAS.md",
+      "bytes": 3196,
+      "crc32": "170a1f03",
+      "sha256": "5201bbc2c7ff58c1ed573cc882e4c9279dda1ec858840f947950049f5857e6e1",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/PRUEBAS_EN_WINDOWS.md",
+      "bytes": 1463,
+      "crc32": "804eb7e2",
+      "sha256": "68df53d9eaa8fb057488bbdd61c74c7649c359e2a394efb011590eb2f6e8ed04",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/RC4_PUBLICACION.md",
+      "bytes": 6123,
+      "crc32": "a324091c",
+      "sha256": "de9267ee0eab73fba19a9e91acf571b4411c44e4d13470878e99a1fdd1d09795",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/README.md",
+      "bytes": 1909,
+      "crc32": "cd66aa6c",
+      "sha256": "c16c55cf678704fed968dc0428f401ddacfb436036bf965286dab1f350a88ba1",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/RELEASE_POLICY.md",
+      "bytes": 4457,
+      "crc32": "296025c6",
+      "sha256": "18b02967a79a56a172f355c61c4b23d067b207351bf4daa8c6a90f3d406d7bb2",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/SIMULADOR.md",
+      "bytes": 3467,
+      "crc32": "4b36b63a",
+      "sha256": "ebae17f859ed722285ad6e2ad39c837f8eee3e0c377efb68abc0950612e261cc",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/SPEC_KIT.md",
+      "bytes": 4348,
+      "crc32": "64862cc9",
+      "sha256": "0654d5ab4300d14b125ed6871e86545262f1a1de8e86ba3a4815f5fb2f58eb3c",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/archive/ACTUALIZACION_093.md",
+      "bytes": 1816,
+      "crc32": "1d5786d5",
+      "sha256": "19536bb5f0903addba25aee7cf164879dc0d98c6d6dc9edae14e93c9436f882a",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/archive/AGENT_CONSENT_FIX.md",
+      "bytes": 1545,
+      "crc32": "a2efcec3",
+      "sha256": "143c1a3f5a589640a079c703ffd93d24685894d26b9c78680a878fea357caa1f",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/archive/AUDITORIA_091.md",
+      "bytes": 2992,
+      "crc32": "67021009",
+      "sha256": "e1a981ba6ea05eae6b4f4d4981ff828ff833c19d433e00ddd3f8c9a6e1fc3729",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/archive/AUDITORIA_092.md",
+      "bytes": 3107,
+      "crc32": "a1366616",
+      "sha256": "f1fea0bd87f687fad34bb55eaa144e7362d611e96f622f0f6e7f1f535330a59a",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/archive/AUDITORIA_093.md",
+      "bytes": 3837,
+      "crc32": "bf31043a",
+      "sha256": "930838c1675a1091fba0f4983e80e5199f837791aa8e3585a6fb702b64e3120a",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/archive/AUDITORIA_094.md",
+      "bytes": 4089,
+      "crc32": "c5348a2a",
+      "sha256": "2151ea9565fd56854e11e064af107c26a2ce2a10d0f6f6cb6a70785c325d307d",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/archive/AUDITORIA_095.md",
+      "bytes": 4798,
+      "crc32": "4d1ffcc9",
+      "sha256": "f24441ae9ad6e34d0869c6f36d8ac49d85263cf297c51bfb12f2b7e106396ca2",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/archive/AUDITORIA_096.md",
+      "bytes": 2273,
+      "crc32": "5ca6b9a4",
+      "sha256": "cf0292e0050e018463b66a1ccc60bf7de43042b8bb9ea08c55c704017173ce25",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/archive/AUDITORIA_097.md",
+      "bytes": 3444,
+      "crc32": "b46e8a21",
+      "sha256": "d4075f6ffdbfc4129bb459eca6a743045b476eb6f3ba0b30dd2a8f1f9cd8af17",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/archive/CIERRE_PRUEBAS_2026-10-25.md",
+      "bytes": 1655,
+      "crc32": "6de2af44",
+      "sha256": "bf818fa57c5f2db647d3602fc2e7dd6d469de1fbbcd0571b5fccbbba242316b8",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/archive/COMPARATIVA_IDES_2026.md",
+      "bytes": 5121,
+      "crc32": "00edcd97",
+      "sha256": "6160f9e77fcf4b6f28c11d95a1268079edee0856e10a1f9b8a07fae51784d6f7",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/archive/GUIA_RAPIDA_UX_092.md",
+      "bytes": 1992,
+      "crc32": "129bb1fa",
+      "sha256": "b4712c2cfc490a202b330fd54107105e84dcd36b16807d62594ac949b92a41f4",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/archive/LANZAMIENTO_RC1.md",
+      "bytes": 2038,
+      "crc32": "5a71eef7",
+      "sha256": "da0baf73f2f30faad889f4c0af12a2078482dccf2235e10f05ffc47bce897761",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/archive/NOTAS_PUBLICACION_RC1.md",
+      "bytes": 3448,
+      "crc32": "8d6e5754",
+      "sha256": "f4348ef83475aba6a7be0447594e870dcfe2906c6edc7c6ef752fe62c5489e7c",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/archive/POSICIONAMIENTO_2026-10-25.md",
+      "bytes": 5300,
+      "crc32": "eaf0634f",
+      "sha256": "b7acaf59f1a14108916df7fc8ef7a83ae8c3168f592bac0db6f55d11044e8bbc",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/archive/PRUEBA_IDEASPARK_094.md",
+      "bytes": 1463,
+      "crc32": "f3b1d829",
+      "sha256": "ac1a4225f1287dd29d29ae68d8bd0c69905583ecac3306a3827fa9f26e249c4b",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/archive/README.md",
+      "bytes": 579,
+      "crc32": "beb8451b",
+      "sha256": "e9e9584019512e9e5136174bda6f10e6c7de7e4da8dbc68fdfa5e1f64aff833f",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/archive/RELEASE_RC1.md",
+      "bytes": 7954,
+      "crc32": "450fecb6",
+      "sha256": "f53cbd7dff458b1a7603c33423752331ae2ca7e708e23f77f9a3ca3a5932bd6e",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/archive/RUMBO_PRODUCTO_097.md",
+      "bytes": 3038,
+      "crc32": "78095f02",
+      "sha256": "ba9b0baed04fe9ce63da29945746191914c43b3dff8c0f2c66a2803b7494c15b",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/archive/images/interfaz_097_esp32_codigo_base.png",
+      "bytes": 143028,
+      "crc32": "affda3d7",
+      "sha256": "37605947c88ae6a24968863ad5fd58a52daec353a649f05e283032630ce18bf6",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/archive/images/interfaz_097_prueba_sintetica.png",
+      "bytes": 164031,
+      "crc32": "9e897498",
+      "sha256": "0760f3049f2ebdc1024e8e124634d6571c61a20015e57be4ab2e21e61d31a206",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/archive/images/interfaz_agente_093.png",
+      "bytes": 230261,
+      "crc32": "efac33a7",
+      "sha256": "36165e4c1c5ce95ad03a25a138bf232f947ead045b9b106a8cedf96dc0918b1f",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/archive/images/interfaz_catalogo_095.png",
+      "bytes": 170912,
+      "crc32": "e81239b3",
+      "sha256": "c49429415c93dcd34c1da3be2ad839553c7b847829ee348ad5bb1aaeb84a2227",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/archive/images/interfaz_recuperacion_094.png",
+      "bytes": 261427,
+      "crc32": "f9feab60",
+      "sha256": "21cc63d5d90c6bd40c38320257bc9e288f573af1da4224210f9f60da042310eb",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/archive/images/interfaz_ux_092.png",
+      "bytes": 156992,
+      "crc32": "803cb50a",
+      "sha256": "276fea17a2fed9bfdae71d97716965085e861e11386bc1f58867ade8c356e120",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/archive/images/super_interfaz_prueba_aislada.png",
+      "bytes": 217205,
+      "crc32": "195c5865",
+      "sha256": "ab7d85b450dcc210ff5f8866ef5a5780d6c2571e3922a475cb13eca3a95f346f",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/01-real-idle.png",
+      "bytes": 116984,
+      "crc32": "94df3f64",
+      "sha256": "09be9582a263b7aa9373fa1da0ed8e5a31d554c654d1bb137a07753a1633c05e",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/02-real-catalog-page2.png",
+      "bytes": 168297,
+      "crc32": "9885cfba",
+      "sha256": "a801b74a634227058f30633df56505edb450bc6e584782a5de60cca76efd597e",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/03-real-compiling.png",
+      "bytes": 104703,
+      "crc32": "f610b840",
+      "sha256": "ebc81038e6fbe25a8b636806c114cc3522498df664d375908768c226f5c3c95a",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/04-real-compile-success.png",
+      "bytes": 110477,
+      "crc32": "6ebc4e2f",
+      "sha256": "cab4c9631a02c586c72e7e70c9b846bddbc72e0149cedef9c8d155d8da06a3a0",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/05-real-recovered.png",
+      "bytes": 104680,
+      "crc32": "adf362b0",
+      "sha256": "0b436cf4504fcc912700064a5a84aa69a48a212c134adaffe10e43456d499cab",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/06-real-compile-error.png",
+      "bytes": 107292,
+      "crc32": "cda58592",
+      "sha256": "01d7b6d56c4caa3357e6aaaaab683edec18eb86d2be6e50be3c65d7fddb2ed4d",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/07-controlled-interrupted.png",
+      "bytes": 103914,
+      "crc32": "e83a6b18",
+      "sha256": "a7854d6e81054484f7d8917b88f2ae3cd650fb5fbd34a8e0e6e021cd3bc3a32a",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/08-controlled-catalog-error.png",
+      "bytes": 144827,
+      "crc32": "7ae42f0d",
+      "sha256": "d9ec37df1057ca41924dffae98c6176e4930ffd7bad9443d82a2cea8290ed942",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/09-controlled-upload-error.png",
+      "bytes": 101651,
+      "crc32": "c13af364",
+      "sha256": "47708f57e88fda217e5c2da30e2dbf516d24edf45798d96a43bad36bb18cba8c",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/10-controlled-agent-success.png",
+      "bytes": 148801,
+      "crc32": "a860cc56",
+      "sha256": "e2a65cad73f794b713ca8377ac8f132b5d6ac1ff5a17373bb53a102e8334be69",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/11-controlled-network-error.png",
+      "bytes": 150238,
+      "crc32": "8bf70034",
+      "sha256": "e9ec384621599f6ea796a6dc13afcda71396ca233cb4ef5b4592761d2d18b040",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/12-real-mobile.png",
+      "bytes": 52610,
+      "crc32": "5dbf5bff",
+      "sha256": "eed31cc00a8d5ef9671735e7e3de7249babcdbcf3eb3203850a7a0e4942d1f32",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/13-final-desktop.png",
+      "bytes": 96811,
+      "crc32": "dd9d8077",
+      "sha256": "58080cfe1516f4a6197b0576ec2862ca2069e10264532cccdc09079ca1babf95",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/README.md",
+      "bytes": 3976,
+      "crc32": "7bd25f6e",
+      "sha256": "f4e41ad50500636405d2841ed0e9114d12ab0e0e0680a80a829d6eb5938ee320",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/agent-activity/01-panel-sin-sesion.png",
+      "bytes": 161782,
+      "crc32": "086d95bb",
+      "sha256": "484df7d77f8594edf90fb1a8081a07056468bab7215fe87d06078b941019e7ee",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/agent-activity/02-actividad-cli-controlada.png",
+      "bytes": 288756,
+      "crc32": "f0587edf",
+      "sha256": "bafdb2a9dc2c5c16507b3a7a85f00d065528f4ada8f21009d1c53ac40d60973c",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/agent-activity/README.md",
+      "bytes": 832,
+      "crc32": "eb9ef149",
+      "sha256": "3825cc613768b122a2b087f7fb406428a8be692f2252beaae3fbe41227f8b9e9",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/agent-consent/agent-consent-checks.json",
+      "bytes": 2780,
+      "crc32": "cd8b2bd9",
+      "sha256": "b27dbe7cdb2ff6aefdf8265fa0b653a393693f47a28b9200c2d883676cf7576a",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/agent-consent/agent-consent-dialog.png",
+      "bytes": 156449,
+      "crc32": "9d15e622",
+      "sha256": "481cb1be6c3c86d16e09270e2b184d049d29b6c306c808cb509ef604ca97c4a2",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/agent-consent/agent-consent-started-controlled.png",
+      "bytes": 166542,
+      "crc32": "ab843525",
+      "sha256": "73047f9216d0242f07aa7103a41853ccb17b13906faea6ebfa62dfdeb0ab55a3",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/agent-projects/README.md",
+      "bytes": 1269,
+      "crc32": "f07a7327",
+      "sha256": "00c6fddf48cc497b6c1682edc845d3fffe14d6b8be485fffde02744860482717",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/agent-projects/agent-consent-checks.json",
+      "bytes": 5859,
+      "crc32": "81bf35d2",
+      "sha256": "46d3f4a3ad73c0b1ccf2e2b47b3b1b3e0b59be9bb0fc1fd4808d11b659cff3dd",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/agent-projects/agent-consent-dialog.png",
+      "bytes": 160387,
+      "crc32": "1a14bb12",
+      "sha256": "d5e7220c9395ed14108ebcec236580cfc34233b7c996ec69da39eb6b900385fd",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/agent-projects/agent-generated-editor-controlled.png",
+      "bytes": 156118,
+      "crc32": "19ee2ff8",
+      "sha256": "baaa2a8da13a67e23472748456a920761a0138e6812bb7d7eabaaf1200ad27c2",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/agent-projects/browser-server.txt",
+      "bytes": 2272,
+      "crc32": "758937ee",
+      "sha256": "d1641a2b7442d342b64030f74714aed81d060e4941a138d89a7582565ce3020a",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/agent-projects/integridad-proyectos.json",
+      "bytes": 74,
+      "crc32": "ca7e54c3",
+      "sha256": "5f84c34b3defcc2f930248fdb119a7e10cc0955c0357f2b063d8b1a8cd6add05",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/agent-projects/radar-editor-controlled.png",
+      "bytes": 200608,
+      "crc32": "fe473524",
+      "sha256": "4ad2b22c47dfc4c242a95697277174918ac68efa99dfc4c22765c0db07e1af77",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/agent-projects/unit-tests.txt",
+      "bytes": 25373,
+      "crc32": "6d856d63",
+      "sha256": "8a390fbc930b4ecced5046dace249f98204681f59cd09f323a9cbc274b657974",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/arduino-mega/02-grabacion.txt",
+      "bytes": 301,
+      "crc32": "127a2e48",
+      "sha256": "48fbcdc42dba3a285a50739c39414c9654d4a091050ed952da5085d4ce09fb8d",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/arduino-mega/03-verificacion-independiente.txt",
+      "bytes": 487,
+      "crc32": "77172815",
+      "sha256": "b5024d4b9c298828b80ed3eceb872a56cbc4437703386ca2565125a14c24faf4",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/arduino-mega/04-diagnostico-serie.txt",
+      "bytes": 204,
+      "crc32": "ffb7672b",
+      "sha256": "d5cf3a3f4aa2b1075021d644426f578d250598af32bbdc43a2577edfadf674f3",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/arduino-mega/MegaDiagnostico.abmaker.json",
+      "bytes": 977,
+      "crc32": "c400ff2b",
+      "sha256": "0c4b4d4c500e5b412d8ec37003a1af11664e8c6d74ce4542067fade91adf3ec9",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/arduino-mega/README.md",
+      "bytes": 1893,
+      "crc32": "9b8c2cc5",
+      "sha256": "65519be1d47aa54d5076eb5e6d63281802b12c8afa8a933b74a671b0007435bd",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/arduino-mega/backup-metadata.json",
+      "bytes": 600,
+      "crc32": "d390617a",
+      "sha256": "11dc776047ae5b26658b51c18b1b57953da61bd0ce24d0ff2428d6c1aa0977c3",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/arduino-mega/compilacion.txt",
+      "bytes": 197,
+      "crc32": "e3030d22",
+      "sha256": "0ad2fc5f71396ae2f50a9d6424598d20aa2ea9ba458974ce43062c10f10e3f3b",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/arduino-mega/identificacion.json",
+      "bytes": 410,
+      "crc32": "b369caa9",
+      "sha256": "fbf48856e9c574e32e3e75265b2337a9afb0ce3c796d4e06ddcd3884d72290c6",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/arduino-mega/identificacion.txt",
+      "bytes": 795,
+      "crc32": "3733b5e0",
+      "sha256": "8b5e59e200333c43d71dc3b74e5c7492624ae70cec2d7ed3680e483294001dd0",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/arduino-mega/resultado-mega.json",
+      "bytes": 1261,
+      "crc32": "85748ff3",
+      "sha256": "824362aa3a7e6b5987b9c1d7d045200aea174ee81a25bbb4ac86aa70c332a726",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/arduino-nano/02-grabacion.txt",
+      "bytes": 301,
+      "crc32": "f0bb6604",
+      "sha256": "891fb528c92fd30cc94ac3eda63b6a6f19657a21dc93056ab7f79ea18c15b057",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/arduino-nano/03-verificacion-independiente.txt",
+      "bytes": 487,
+      "crc32": "ad973c14",
+      "sha256": "1ae5a40a3a6579f668df29cf20f4103b15780e13f52532fc8c31d6e0c8ba81d7",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/arduino-nano/04-diagnostico-serie.txt",
+      "bytes": 204,
+      "crc32": "ce46e9db",
+      "sha256": "7835e0b05e316ddcc834029d5b036f53a94de25dad63b6e24088a9b5d3a70768",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/arduino-nano/NanoDiagnostico.abmaker.json",
+      "bytes": 979,
+      "crc32": "c7bd3bd2",
+      "sha256": "47c443bde58d091c05e8daa5ba2a961edd611d96b7546e79e6061b41a67b518b",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/arduino-nano/README.md",
+      "bytes": 1982,
+      "crc32": "5ccd73e1",
+      "sha256": "5c67b08c3ce54a4587866829b0dd9114b43f621fd611ba329a3e4d680b425fba",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/arduino-nano/backup-metadata.json",
+      "bytes": 576,
+      "crc32": "b20e9ed1",
+      "sha256": "797880d037de3c8d62c89485edabde7e7e0e05fa8fd0fdb8d41ab60401faa6ea",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/arduino-nano/compilacion.txt",
+      "bytes": 196,
+      "crc32": "89e84727",
+      "sha256": "eeed1937ad454ae70979caa98cf8591659605318e6f2b9cc859aad2d24c50341",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/arduino-nano/identificacion-115200.txt",
+      "bytes": 809,
+      "crc32": "64d127ee",
+      "sha256": "f8be6bb52c7762687476f9482836cab123fe06c027583b41ce0664240873bb7a",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/arduino-nano/identificacion-57600.txt",
+      "bytes": 786,
+      "crc32": "c80f14cc",
+      "sha256": "80da68ee6da9f5db19a8b33f37feb6b94dde2eff6f1ede2f0129ceb9c0772107",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/arduino-nano/identificacion.json",
+      "bytes": 643,
+      "crc32": "9998c64f",
+      "sha256": "847006490e47b8f5bf0f4df8a75504f223997b709c8c9ae86af501193ea8c1ad",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/arduino-nano/resultado-nano.json",
+      "bytes": 1263,
+      "crc32": "c6b05a90",
+      "sha256": "19f5195c3283763d321c457e47553619628685b873a3a87a75b4e648e2370581",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/arduino-real.json",
+      "bytes": 11979,
+      "crc32": "acc68dfe",
+      "sha256": "ab53c909dbd60ab68000537cbbe54803d1a35538f541f8e8214c03db5c6b2187",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/board-trials/README.md",
+      "bytes": 1151,
+      "crc32": "40d65bf7",
+      "sha256": "a1f7b636194e6f733343c03d3b5ae18aa2b21cd0e95f0310bee8a8ecc34a11ab",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/board-trials/agent-consent-checks.json",
+      "bytes": 7020,
+      "crc32": "f09fe3e1",
+      "sha256": "9b54bbd6cedc6ca1ef55b566b2a07c2e8ab0977409b72614058e7ef366d59844",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/board-trials/board-trials-controlled.json",
+      "bytes": 2533,
+      "crc32": "5a1e0845",
+      "sha256": "db0880390b682fbb9e8b97a19474991bbea4b341409d0a70c80e8293f30babed",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/board-trials/board-trials-controlled.png",
+      "bytes": 131219,
+      "crc32": "6357d8dd",
+      "sha256": "27a4dd3999962b339f427a5e1731def804579738029c8ea5853993975846ba31",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/board-trials/board-trials-mobile-controlled.png",
+      "bytes": 62667,
+      "crc32": "12068099",
+      "sha256": "5d5d5fefc6d4866e5494b9e7cc6eb89b5adc2e72c79660db2083a8b2a35b2fff",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/board-trials/browser-server.txt",
+      "bytes": 3004,
+      "crc32": "5e34076f",
+      "sha256": "3288b1e6b114e38b9d243bc0b6100de197f5270046025272e351114c442b3960",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/board-trials/unit-tests.txt",
+      "bytes": 25635,
+      "crc32": "2054de26",
+      "sha256": "7fc1295b35306fc75ce46275650d3f28486fea30337d6b38a3ed9c484ca6c509",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/browser-results.json",
+      "bytes": 20086,
+      "crc32": "f37817f0",
+      "sha256": "d19c0f21ff71fde3ef2199e0917ff4fbdc5620791864dc30d23c8a00741eee93",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/browser-server.txt",
+      "bytes": 17521,
+      "crc32": "db27f5d2",
+      "sha256": "6859081c0592bfeaf2a82a10c8eeda6d987e3e0ad4d3c8e4625d9593ab00049e",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/cyd-rc4/BloquesCYD-guardado-desde-IDE.abmaker.json",
+      "bytes": 9280,
+      "crc32": "ad986e6c",
+      "sha256": "ccf985a6072e4a5010f5321c57d6f8a6c4c756dfe8bd1fb150e0a256cf73e869",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/cyd-rc4/README.md",
+      "bytes": 2610,
+      "crc32": "c253f76f",
+      "sha256": "edc4e6413811712ece33e66b965623a085523c194c94610cf88369a6ba94be77",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/cyd-rc4/carga-desde-ide-real.png",
+      "bytes": 205098,
+      "crc32": "9a58cbdb",
+      "sha256": "0c5e656e739117d3b54f29a36ed6505a128d6dadac2b146ee42bfb02be9c7a63",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/cyd-rc4/monitor-serie-real.png",
+      "bytes": 229043,
+      "crc32": "21dec1a1",
+      "sha256": "398a35bf47d37bd6f92efbcaaa0de08639ef029399b0a6140830d844e9c6b583",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/cyd-rc4/result.json",
+      "bytes": 2808,
+      "crc32": "72c5dc55",
+      "sha256": "66a5824f66f9887ae3f8330037e153da76693435104fda350c6eb101faa08f5c",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/cyd-space-invaders/README.md",
+      "bytes": 2892,
+      "crc32": "b26c5b97",
+      "sha256": "d0fad8f1b35eaf0c742917a2022abd1f13bffb579bfacede0c4de2e0f7315632",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/cyd-space-invaders/grabacion-resumen.txt",
+      "bytes": 477,
+      "crc32": "a93ed305",
+      "sha256": "376fb00f339776f77137a7e281ddd70466a672c9a305258f8ee2d11dd269209a",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/cyd-space-invaders/resultado.json",
+      "bytes": 3017,
+      "crc32": "9ffd7fa4",
+      "sha256": "fe7a3444b5eed9681f2358ef5b5f601b924ccee73b7e387314117ffe95c8ba5e",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/cyd-space-invaders/serie.txt",
+      "bytes": 580,
+      "crc32": "52eba029",
+      "sha256": "8f236eed059f5d0a4fe75b6310cf12e032ce0b1c644841155cbef3afe8f30723",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/cyd/README.md",
+      "bytes": 1890,
+      "crc32": "b50a50f5",
+      "sha256": "e685f4316cbd6bff4b8fdd7a3cf7d5879309dde402d1c16f798137f3bb5ec708",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/cyd/ide-com4-juego.png",
+      "bytes": 88052,
+      "crc32": "42029c2f",
+      "sha256": "0887f47af63509552fa0e48d0088af7de94afc7fa3449c94680584f769a2c053",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/cyd/resultado.json",
+      "bytes": 1329,
+      "crc32": "6b715215",
+      "sha256": "2fc5b3aa7f489f3ba5eeebab3a5b9d38bf1099d6fd2189484f72bc884f491a6d",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/esp32cam/ESP32CamDiagnostico-verificado.abmaker.json",
+      "bytes": 4180,
+      "crc32": "ca2b64b0",
+      "sha256": "090351b549d564065027b4fc8324de67c258de0f395c57fb933780cdf153bace",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/esp32cam/ESP32CamDiagnostico-verificado.ino",
+      "bytes": 3791,
+      "crc32": "db240594",
+      "sha256": "631a3098a73f727a2b95654b4766c244c0b532a9048e8f3cbc3d08b7626461f2",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/esp32cam/README.md",
+      "bytes": 2750,
+      "crc32": "21ca87db",
+      "sha256": "b2e5259949bfda0125347f9cf8541930e2d63e42470085023c7cfb1d57bbc841",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/esp32cam/compilacion.txt",
+      "bytes": 208,
+      "crc32": "97c9f85d",
+      "sha256": "ededc1abac9ca9377a17fd7372259e5ba042bfa2aa2aa6e71ec794712194ad80",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/esp32cam/diagnostico-serie.txt",
+      "bytes": 891,
+      "crc32": "feb6ace3",
+      "sha256": "90a4c2ad8bcaa848462d72a860138c6bd379ef5b18683bd5e2e85557ab7c8078",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/esp32cam/estado.json",
+      "bytes": 1799,
+      "crc32": "b8b07fc9",
+      "sha256": "ab681626c55aaf189e30ab0043c167f7f37396ef126ec482ebdc258c08198131",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/esp32cam/grabacion.txt",
+      "bytes": 3487,
+      "crc32": "7530912d",
+      "sha256": "cdaea2d3b5e7707e23070d8d6f4251014bf9ed9af0e3e1c3e0304e506a42b5a9",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/esp32cam/identificacion-sin-grabar.txt",
+      "bytes": 539,
+      "crc32": "6061af95",
+      "sha256": "6a47c14b5b2f4bbada4a3e3903c8aa297fb53025407d03eaf09049b73da3d803",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/esp32cam/respaldo-metadata.json",
+      "bytes": 353,
+      "crc32": "f94ed4a7",
+      "sha256": "f2e12db219a4dc620c140fea534a2b48f5dcc7488a3fcc9aa5812a483ce8527d",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/esp32cam/resultado-camara.json",
+      "bytes": 974,
+      "crc32": "100da99b",
+      "sha256": "02272988e8b2757ab9b75b695772c6decd33d41482ff06c65383eadf8734249f",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/final-preview.json",
+      "bytes": 8761,
+      "crc32": "9c4886ac",
+      "sha256": "4574c14c7cc434edf3836631e5b99ae580a63fc3edbaec37165cd9e4f3ead0f3",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/install-recovery/01-bare-diagnostic.txt",
+      "bytes": 1434,
+      "crc32": "1007b2c9",
+      "sha256": "6efbc42d216e018c507a7512285e7e1c9f352c834934b7685beb1a1f26a4ad1a",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/install-recovery/02-occupied-port.txt",
+      "bytes": 682,
+      "crc32": "206438dd",
+      "sha256": "8bb99e331b5bbb38ed7cbafe04981e0bce14390ee1019d9aec71606836f991dd",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/install-recovery/03-blocked-data.txt",
+      "bytes": 1637,
+      "crc32": "03775d29",
+      "sha256": "2347e4d0f918c42aa9176556931bbf215788e4c77791410b5e65c68cecbf68cd",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/install-recovery/06-prepared-diagnostic.txt",
+      "bytes": 1257,
+      "crc32": "3ebe8070",
+      "sha256": "6e895041dac8d029198e6aff4ad3c4caf140975b898653ba0541cc37dcc955d4",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/install-recovery/07-dependency-versions.txt",
+      "bytes": 42,
+      "crc32": "4eca3ced",
+      "sha256": "96696d901d15d5fe1ff28398adc1fed4918a8d607660d8940114a60e0c23902a",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/install-recovery/README.md",
+      "bytes": 3163,
+      "crc32": "1787039f",
+      "sha256": "469fa30b52d9f5b7bfcd045f82e1421cce3402425f35f73285cff2fa21e4848b",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/install-recovery/agents-checks.json",
+      "bytes": 7021,
+      "crc32": "a5db9b7f",
+      "sha256": "0bbc0b2bf0449beb1120f05ff3a8a7a276a117503f85c599c5f3a66f6f6376d6",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/install-recovery/clean-install-desktop.png",
+      "bytes": 132406,
+      "crc32": "f5e4d47c",
+      "sha256": "6e677c096515ea470127e8fee2260a606bca6247ba12f0bf8629bc169c4254ec",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/install-recovery/install-checks.json",
+      "bytes": 2383,
+      "crc32": "0923aa68",
+      "sha256": "d945b383880bb32daeeb3812e46bb6e1790f99941ae7d88bf15486ede019b0dd",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/install-recovery/publication-text-audit.json",
+      "bytes": 431,
+      "crc32": "5b6a2b31",
+      "sha256": "1a1208349f0be6501d905363a4d68f678eb9b6b72baf34f82c03d6764bae769d",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/install-recovery/recovery-checks.json",
+      "bytes": 2350,
+      "crc32": "ae3cf625",
+      "sha256": "8aeedb82d6500f2e0d8087ea9b6e3529ec46659476d6d2e7d5e49e10ca378695",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/install-recovery/recovery-server.txt",
+      "bytes": 1626,
+      "crc32": "5bd511d3",
+      "sha256": "690d77d8d50e62fdbe9ca3eda1ddb6d978306e40e9491f78b310640add10e63c",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/install-recovery/restart-unknown-controlled.png",
+      "bytes": 105624,
+      "crc32": "9f8cc57c",
+      "sha256": "c8684330dc91d158fa51f01cf326e967f8f8023cbee940ab71e1970db23798c8",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/install-recovery/serial-disconnected-controlled.png",
+      "bytes": 120825,
+      "crc32": "42f89146",
+      "sha256": "2a857393efa41a46bb92488012414453c26c874257ce983a1dff479afd0065d4",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/install-recovery/simulator-checks.json",
+      "bytes": 2389,
+      "crc32": "7657b90c",
+      "sha256": "de9117c605738a88eb69622831ae949243e82cb0eeb8fdad5127064de1500d61",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/install-recovery/unit-tests.txt",
+      "bytes": 27936,
+      "crc32": "052af3e2",
+      "sha256": "b5c9cb79dcfbeb5bdc5de1450015d90f7700c5b4c43bd0906c11a16796a2f175",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/install-recovery/validation.json",
+      "bytes": 1591,
+      "crc32": "2dd156da",
+      "sha256": "d688946f1aa2df2019b78add4a167e6ad84088f6f9fa9dbb6b7ac8c50b9fce07",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/local-security/README.md",
+      "bytes": 2536,
+      "crc32": "f120e512",
+      "sha256": "34255fb115d9fe57e9865f014fb4e78c3999cf69bb2b5e488a5a316efb30bb75",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/local-security/validation.json",
+      "bytes": 8203,
+      "crc32": "e07d4be6",
+      "sha256": "99c53561fb4c31b4d029340227f14271b581b83cd6edc4ccfb3ff2e5d0cf22b9",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/original-projects-integrity.json",
+      "bytes": 108,
+      "crc32": "b843f194",
+      "sha256": "39168890babb8edd0d84e57e1dcc214132475a33cdd3d525af2d77587d611fad",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/radar-ideaspark/README.md",
+      "bytes": 1596,
+      "crc32": "cbc2e670",
+      "sha256": "59742b865b3787fa6586ac41927f4d8aad851e8ec1fd0572aadef8b7533f2e6f",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/radar-ideaspark/compilacion.txt",
+      "bytes": 207,
+      "crc32": "603090f8",
+      "sha256": "cbafadf8cd0b269eb2812018c362cf9addeeec1977221f7bd26af720b497d905",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/radar-ideaspark/estado.json",
+      "bytes": 1142,
+      "crc32": "03a95aed",
+      "sha256": "05d8505e50f111ffac47f55b86fb673a9e159a5e0bf8e720f720e7181e30fc03",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/radar-ideaspark/grabacion.txt",
+      "bytes": 3567,
+      "crc32": "669ec417",
+      "sha256": "bb1e2a122c9da16c218168197ab35ce7e8bdd9edf21edf4690d19dd9e498c73b",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/rc2/README.md",
+      "bytes": 1395,
+      "crc32": "d21a9d42",
+      "sha256": "4218d48b9d6e00d132744ec92196d8bcf34d345730858b872bb08f47859853e1",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/rc2/agente.json",
+      "bytes": 7498,
+      "crc32": "0dd760cc",
+      "sha256": "3d8f2af331b19a3bfa77dfd20879ad1384e4329b57bbd08d79cd45a11b5a1482",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/rc2/identificacion.json",
+      "bytes": 1972,
+      "crc32": "c35da63a",
+      "sha256": "411ca97360c99b027516b87df0db37944d63c0d634f786ad769efd4b058b068b",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/rc2/recuperacion.json",
+      "bytes": 2350,
+      "crc32": "fe32a99c",
+      "sha256": "238024c3ad39bca7f7d767fdc5b9c74e514aece51ee8b9b33c299509802ba7bc",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/rc2/simulador.json",
+      "bytes": 2389,
+      "crc32": "7657b90c",
+      "sha256": "de9117c605738a88eb69622831ae949243e82cb0eeb8fdad5127064de1500d61",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/rc2/unitarios.json",
+      "bytes": 246,
+      "crc32": "d1890bc8",
+      "sha256": "45b5a18753d31d374845285a7f726cbab989e8cd9d4969ecbec4069cb27649d8",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/rc3/README.md",
+      "bytes": 3180,
+      "crc32": "f5f7a506",
+      "sha256": "9380a1927d30ba2709addaaa7e2472eb14e90f4062919daaef122057a760aab8",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/rc3/aceptacion.json",
+      "bytes": 3956,
+      "crc32": "b899eada",
+      "sha256": "eb47408a47d07d08cb57f349bee6ac5eee608db28e2e1973bbb94692d65a9f91",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/rc3/agente.json",
+      "bytes": 4282,
+      "crc32": "22545151",
+      "sha256": "cff92327b4b1e5dd493c44ac64fe1d34b690f7072667cbdd159a85eb1b660044",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/rc3/chat-real.json",
+      "bytes": 315,
+      "crc32": "541b4b19",
+      "sha256": "af0f6ccee9d7cd4f9981efe4c7f6a78123efcaed485f63e06945643ae2c03c08",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/rc3/cli-real.json",
+      "bytes": 341,
+      "crc32": "cdeab2f9",
+      "sha256": "d436cf51c2425ef2839741455dbfc6cf7a8fa094ffd402029fb8f1d117ad1c01",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/rc3/identificacion.json",
+      "bytes": 2145,
+      "crc32": "de5a9154",
+      "sha256": "197212269b733a78c423401453c5222c4895e5b5014899e47b485bef28df42a8",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/rc3/inicio-limpio.json",
+      "bytes": 1997,
+      "crc32": "ebbf98b8",
+      "sha256": "26f3ee5caef07250d54d9efe7432dc0db8edbf6daad3fc50014dc18f9395ddf0",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/rc3/mcp-http-real.json",
+      "bytes": 711,
+      "crc32": "4325e965",
+      "sha256": "7d1f1a80ff144c45854a39b7988beb22443b05740ccb19b5b6217678d2db2d19",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/rc3/mcp-interfaz.json",
+      "bytes": 1441,
+      "crc32": "5ec8bd36",
+      "sha256": "218f3e14f3a385a123394ae89f7bb052aed5910d23bc0299347ff4210f9f5e80",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/rc3/mcp-panel-real.png",
+      "bytes": 113667,
+      "crc32": "e680e35e",
+      "sha256": "eb5c1c77ccaed8a404be2aae38c4bb49fa1ce026fbacd10e674a2df2db912731",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/rc3/mcp-stdio-real.json",
+      "bytes": 731,
+      "crc32": "04c2d73d",
+      "sha256": "84462c2aa82546d097e1566449eedc73a9b7e241bdc26ec7c44de1ff05d04ae0",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/rc3/recuperacion.json",
+      "bytes": 2263,
+      "crc32": "d9a8f979",
+      "sha256": "2da165e74a35689f710c26c51ed11f82f778d6d9b6d1031e749377f9839d3901",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/rc3/sesion-limpia-real.png",
+      "bytes": 95590,
+      "crc32": "60e38d6b",
+      "sha256": "e603fea415fd361b95c86ff94a33408349a00c5b27fda663fcd9a0bcccd767e2",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/rc3/simulador.json",
+      "bytes": 2441,
+      "crc32": "dabfd2ff",
+      "sha256": "d80a7fbe3d06014dbcb940520c148de2fb369e0528941efd005f9442fab22a7c",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/rc3/unitarios.json",
+      "bytes": 230,
+      "crc32": "9371991f",
+      "sha256": "daaaea83c5535b00005d89965b71a98c8beebc8e22f3af223a7e949f9935faeb",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/rc4/README.md",
+      "bytes": 3673,
+      "crc32": "59f9036e",
+      "sha256": "1798f5913646a9e355fdd494d26635d11970f264f0ce77eb615fa9a68f2af6a3",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/rc4/codex-mcp-real.json",
+      "bytes": 880,
+      "crc32": "0e9da7ee",
+      "sha256": "19f97e6f34d1d0c9303cb08e8c82e9c03008319993f6846529bccfb8676ec6cb",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/rc4/manual-upload-controlled.png",
+      "bytes": 139494,
+      "crc32": "4fc9030e",
+      "sha256": "bf8208a2d8bc5b7dc8534bfd3fe36fb936c0ccc8855156ab7b3d54faee36ebfc",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/rc4/security-controlled.png",
+      "bytes": 163679,
+      "crc32": "b1e4eb2d",
+      "sha256": "4072e455e6f1c180a6da0a220c275277a956fa2ce3673bf9e8fd5c316f0e52f2",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/rc4/validation.json",
+      "bytes": 24775,
+      "crc32": "0ca53df1",
+      "sha256": "7094e063b98832e3b4d7097b488a597868ba474e5643aeed002deafc8b8e861e",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/robot-tests.txt",
+      "bytes": 740,
+      "crc32": "b903be4d",
+      "sha256": "1b82dfa8601e10485b9afcb996d9c25d3aa2c5ab0db6b33bc19b25b0bdb9fff8",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/simulator/README.md",
+      "bytes": 2091,
+      "crc32": "cea102de",
+      "sha256": "4127053386d2756c3fb1b5ee2b2977929ae05ce147c2f900579ab9c509beb07a",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/simulator/agent-regression.json",
+      "bytes": 7021,
+      "crc32": "6bf8f423",
+      "sha256": "9f8fcef350c9aa062f2de544ddd08295641f72be2839300927959d6e40b13af7",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/simulator/browser-server.txt",
+      "bytes": 1047,
+      "crc32": "40bef9bc",
+      "sha256": "039d35bd8eb6e966643856f9733d0f75fbe6ee17eaacc48e5cce92660fdbfc6a",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/simulator/example-compile.txt",
+      "bytes": 194,
+      "crc32": "66d65288",
+      "sha256": "f85c78e67c10835b578f726c1532dac9cff251c3fb7a7058cb4fd8a3fdc35610",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/simulator/simulator-browser.json",
+      "bytes": 2389,
+      "crc32": "7657b90c",
+      "sha256": "de9117c605738a88eb69622831ae949243e82cb0eeb8fdad5127064de1500d61",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/simulator/simulator-desktop.png",
+      "bytes": 162889,
+      "crc32": "d524541f",
+      "sha256": "c027fbeecc5467e5ce1c944868e4e7bbcbc720bdd1412df09d4229accc06ad32",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/simulator/simulator-mobile.png",
+      "bytes": 64143,
+      "crc32": "586be826",
+      "sha256": "09e9ddc6aedbd155dae64547449cac6952914c286f33afb6e8bd49519ceb8c73",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/simulator/simulator-unsupported.png",
+      "bytes": 132139,
+      "crc32": "ff745259",
+      "sha256": "f91166b0d5bbefe0863999df7e83245c88d2ca99b285dcc5ad9b69da18f74559",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/simulator/unit-tests.txt",
+      "bytes": 25753,
+      "crc32": "1fadf596",
+      "sha256": "ed559f86add30667e6e719f7d8e8c55c6bb486e5761d95fae6e432ed673c7c5a",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/simulator/validation.json",
+      "bytes": 1294,
+      "crc32": "c39312ef",
+      "sha256": "9f94cacbeb12e6df8890369c1dc30c3dbabb1a3ec32c4e77ac0ffcc9334cfbfb",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/syntax-checks.txt",
+      "bytes": 192,
+      "crc32": "80b551af",
+      "sha256": "29cc06342a5847630a6e7c225be800d05ef16b39480b95766830ca714faf9490",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/unit-tests.txt",
+      "bytes": 23555,
+      "crc32": "6132227b",
+      "sha256": "6702f2bdab27ab629d15f1300f952b4a0f977293fa914a03def6b5ca16214510",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/user-robot-states/README.md",
+      "bytes": 992,
+      "crc32": "4e87349b",
+      "sha256": "11ed42b9ca5e1031892e0a2eef70208d7ef4a971ffdd89f502e7fcbafd274ff6",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/user-robot-states/metadata.json",
+      "bytes": 791,
+      "crc32": "06ec5b7c",
+      "sha256": "e2638121788fdbd6e8860fd5919a6b2ee8ecd7225e3dc89eae04b03473ce6303",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/user-robot-states/robot-134-cli-green.png",
+      "bytes": 210175,
+      "crc32": "ef7138e4",
+      "sha256": "ea62f45196dcc4a8c5c9f34bddc5b19adcbea02efe7c4468cb8b0586652319e2",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/user-robot-states/robot-135-cli-green.png",
+      "bytes": 149140,
+      "crc32": "65511bf1",
+      "sha256": "603dba4160826e1360311b14d6817684f778701634a187060f245b02b5d640ab",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/videos/README.md",
+      "bytes": 3102,
+      "crc32": "297debbd",
+      "sha256": "bf69f24cfd5a99d6902897c55de8209e0b619ce48c9c241f0cbe574a486c0a30",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/videos/video_2026-10-25_00-52-16.contact-sheet.jpg",
+      "bytes": 220964,
+      "crc32": "61f6b3f7",
+      "sha256": "08af241ec753425a4f5910af4906f8f69eec7226ce7ed10bbbbf334004feb7f4",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/videos/video_2026-10-25_00-52-16.metadata.json",
+      "bytes": 651,
+      "crc32": "0e89618a",
+      "sha256": "d41d95bebe07abcfad44fd7c13053e8f7eb5586caed501a1d8ac0b18bd92e018",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/wroom-micropython/01-identidad-antes-borrado.txt",
+      "bytes": 539,
+      "crc32": "1517af5f",
+      "sha256": "3631036975338152dc6481e049e255539bdefc2db94ac472b55507d253c3b890",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/wroom-micropython/02-borrado.txt",
+      "bytes": 563,
+      "crc32": "fa85a612",
+      "sha256": "4514a98335d8a187c079e751cce64f33c6e307159da15784730c0d9a7cfd287a",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/wroom-micropython/03-grabacion.txt",
+      "bytes": 7072,
+      "crc32": "9ce56ab0",
+      "sha256": "3e96b40b0f7ab1901f8fbdb34057bbab1159bc4dae2341271695c7e9548e5aad",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/wroom-micropython/04-verificacion.txt",
+      "bytes": 757,
+      "crc32": "8f7812c8",
+      "sha256": "80fff313f7eafa00e2abfb249c013c2a5ec70714b08b6b2265211fa734b486af",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/wroom-micropython/05-prueba-en-ram.txt",
+      "bytes": 660,
+      "crc32": "af41b7f0",
+      "sha256": "c53c98f5bef36a13c752d10b7208cf2b9f077fe6ed1668fd8f02d5f7f2016aef",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/wroom-micropython/README.md",
+      "bytes": 3199,
+      "crc32": "5c7077b6",
+      "sha256": "e4ee3dc46669f0773a469742e7fbc98503d49f1770f6fd925a5d33d9d4f9e902",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/wroom-micropython/controlador.json",
+      "bytes": 589,
+      "crc32": "858406e2",
+      "sha256": "4f2ef3cacd1c5676beab64ab7effced55765699ac9d36cc726fe6008359767bf",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/wroom-micropython/estado.json",
+      "bytes": 1663,
+      "crc32": "37bbe16b",
+      "sha256": "70a5814e7829b0491630452222d314c72067ebdc78439c1d520d9a9564637d6e",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/wroom-micropython/identificacion.txt",
+      "bytes": 540,
+      "crc32": "442cb085",
+      "sha256": "eb7db3a86ac0f3447190944f7a954f2871f03e01f54a07f4e728f6b6ff906249",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/wroom-micropython/micropython-app-info.txt",
+      "bytes": 1390,
+      "crc32": "9a2036cb",
+      "sha256": "167165223a8ad92b2b2c05d76a511f45c54309c28338535c45526fb944e953f0",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/wroom-micropython/micropython-image-info.txt",
+      "bytes": 1064,
+      "crc32": "d9fed8fd",
+      "sha256": "aba8f8039ff45e94915f13e3e575b76ccbef8224d2cf932562871dd42df3c39f",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/docs/evidence/wroom-micropython/respaldo-metadata.json",
+      "bytes": 322,
+      "crc32": "9aa46db0",
+      "sha256": "b73f79fb1c0eea4f0d7fb16efed90c97d3bbf3ea89a1e03cb224ce3a14d60584",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/eslint.config.mjs",
+      "bytes": 1096,
+      "crc32": "6710f662",
+      "sha256": "6a4f7b980c9eb8c0650e5a4ebf6a99ed7e9fed5c5384baf9c9f960e1c0523f4a",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/examples/Blink_Uno.ino",
+      "bytes": 457,
+      "crc32": "9ebeeacf",
+      "sha256": "73cb32fcacd4368b4b0fe9e43e8ec25d9730d8f27768c999e9cd1c2c50039c13",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/examples/cyd_28_bloques_tactil.ino",
+      "bytes": 8818,
+      "crc32": "5cfc3ee0",
+      "sha256": "9fda3a0583fa8e298eb29fadba6dec2363faeb39879081927ec98a435319d648",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/examples/cyd_space_invaders/CYDFrame.h",
+      "bytes": 2541,
+      "crc32": "24e1861c",
+      "sha256": "07c06008c4a4963377ffc23ae0fd188ac67f67982b9d7749efe3fd7142734b5d",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/examples/cyd_space_invaders/SpaceInvaders.h",
+      "bytes": 9849,
+      "crc32": "9d49f109",
+      "sha256": "7b1667881d27c9451d0bee815632f7394fac51c496cfd041f53ddc005417382d",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/examples/cyd_space_invaders/cyd_space_invaders.ino",
+      "bytes": 5151,
+      "crc32": "9beadd7f",
+      "sha256": "4d7ddfb3e07569acb1d16e55dd8d6a96c923a81f6453442d64854944a241d58a",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/examples/esp32_wroom_micropython_diag.py",
+      "bytes": 1177,
+      "crc32": "9d8bb2db",
+      "sha256": "ba1f0d951d6a12f97ab42be1274977a2018a639f8fc0f631160ccb1446163b20",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/examples/esp32cam_ai_thinker_test.ino",
+      "bytes": 3894,
+      "crc32": "af5c63ba",
+      "sha256": "8ae3ebf5456a9d26c967c758194efde1b21c6940b572382e534e5f1ebed4a3d7",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/examples/ideaspark_114_radar.ino",
+      "bytes": 4400,
+      "crc32": "ff40450e",
+      "sha256": "be6c114c4b74aafa9f99b67158237513455b43430278c81a9c2aacf5cd837e4b",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/examples/ideaspark_114_st7789.ino",
+      "bytes": 3218,
+      "crc32": "c4546fbc",
+      "sha256": "778f1be907dbc095051bfa9e04199c5f7e733b269c568a8ebafb5d9e61bf1138",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/examples/ideaspark_19_st7789.ino",
+      "bytes": 3149,
+      "crc32": "23bcec85",
+      "sha256": "9cb54710a9009b044cdaded52d1e95f1b28a4c387340fb77a8d14fab1e39856a",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/examples/mega_diagnostico.ino",
+      "bytes": 759,
+      "crc32": "585f0c56",
+      "sha256": "b02376439f3282f6f28a12283cd4679f4128e4db158c6c448a2b5d812e03f684",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/examples/nano_diagnostico.ino",
+      "bytes": 759,
+      "crc32": "acb68a7d",
+      "sha256": "08b7019a0c92b5f27dbb1be16611a6535d702f5079230e5975fa6880ed127bba",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/examples/semaforo_simulacion.ino",
+      "bytes": 605,
+      "crc32": "8cc9db39",
+      "sha256": "7ed7a5234326d35a3263eabec6bc78879a7e5794b4e6e32138d834cac6cd1a87",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/examples/semaforo_simulacion.py",
+      "bytes": 441,
+      "crc32": "ee099bf5",
+      "sha256": "ac06aa67d772f7ff9c1b1fdf29dc649023bdcb531812da3d6252ca89fbe51c2c",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/examples/uno_r3_diagnostico.ino",
+      "bytes": 2113,
+      "crc32": "b9d7bf3f",
+      "sha256": "2d33ff6151ce029c4b05e4e8b6b726a36652c7b4a9a0cdd3d235657b1b0af455",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/frontend/agent.js",
+      "bytes": 35124,
+      "crc32": "5c3370d5",
+      "sha256": "064a1a1a4520773703cb7e7bd12ee348642c7fd333baf3dcbf79f8d101799562",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/frontend/agent_activity.js",
+      "bytes": 10265,
+      "crc32": "222dc4a1",
+      "sha256": "520a01d3e476d943df3f39a178e1ba5c0c0787b4a50de11aea84d053f9e267c3",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/frontend/ai.js",
+      "bytes": 14455,
+      "crc32": "81492ce6",
+      "sha256": "e986671af93acd83dd1a13df107dbe549306e5346fae08de1d14742e8c8fa95b",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/frontend/assistant.js",
+      "bytes": 8209,
+      "crc32": "fb7f588c",
+      "sha256": "8a5eafb2c010a16b7bd19c3e981eef8b20f3353ae3a0af80cf49b4d5a8d18583",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/frontend/boards.js",
+      "bytes": 23927,
+      "crc32": "d8794261",
+      "sha256": "1e8f7daf1c249a5af4566b51f55fcbe3aba6c86776e96d8af321f3fceb08ad21",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/frontend/bootstrap.js",
+      "bytes": 1496,
+      "crc32": "594b0887",
+      "sha256": "a501ad4df717fc7d02b4c353dfa556719a6cb31bc0a05a1eecbd8bacc5c7a7fe",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/frontend/build.js",
+      "bytes": 20383,
+      "crc32": "4e2665e5",
+      "sha256": "0757228389063925ce5221ff5694b0688e24bed7155466346e8272a30c50322f",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/frontend/confirmation.js",
+      "bytes": 751,
+      "crc32": "fb5fceba",
+      "sha256": "6ee1a226244de8387374fba320e8a9555a3cf9cbc5b59730d074c03cd17dc255",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/frontend/editor.js",
+      "bytes": 17941,
+      "crc32": "9e2137a2",
+      "sha256": "6fa1bf4a54f552977fa8208629d227222249ba427cb95759835e9265cb479dcc",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/frontend/hardware.js",
+      "bytes": 7792,
+      "crc32": "d9ff1512",
+      "sha256": "f812f751517ffb4a7676e75d08188d697512b86ffd0cf4ceb40401bdddddf8d7",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/frontend/layout.js",
+      "bytes": 4248,
+      "crc32": "c984d978",
+      "sha256": "fcc688bc040a3d88d0959f480c63b047ce0fff139df74138be9150a3a1f40952",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/frontend/package.json",
+      "bytes": 42,
+      "crc32": "00e5ca6a",
+      "sha256": "f69ed17eea98f49ee075f676bae79df9cb779e54d5887b94d94313d34511170c",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/frontend/serial.js",
+      "bytes": 7312,
+      "crc32": "4edd6efd",
+      "sha256": "960c0321cd986a5e736132f0e8b58c3e79ba63c8433b79431326d8421a64bdb2",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/frontend/simulation.js",
+      "bytes": 5537,
+      "crc32": "427e736d",
+      "sha256": "7dccbe7de0894b748f3775263c14273df92a7dcd12c4c0d6bd5ccb8c97f78bfa",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/frontend/startup.js",
+      "bytes": 1206,
+      "crc32": "1e34affe",
+      "sha256": "49075c21fee703d288005844e1728de4108e09b8d1d5c2a4b7b56ae727cfc0ad",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/frontend/styles.css",
+      "bytes": 39980,
+      "crc32": "6a32a76d",
+      "sha256": "3fe7c955b686226c5b41e9807aa011777e9364d56d52507442f35a6761aea247",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/frontend/target_review.js",
+      "bytes": 925,
+      "crc32": "3acf45ea",
+      "sha256": "3556d977a1b2fa921d85fdc421a3d8e27d38c809aebccdbbd584ed939cac3727",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/frontend/workspace.js",
+      "bytes": 20899,
+      "crc32": "647b7a49",
+      "sha256": "2b3d6512a85a283054a1b8eff18b5cad7fab6e84fa08bddf26df739650320594",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/index.html",
+      "bytes": 38183,
+      "crc32": "2e5a38a0",
+      "sha256": "b3da610ba1ca9f2bc8b450b4d6452fb5d0264efda8607a533720274109420370",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/iniciar_linux_mac.sh",
+      "bytes": 265,
+      "crc32": "6a9de3a3",
+      "sha256": "a228cc306bcccc1be24efd3272014aa2f9f0a9d129494b80d3f117bf90197458",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/launch.py",
+      "bytes": 6895,
+      "crc32": "a088253f",
+      "sha256": "1bf8596b99d8894a6ffab176ce256a42f729a28ae644ddf172b084d01535cb2b",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/package-lock.json",
+      "bytes": 35331,
+      "crc32": "9397976f",
+      "sha256": "bbc3f802e74ecca638509e7c97b7db6c25a1e0ea5baa5f0918952fd88db69f51",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/package.json",
+      "bytes": 468,
+      "crc32": "3e60c83e",
+      "sha256": "eaa21d261ad7197212e9a8c032a648c928a63eeca674599f4c2208ae74a9b8c0",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/preparar_linux_mac.sh",
+      "bytes": 117,
+      "crc32": "5c019c42",
+      "sha256": "dac1dbdfee19fc7591e76cfc272e5bdff1ecd48abcb8d5331954c5d8bd3e8a1b",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/prepare_windows.py",
+      "bytes": 2307,
+      "crc32": "d61ff996",
+      "sha256": "b96c86d42e6ee2a0d30f2628b1daa815bc403eabfdddc7eba6a9f3497a7e911d",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/pyproject.toml",
+      "bytes": 484,
+      "crc32": "5ce73d32",
+      "sha256": "cca8d856fd8009c0e6d2fc72d638f979a2d1ebf2c0e20129aea9684cf74570d8",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/requirements-dev.txt",
+      "bytes": 32,
+      "crc32": "027a83c0",
+      "sha256": "5dbd2e24dca9a0409ad5de0859ce3cd3a6928880f0b30f5669f870f8ab516667",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/requirements.txt",
+      "bytes": 201,
+      "crc32": "b27161ea",
+      "sha256": "c82e38ea9b92bca409e6d459bb9192696d5decd037727df73d61626cf29d12e4",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/server.py",
+      "bytes": 58147,
+      "crc32": "041f6dc2",
+      "sha256": "efccac48f2c528a2358621cafeb685868c1d95af4198429d40bc84b26a33791f",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/simulator.js",
+      "bytes": 16426,
+      "crc32": "b8a2349b",
+      "sha256": "3f44c06d573bdd0a22f69f2b7025c68e9e259bc7338e8d674941869fdd5933ec",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/specs/001-spec-kit-gate/analysis.md",
+      "bytes": 1367,
+      "crc32": "f0d3793c",
+      "sha256": "96e6d6afa8639a3eb68a40bf364f8a210d704332b376c2b2fe625e8141e91b4b",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/specs/001-spec-kit-gate/checklists/requirements.md",
+      "bytes": 1318,
+      "crc32": "236b3a21",
+      "sha256": "7664efcb7aa1bac57856305cbd72b0cef0c150b564755abc009939c7ca623421",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/specs/001-spec-kit-gate/contracts/gate.md",
+      "bytes": 1932,
+      "crc32": "2c968bc7",
+      "sha256": "be8bdbcb458ab1a7ae03b76c7ce05399452a2349a3d69133e0f6e77ba91c8c15",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/specs/001-spec-kit-gate/convergence.md",
+      "bytes": 1576,
+      "crc32": "8acf95be",
+      "sha256": "7033702a96c7a4c389622455f0c07512329c65cda97d78c17807b7d3560fbca4",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/specs/001-spec-kit-gate/data-model.md",
+      "bytes": 858,
+      "crc32": "e99319b4",
+      "sha256": "2860c24adc08a2c47db85df1b29d9fabac9677ff9a8afa695216adb1f0daf29a",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/specs/001-spec-kit-gate/plan.md",
+      "bytes": 3229,
+      "crc32": "6ca2b8af",
+      "sha256": "5cae1685fd40dd874cda8b7896f4adaf08bc70507ec5d49087366fcd4ecc6caa",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/specs/001-spec-kit-gate/quickstart.md",
+      "bytes": 911,
+      "crc32": "9f775ead",
+      "sha256": "deb01677f96b7a4621ea6106db050b988592f420b1d319b7ab3efe05a6e3b9be",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/specs/001-spec-kit-gate/research.md",
+      "bytes": 2156,
+      "crc32": "8ed1207e",
+      "sha256": "dcca47690ff2dfd34155d304a78c8629387e53bc5ea3fed5e0c26f99d8f55367",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/specs/001-spec-kit-gate/results.json",
+      "bytes": 669,
+      "crc32": "94303554",
+      "sha256": "00d2f8ee5ed941f24903b0638570e7a9e56678d8fdafd202579908220507c0ff",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/specs/001-spec-kit-gate/spec.md",
+      "bytes": 5321,
+      "crc32": "d7706e42",
+      "sha256": "3149714e297d0fce8d54a9c665c90bfa7afa59e654ebe1f254c76b9166f8a5db",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/specs/001-spec-kit-gate/tasks.md",
+      "bytes": 2017,
+      "crc32": "82391bcb",
+      "sha256": "808f718484720e3ad59aa4fb707f27d9e637fc989b66fb41793cd83608a9c1ff",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/specs/001-spec-kit-gate/verification.json",
+      "bytes": 2424,
+      "crc32": "23120f5c",
+      "sha256": "dc760f6abbe88b897337868f44a63d5dd24e117ee3715243aec7a3f3ff90fd35",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/specs/002-release-hygiene/analysis.md",
+      "bytes": 949,
+      "crc32": "450cc7ba",
+      "sha256": "a73d6fc71fd07bcaa6e9c382ae67ad1d2cb08a249827f2067cd3fec5840498b8",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/specs/002-release-hygiene/checklists/requirements.md",
+      "bytes": 587,
+      "crc32": "76ba6c1a",
+      "sha256": "c8719291e172ea0f9e629cb0b34bd3f56dd281647c7ca0ce013b2de417003eb8",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/specs/002-release-hygiene/convergence.md",
+      "bytes": 877,
+      "crc32": "b6589a1e",
+      "sha256": "59745b4180f43a147ab98b09db989eb86f69c2ec00fed3f773914112066e0644",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/specs/002-release-hygiene/plan.md",
+      "bytes": 1285,
+      "crc32": "eb29dd59",
+      "sha256": "dda921e01bc02da1a876f70d9e1d61231ba2a653a10a2e090dc4ca29e24332f8",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/specs/002-release-hygiene/spec.md",
+      "bytes": 2161,
+      "crc32": "9de42d15",
+      "sha256": "bd8b2880b0f8ef136dde4df152110e653e163bcbe9e78737780a9725c5426a69",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/specs/002-release-hygiene/tasks.md",
+      "bytes": 979,
+      "crc32": "53932149",
+      "sha256": "afe3fe435e6eb99db64262f85d8825a462f18c6a29569c93014783641f846af6",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/specs/002-release-hygiene/verification.json",
+      "bytes": 1992,
+      "crc32": "0651ea73",
+      "sha256": "47fa4aee8dc650d6596ce1996eb31ff95e6223cd686ebd2d07067904af343aa2",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/specs/003-rc4-presentation/analysis.md",
+      "bytes": 947,
+      "crc32": "3395ed89",
+      "sha256": "fb8a6ab294385a676c10e0b7bb5a7799956c013b7973d7593d3378fbdf1f888b",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/specs/003-rc4-presentation/checklists/requirements.md",
+      "bytes": 538,
+      "crc32": "da0c8534",
+      "sha256": "9bb230b79579dce39a8dc8d3a3e875828db66cc7b4cec66513da92026f18e600",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/specs/003-rc4-presentation/convergence.md",
+      "bytes": 550,
+      "crc32": "d283dcd5",
+      "sha256": "9131abe7e8accf48a86da803cd94f006da753c5fcf69068e916fe799cd93860f",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/specs/003-rc4-presentation/plan.md",
+      "bytes": 855,
+      "crc32": "41c747a9",
+      "sha256": "856b52f480077ea5b14265b9b19c721e84e9dfa6e0fa6c71f08b9146b42d32ae",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/specs/003-rc4-presentation/spec.md",
+      "bytes": 1666,
+      "crc32": "0718e70e",
+      "sha256": "22a004d3a75b313bba9ba1ce06332988aa2b0f84bdf4172d6566284c48360938",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/specs/003-rc4-presentation/tasks.md",
+      "bytes": 566,
+      "crc32": "377a2b98",
+      "sha256": "17c1a2c04b103a1cbf3489ef73a9299fa51f322093ea619f98388476c196a442",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/specs/003-rc4-presentation/verification.json",
+      "bytes": 2029,
+      "crc32": "fbe67ad8",
+      "sha256": "49abe65571d5c3c9fc9d382ff3e2b8435e1fc8868c961302343855c4428cbe47",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/specs/004-agent-activity-center/analysis.md",
+      "bytes": 1349,
+      "crc32": "b2fb126e",
+      "sha256": "8df0c090198d9e45e6109b0876549956dd9682c0808345d95c85124067c87f4b",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/specs/004-agent-activity-center/checklists/requirements.md",
+      "bytes": 481,
+      "crc32": "80dda7ce",
+      "sha256": "0f635557a782864eea0d3b419e4e0fc8ca173159cbe995d1ec2ae00f77ea91c6",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/specs/004-agent-activity-center/convergence.md",
+      "bytes": 606,
+      "crc32": "e4f390a7",
+      "sha256": "2654b4bb776149ab1ff8a8263782244e85f12a08f2bceefb59fddc6e41e88166",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/specs/004-agent-activity-center/plan.md",
+      "bytes": 992,
+      "crc32": "5cc29053",
+      "sha256": "d4940382b796d4546245acdf82cec668bb646cd63d5ff2282c3ca9d0adc99895",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/specs/004-agent-activity-center/spec.md",
+      "bytes": 1828,
+      "crc32": "73563288",
+      "sha256": "521fd55439abe4e8cbb6a23506cd0b8ac392e2470a80578fe48730736ccf4f5b",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/specs/004-agent-activity-center/tasks.md",
+      "bytes": 588,
+      "crc32": "2c1af8fe",
+      "sha256": "5a3783e98d4f3e3db9ba708a08edd0aaf35052fe6d4a8e83d493ed77e2cf0dab",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/specs/004-agent-activity-center/verification.json",
+      "bytes": 3043,
+      "crc32": "6b0d75c9",
+      "sha256": "c878ff315e5d3d1b78e41207d06d31501892c48ebe700fd1f8d1612df945f201",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/tests/audit_real_arduino.py",
+      "bytes": 2070,
+      "crc32": "9a534557",
+      "sha256": "f58e5a142012f37039d2d84434d1e7057392cd13c01cd5e41cb3ec4ea30b1060",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/tests/board_trials.test.cjs",
+      "bytes": 3647,
+      "crc32": "3164f857",
+      "sha256": "2cea0f598b325a038246faeb7de842f1ae291b3fefd66f973e24fc38d75653f2",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/tests/browser_acceptance.py",
+      "bytes": 24600,
+      "crc32": "9e96ab92",
+      "sha256": "bf0986ad3327168dd65953829f7d1c3490bce1441d932574628340e522df22ee",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/tests/browser_agent_consent.py",
+      "bytes": 35001,
+      "crc32": "a8b318d3",
+      "sha256": "e7c1df944ef57288f4f09592a3667fd1addd05ade0d2700879df07daec05b097",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/tests/browser_auto_identity.py",
+      "bytes": 12448,
+      "crc32": "576b9036",
+      "sha256": "271a888dba1cddf981eb5d6fb4532ec80434815f5a080a2b6ac6b4df6151e131",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/tests/browser_clean_start.py",
+      "bytes": 11702,
+      "crc32": "8d8eb5e8",
+      "sha256": "046a9d6ce1f0072c5da718cc6b1d95a68151f7a19bba960461c55e73a8b57608",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/tests/browser_connection_recovery.py",
+      "bytes": 13018,
+      "crc32": "b9ccb85c",
+      "sha256": "15ed209f083661b528b2b308fba14ad86440167a490fa2d339029df9b2899cea",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/tests/browser_manual_build.py",
+      "bytes": 15548,
+      "crc32": "18cebc2e",
+      "sha256": "16ca0a776d35f53e9d39d9855f33f280a5b3f54c30cb8d35f667b08bb9ad6a8c",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/tests/browser_mcp.py",
+      "bytes": 10328,
+      "crc32": "0e0d87cb",
+      "sha256": "f05bd3155f04c30603c5aa9d3cd4cfe5b1ed5b7a739dff8e80bc9e726370d2a4",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/tests/browser_security.py",
+      "bytes": 12319,
+      "crc32": "560d49f6",
+      "sha256": "b8472a52f06b51eb1ef182b77af5fe5f2f703823795574719fbc81b1df3e332f",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/tests/browser_simulator.py",
+      "bytes": 13641,
+      "crc32": "7f83d890",
+      "sha256": "018a279c16f8161602805fac6bd720fe93a9fdad77dc90ceab090b36e476adbd",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/tests/clean_package_smoke.py",
+      "bytes": 14566,
+      "crc32": "95b4e798",
+      "sha256": "b76f06e331be4ad36a4d4935eb27f712b7d3831c1e1a8472f120c3998d58274e",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/tests/frontend_source.py",
+      "bytes": 433,
+      "crc32": "e013f93c",
+      "sha256": "2efdb0b3cbdf24bbd78ce07c7b4d8bc1def28e2219ab77b0368e47a31256b8fb",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/tests/manifest.py",
+      "bytes": 2340,
+      "crc32": "6a3a933c",
+      "sha256": "3a85602c591630e3ff1be176d990ac3fac718810c47251202bb32ae8de889eab",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/tests/robot_status.test.cjs",
+      "bytes": 2336,
+      "crc32": "81901f12",
+      "sha256": "e47ada25c50729af1cbf5be4af8b0d66408722897aa32b4a7a30e6adf402a44a",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/tests/run_isolated.py",
+      "bytes": 763,
+      "crc32": "639e7d15",
+      "sha256": "48f1f73c84dc76c3a8ffe8b8d37874740f242d4ffa8da98959d1d6179b49ed80",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/tests/simulator.test.cjs",
+      "bytes": 5159,
+      "crc32": "23582355",
+      "sha256": "efff51d95d0410f3c41f9c15544210f3e7534f1f2cd9ee13bcda3409e1d7fb1c",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/tests/specification_gate.py",
+      "bytes": 8286,
+      "crc32": "2b1593b9",
+      "sha256": "c1e9bdfe966e2ef5c0fb2f5e7572cce68b81568e099d012900dd8ce37086b9aa",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/tests/test_agent_activity.mjs",
+      "bytes": 2925,
+      "crc32": "68ae5ec7",
+      "sha256": "db667a855ccb59f0c8ebc526efb35854f5a0e670399263f39671a029373a8437",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/tests/test_agent_evidence.py",
+      "bytes": 4136,
+      "crc32": "19bbb32a",
+      "sha256": "09ecb46f41a20faef21d2a1b9fa4bdb0758cb77e475c06f7776aea126f1e1688",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/tests/test_agent_permissions.py",
+      "bytes": 11469,
+      "crc32": "0930f5ec",
+      "sha256": "70527cb26ea92fb91ab331d942ac6ab7fba98a79a5859a9e67e1c48351150be8",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/tests/test_agent_projects.py",
+      "bytes": 9613,
+      "crc32": "cf71fc38",
+      "sha256": "3311d5a336346949968af7625ce8413c27775203f6ab4d12a3bc20d68bd179dc",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/tests/test_board_catalog.py",
+      "bytes": 6672,
+      "crc32": "fa37a1b5",
+      "sha256": "32fe90b604bd4e61a28b5b5df735f07a50511a55b694d838033c862ce7e1a771",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/tests/test_board_families.py",
+      "bytes": 6266,
+      "crc32": "5c63da39",
+      "sha256": "67aa8e5f1d58f36e01fa010fff2066350a25f8207d6ca62dc9138ecbb1ee68a5",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/tests/test_board_identity.py",
+      "bytes": 23254,
+      "crc32": "add824b4",
+      "sha256": "e5131dc6530f4423a2d3dd4207c3320df36c1fe38f94350ea7f786b6bf185e6d",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/tests/test_board_trials.py",
+      "bytes": 1235,
+      "crc32": "cac147b6",
+      "sha256": "51b8dc2b99aa7bae8a10cf6f0445f06ce4a9589f499d57df819c54bb22f4f8df",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/tests/test_catalog_fallback.py",
+      "bytes": 4435,
+      "crc32": "421e1673",
+      "sha256": "d5f3e95157458102ea3557e488a72c0ffaa63ce582cbdfd5c01bd9bc22f8c688",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/tests/test_catalog_pagination.py",
+      "bytes": 4221,
+      "crc32": "89e7525d",
+      "sha256": "a2fb38f189019b33abea2ff87f496c66e642b3344edda3f1ed0514b331073c96",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/tests/test_codex_session.py",
+      "bytes": 4996,
+      "crc32": "a94d666d",
+      "sha256": "5179c2bff69847c33015a71077196a84810e39f13d8f3a8aaa5d8ff0ad40cecb",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/tests/test_dependencies_cloud.py",
+      "bytes": 8899,
+      "crc32": "c3768b4e",
+      "sha256": "0030b83d5023cfd10fffad5d3117c5256bd6e5a5ba9836545b0ab4ed5da28fde",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/tests/test_editor_controls.py",
+      "bytes": 2962,
+      "crc32": "5b08ba49",
+      "sha256": "c9f61ff860f023322cd3480cf15633f55feec81be63d0f2a486518ec1eeccb47",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/tests/test_examples_cpp_syntax.py",
+      "bytes": 3256,
+      "crc32": "445fd2f3",
+      "sha256": "18f58d5ff77275ea29c96d2e7f60c8a7ff87a35842bdb2b9509addcd5dad11c3",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/tests/test_hardware_profiles.py",
+      "bytes": 7336,
+      "crc32": "c41d6e96",
+      "sha256": "eceaef3062ed5294cd5f11d064cb9559481868be5d41173e5c147e881c81bfe6",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/tests/test_install_recovery.py",
+      "bytes": 12955,
+      "crc32": "cca3ef8a",
+      "sha256": "920ab4306185bbfb175e2d1bcc465a504a7492012e751df40e2bc1a82cb1eab7",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/tests/test_jobs_cloud_api.py",
+      "bytes": 10190,
+      "crc32": "36dc06cd",
+      "sha256": "68b8150f0edcabba69b6f70454a111d903f5b7708eb546ec27f6640f2eaef4b4",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/tests/test_local_security.py",
+      "bytes": 16709,
+      "crc32": "396a5fe1",
+      "sha256": "8d83174d39657779429d5bdef487e8a8faf34cb9a4f4f34902c3bd345048a259",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/tests/test_manifest_integrity.py",
+      "bytes": 1802,
+      "crc32": "6ec36e94",
+      "sha256": "13f3676f3c06c52baa67a514031e3dd72007bd15350cd01a63d1a01f1b7511b4",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/tests/test_mcp_bridge.py",
+      "bytes": 10149,
+      "crc32": "76bf5a68",
+      "sha256": "af10e6cfd20419ba2fc3310952b32deae463bc0a2cde5abef52708372d7219c4",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/tests/test_migration_activity.py",
+      "bytes": 4519,
+      "crc32": "e87375f2",
+      "sha256": "f264ce3f4e0c6a63bd004c31176807dda890e5fa0a698c72ba096d6a2cc69a71",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/tests/test_release_integrity.py",
+      "bytes": 10380,
+      "crc32": "1276f398",
+      "sha256": "99b7c6c99e448281cad78051f821b21990a7c590265a47f6e75e292468f363d3",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/tests/test_secret_store.py",
+      "bytes": 3935,
+      "crc32": "e60ad76a",
+      "sha256": "578ca56a764cec9b119914290e5f7a00bc3aa5235c1e173282521d7420c277ed",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/tests/test_server.py",
+      "bytes": 10395,
+      "crc32": "da85c127",
+      "sha256": "21600c8e7abde394e27bca016e4f3aa7bc95ab0cdff92bea915227a63ad51fdd",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/tests/test_session_recovery.py",
+      "bytes": 6528,
+      "crc32": "c0bc7961",
+      "sha256": "c867569f81ac1d98f096fde9b1afd881d447db22aec61dc2b80e5a42f31bcb9f",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/tests/test_simulator.py",
+      "bytes": 432,
+      "crc32": "98d65b62",
+      "sha256": "9cd8c2cba31f368a2833c83e5f84f073026471b325ac71726dbf278938d6397f",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/tests/test_specification_gate.py",
+      "bytes": 7996,
+      "crc32": "5eec50d1",
+      "sha256": "b8c1f541ea519dfd9da8efe2461d85e19b0d6e78cbd39a858f67679e8fcdbfa4",
+      "license_review": "not reviewed individually"
+    },
+    {
+      "path": "AB-MakerIDE-SUPER/tests/test_upload_controls.py",
+      "bytes": 9335,
+      "crc32": "91610515",
+      "sha256": "8b12c17b3821639f5f8e4dd295a22c60a0a6a9876700c1bb8cbc49f3b6fbf409",
+      "license_review": "not reviewed individually"
+    }
+  ],
+  "scope": "Exact historical public ZIP; read only, no extraction or target execution."
+}

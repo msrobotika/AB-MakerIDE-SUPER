@@ -1,0 +1,92 @@
+{
+  "installer": "AUDIT_WORKSPACE\\makeride-artifacts\\AB-MakerIDE-SUPER-Windows-x64-dev-025dd26e85-Setup.exe",
+  "passed": [
+    "Per-user installation and Windows registration in Unicode path",
+    "Installed binary --check --json",
+    "Installed application responds over localhost",
+    "Repeat installation/update preserves external user data",
+    "Uninstall removes application and preserves external data"
+  ],
+  "failures": [],
+  "limits": [
+    "No SmartScreen interaction",
+    "No physical ESP32/serial/camera",
+    "No AI account execution"
+  ],
+  "registration": {
+    "Inno Setup: Setup Version": "6.7.1",
+    "Inno Setup: App Path": "AUDIT_WORKSPACE\\makeride-install-qa\\Instalación áé Robotika",
+    "InstallLocation": "AUDIT_WORKSPACE\\makeride-install-qa\\Instalación áé Robotika\\",
+    "Inno Setup: Icon Group": "AB MakerIDE SUPER",
+    "Inno Setup: User": "AUDIT_USER",
+    "Inno Setup: Selected Tasks": "",
+    "Inno Setup: Deselected Tasks": "desktopicon",
+    "Inno Setup: Language": "spanish",
+    "DisplayName": "AB MakerIDE SUPER - pruebas Windows (dev-025dd26e85)",
+    "DisplayIcon": "AUDIT_WORKSPACE\\makeride-install-qa\\Instalación áé Robotika\\AB-MakerIDE-SUPER.exe",
+    "UninstallString": "\"AUDIT_WORKSPACE\\makeride-install-qa\\Instalación áé Robotika\\unins000.exe\"",
+    "QuietUninstallString": "\"AUDIT_WORKSPACE\\makeride-install-qa\\Instalación áé Robotika\\unins000.exe\" /SILENT",
+    "DisplayVersion": "1.0.0-rc.4.dev",
+    "Publisher": "MS Robotika",
+    "URLInfoAbout": "https://github.com/msrobotika/AB-MakerIDE-SUPER",
+    "HelpLink": "https://github.com/msrobotika/AB-MakerIDE-SUPER/issues",
+    "NoModify": 1,
+    "NoRepair": 1,
+    "InstallDate": "20261028",
+    "MajorVersion": 1,
+    "MinorVersion": 0,
+    "VersionMajor": 1,
+    "VersionMinor": 0,
+    "EstimatedSize": 33594
+  },
+  "diagnostic": {
+    "ok": true,
+    "checks": [
+      {
+        "name": "python",
+        "ok": true,
+        "message": "Python 3.10 o posterior; actual: 3.13.16",
+        "required": true
+      },
+      {
+        "name": "files",
+        "ok": true,
+        "message": "Carpeta de programa completa.",
+        "required": true
+      },
+      {
+        "name": "data",
+        "ok": true,
+        "message": "Datos y sesiones: AUDIT_WORKSPACE\\makeride-install-qa\\datos propios",
+        "required": true
+      },
+      {
+        "name": "port",
+        "ok": true,
+        "message": "Puerto local disponible: 4291",
+        "required": true
+      },
+      {
+        "name": "arduino",
+        "ok": true,
+        "message": "Arduino CLI disponible.",
+        "required": false
+      },
+      {
+        "name": "serial",
+        "ok": true,
+        "message": "Monitor serie disponible.",
+        "required": false
+      },
+      {
+        "name": "micropython",
+        "ok": true,
+        "message": "Herramienta MicroPython disponible.",
+        "required": false
+      }
+    ],
+    "data_dir": "AUDIT_WORKSPACE\\makeride-install-qa\\datos propios",
+    "version": "1.0.0-rc.4",
+    "scope": "Diagnóstico local; no abre puertos serie, no graba hardware ni configura cuentas de IA."
+  }
+}

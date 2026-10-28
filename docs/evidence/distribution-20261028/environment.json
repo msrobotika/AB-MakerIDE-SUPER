@@ -1,0 +1,10 @@
+{
+  "platform": "Windows-10-10.0.19045-SP0",
+  "python": "3.13.7",
+  "source_commit": "36209e0d8188284de7d160d571940f385abb4cbb",
+  "test_installer_commit": "025dd26e85d790640f5593b0ffd223267cef8f22",
+  "test_installer_sha256": "ecb25a3d7f021c5f0c3f26a2d3a06b96c26e586366e206847a56ba4599602f7c",
+  "hardware_tested": false,
+  "smartscreen_tested": false,
+  "authenticode": "NotSigned"
+}

@@ -1,0 +1,120 @@
+{
+  "evidence_id": "ev_8eb0c2b701730461ccae6b570e5d5c1e62cd5f2e3923e1c43c9dc91c01613d28",
+  "subject": {
+    "name": "AB-MakerIDE-SUPER-1.0.0-rc.4-IA-actualizada.zip",
+    "digest": {
+      "sha256": "2337121a9709b1371a4cd910073521b4d93632dc35a2b16bce831cbf9bba2862"
+    },
+    "local_path": "AUDIT_WORKSPACE\\makeride-artifacts\\AB-MakerIDE-SUPER-1.0.0-rc.4-IA-actualizada.zip",
+    "format": "zip",
+    "architecture": null
+  },
+  "provider": {
+    "id": "rea-analysis-view",
+    "name": "REA analysis view projection",
+    "version": "1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis-view",
+  "operation": "inspect_analysis_view",
+  "parameters": {
+    "parent_evidence_id": "ev_dcc6c19839591181375b3f4cc665078ca33b5e90e89e80fb1dc4b5b39becbdc2",
+    "view": {
+      "kind": "summary"
+    }
+  },
+  "raw_result": null,
+  "normalized_result": {
+    "kind": "summary",
+    "view": {
+      "kind": "summary"
+    },
+    "parent_evidence_id": "ev_dcc6c19839591181375b3f4cc665078ca33b5e90e89e80fb1dc4b5b39becbdc2",
+    "parent_operation": "inspect_artifact",
+    "parent_digest": "dcc6c19839591181375b3f4cc665078ca33b5e90e89e80fb1dc4b5b39becbdc2",
+    "view_digest": "ef5e845bf564b3099b3911270c2d7c90a0a4673c6c5f88d3b7775a707fa923f7",
+    "artifact": {
+      "path": "AUDIT_WORKSPACE\\makeride-artifacts\\AB-MakerIDE-SUPER-1.0.0-rc.4-IA-actualizada.zip",
+      "sha256": "2337121a9709b1371a4cd910073521b4d93632dc35a2b16bce831cbf9bba2862"
+    },
+    "coverage": {
+      "status": "complete-within-view",
+      "examined": 1422,
+      "total": 1422,
+      "next_offset": null,
+      "exhausted": true
+    },
+    "limitations": [
+      "Inspection derives bounded static hypotheses and next probes; it does not execute the artifact or claim format-specific semantics.",
+      "ZIP inventory lists central-directory entries only. Non-entry bytes, including leading bytes before the first entry such as a self-extractor stub, an APK Signing Block before the central directory or a ZIP comment after it, are not occurrences."
+    ],
+    "unknowns": [
+      "Inventory does not establish application runtime behavior or complete format-specific analysis."
+    ],
+    "summary": {
+      "source_coverage": {
+        "scope": "container-entries",
+        "status": "complete"
+      },
+      "manifest": {
+        "manifest_id": "agm_3a5c7970a1e7ec746e3daafdac88a7aff32dc18710e9c46b4bd88f771cb2a27b",
+        "root_artifact_id": "art_e26f9278785f3831489346efd7004ca40942a49c01c321b0b06d3511be44d77f",
+        "root_sha256": "2337121a9709b1371a4cd910073521b4d93632dc35a2b16bce831cbf9bba2862",
+        "root_format": "zip",
+        "graph_sha256": "c05b45909706a6bf04637c1009cfdfe58e6bc60f0029d33f88186c2f3f30fc00",
+        "node_count": 473,
+        "occurrence_count": 475,
+        "edge_count": 474
+      },
+      "available_counts": {
+        "nodes": 473,
+        "occurrences": 475,
+        "edges": 474,
+        "integrity_contradictions": 0
+      },
+      "observed_entry_kind_counts": {
+        "file": 411,
+        "directory": 64,
+        "symlink": 0,
+        "slice": 0
+      },
+      "source_complete": true,
+      "inventory_evidence_ids": [
+        "ev_43aacd75dd153e31afe59b3c0b18de433d786df5d52e628a1bfa21d16a4d7125"
+      ],
+      "inspection": {
+        "coverage": {
+          "status": "complete-within-substeps",
+          "substeps_completed": 1,
+          "observations_retained": 1,
+          "observations_omitted": 0,
+          "hypotheses_retained": 0,
+          "hypotheses_omitted": 0,
+          "unexplored_branches_retained": 0,
+          "unexplored_branches_omitted": 0,
+          "next_probes_retained": 0,
+          "next_probes_omitted": 0
+        },
+        "unexplored_branches": []
+      },
+      "limitation_count": 2
+    }
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Inspection derives bounded static hypotheses and next probes; it does not execute the artifact or claim format-specific semantics.",
+    "ZIP inventory lists central-directory entries only. Non-entry bytes, including leading bytes before the first entry such as a self-extractor stub, an APK Signing Block before the central directory or a ZIP comment after it, are not occurrences."
+  ],
+  "relationship_coverage": null,
+  "locations": [
+    {
+      "kind": "artifact-path",
+      "path": "AUDIT_WORKSPACE\\makeride-artifacts\\AB-MakerIDE-SUPER-1.0.0-rc.4-IA-actualizada.zip"
+    }
+  ],
+  "evidence_links": [
+    "ev_dcc6c19839591181375b3f4cc665078ca33b5e90e89e80fb1dc4b5b39becbdc2"
+  ]
+}

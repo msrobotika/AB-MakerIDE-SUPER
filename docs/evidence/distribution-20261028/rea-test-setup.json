@@ -1,0 +1,61 @@
+{
+  "evidence_id": "ev_a40a555f37f33fcb50502503a03bb0206e336c925a874578ef18cb99dcf7431b",
+  "subject": {
+    "name": "AB-MakerIDE-SUPER-Windows-x64-dev-025dd26e85-Setup.exe",
+    "digest": {
+      "sha256": "ecb25a3d7f021c5f0c3f26a2d3a06b96c26e586366e206847a56ba4599602f7c"
+    },
+    "local_path": "AUDIT_WORKSPACE/makeride-artifacts/AB-MakerIDE-SUPER-Windows-x64-dev-025dd26e85-Setup.exe",
+    "format": "pe",
+    "architecture": "x86"
+  },
+  "provider": {
+    "id": "rea-pe-certificates",
+    "name": "REA PE certificate parser",
+    "version": "1"
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.analysis",
+  "operation": "inspect_pe_certificates",
+  "parameters": {
+    "path": "AUDIT_WORKSPACE/makeride-artifacts/AB-MakerIDE-SUPER-Windows-x64-dev-025dd26e85-Setup.exe",
+    "max_file_bytes": 67108864,
+    "max_entries": 8
+  },
+  "raw_result": null,
+  "normalized_result": {
+    "artifact": {
+      "path": "AUDIT_WORKSPACE/makeride-artifacts/AB-MakerIDE-SUPER-Windows-x64-dev-025dd26e85-Setup.exe",
+      "sha256": "ecb25a3d7f021c5f0c3f26a2d3a06b96c26e586366e206847a56ba4599602f7c",
+      "bytes": 16447426
+    },
+    "format": "pe32",
+    "machine": 332,
+    "table": null,
+    "entries": [],
+    "coverage": {
+      "status": "complete",
+      "examined_entries": 0,
+      "certificates": 0
+    },
+    "limitations": [
+      "IMAGE_DIRECTORY_ENTRY_SECURITY is absent. That is not proof the image is unsigned in every catalog or overlay sense.",
+      "This workflow does not verify signatures, certificate chains, timestamps, or Authenticode digest coverage of image bytes."
+    ]
+  },
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "IMAGE_DIRECTORY_ENTRY_SECURITY is absent. That is not proof the image is unsigned in every catalog or overlay sense.",
+    "This workflow does not verify signatures, certificate chains, timestamps, or Authenticode digest coverage of image bytes."
+  ],
+  "relationship_coverage": null,
+  "locations": [
+    {
+      "kind": "artifact-path",
+      "path": "AUDIT_WORKSPACE/makeride-artifacts/AB-MakerIDE-SUPER-Windows-x64-dev-025dd26e85-Setup.exe"
+    }
+  ],
+  "evidence_links": []
+}
