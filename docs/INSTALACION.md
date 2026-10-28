@@ -22,6 +22,20 @@ El arranque también configura UTF-8 para evitar que una consola/redirección cp
 
 No mezcles las carpetas y recursos de la edición RC4 con el nuevo instalador. Esta validación automatizada no constituye una prueba física de un ESP32 ni confirma Windows SmartScreen en todas las máquinas.
 
+### Edge muestra «no se descarga habitualmente»
+
+El aviso observado el 28/10/2026 corresponde al archivo `AB-MakerIDE-SUPER-Windows-x64-dev-025dd26e85-Setup.exe` en el panel Descargas de Edge. Es un aviso de reputación de descarga anterior a la ejecución del instalador. Por sí solo no demuestra un fallo de instalación ni certifica que el archivo sea seguro. Este TEST no está firmado: Windows informa `NotSigned` y la inspección REA no encuentra tabla de certificados PE.
+
+Comprueba que el enlace procede de la Release oficial indicada arriba. Si decides conservar la descarga desde sus opciones en Edge, contrasta el archivo completo antes de abrirlo:
+
+```powershell
+Get-FileHash -Algorithm SHA256 -LiteralPath "$env:USERPROFILE\Downloads\AB-MakerIDE-SUPER-Windows-x64-dev-025dd26e85-Setup.exe"
+```
+
+La huella esperada para ese archivo exacto es `ecb25a3d7f021c5f0c3f26a2d3a06b96c26e586366e206847a56ba4599602f7c`, publicada con la Release. Una huella distinta identifica otros bytes: no atribuyas a ese archivo las pruebas del TEST auditado. Si aparece una detección explícita de malware o una restricción de organización, conserva ese diagnóstico por separado.
+
+No hace falta desactivar SmartScreen, Defender ni las políticas de Windows. Una distribución futura deberá resolver la identidad de firma y su validación; firmar tampoco garantiza la desaparición inmediata de todos los avisos de reputación. [Explicación oficial de Microsoft para desarrolladores](https://learn.microsoft.com/windows/apps/package-and-deploy/smartscreen-reputation).
+
 # Instalación y recuperación en Windows
 
 ## Primer arranque — ZIP RC4 portátil
