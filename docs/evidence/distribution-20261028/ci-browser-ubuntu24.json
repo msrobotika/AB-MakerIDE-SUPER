@@ -1,0 +1,123 @@
+{
+  "source_commit": "1cacc750619ed2628aabfa4fe8408e5596c296f3",
+  "run_url": "https://github.com/msrobotika/AB-MakerIDE-SUPER/actions/runs/40780735147",
+  "browser_job": {
+    "id": 123141478082,
+    "name": "Editor y proyectos / Chromium aislado",
+    "status": "completed",
+    "conclusion": "success",
+    "run_id": 40780735147,
+    "logs_url": null,
+    "steps": [
+      {
+        "name": "Set up job",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 1
+      },
+      {
+        "name": "Run actions/checkout@v7",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 2
+      },
+      {
+        "name": "Run actions/setup-python@v7",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 3
+      },
+      {
+        "name": "Run python -m pip install playwright==1.56.0",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 4
+      },
+      {
+        "name": "Run python -m playwright install --with-deps chromium",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 5
+      },
+      {
+        "name": "Run python tests/browser_agent_consent.py --outputs work/browser-ci",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 6
+      },
+      {
+        "name": "Run python tests/browser_simulator.py --outputs work/simulator-ci",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 7
+      },
+      {
+        "name": "Run python tests/browser_connection_recovery.py --outputs work/connection-ci",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 8
+      },
+      {
+        "name": "Run python tests/browser_auto_identity.py --outputs work/identity-ci",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 9
+      },
+      {
+        "name": "Run python tests/browser_clean_start.py --outputs work/start-ci",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 10
+      },
+      {
+        "name": "Run python tests/browser_mcp.py --outputs work/mcp-ci",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 11
+      },
+      {
+        "name": "Run python tests/browser_screenlab.py --outputs work/screenlab-ci",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 12
+      },
+      {
+        "name": "Run python tests/browser_security.py --outputs work/security-ci",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 13
+      },
+      {
+        "name": "Run python tests/browser_manual_build.py --outputs work/manual-build-ci",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 14
+      },
+      {
+        "name": "Preserve genuine ScreenLab Chromium screenshot",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 15
+      },
+      {
+        "name": "Post Run actions/setup-python@v7",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 29
+      },
+      {
+        "name": "Post Run actions/checkout@v7",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 30
+      },
+      {
+        "name": "Complete job",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 31
+      }
+    ]
+  },
+  "scope": "Hosted browser job succeeded after Ubuntu 24.04 pin; this run's quality gate intentionally remained pending until evidence was recorded. Not an overall green-run claim."
+}
