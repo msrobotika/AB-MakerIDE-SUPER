@@ -7,6 +7,8 @@ Hay un **instalador Windows TEST** de la revisión de desarrollo `025dd26e85` y 
 | Necesidad | Guía |
 | --- | --- |
 | **Descargas: instalador Windows TEST, RC4 histórica y código actualizado** | **[DESCARGAS_Y_VERSIONES.md](DESCARGAS_Y_VERSIONES.md)** |
+| Estado beta y prioridades | [ESTADO_BETA.md](ESTADO_BETA.md) |
+| Revisión abierta: 227 controles | [Checklist](../compliance/CHECKLIST.md) · [Alcance](../compliance/README.md) |
 | Instalación y recuperación | [INSTALACION.md](INSTALACION.md) |
 | Primeros pasos en Windows | [PRUEBAS_EN_WINDOWS.md](PRUEBAS_EN_WINDOWS.md) |
 | Linux y macOS | [LINUX_MACOS.md](LINUX_MACOS.md) |
