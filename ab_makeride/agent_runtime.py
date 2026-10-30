@@ -25,8 +25,8 @@ import tempfile
 import threading
 import time
 import uuid
-import unicodedata
 
+from .agent_intent import requests_upload
 from .dependency_advisor import redact_secrets
 from .agent_projects import (
     collect_project,
@@ -59,24 +59,6 @@ JOURNAL_FILENAME = ".makeride_session.json"
 ORIGINAL_FILENAME = ".makeride_original.txt"
 JOURNAL_SCHEMA = 1
 ANSI_RE = re.compile(r"\x1b\[[0-9;]*[A-Za-z]")
-
-
-def requests_upload(prompt: str) -> bool:
-    """Completion requirement only; never grants permissions to a CLI/tool."""
-    text = "".join(
-        c for c in unicodedata.normalize("NFKD", prompt.lower()) if not unicodedata.combining(c)
-    )
-    if re.search(
-        r"\b(?:no|sin)\s+(?:(?:lo|la|el|que|se)\s+)*(?:sub(?:as|ir)|carg(?:ues|ar)|grab(?:es|ar)|flashe(?:es|ar))\b",
-        text,
-    ):
-        return False
-    return bool(
-        re.search(
-            r"\b(?:sube(?:lo|la)?|carga(?:lo|la)?|graba(?:lo|la)?|subir|cargar|grabar|upload|flashea(?:lo)?)\b",
-            text,
-        )
-    )
 
 
 def physical_profile(profile: str, fqbn: str, prompt: str) -> str:
