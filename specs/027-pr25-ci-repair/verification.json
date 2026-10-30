@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "convergence": "converged",
+  "changed_files": {
+    ".github/workflows/checks.yml": "54c885c838b17d51b826a91d0b8a852a0985fc3dbe5b892692ebe02e41c096eb",
+    "ab_makeride/agent_intent.py": "cad11ef7b2fed9c541f6154a0bbec4ab3aaa811f1077885443e90941fad5a96d",
+    "ab_makeride/agent_runtime.py": "32980101797858a54f6e34ca9555f75c8c79dd3d9af3ce0098fe8a47270f99f4",
+    "docs/evidence/pr25-ci-repair/results.json": "0a655f9d1dc3061b4221bf75c555391303985bb03e60bcbbd77463d39d556a0a",
+    "tests/test_agent_intent.py": "3d61031a9da2111fa8eb0fe5efafe4b83b13829b247d1198fcb0fa8270a47970"
+  },
+  "requirements": [
+    {
+      "id": "FR-001",
+      "result": "passed",
+      "notes": "Import mínimo y AST original del clasificador conservado.",
+      "evidence": [
+        "ab_makeride/agent_runtime.py",
+        "ab_makeride/agent_intent.py",
+        "docs/evidence/pr25-ci-repair/results.json"
+      ]
+    },
+    {
+      "id": "FR-002",
+      "result": "passed",
+      "notes": "Tres casos ejecutados individualmente y descubiertos en suite336.",
+      "evidence": [
+        "tests/test_agent_intent.py",
+        "docs/evidence/pr25-ci-repair/results.json"
+      ]
+    },
+    {
+      "id": "FR-003",
+      "result": "passed",
+      "notes": "Navegador fijado a Ubuntu24; nueve escenarios localWindows correctos.",
+      "evidence": [
+        ".github/workflows/checks.yml",
+        "docs/evidence/pr25-ci-repair/results.json"
+      ]
+    },
+    {
+      "id": "FR-004",
+      "result": "passed",
+      "notes": "Calidad, evidencia local y manifiesto; aceptación remota expresamente pendiente.",
+      "evidence": [
+        "docs/evidence/pr25-ci-repair/README.md",
+        "docs/evidence/pr25-ci-repair/results.json"
+      ]
+    }
+  ]
+}

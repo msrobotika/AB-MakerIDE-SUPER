@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "convergence": "converged",
+  "requirements": [
+    {
+      "id": "FR-001",
+      "result": "passed",
+      "notes": "Portadas breves; textos anteriores conservados.",
+      "evidence": [
+        "README.md",
+        "README.en.md",
+        "docs/archive/README_2026-10-29.md"
+      ]
+    },
+    {
+      "id": "FR-002",
+      "result": "passed",
+      "notes": "227 IDs únicos; estados y aplicabilidad explícitos.",
+      "evidence": [
+        "compliance/CHECKLIST.md",
+        "compliance/README.md"
+      ]
+    },
+    {
+      "id": "FR-003",
+      "result": "passed",
+      "notes": "RC4, Cuttlefish y alcance local diferenciados; enlaces y privacidad revisados.",
+      "evidence": [
+        "docs/ESTADO_BETA.md",
+        "docs/evidence/public-beta-docs/results.json"
+      ]
+    },
+    {
+      "id": "FR-004",
+      "result": "passed",
+      "notes": "Base pública aislada, controles locales y publicación documental sin binarios ni workflows nuevos.",
+      "evidence": [
+        "docs/RELEASE_POLICY.md",
+        "docs/evidence/public-beta-docs/results.json"
+      ]
+    }
+  ],
+  "changed_files": {
+    "docs/evidence/public-beta-docs/results.json": "6738e852f8df979e079dec2ef87a72e2a0172d684643f32d048402c69345b2c2"
+  }
+}

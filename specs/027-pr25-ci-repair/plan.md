@@ -1,0 +1,2 @@
+# Plan
+Worktree independiente; conservar commits y fusionar main sin rebase/force-push. Corregir import, descubrimiento unittest y runner Playwright con mismo ajuste confirmado en PR23. Ejecutar runner completo, tres casos aislados, Ruff/ESLint/Prettier, Chromium y manifiesto/gate respecto a main. Preparar avance fast-forward en rama PR25 tras comprobar SHA remoto; conservar draft y no merge. CI estándar pública gratuita, sin instalador ni release. No cambiar API, permisos, hardware o datos. No importar mejoras locales de 026.

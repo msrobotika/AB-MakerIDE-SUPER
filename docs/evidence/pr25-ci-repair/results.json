@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-30",
+  "pr": 25,
+  "previous_head": "b69f541d8b0d3fab509bba37af1dbba7c3869759",
+  "main_integrated": "e3353eedbf69fff7c418dd98fbd906e3d8b52692",
+  "observed_failures": {
+    "ci_run": 40820358302,
+    "ruff": "F401 unicodedata",
+    "manifest": [
+      "agent_runtime.py stale",
+      "agent_intent.py missing",
+      "test_agent_intent.py missing"
+    ],
+    "browser": "Playwright1.56 does not support ubuntu26.04-x64",
+    "unittest_intent_discovered_before": 0,
+    "ruff_format_after_import_fix": "extra trailing blank line in agent_intent.py"
+  },
+  "local_windows": {
+    "unittest_total": 336,
+    "passed": 331,
+    "skipped": 5,
+    "intent_tests_discovered_after": 3,
+    "node_passed": 21,
+    "browser_scenarios_passed": 9,
+    "browser": "Existing Chromium 1248 with explicit executable path via wrapper; actual local browser, not mocked",
+    "ruff_check": "passed",
+    "ruff_format": 263,
+    "eslint": "passed",
+    "prettier": "passed",
+    "classifier_ast_unchanged": true
+  },
+  "remote_acceptance": "Pending new commit CI and human review; no merge/release/hardware actions"
+}

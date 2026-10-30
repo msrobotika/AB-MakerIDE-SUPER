@@ -25,7 +25,6 @@ import tempfile
 import threading
 import time
 import uuid
-import unicodedata
 
 from .agent_intent import requests_upload
 from .dependency_advisor import redact_secrets

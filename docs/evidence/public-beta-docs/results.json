@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-30",
+  "base": "36209e0d8188284de7d160d571940f385abb4cbb",
+  "scope": "Documentation only; no hardware, installer or full legal certification",
+  "checks": {
+    "python_isolated": {
+      "command": "python tests/run_isolated.py",
+      "total": 333,
+      "passed": 328,
+      "skipped": 5,
+      "failures": 0
+    },
+    "javascript": {
+      "command": "node --test tests/test_agent_activity.mjs tests/test_screenlab.mjs tests/test_screenlab_sketch.mjs",
+      "passed": 21,
+      "failed": 0
+    },
+    "download_landing": "passed",
+    "local_links": 151,
+    "checklist_unique_ids": 227,
+    "readme_lines": 65,
+    "ruff_check": "passed",
+    "ruff_format_files": 254,
+    "eslint": "passed",
+    "prettier": "passed",
+    "private_path_token_scan": "passed"
+  },
+  "limitations": [
+    "Existing public source tested on local Windows only; five Python tests skipped.",
+    "Runtime code, workflows and installers unchanged.",
+    "These checks do not close the 227-control product audit.",
+    "Remote CI intentionally skipped to preserve zero-cost requirement."
+  ]
+}

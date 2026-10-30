@@ -22,4 +22,3 @@ def requests_upload(prompt: str) -> bool:
             text,
         )
     )
-
