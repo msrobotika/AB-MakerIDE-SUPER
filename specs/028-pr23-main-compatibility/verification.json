@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "convergence": "converged",
+  "changed_files": {
+    ".github/workflows/checks.yml": "9d5873725cf4452639cbafd362e70752df27fe5a04b3cc1bdbedf40f882c78ca",
+    "docs/evidence/distribution-20261028/ci-browser-ubuntu24.json": "c9881030e3ef3e55c9e445c1c4403973245a81da964e73c491a336691b52cc37",
+    "docs/evidence/distribution-20261028/environment.json": "e8323a89dec3466ca46e10def9a8f6679438ed8f939c6a8fdc6589dc9f99e545",
+    "docs/evidence/distribution-20261028/rc4-audit.json": "ae255e15af7a0a083856533758e5c0bd4ce04fa9ff93064ffd609b668014a97f",
+    "docs/evidence/distribution-20261028/rc4-inventory.json": "09b809c0c6d70582982c33cb16a3e9daaa16e2f28a23f6855009f92d8cf2d2ec",
+    "docs/evidence/distribution-20261028/rea-rc4-summary.json": "cc3b0ba7ed43914c01a57f41aff6d0f3d67a7002d6376502c4a55c4a86a6f0b0",
+    "docs/evidence/distribution-20261028/rea-test-setup.json": "bf5b98e72ad120306b4fbea354b27b24ace4858d599af9e519481d5f2adf6112",
+    "docs/evidence/distribution-20261028/windows-test-lifecycle.json": "15609451fa429813513fc6dd31c8c77314999937112a858500eaa2b6e53e40e3",
+    "docs/evidence/pr23-main-compatibility/artifacts.json": "715a5ba55d2736e083060e6db6392f59bfcb08027a03213bb367a3de409e511c",
+    "docs/evidence/pr23-main-compatibility/results.json": "689671f253d34049017af4621e4cfb0b4089a9034cc8b4752b676ffa70e1761c",
+    "scripts/audit_distribution.py": "3ad2acb74c985fbf90566178fe0435143da64e162e616c5bd529cc55d0a9421e",
+    "tests/test_distribution_archive.py": "9f0a8b101c9cc28d75898bd542ff1e02cf5c1fc9cf9ceed867548b62932a8a54",
+    "docs/evidence/public-beta-docs/results.json": "6738e852f8df979e079dec2ef87a72e2a0172d684643f32d048402c69345b2c2"
+  },
+  "requirements": [
+    {
+      "id": "FR-001",
+      "result": "passed",
+      "notes": "Merge main y conflictos limitados a metadatos; runtime preservado.",
+      "evidence": [
+        "docs/evidence/pr23-main-compatibility/results.json"
+      ]
+    },
+    {
+      "id": "FR-002",
+      "result": "passed",
+      "notes": "Diez negativos/positivos ZIP y revisión de bytes exactos con no conformidad histórica explícita.",
+      "evidence": [
+        "tests/test_distribution_archive.py",
+        "docs/evidence/pr23-main-compatibility/artifacts.json"
+      ]
+    },
+    {
+      "id": "FR-003",
+      "result": "passed",
+      "notes": "QA histórica de artefacto exacto conservada sin tocar instalación actual; límites documentados.",
+      "evidence": [
+        "docs/evidence/distribution-20261028/windows-test-lifecycle.json",
+        "docs/evidence/pr23-main-compatibility/README.md"
+      ]
+    },
+    {
+      "id": "FR-004",
+      "result": "passed",
+      "notes": "Calidad local, suite337, manifest/gate y preparación de entrega; CI/revisión pendientes fuera de convergencia local.",
+      "evidence": [
+        "docs/evidence/pr23-main-compatibility/results.json"
+      ]
+    }
+  ]
+}

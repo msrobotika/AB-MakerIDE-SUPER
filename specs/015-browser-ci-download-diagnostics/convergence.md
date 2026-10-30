@@ -1,0 +1,4 @@
+# Convergence: verified browser runner repair
+Original failure is recorded in assessment.md. The candidate pins the browser runner without skipping or weakening tests.
+FR-001 is now verified by hosted run 40780735147, browser job 123141478082: Chromium installation and all nine browser commands succeeded on candidate 1cacc750619ed2628aabfa4fe8408e5596c296f3. Windows, Ubuntu and macOS unit jobs also succeeded. The candidate's quality gate intentionally failed while convergence was pending; this is not a claim that the whole candidate run was green. The final evidence-only commit must pass its own checks.
+FR-002 is supported by the supplied screenshots, exact package hash/lifecycle evidence and official Microsoft documentation. FR-003 preserves the archive guard; its ten regression tests remain required.

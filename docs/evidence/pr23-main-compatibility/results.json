@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-30",
+  "original_head": "a1bf4820941c84dc64f5195660f952d2ec2e4b39",
+  "main_integrated": "e3353eedbf69fff7c418dd98fbd906e3d8b52692",
+  "confirmed_merge_conflicts": [
+    ".specify/memory/quality-gate.json",
+    "MANIFEST_SHA256.txt"
+  ],
+  "runtime_installer_guard_and_test_code_unchanged": true,
+  "unittest": {
+    "total": 337,
+    "passed": 332,
+    "skipped": 5
+  },
+  "zip_guard_cases_passed": 10,
+  "node_passed": 21,
+  "ruff_check": "passed",
+  "ruff_formatted_files": 279,
+  "eslint": "passed",
+  "prettier": "passed",
+  "installer_not_signed": true,
+  "installer_replaced": false,
+  "rc4_conformance": false,
+  "clean_windows_qa": "Pending independent environment; previous exact-artifact Unicode lifecycle evidence retained, not rerun on active user profile.",
+  "remote_acceptance": "New CI and review pending; no merge/release."
+}

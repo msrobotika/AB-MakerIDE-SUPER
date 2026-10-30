@@ -10,7 +10,7 @@ from scripts.audit_distribution import audit_zip
 
 
 class DistributionArchiveTests(unittest.TestCase):
-    def audit_fixture(self, remove=(), add=None, tamper=None, traversal=False):
+    def audit_fixture(self, remove=(), add=None, tamper=None, traversal=False, directories=()):
         files = {
             "README.md": b"Independent tool",
             "README.en.md": b"Independent tool",
@@ -41,6 +41,8 @@ class DistributionArchiveTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             filename = Path(folder) / "test.zip"
             with zipfile.ZipFile(filename, "w", zipfile.ZIP_DEFLATED) as archive:
+                for directory in directories:
+                    archive.writestr("MakerIDE/" + directory.rstrip("/") + "/", b"")
                 for path, content in files.items():
                     archive.writestr("MakerIDE/" + path, content)
                 if traversal:
@@ -66,6 +68,26 @@ class DistributionArchiveTests(unittest.TestCase):
 
     def test_zip_traversal_blocked(self):
         self.assertFalse(self.audit_fixture(traversal=True)["passed"])
+
+    def test_windows_case_alias_blocked(self):
+        report = self.audit_fixture(add={"readme.md": b"different file"})
+        self.assertFalse(report["passed"])
+        self.assertTrue(any("Windows" in error for error in report["errors"]))
+
+    def test_windows_ancestor_case_alias_blocked(self):
+        report = self.audit_fixture(add={"Examples/other.txt": b"different directory spelling"})
+        self.assertFalse(report["passed"])
+
+    def test_file_directory_conflict_blocked_in_both_orders(self):
+        pairs = [("assets", b"file"), ("assets/icon.svg", b"icon")]
+        for entries in (pairs, list(reversed(pairs))):
+            with self.subTest(entries=entries):
+                self.assertFalse(self.audit_fixture(add=dict(entries))["passed"])
+
+    def test_consistent_explicit_directories_allowed(self):
+        self.assertTrue(
+            self.audit_fixture(directories=("examples", "examples/defensa_orbital"))["passed"]
+        )
 
 
 if __name__ == "__main__":

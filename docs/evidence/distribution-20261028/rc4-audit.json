@@ -1,0 +1,10 @@
+{
+  "path": "..\\makeride-artifacts\\AB-MakerIDE-SUPER-1.0.0-rc.4-IA-actualizada.zip",
+  "passed": false,
+  "errors": [
+    "Documentos obligatorios ausentes: THIRD_PARTY_NOTICES.md, examples/defensa_orbital/CYDFrame.h, examples/defensa_orbital/DefensaOrbital.h, examples/defensa_orbital/defensa_orbital.ino",
+    "Nombre historico del videojuego en ejemplos vigentes"
+  ],
+  "files": 410,
+  "sha256": "2337121a9709b1371a4cd910073521b4d93632dc35a2b16bce831cbf9bba2862"
+}
