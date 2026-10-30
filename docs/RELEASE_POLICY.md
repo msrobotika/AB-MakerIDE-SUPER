@@ -21,12 +21,12 @@
 - Usar SemVer. Mientras el funcionamiento general no esté aceptado, marcar **pre-release**; no anunciar «1.0 estable».
 - Mantener **un único candidato visible** cuando se decida consolidar la página de Releases. Conservar los tags y el historial Git para trazabilidad salvo solicitud específica de eliminación de etiquetas.
 - No reescribir el historial ni borrar documentación técnica validada para dar una falsa apariencia de madurez.
-- Los artefactos CI no son automáticamente Releases públicas. La CI existente solo verifica; **no publica**.
+- Los artefactos CI no son automáticamente Releases públicas. La CI de comprobaciones verifica; el flujo del instalador tiene una vía de publicación explícita. No activarla mediante una actualización documental.
 - Incidencias: issues reproducibles; mejoras: ramas con PR; experimentos: documentación interna. Nunca anunciar pruebas controladas como hardware físico verificado.
 
-## Inventario público de Releases (26/10/2026)
+## Inventario público de Releases (30/10/2026)
 
-Solo figura **una Release pública: `v1.0.0-rc.4`**. Las RC anteriores no aparecen ya en la ficha pública. Esto no implica eliminar tags ni reescribir historial.
+Se conservan la RC4 histórica `v1.0.0-rc.4` y el instalador de pruebas `windows-test-dev-025dd26e85`. Ninguno es estable. Véase [descargas y versiones](DESCARGAS_Y_VERSIONES.md). Esta actualización documental no crea ni modifica artefactos.
 
 El ZIP de RC4 se creó antes de integrar las nuevas atribuciones de terceros. Su contenido no puede acreditarse desde la rama `main`. [Auditoría de la distribución pendiente](AUDITORIA_DISTRIBUCION_RC4.md) · [bloqueante #11](https://github.com/msrobotika/AB-MakerIDE-SUPER/issues/11). Ningún cambio documental constituye una verificación del ZIP antiguo.
 
@@ -37,3 +37,9 @@ La documentación que corresponda a 0.9.x, RC1–RC3 y pruebas ya superadas se e
 ## Próximo lanzamiento
 
 En estado **congelado para publicación**, salvo decisión explícita y puertas verificadas. El siguiente cambio se incorpora como PR y no desencadena por sí mismo una RC nueva.
+
+## Actualizaciones documentales
+
+Se pueden publicar aclaraciones, manuales y controles pendientes mediante PR, tras revisar exactitud, enlaces y privacidad. No hace falta afirmar que toda la auditoría del software esté cerrada para informar honestamente de su estado. Esta autorización no publica parches locales, instaladores ni nuevas Releases.
+
+Los cambios documentales usan `[skip ci]` y comprobaciones locales para no iniciar ejecuciones remotas con posible coste. No eludir protecciones de rama si exigen controles adicionales.
