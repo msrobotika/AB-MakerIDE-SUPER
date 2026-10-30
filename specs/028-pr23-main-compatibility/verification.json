@@ -13,7 +13,8 @@
     "docs/evidence/pr23-main-compatibility/artifacts.json": "715a5ba55d2736e083060e6db6392f59bfcb08027a03213bb367a3de409e511c",
     "docs/evidence/pr23-main-compatibility/results.json": "689671f253d34049017af4621e4cfb0b4089a9034cc8b4752b676ffa70e1761c",
     "scripts/audit_distribution.py": "3ad2acb74c985fbf90566178fe0435143da64e162e616c5bd529cc55d0a9421e",
-    "tests/test_distribution_archive.py": "9f0a8b101c9cc28d75898bd542ff1e02cf5c1fc9cf9ceed867548b62932a8a54"
+    "tests/test_distribution_archive.py": "9f0a8b101c9cc28d75898bd542ff1e02cf5c1fc9cf9ceed867548b62932a8a54",
+    "docs/evidence/public-beta-docs/results.json": "6738e852f8df979e079dec2ef87a72e2a0172d684643f32d048402c69345b2c2"
   },
   "requirements": [
     {

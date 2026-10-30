@@ -9,3 +9,9 @@ La PR original tenía [CI40781222256 verde](https://github.com/msrobotika/AB-Mak
 Los bytes actuales del TEST siguen coincidiendo con el artefacto de la evidencia anterior de instalación/reinstalación/desinstalación Unicode y conservación de datos. Se contrastó SHA y firma NotSigned de nuevo. No se reinstaló/desinstaló el mismo AppId en el perfil activo, porque podría alterar su registro y programa; la prueba Windows limpia e independiente sigue pendiente. No atribuir el QA anterior al código nuevo de esta integración.
 
 El ZIP RC4 real sigue con 410 archivos, CRC/manifiesto histórico correctos y no conformidad por avisos/documentos/ejemplo vigente ausentes. No se modifica ni se reemplaza; #11 sigue abierta. Inventario, recursos y revisión jurídica completa siguen pendientes de su propio cierre. No se sustituye el instalador ni se publica release.
+
+El gate remoto de push sobre 1d464f3 falló comparando con la antigua cabeza
+a1bf482, aunque los cinco jobs de pull_request sobre main pasaron.
+Reproducido localmente: faltaba la huella de un informe JSON heredado
+de main. Se añade esa huella sin alterar el informe histórico; se
+comprueban ambas bases antes del siguiente push. No se omite el gate.
