@@ -188,6 +188,84 @@ class SpecificationGateTests(unittest.TestCase):
         self.assertTrue(result["passed"], result)
         self.assertTrue(result["base_compared"])
 
+    def git(self, *args):
+        return (
+            subprocess.check_output(
+                ["git", "-c", "user.name=Test", "-c", "user.email=test@local", *args],
+                cwd=self.root,
+                stderr=subprocess.DEVNULL,
+            )
+            .decode()
+            .strip()
+        )
+
+    def commit(self, message):
+        self.git("add", "-A")
+        self.git("commit", "-qm", message)
+        return self.git("rev-parse", "HEAD")
+
+    def feature_merges_main(self):
+        """Feature branch whose last push merges main, which brings main.py."""
+        self.git("init", "-q", "-b", "main")
+        self.git("config", "core.autocrlf", "false")
+        self.commit("baseline")
+        self.git("switch", "-qc", "feature")
+        self.write("tool.py", "print('feature')\n")
+        self.record["changed_files"]["tool.py"] = self.digest("tool.py")
+        self.save()
+        before = self.commit("feature work")
+        self.git("switch", "-q", "main")
+        self.write("main.py", "print('from main')\n")
+        self.commit("main work")
+        self.git("switch", "-q", "feature")
+        self.git("merge", "-q", "--no-edit", "main")
+        return before
+
+    def test_files_received_from_main_by_merge_need_no_new_coverage(self):
+        before = self.feature_merges_main()
+        result = gate.validate(self.root, before, "refs/heads/main")
+        self.assertTrue(result["passed"], result)
+        self.assertEqual(result["integrated_files_skipped"], ["main.py"])
+
+    def test_merged_file_changed_by_the_feature_still_needs_coverage(self):
+        before = self.feature_merges_main()
+        self.write("main.py", "print('edited after merge')\n")
+        self.rejected_with_base(before, "main.py")
+        self.commit("edit merged file")
+        self.rejected_with_base(before, "main.py")
+
+    def test_merge_from_branch_outside_main_is_not_trusted(self):
+        before = self.feature_merges_main()
+        self.git("switch", "-qc", "other", "main")
+        self.write("other.py", "print('other feature')\n")
+        self.commit("other feature")
+        self.git("switch", "-q", "feature")
+        self.git("merge", "-q", "--no-edit", "other")
+        self.rejected_with_base(before, "other.py")
+
+    def test_integration_branch_itself_gets_no_exception(self):
+        before = self.feature_merges_main()
+        self.git("switch", "-q", "main")
+        self.git("merge", "-q", "--no-ff", "--no-edit", "feature")
+        result = gate.validate(self.root, self.git("rev-parse", "HEAD~1"), "refs/heads/main")
+        self.assertTrue(result["passed"], result)
+        self.assertEqual(result["integrated_files_skipped"], [])
+        self.assertTrue(before)
+
+    def test_missing_or_invalid_integration_reference(self):
+        before = self.feature_merges_main()
+        self.rejected_with_base(before, "main.py", "refs/remotes/origin/absent")
+        for ref in ("main", "refs/../x", "--output=bad"):
+            result = gate.validate(self.root, before, ref)
+            self.assertFalse(result["passed"], result)
+            self.assertIn("integración", " ".join(result["errors"]))
+
+    def rejected_with_base(self, base, name, ref="refs/heads/main"):
+        result = gate.validate(self.root, base, ref)
+        self.assertFalse(result["passed"], result)
+        self.assertIn("sin cobertura", " ".join(result["errors"]))
+        self.assertIn(name, " ".join(result["errors"]))
+
     def test_invalid_and_unavailable_base_fail_instead_of_skipping(self):
         for base in ("HEAD~1", "--output=bad", "a" * 40):
             result = gate.validate(self.root, base)

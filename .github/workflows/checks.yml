@@ -83,7 +83,9 @@ jobs:
 
   browser:
     name: Editor y proyectos / Chromium aislado
-    runs-on: ubuntu-latest
+    # Playwright 1.56 instala sus dependencias de sistema para Ubuntu 24.04;
+    # ubuntu-latest pasa a Ubuntu 26 y ese paso falla. Revisar al subir Playwright.
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     env:
       PYTHONUTF8: '1'

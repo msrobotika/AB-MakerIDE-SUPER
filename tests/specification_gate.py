@@ -103,24 +103,90 @@ def read_json(root, name):
     return data
 
 
-def changed_paths(root, base):
+DEFAULT_INTEGRATION_REF = "refs/remotes/origin/main"
+
+
+def git_output(root, *args):
+    return subprocess.check_output(
+        ["git", *args], cwd=root, stderr=subprocess.DEVNULL, timeout=30
+    ).decode("utf-8")
+
+
+def git_succeeds(root, *args):
+    try:
+        subprocess.check_output(["git", *args], cwd=root, stderr=subprocess.DEVNULL, timeout=30)
+    except subprocess.CalledProcessError:
+        return False
+    return True
+
+
+def tree_entries(root, commit):
+    """Map path -> (mode, object) for every file in a commit."""
+    entries = {}
+    for row in git_output(root, "ls-tree", "-r", "-z", "--full-tree", commit).split("\0"):
+        if row:
+            meta, name = row.split("\t", 1)
+            mode, _kind, obj = meta.split(" ")
+            entries[name] = (mode, obj)
+    return entries
+
+
+def integrated_paths(root, base, changed, integration_ref):
+    """Changed paths whose current content comes unchanged from the integration branch.
+
+    A branch that merges the integration branch (main) receives files the feature did
+    not write. They were covered by that branch's own delivery, so they are not asked
+    again. Only merges on the first-parent line after the base count, the merged parent
+    must already be part of the integration branch, and the file must match that parent
+    byte for byte (same Git object) with no local edits. Pushes to the integration
+    branch itself never use this exception.
+    """
+    if not re.fullmatch(r"refs/[A-Za-z0-9._/-]+", integration_ref) or ".." in integration_ref:
+        raise ValueError("referencia de integración no válida")
+    if not changed:
+        return set()
+    try:
+        integration = git_output(root, "rev-parse", "--verify", "-q", integration_ref + "^{commit}")
+    except subprocess.CalledProcessError:
+        return set()
+    integration = integration.strip()
+    if git_succeeds(root, "merge-base", "--is-ancestor", "HEAD", integration):
+        return set()
+    merges = git_output(root, "rev-list", "--first-parent", "--merges", base + "..HEAD").split()
+    if not merges:
+        return set()
+    dirty = {
+        name
+        for name in git_output(root, "diff", "--name-only", "-z", "HEAD", "--").split("\0")
+        if name
+    }
+    head = tree_entries(root, "HEAD")
+    result = set()
+    for merge in merges:
+        for parent in git_output(root, "rev-list", "--parents", "-n", "1", merge).split()[2:]:
+            if not git_succeeds(root, "merge-base", "--is-ancestor", parent, integration):
+                continue
+            merged = tree_entries(root, parent)
+            result |= {name for name in changed - dirty if head.get(name) == merged.get(name)}
+    return result
+
+
+def changed_paths(root, base, integration_ref=DEFAULT_INTEGRATION_REF):
+    """Return (technical paths changed since base, paths received from main), or None."""
     if not re.fullmatch(r"[a-fA-F0-9]{40}", base):
         raise ValueError("base Git no válida: se exige SHA completo")
     if base == "0" * 40:
         return None
     try:
-        output = subprocess.check_output(
-            ["git", "diff", "--name-only", "-z", base, "--"],
-            cwd=root,
-            stderr=subprocess.DEVNULL,
-            timeout=30,
-        )
-    except (OSError, subprocess.SubprocessError):
+        output = git_output(root, "diff", "--name-only", "-z", base, "--")
+        changed = {name for name in output.split("\0") if name and technical(name)}
+        integrated = integrated_paths(root, base, changed, integration_ref)
+    except (OSError, subprocess.SubprocessError, UnicodeError):
         raise ValueError("no se puede comparar la base Git solicitada") from None
-    return {name for name in output.decode("utf-8").split("\0") if name and technical(name)}
+    return changed - integrated, integrated
 
 
-def validate(root, base=None):
+def validate(root, base=None, integration_ref=DEFAULT_INTEGRATION_REF):
     root = Path(root).resolve()
     result = {
         "passed": False,
@@ -128,6 +194,7 @@ def validate(root, base=None):
         "requirements": 0,
         "changed_files_checked": 0,
         "base_compared": False,
+        "integrated_files_skipped": [],
         "errors": [],
     }
     try:
@@ -197,9 +264,11 @@ def validate(root, base=None):
                 raise ValueError("huella desactualizada o no válida: " + name)
         result["changed_files_checked"] = len(hashes)
         if base is not None:
-            changed = changed_paths(root, base)
-            if changed is not None:
+            compared = changed_paths(root, base, integration_ref)
+            if compared is not None:
+                changed, integrated = compared
                 result["base_compared"] = True
+                result["integrated_files_skipped"] = sorted(integrated)
                 missing = changed - set(hashes)
                 if missing:
                     raise ValueError(
@@ -214,14 +283,20 @@ def validate(root, base=None):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--base")
+    parser.add_argument("--integration-ref", default=DEFAULT_INTEGRATION_REF)
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args()
-    result = validate(Path(__file__).resolve().parents[1], args.base)
+    result = validate(Path(__file__).resolve().parents[1], args.base, args.integration_ref)
     if args.json:
         print(json.dumps(result, ensure_ascii=False))
     else:
         print("Spec Kit delivery: " + ("PASS" if result["passed"] else "FAIL"))
         print("Base Git comparada: " + str(result["base_compared"]))
+        if result["integrated_files_skipped"]:
+            print(
+                "Recibidos sin cambios desde la integración: "
+                + ", ".join(result["integrated_files_skipped"])
+            )
         for message in result["errors"]:
             print(message)
     return 0 if result["passed"] else 1
