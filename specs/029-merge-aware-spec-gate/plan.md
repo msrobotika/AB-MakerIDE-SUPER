@@ -12,3 +12,7 @@ archivo fusionado y luego editado (en disco y confirmado), merge de otra rama no
 integrada, comprobación sobre main y referencias ausentes o no válidas. Reproducir el
 caso real sobre la cabeza del PR #25. Ejecutar unidades aisladas, Node, Ruff,
 ESLint, Prettier, manifiesto y gate. No crear tags ni releases ni fusionar PR.
+
+En `.github/workflows/checks.yml`, cambiar solo `runs-on` del job Chromium a
+`ubuntu-24.04`, con un comentario para revisarlo al actualizar Playwright. La prueba
+del síntoma es la propia ejecución de CI en GitHub sobre esta rama.

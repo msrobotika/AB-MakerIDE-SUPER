@@ -2,13 +2,19 @@
   "schema_version": 1,
   "date": "2026-11-01",
   "base": "e3353ee",
-  "scope": "Spec Kit gate only; no interface, server, workflow, hardware or release change",
+  "scope": "Spec Kit gate and Chromium CI runner only; no interface, server, hardware or release change",
   "symptom": {
     "run": "push of PR #25, commit a45e329 (merge of main into the branch)",
     "base": "b69f541",
     "previous_gate": "failed: archivos técnicos sin cobertura: docs/evidence/public-beta-docs/results.json",
     "new_gate": "passed; integrated_files_skipped = docs/evidence/public-beta-docs/results.json",
     "new_gate_against_main": "passed; integrated_files_skipped = []"
+  },
+  "chromium_ci": {
+    "symptom": "Job 'Editor y proyectos / Chromium aislado' fails at 'python -m playwright install --with-deps chromium' (runs 41333358307, 41333439947 and Dependabot runs 41326531745, 41326539350)",
+    "cause": "ubuntu-latest is migrating to Ubuntu 26 (runner notice); Playwright 1.56 installs system dependencies for Ubuntu 24.04",
+    "change": "runs-on: ubuntu-24.04 for that job only; steps unchanged",
+    "verification": "GitHub Actions run of the commit that contains this change"
   },
   "checks": {
     "specification_gate_unit_tests": {

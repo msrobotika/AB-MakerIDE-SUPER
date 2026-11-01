@@ -30,9 +30,18 @@
     {
       "id": "FR-004",
       "result": "passed",
-      "notes": "Regla documentada; sin cambios de workflows, interfaz ni servidor; controles locales superados.",
+      "notes": "Regla documentada; sin cambios de interfaz ni servidor; controles locales superados.",
       "evidence": [
         "docs/SPEC_KIT.md",
+        "docs/evidence/merge-aware-spec-gate/results.json"
+      ]
+    },
+    {
+      "id": "FR-005",
+      "result": "passed",
+      "notes": "Fallo de instalación de Chromium diagnosticado en varias ramas; solo se fija runs-on a ubuntu-24.04. El resultado remoto se comprueba en la ejecución de GitHub de este commit.",
+      "evidence": [
+        ".github/workflows/checks.yml",
         "docs/evidence/merge-aware-spec-gate/results.json"
       ]
     }
@@ -40,6 +49,7 @@
   "changed_files": {
     "tests/specification_gate.py": "b49b62bd99b19bb94c16d6c867897317d329401b84ddbee5098274b8ce81eb4c",
     "tests/test_specification_gate.py": "1488ac6e7dfc26a4057dd08d07b24d40813809431729c2d55625d936e9347ed0",
-    "docs/evidence/merge-aware-spec-gate/results.json": "0152c4b7f2d965e1843609bd5992b2c4c760f3c4f0df10d7067080f7845a8fb0"
+    "docs/evidence/merge-aware-spec-gate/results.json": "8c06b9ba86426741978c3640b1ad395a3803ae8a7e48d1149eac7995b862d67e",
+    ".github/workflows/checks.yml": "e1eb3e37c6f663117a2a4be30cc3e79a07ce5015e937f20fe7abc87eacf11338"
   }
 }
