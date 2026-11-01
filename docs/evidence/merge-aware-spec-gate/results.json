@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-01",
+  "base": "e3353ee",
+  "scope": "Spec Kit gate only; no interface, server, workflow, hardware or release change",
+  "symptom": {
+    "run": "push of PR #25, commit a45e329 (merge of main into the branch)",
+    "base": "b69f541",
+    "previous_gate": "failed: archivos técnicos sin cobertura: docs/evidence/public-beta-docs/results.json",
+    "new_gate": "passed; integrated_files_skipped = docs/evidence/public-beta-docs/results.json",
+    "new_gate_against_main": "passed; integrated_files_skipped = []"
+  },
+  "checks": {
+    "specification_gate_unit_tests": {
+      "command": "python -m unittest test_specification_gate",
+      "total": 21,
+      "failures": 0
+    },
+    "python_isolated": {
+      "command": "python tests/run_isolated.py",
+      "total": 338,
+      "skipped": 5,
+      "failures": 0
+    },
+    "javascript": {
+      "command": "node --test tests/test_agent_activity.mjs tests/test_screenlab.mjs tests/test_screenlab_sketch.mjs",
+      "passed": 21,
+      "failed": 0
+    },
+    "download_landing": "passed",
+    "ruff_check": "passed",
+    "ruff_format": "passed",
+    "eslint": "passed",
+    "prettier": "passed"
+  },
+  "limitations": [
+    "Run on local Windows only; CI runs the same checks on Windows, Ubuntu and macOS.",
+    "PR #25 keeps its old failing push run until its branch integrates this change."
+  ],
+  "ai_assistance": "Prepared with Claude Code; reviewed through the tests listed above."
+}

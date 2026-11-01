@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "convergence": "converged",
+  "requirements": [
+    {
+      "id": "FR-001",
+      "result": "passed",
+      "notes": "Archivos recibidos desde main sin cambios se omiten y se enumeran en integrated_files_skipped.",
+      "evidence": [
+        "tests/specification_gate.py",
+        "tests/test_specification_gate.py"
+      ]
+    },
+    {
+      "id": "FR-002",
+      "result": "passed",
+      "notes": "Pruebas de regresión: edición tras el merge, otra rama, la propia main, referencia ausente o no válida.",
+      "evidence": [
+        "tests/test_specification_gate.py"
+      ]
+    },
+    {
+      "id": "FR-003",
+      "result": "passed",
+      "notes": "La versión anterior falla en a45e329 con base b69f541; la nueva pasa; contra main no omite nada.",
+      "evidence": [
+        "docs/evidence/merge-aware-spec-gate/results.json"
+      ]
+    },
+    {
+      "id": "FR-004",
+      "result": "passed",
+      "notes": "Regla documentada; sin cambios de workflows, interfaz ni servidor; controles locales superados.",
+      "evidence": [
+        "docs/SPEC_KIT.md",
+        "docs/evidence/merge-aware-spec-gate/results.json"
+      ]
+    }
+  ],
+  "changed_files": {
+    "tests/specification_gate.py": "b49b62bd99b19bb94c16d6c867897317d329401b84ddbee5098274b8ce81eb4c",
+    "tests/test_specification_gate.py": "1488ac6e7dfc26a4057dd08d07b24d40813809431729c2d55625d936e9347ed0",
+    "docs/evidence/merge-aware-spec-gate/results.json": "0152c4b7f2d965e1843609bd5992b2c4c760f3c4f0df10d7067080f7845a8fb0"
+  }
+}

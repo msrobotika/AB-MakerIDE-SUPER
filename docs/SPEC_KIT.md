@@ -37,6 +37,14 @@ El [contrato](../specs/001-spec-kit-gate/contracts/gate.md) detalla formato y er
 Con base Git, comprueba además todos los cambios técnicos desde ese commit. Sin base,
 declara `base_compared=false`: no oculta la diferencia. La CI aporta la base de push/PR.
 
+Si una rama de trabajo integra `main` mediante un merge, los archivos que llegan de
+`main` sin ninguna modificación (mismo objeto Git que en el padre fusionado, sin
+cambios locales) ya tienen su propio expediente y no se exigen otra vez. Se enumeran
+en `integrated_files_skipped`. La excepción solo vale para merges en la línea principal
+de la rama posteriores a la base, cuyo padre fusionado ya forma parte de
+`refs/remotes/origin/main` (configurable con `--integration-ref`), y nunca cuando se
+comprueba la propia rama de integración. Si la referencia no existe, no hay excepción.
+
 Los expedientes completos se conservan como registros históricos. La siguiente mejora
 crea otro y cambia la referencia activa; no sobrescribe el resultado anterior.
 Dependabot también necesita una especificación de mantenimiento y actualizar el manifiesto
