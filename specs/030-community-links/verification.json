@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "convergence": "converged",
+  "requirements": [
+    {
+      "id": "FR-001",
+      "result": "passed",
+      "notes": "Portadas ES y EN enlazan el catálogo de proyectos y TikTok @ms_robotika.",
+      "evidence": [
+        "README.md",
+        "README.en.md"
+      ]
+    },
+    {
+      "id": "FR-002",
+      "result": "passed",
+      "notes": "Solo se añaden dos líneas por portada; advertencias y descargas intactas.",
+      "evidence": [
+        "README.md",
+        "README.en.md",
+        "docs/evidence/community-links/results.json"
+      ]
+    },
+    {
+      "id": "FR-003",
+      "result": "passed",
+      "notes": "Página de descargas, Prettier, manifiesto y gate superados; sin código ni workflows.",
+      "evidence": [
+        "docs/evidence/community-links/results.json"
+      ]
+    }
+  ],
+  "changed_files": {
+    "docs/evidence/community-links/results.json": "87fd3646cc7882690253dae4697008b8f8e6bc954228d4c68e47124de75fc8e1"
+  }
+}

@@ -7,6 +7,9 @@ This is an evolving project: documented tests and known limitations are part of 
 - Compile, upload and use the serial monitor with the required external board tools.
 - Explore ScreenLab/MotionLab and optional AI/MCP integrations using your own accounts and permissions.
 
+**[Projects built with the IDE](https://github.com/msrobotika/AB-MakerIDE-Projects)** (source and downloads)
+· [Videos on TikTok @ms_robotika](https://www.tiktok.com/@ms_robotika)
+
 **[Download Windows x64 TEST](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/download/windows-test-dev-025dd26e85/AB-MakerIDE-SUPER-Windows-x64-dev-025dd26e85-Setup.exe)**
 · [Checksums and package evidence](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/tag/windows-test-dev-025dd26e85)
 
