@@ -10,6 +10,9 @@ El proyecto mejora paso a paso con pruebas, incidencias y aportaciones de la com
 - Diseñar interfaces con ScreenLab y explorar animaciones con MotionLab.
 - Usar asistentes y MCP opcionales, con tus propias herramientas, cuentas y permisos.
 
+**[Proyectos hechos con el IDE](https://github.com/msrobotika/AB-MakerIDE-Projects)** (código y descargas)
+· [Vídeos en TikTok @ms_robotika](https://www.tiktok.com/@ms_robotika)
+
 Puedes usar el editor sin contratar una IA. Los proveedores externos tienen sus
 propias condiciones y posibles costes; el proyecto no incluye créditos ni los activa.
 

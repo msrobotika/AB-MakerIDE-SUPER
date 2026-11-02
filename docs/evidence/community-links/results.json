@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-01",
+  "base": "808adb0",
+  "scope": "Documentation only: links to the public project catalog and TikTok account in README.md and README.en.md",
+  "links": [
+    "https://github.com/msrobotika/AB-MakerIDE-Projects",
+    "https://www.tiktok.com/@ms_robotika"
+  ],
+  "checks": {
+    "download_landing": "passed",
+    "prettier": "passed",
+    "manifest": "passed",
+    "specification_gate": "passed"
+  },
+  "ai_assistance": "Prepared with Claude Code; reviewed through the checks listed above."
+}
