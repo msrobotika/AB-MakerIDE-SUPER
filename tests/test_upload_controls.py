@@ -77,14 +77,18 @@ class UploadOptions(unittest.TestCase):
 
             with patch.object(m, "_run", fake):
                 runs = (
-                    ("void setup(){} void loop(){}", "esp32:esp32:esp32", {"extra.h": b"x"}),
-                    ("// v2", "esp32:esp32:esp32", {}),
-                    ("x", "arduino:avr:uno", {}),
+                    ("void setup(){} void loop(){}", "esp32:esp32:esp32", None, {"extra.h": b"x"}),
+                    ("// v2", "esp32:esp32:esp32", None, {}),
+                    ("x", "arduino:avr:uno", None, {}),
+                    ("x", "esp32:esp32:esp32", "COM4", {}),
+                    ("y", "esp32:esp32:esp32", "COM4", {}),
                 )
-                for code, fqbn, files in runs:
-                    jid = m.start(code, fqbn, project_files=files)["job_id"]
+                for code, fqbn, port, files in runs:
+                    kw = {"upload_speed": 921600} if port else {}
+                    jid = m.start(code, fqbn, port, project_files=files, **kw)["job_id"]
                     completed(m, jid)
-        (a1, t1, f1), (a2, _, f2), (a3, _, _) = calls
+        compiles = [c for c in calls if c[0][1] == "compile"]
+        (a1, t1, f1), (a2, _, f2), (a3, _, _), (u1, _, _), (u2, _, _) = compiles
 
         def path(a):
             return a[a.index("--build-path") + 1]
@@ -92,6 +96,9 @@ class UploadOptions(unittest.TestCase):
         self.assertEqual(path(a1), path(a2))  # same board: arduino-cli can reuse its cache
         self.assertEqual(a1[-1], a2[-1])  # and the sketch path, which is part of that cache key
         self.assertNotEqual(path(a1), path(a3))  # another board does not overwrite it
+        # Upload adds board options, which would wipe the compile-only cache if shared.
+        self.assertNotEqual(path(a1), path(u1))
+        self.assertEqual(path(u1), path(u2))
         self.assertEqual(f1, ["extra.h", "sketch.ino"])
         self.assertEqual(f2, ["sketch.ino"])  # files from the previous project are removed
         self.assertGreaterEqual(t1, 900)

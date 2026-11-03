@@ -284,10 +284,10 @@ class JobManager:
             except OSError:
                 pass
 
-    def _build_cache(self, fqbn: str) -> Path | None:
+    def _build_cache(self, target: str) -> Path | None:
         if self.root is None:
             return None
-        key = hashlib.sha256(fqbn.encode("utf-8")).hexdigest()[:16]
+        key = hashlib.sha256(target.encode("utf-8")).hexdigest()[:16]
         return plain_directory(self.root.parent / "BuildCache" / key, create=True)
 
     def _run(self, job: Job, args: list[str], timeout: int) -> int:
@@ -350,9 +350,12 @@ class JobManager:
         try:
             with tempfile.TemporaryDirectory(prefix="ab-makeride-") as temp:
                 root = Path(temp)
-                # Same sketch and build folders per board, so arduino-cli reuses the compiled
-                # core and libraries instead of rebuilding everything (minutes on a slow PC).
-                work = self._build_cache(fqbn) or root
+                is_esp = fqbn.startswith("esp32:esp32:")
+                opts = ["--board-options", f"UploadSpeed={upload_speed}"] if port and is_esp else []
+                # Same sketch and build folders per board and options, so arduino-cli reuses the
+                # compiled core and libraries instead of rebuilding everything (minutes on a slow
+                # PC). Any change of board options makes arduino-cli start over, hence the key.
+                work = self._build_cache(" ".join([fqbn, *opts])) or root
                 sketch = work / "sketch"
                 if sketch.exists():
                     shutil.rmtree(sketch)
@@ -368,8 +371,6 @@ class JobManager:
                 build.mkdir()
                 job.stage = "compilación"
                 job.emit("Compilación real iniciada · porcentaje no disponible")
-                is_esp = fqbn.startswith("esp32:esp32:")
-                opts = ["--board-options", f"UploadSpeed={upload_speed}"] if port and is_esp else []
                 executable = arduino_cli() or "arduino-cli"
                 rc = self._run(
                     job,

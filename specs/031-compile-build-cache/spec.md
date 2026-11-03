@@ -13,6 +13,8 @@ Preparado con asistencia de IA (Claude Code). No publica versiones ni instalador
   modesto termina en lugar de cortarse; el límite pasa a 900 s.
 - **FR-004**: FQBN distintos usan cachés distintas; el árbol de datos rechaza enlaces
   como el resto de almacenes del IDE.
+- **FR-005**: Compilar y Compilar y grabar (que añade la velocidad de grabación como
+  opción de placa) usan cachés separadas para no invalidarse al alternar botones.
 
 Diagnóstico: síntoma reproducido dos veces (480 s agotados) y causa medida (539 s en
 frío con arduino-cli). Clarificación: la caché vive junto a `BuildSessions` en la carpeta
