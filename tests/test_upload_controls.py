@@ -63,6 +63,39 @@ class UploadOptions(unittest.TestCase):
         self.assertFalse(result["flash_verified"])
         self.assertFalse(result["runtime_observed"])
 
+    def test_compiles_reuse_build_cache_per_board_and_allow_slow_cold_builds(self):
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as data:
+            m = jobs.JobManager(threading.Lock(), Path(data) / "BuildSessions")
+            calls = []
+
+            def fake(job, args, timeout):
+                sketch = Path(args[-1])
+                calls.append((args, timeout, sorted(p.name for p in sketch.iterdir())))
+                return 0
+
+            with patch.object(m, "_run", fake):
+                runs = (
+                    ("void setup(){} void loop(){}", "esp32:esp32:esp32", {"extra.h": b"x"}),
+                    ("// v2", "esp32:esp32:esp32", {}),
+                    ("x", "arduino:avr:uno", {}),
+                )
+                for code, fqbn, files in runs:
+                    jid = m.start(code, fqbn, project_files=files)["job_id"]
+                    completed(m, jid)
+        (a1, t1, f1), (a2, _, f2), (a3, _, _) = calls
+
+        def path(a):
+            return a[a.index("--build-path") + 1]
+
+        self.assertEqual(path(a1), path(a2))  # same board: arduino-cli can reuse its cache
+        self.assertEqual(a1[-1], a2[-1])  # and the sketch path, which is part of that cache key
+        self.assertNotEqual(path(a1), path(a3))  # another board does not overwrite it
+        self.assertEqual(f1, ["extra.h", "sketch.ino"])
+        self.assertEqual(f2, ["sketch.ino"])  # files from the previous project are removed
+        self.assertGreaterEqual(t1, 900)
+
     def test_retry_only_on_recoverable_transport_error_and_opt_in(self):
         for enabled in (False, True):
             m = jobs.JobManager(threading.Lock())

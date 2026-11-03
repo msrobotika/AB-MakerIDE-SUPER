@@ -10,6 +10,7 @@ import subprocess
 import tempfile
 import threading
 import time
+import shutil
 import uuid
 import json
 import logging
@@ -134,6 +135,10 @@ class Job:
                 lines=[e for e in self.events if e["id"] > since][-500:],
                 last_id=self.sequence,
             )
+
+
+# A cold ESP32 build took 540 s on a modest Windows PC; later builds reuse the cache.
+COMPILE_TIMEOUT = 900
 
 
 class JobManager:
@@ -279,6 +284,12 @@ class JobManager:
             except OSError:
                 pass
 
+    def _build_cache(self, fqbn: str) -> Path | None:
+        if self.root is None:
+            return None
+        key = hashlib.sha256(fqbn.encode("utf-8")).hexdigest()[:16]
+        return plain_directory(self.root.parent / "BuildCache" / key, create=True)
+
     def _run(self, job: Job, args: list[str], timeout: int) -> int:
         job.emit("Ejecutando: " + " ".join(args[:4]) + " …")
         flags = getattr(subprocess, "CREATE_NO_WINDOW", 0)
@@ -339,7 +350,12 @@ class JobManager:
         try:
             with tempfile.TemporaryDirectory(prefix="ab-makeride-") as temp:
                 root = Path(temp)
-                sketch = root / "sketch"
+                # Same sketch and build folders per board, so arduino-cli reuses the compiled
+                # core and libraries instead of rebuilding everything (minutes on a slow PC).
+                work = self._build_cache(fqbn) or root
+                sketch = work / "sketch"
+                if sketch.exists():
+                    shutil.rmtree(sketch)
                 sketch.mkdir()
                 for name, data in (project_files or {}).items():
                     if name == "sketch.ino":
@@ -364,11 +380,13 @@ class JobManager:
                         fqbn,
                         *opts,
                         "--no-color",
+                        "--build-path",
+                        str(work / "cache"),
                         "--output-dir",
                         str(build),
                         str(sketch),
                     ],
-                    480,
+                    COMPILE_TIMEOUT,
                 )
                 job.exit_code = rc
                 if job.cancelled or rc != 0:

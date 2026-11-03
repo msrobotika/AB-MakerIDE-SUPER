@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "convergence": "converged",
+  "requirements": [
+    {
+      "id": "FR-001",
+      "result": "passed",
+      "notes": "Misma carpeta --build-path y ruta del sketch para el mismo FQBN; 2.ª compilación real 42 s frente a 555 s.",
+      "evidence": [
+        "ab_makeride/jobs.py",
+        "tests/test_upload_controls.py",
+        "docs/evidence/compile-build-cache/results.json"
+      ]
+    },
+    {
+      "id": "FR-002",
+      "result": "passed",
+      "notes": "La carpeta sketch/ se vacía en cada trabajo; la prueba comprueba que extra.h no pasa al proyecto siguiente.",
+      "evidence": [
+        "ab_makeride/jobs.py",
+        "tests/test_upload_controls.py"
+      ]
+    },
+    {
+      "id": "FR-003",
+      "result": "passed",
+      "notes": "COMPILE_TIMEOUT = 900; compilación en frío real de 555 s terminada con éxito.",
+      "evidence": [
+        "ab_makeride/jobs.py",
+        "docs/evidence/compile-build-cache/results.json"
+      ]
+    },
+    {
+      "id": "FR-004",
+      "result": "passed",
+      "notes": "Clave por hash del FQBN (la prueba compara ESP32 y Uno) y plain_directory rechaza enlaces.",
+      "evidence": [
+        "ab_makeride/jobs.py",
+        "tests/test_upload_controls.py"
+      ]
+    }
+  ],
+  "changed_files": {
+    "ab_makeride/jobs.py": "04a8e1cfef8ff2242d1a1f4749eeab7e466d1bfa9b0f82baebe6e2dd531b4a98",
+    "tests/test_upload_controls.py": "a37465480acfb43acde68cc4b5c9e736a11ce881d855e3077aaed6309067e301",
+    "docs/evidence/compile-build-cache/results.json": "185b78c20e087fafd4604cd8e400904ddcd66efd939b99ac98525b64218cb134"
+  }
+}
