@@ -5,7 +5,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 WINDOWS_SETUP = (
     "https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/download/"
-    "windows-test-dev-025dd26e85/AB-MakerIDE-SUPER-Windows-x64-dev-025dd26e85-Setup.exe"
+    "windows-test-dev-6e17539fc0/AB-MakerIDE-SUPER-Windows-x64-dev-6e17539fc0-Setup.exe"
 )
 ZIP_RC4 = (
     "https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/download/"
