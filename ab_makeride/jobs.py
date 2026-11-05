@@ -139,6 +139,15 @@ class Job:
 
 # A cold ESP32 build took 540 s on a modest Windows PC; later builds reuse the cache.
 COMPILE_TIMEOUT = 900
+# ESP32 flash layouts offered by the core ("PartitionScheme" board option). "default" passes nothing.
+ESP_PARTITIONS = ("default", "huge_app", "min_spiffs", "no_ota")
+
+
+def esp_board_options(port: str | None, upload_speed: int, partition_scheme: str) -> list[str]:
+    opts = ["--board-options", f"UploadSpeed={upload_speed}"] if port else []
+    if partition_scheme != "default":
+        opts += ["--board-options", f"PartitionScheme={partition_scheme}"]
+    return opts
 
 
 class JobManager:
@@ -156,6 +165,7 @@ class JobManager:
         *,
         upload_speed: int = 115200,
         retry_slow: bool = False,
+        partition_scheme: str = "default",
         request_id: str | None = None,
         project_files: dict | None = None,
         agent_project_id: str = "",
@@ -192,6 +202,10 @@ class JobManager:
             raise ValueError("La opción de reintento debe ser booleana.")
         if port and not fqbn.startswith("esp32:esp32:") and (upload_speed != 115200 or retry_slow):
             raise ValueError("Ajustes de velocidad específicos de ESP32. Selecciona un ESP32.")
+        if partition_scheme not in ESP_PARTITIONS:
+            raise ValueError("Esquema de particiones no permitido.")
+        if partition_scheme != "default" and not fqbn.startswith("esp32:esp32:"):
+            raise ValueError("El esquema de particiones solo existe en placas ESP32.")
         if not self._hardware_lock.acquire(blocking=False):
             raise ValueError("Hay otra operación de hardware activa.")
         try:
@@ -222,7 +236,7 @@ class JobManager:
             threading.Thread(
                 target=self._worker,
                 args=(job, code, fqbn, port, upload_speed, retry_slow),
-                kwargs={"project_files": project_files},
+                kwargs={"project_files": project_files, "partition_scheme": partition_scheme},
                 daemon=True,
             ).start()
             return {"ok": True, "job_id": job.id}
@@ -346,12 +360,13 @@ class JobManager:
         retry_slow: bool = False,
         *,
         project_files: dict | None = None,
+        partition_scheme: str = "default",
     ):
         try:
             with tempfile.TemporaryDirectory(prefix="ab-makeride-") as temp:
                 root = Path(temp)
                 is_esp = fqbn.startswith("esp32:esp32:")
-                opts = ["--board-options", f"UploadSpeed={upload_speed}"] if port and is_esp else []
+                opts = esp_board_options(port, upload_speed, partition_scheme) if is_esp else []
                 # Same sketch and build folders per board and options, so arduino-cli reuses the
                 # compiled core and libraries instead of rebuilding everything (minutes on a slow
                 # PC). Any change of board options makes arduino-cli start over, hence the key.
@@ -463,8 +478,7 @@ class JobManager:
                                     port,
                                     "--fqbn",
                                     fqbn,
-                                    "--board-options",
-                                    "UploadSpeed=115200",
+                                    *esp_board_options(port, 115200, partition_scheme),
                                     "--no-color",
                                     "--input-dir",
                                     str(build),

@@ -226,6 +226,17 @@ export function define(context) {
         speeds.map((v) => [v + ' baudios', String(v)]),
         String(state.uploadSpeed),
       ),
+      context.panelSelect(
+        'partitionSelect',
+        'ESQUEMA DE PARTICIONES ESP32',
+        [
+          ['Por defecto (programa hasta 1,2 MB)', 'default'],
+          ['Huge APP (programa hasta 3 MB, sin OTA)', 'huge_app'],
+          ['Minimal SPIFFS (1,9 MB con OTA)', 'min_spiffs'],
+          ['No OTA (2 MB, sin OTA)', 'no_ota'],
+        ],
+        state.partitionScheme,
+      ),
       context.node(
         'label',
         { className: 'settingscheck retry-setting' },
@@ -420,6 +431,10 @@ export function define(context) {
       };
       b.querySelector('#uploadSpeedSelect').onchange = (e) => {
         context.state.uploadSpeed = +e.target.value;
+        context.save();
+      };
+      b.querySelector('#partitionSelect').onchange = (e) => {
+        context.state.partitionScheme = e.target.value;
         context.save();
       };
       b.querySelector('#retrySlow').onchange = (e) => {

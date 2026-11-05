@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-05",
+  "base": "f36123c",
+  "symptom": "AstroCYD MS (catálogo AB-MakerIDE-Projects) con arduino-cli compile --fqbn esp32:esp32:esp32 (lo único que aceptaba el IDE): 'text section exceeds available space in board'. Programa de 1 520 667 bytes frente a 1 310 720 del esquema por defecto.",
+  "after_change": {
+    "server": "server.py de esta rama, API /api/jobs/start con partition_scheme=huge_app; CYD real ESP32-D0WD-V3 en COM4",
+    "compile_cold_s": 859,
+    "upload_cold_s": 902,
+    "compile_result": "El Sketch usa 1520667 bytes (48%). El máximo es 3145728 bytes.",
+    "upload_result": "Wrote 1520832 bytes … Hash of data verified.",
+    "board_boot": "MSR_ASTRO_BOOT selftest=OK; Wi-Fi, nubes y Kp descargados (monitor serie del IDE)",
+    "ui_walkthrough": "Chromium (Playwright) con la interfaz de la rama: selector Huge APP en el panel de la placa, diálogo 'Particiones: huge_app', compilación con caché y grabación verificada.",
+    "all_success": true
+  },
+  "unit_tests": "python -m unittest discover -s tests: 341 OK (5 skipped)",
+  "risk": "La compilación en frío con Huge APP tardó 859 s en el PC del autor, cerca del límite de 900 s de COMPILE_TIMEOUT.",
+  "not_checked": "No se ha generado ni probado un instalador nuevo; la descarga TEST rc.4 no tiene el selector."
+}

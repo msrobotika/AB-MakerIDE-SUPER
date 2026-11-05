@@ -361,6 +361,7 @@ export function initialize(context) {
     port: '',
     baud: 9600,
     uploadSpeed: 115200,
+    partitionScheme: 'default',
     retrySlow: false,
     panel: 'project',
     pane: 'console',

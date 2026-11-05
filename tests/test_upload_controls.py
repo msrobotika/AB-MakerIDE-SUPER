@@ -63,6 +63,50 @@ class UploadOptions(unittest.TestCase):
         self.assertFalse(result["flash_verified"])
         self.assertFalse(result["runtime_observed"])
 
+    def test_partition_scheme_reaches_compile_upload_and_slow_retry(self):
+        m = jobs.JobManager(threading.Lock())
+        calls = []
+
+        def fake(job, args, timeout):
+            calls.append(args)
+            if args[1] == "upload" and len(calls) == 2:
+                job.emit("Failed to connect to ESP32")
+                return 2  # fuerza el reintento a 115200
+            return 0
+
+        with patch.object(m, "_run", fake):
+            jid = m.start(
+                "x",
+                "esp32:esp32:esp32",
+                "COM4",
+                upload_speed=921600,
+                retry_slow=True,
+                partition_scheme="huge_app",
+            )["job_id"]
+            completed(m, jid)
+        self.assertEqual(len(calls), 3)
+        for args in calls:
+            self.assertIn("PartitionScheme=huge_app", args)
+        self.assertIn("UploadSpeed=115200", calls[-1])
+        calls.clear()
+        with patch.object(m, "_run", fake):
+            completed(m, m.start("x", "esp32:esp32:esp32", partition_scheme="huge_app")["job_id"])
+        self.assertEqual(
+            calls[0][calls[0].index("--board-options") + 1], "PartitionScheme=huge_app"
+        )
+        calls.clear()
+        with patch.object(m, "_run", fake):
+            completed(m, m.start("x", "esp32:esp32:esp32")["job_id"])
+        self.assertNotIn("--board-options", calls[0])  # por defecto no cambia nada
+
+    def test_partition_scheme_validated(self):
+        m = jobs.JobManager(threading.Lock())
+        for bad in ("huge", "huge_app,UploadSpeed=1", None, 3):
+            with self.subTest(bad=bad), self.assertRaises(ValueError):
+                m.start("x", "esp32:esp32:esp32", partition_scheme=bad)
+        with self.assertRaises(ValueError):
+            m.start("x", "arduino:avr:uno", partition_scheme="huge_app")
+
     def test_compiles_reuse_build_cache_per_board_and_allow_slow_cold_builds(self):
         import tempfile
 

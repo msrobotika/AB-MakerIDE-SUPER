@@ -122,7 +122,7 @@ export function define(context) {
     if (
       action === 'upload' &&
       !(await context.confirmAction(
-        `${targetWarning ? 'REVISAR DESTINO: ' + targetWarning + '\n\n' : ''}GRABAR firmware REAL en ${context.state.port}\nPlaca: ${context.state.fqbn}\nVelocidad: ${context.state.uploadSpeed} baudios\nReintento 115200: ${context.state.retrySlow ? 'activado' : 'desactivado'}\nEsta acción sobrescribe el programa actual. ¿Confirmas?`,
+        `${targetWarning ? 'REVISAR DESTINO: ' + targetWarning + '\n\n' : ''}GRABAR firmware REAL en ${context.state.port}\nPlaca: ${context.state.fqbn}\nVelocidad: ${context.state.uploadSpeed} baudios\nParticiones: ${context.state.partitionScheme}\nReintento 115200: ${context.state.retrySlow ? 'activado' : 'desactivado'}\nEsta acción sobrescribe el programa actual. ¿Confirmas?`,
       ))
     )
       return;
@@ -158,6 +158,9 @@ export function define(context) {
         port: context.state.port,
         upload_speed: context.state.uploadSpeed,
         retry_slow: context.state.retrySlow,
+        partition_scheme: context.state.fqbn.startsWith('esp32:esp32:')
+          ? context.state.partitionScheme
+          : 'default',
         confirm: action === 'upload',
         agent_project_id: context.agentProjectId,
       });
