@@ -6,15 +6,15 @@ Actualizado: **27 de octubre de 2026**. Hay **dos pre-releases diferenciadas**: 
 
 | Edición | Enlace | Estado |
 | --- | --- | --- |
-| **Windows TEST x64 (.exe)** | **[DESCARGAR INSTALADOR WINDOWS](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/download/windows-test-dev-025dd26e85/AB-MakerIDE-SUPER-Windows-x64-dev-025dd26e85-Setup.exe)** | **16,4 MB, Python integrado**. Instalación/arranque/desinstalación verificados mediante CI sobre el commit `025dd26e85d790640f5593b0ffd223267cef8f22`. Sin firma digital y sin pruebas físicas nuevas de placas. |
+| **Windows TEST x64 (.exe)** | **[DESCARGAR INSTALADOR WINDOWS](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/download/windows-test-dev-6e17539fc0/AB-MakerIDE-SUPER-Windows-x64-dev-6e17539fc0-Setup.exe)** | **16,5 MB, Python integrado**. Instalación/arranque/desinstalación verificados mediante CI sobre el commit `6e17539fc0a63ac6299b37b8226fce3d0a1876fe`. Sin firma digital y sin pruebas físicas nuevas de placas. |
 | **RC4 histórica (ZIP portátil)** | [Descargar RC4](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/download/v1.0.0-rc.4/AB-MakerIDE-SUPER-1.0.0-rc.4-IA-actualizada.zip) | Necesita Python 3.10+, no incluye ScreenLab/MotionLab posteriores; auditoría de distribución #11 pendiente. |
 | **Código de desarrollo main.zip** | [Descargar fuentes](https://github.com/msrobotika/AB-MakerIDE-SUPER/archive/refs/heads/main.zip) | Código fuente cambiante; no es un instalador autónomo. |
 
-La [Release de Windows TEST](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/tag/windows-test-dev-025dd26e85) publica el instalador, su `SHA256SUMS.txt`, inventario de dependencias y evidencias de arranque. Puede aparecer un aviso de Windows SmartScreen porque **no está firmado**. No se anuncian pruebas físicas del firmware generado que no se hayan realizado.
+La [Release de Windows TEST](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/tag/windows-test-dev-6e17539fc0) publica el instalador, su `SHA256SUMS.txt`, inventario de dependencias y evidencias de arranque. Puede aparecer un aviso de Windows SmartScreen porque **no está firmado**. No se anuncian pruebas físicas del firmware generado que no se hayan realizado.
 
 ## Instalación Windows TEST (sugerida a probadores)
 
-1. Descarga **[AB MakerIDE SUPER Setup.exe](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/download/windows-test-dev-025dd26e85/AB-MakerIDE-SUPER-Windows-x64-dev-025dd26e85-Setup.exe)** y ejecútalo.
+1. Descarga **[AB MakerIDE SUPER Setup.exe](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/download/windows-test-dev-6e17539fc0/AB-MakerIDE-SUPER-Windows-x64-dev-6e17539fc0-Setup.exe)** y ejecútalo.
 2. Instala para tu usuario, sin permisos de administrador; abre AB MakerIDE SUPER desde Inicio.
 3. Conserva abierta la consola de diagnósticos mientras utilizas el IDE en el navegador local.
 4. El editor, simulador y diseñador ScreenLab no requieren instalar Python. Para **compilar o grabar Arduino/ESP32** sí necesitas Arduino CLI, el núcleo de placa y bibliotecas compatibles instalados aparte. Los proveedores IA usan tus herramientas y cuentas.

@@ -10,8 +10,8 @@ This is an evolving project: documented tests and known limitations are part of 
 **[Projects built with the IDE](https://github.com/msrobotika/AB-MakerIDE-Projects)** (source and downloads)
 · [Videos on TikTok @ms_robotika](https://www.tiktok.com/@ms_robotika)
 
-**[Download Windows x64 TEST](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/download/windows-test-dev-025dd26e85/AB-MakerIDE-SUPER-Windows-x64-dev-025dd26e85-Setup.exe)**
-· [Checksums and package evidence](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/tag/windows-test-dev-025dd26e85)
+**[Download Windows x64 TEST](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/download/windows-test-dev-6e17539fc0/AB-MakerIDE-SUPER-Windows-x64-dev-6e17539fc0-Setup.exe)**
+· [Checksums and package evidence](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/tag/windows-test-dev-6e17539fc0)
 
 The unsigned TEST installer includes Python. Arduino CLI, board cores and AI credits are not bundled.
 Read the [installation/version guide](docs/DESCARGAS_Y_VERSIONES.md), verify the download source and checksum,

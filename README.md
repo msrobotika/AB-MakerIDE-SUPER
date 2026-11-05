@@ -18,8 +18,8 @@ propias condiciones y posibles costes; el proyecto no incluye créditos ni los a
 
 ## Empezar
 
-**[Descargar instalador Windows x64 TEST](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/download/windows-test-dev-025dd26e85/AB-MakerIDE-SUPER-Windows-x64-dev-025dd26e85-Setup.exe)**
-· [Detalles, SHA-256 y evidencias del paquete](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/tag/windows-test-dev-025dd26e85)
+**[Descargar instalador Windows x64 TEST](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/download/windows-test-dev-6e17539fc0/AB-MakerIDE-SUPER-Windows-x64-dev-6e17539fc0-Setup.exe)**
+· [Detalles, SHA-256 y evidencias del paquete](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/tag/windows-test-dev-6e17539fc0)
 
 1. Lee la [guía de instalación y versiones](docs/DESCARGAS_Y_VERSIONES.md).
 2. Guarda tus proyectos antes de cerrar, actualizar o probar otro firmware.

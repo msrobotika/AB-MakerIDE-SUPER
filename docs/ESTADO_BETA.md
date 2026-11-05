@@ -10,7 +10,7 @@ El código propio conserva MIT; esta declaración no elimina las condiciones de 
 | ScreenLab / MotionLab | Diseño visual y exportadores descritos en el [manual](SCREENLAB.md) | Distinguir diseño, código exportado, compilación y prueba física. |
 | Cuttlefish HTML/CSS | Investigación y pruebas locales en curso | Integración en la interfaz, seguridad ampliada, empaquetado y prueba instalada. No disponible en esta entrega pública. |
 | Asistentes / MCP | Integraciones opcionales, [permisos y límites](MCP.md) | Continuar revisando inyecciones, permisos, retención y condiciones de proveedores. |
-| Windows TEST | Paquete del commit `025dd26e85d790640f5593b0ffd223267cef8f22`; evidencias en su [Release](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/tag/windows-test-dev-025dd26e85) | Firma digital, más pruebas interactivas y validación de futuras actualizaciones. |
+| Windows TEST | Paquete del commit `6e17539fc0a63ac6299b37b8226fce3d0a1876fe`; evidencias en su [Release](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/tag/windows-test-dev-6e17539fc0) | Firma digital, más pruebas interactivas y validación de futuras actualizaciones. |
 | RC4 portátil | Archivo histórico conservado | Auditoría de atribuciones y contenido [#11](https://github.com/msrobotika/AB-MakerIDE-SUPER/issues/11) abierta. |
 
 ## Prioridades
