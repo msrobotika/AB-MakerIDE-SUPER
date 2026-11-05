@@ -43,11 +43,12 @@
     {
       "id": "FR-005",
       "result": "passed",
-      "notes": "«default» no añade opciones (prueba); Huge APP compiló en su propia caché (859 s en frío).",
+      "notes": "«default» no añade opciones (prueba); Huge APP compiló en su propia caché (859 s en frío). La caché por placa y opciones viene de la rama 031 (medida en compile-build-cache/results.json), que esta PR integra.",
       "evidence": [
         "ab_makeride/jobs.py",
         "tests/test_upload_controls.py",
-        "docs/evidence/partition-scheme/results.json"
+        "docs/evidence/partition-scheme/results.json",
+        "docs/evidence/compile-build-cache/results.json"
       ]
     }
   ],
@@ -58,6 +59,7 @@
     "frontend/build.js": "ca87e1b33276d16ebfa29b215994f0cfe3d637cb194ca07a8be4244b1d9c6d20",
     "frontend/editor.js": "617994cb64175d4c26a224193afc4caf0ea8c36da20d0a6dba44409e516e7590",
     "tests/test_upload_controls.py": "e6cb7be072785a2dc52ceb04fc6af892d75a0fd2e75641a05e3371ce71a877c8",
-    "docs/evidence/partition-scheme/results.json": "9c72b0b1c2bb24debc1e154d09131429c2bed7c8b1be5e512f147928a92b2cde"
+    "docs/evidence/partition-scheme/results.json": "9c72b0b1c2bb24debc1e154d09131429c2bed7c8b1be5e512f147928a92b2cde",
+    "docs/evidence/compile-build-cache/results.json": "35fed74c16bb078034a923d9a56c33badfcb7dcb4ede373c474af7ad664ae548"
   }
 }
