@@ -54,7 +54,7 @@
     {
       "id": "FR-006",
       "result": "passed",
-      "notes": "COMPILE_TIMEOUT = 1800 tras el corte a 900 s medido con el instalador de prueba en el PC del autor; la prueba exige >= 1800.",
+      "notes": "COMPILE_TIMEOUT = 1800 tras el corte a 900 s medido con el instalador de prueba en el PC del autor; la prueba exige >= 1800. Con el instalador dev-08467ee6ea: compilación en frío 859 s y grabación 908 s correctas.",
       "evidence": [
         "ab_makeride/jobs.py",
         "tests/test_upload_controls.py",
@@ -69,7 +69,7 @@
     "frontend/build.js": "ca87e1b33276d16ebfa29b215994f0cfe3d637cb194ca07a8be4244b1d9c6d20",
     "frontend/editor.js": "617994cb64175d4c26a224193afc4caf0ea8c36da20d0a6dba44409e516e7590",
     "tests/test_upload_controls.py": "190c9e97066d50899cd27d4375ced70f7378d5305b7171a7589857197e90bbf4",
-    "docs/evidence/partition-scheme/results.json": "b2e2316b6c378dc6e2183402c7b4128e8f9881ecd03d00d067e49797e4d94f28",
+    "docs/evidence/partition-scheme/results.json": "2e0acee1072078c17ab587c692c164c0e271e0210df118babb540a715596549c",
     "docs/evidence/compile-build-cache/results.json": "35fed74c16bb078034a923d9a56c33badfcb7dcb4ede373c474af7ad664ae548"
   }
 }

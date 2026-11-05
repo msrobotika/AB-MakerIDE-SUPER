@@ -20,5 +20,14 @@
     "decision": "COMPILE_TIMEOUT 900 -> 1800 s (FR-006)"
   },
   "unit_tests": "python -m unittest discover -s tests: 341 OK (5 skipped)",
-  "not_checked": "Pendiente repetir la compilación en frío con el instalador que lleve el límite de 1800 s. La descarga TEST anterior no tiene el selector."
+  "not_checked": "Instalador sin firma digital. Solo se ha probado en el PC del autor (Windows 10) y en el runner Windows del CI.",
+  "installer_test_08467ee6ea": {
+    "where": "PC del autor, instalador del CI AB-MakerIDE-SUPER-Windows-x64-dev-08467ee6ea-Setup.exe, SHA-256 c543fdafeef86e26028d7ac4c3bce63fe3844060118a5994279de08eae75b707, instalado encima de dev-c3ce5c3293 y con la carpeta BuildCache borrada",
+    "install": "Instalación silenciosa exit 0",
+    "compile_cold_s": 859,
+    "compile_result": "El Sketch usa 1520667 bytes (48%).",
+    "upload_cold_s": 908,
+    "upload_result": "Wrote 1520832 bytes … Hash of data verified. (CYD real en COM4)",
+    "note": "La grabación en frío también habría superado el antiguo límite de 900 s."
+  }
 }
