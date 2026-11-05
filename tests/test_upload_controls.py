@@ -145,7 +145,9 @@ class UploadOptions(unittest.TestCase):
         self.assertEqual(path(u1), path(u2))
         self.assertEqual(f1, ["extra.h", "sketch.ino"])
         self.assertEqual(f2, ["sketch.ino"])  # files from the previous project are removed
-        self.assertGreaterEqual(t1, 900)
+        self.assertGreaterEqual(
+            t1, 1800
+        )  # una compilación en frío con Wi-Fi y Bluetooth supera 900 s
 
     def test_retry_only_on_recoverable_transport_error_and_opt_in(self):
         for enabled in (False, True):

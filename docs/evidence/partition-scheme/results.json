@@ -13,7 +13,12 @@
     "ui_walkthrough": "Chromium (Playwright) con la interfaz de la rama: selector Huge APP en el panel de la placa, diálogo 'Particiones: huge_app', compilación con caché y grabación verificada.",
     "all_success": true
   },
+  "installer_test_c3ce5c3293": {
+    "where": "PC del autor (Windows 10), instalador del CI AB-MakerIDE-SUPER-Windows-x64-dev-c3ce5c3293-Setup.exe, SHA-256 c0fbfb855198b09387b0955aaaf27cb2f429112ec527e30a2d847a0a2e1c59aa, tras desinstalar dev-025dd26e85",
+    "install": "Instalación silenciosa exit 0; --check ok=true; HTTP en 8770; la interfaz sirve el selector ESQUEMA DE PARTICIONES ESP32",
+    "compile_cold": "AstroCYD MS con Huge APP: cortado por 'Tiempo límite de 900 s agotado'",
+    "decision": "COMPILE_TIMEOUT 900 -> 1800 s (FR-006)"
+  },
   "unit_tests": "python -m unittest discover -s tests: 341 OK (5 skipped)",
-  "risk": "La compilación en frío con Huge APP tardó 859 s en el PC del autor, cerca del límite de 900 s de COMPILE_TIMEOUT.",
-  "not_checked": "No se ha generado ni probado un instalador nuevo; la descarga TEST rc.4 no tiene el selector."
+  "not_checked": "Pendiente repetir la compilación en frío con el instalador que lleve el límite de 1800 s. La descarga TEST anterior no tiene el selector."
 }

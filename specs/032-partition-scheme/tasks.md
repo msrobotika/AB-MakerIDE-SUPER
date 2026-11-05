@@ -6,3 +6,4 @@
 - [x] T004 Pruebas unitarias de las opciones y de la validación.
 - [x] T005 Compilar y grabar AstroCYD MS real desde el IDE con Huge APP y grabar la interfaz con Chromium.
 - [x] T006 Ruff, lint, pruebas, manifiesto y gate; publicar como PR sin fusionar.
+- [x] T007 Probar el instalador del CI en el PC del autor; el corte a 900 s obliga a subir el límite a 1800 s.

@@ -137,8 +137,9 @@ class Job:
             )
 
 
-# A cold ESP32 build took 540 s on a modest Windows PC; later builds reuse the cache.
-COMPILE_TIMEOUT = 900
+# Cold ESP32 builds measured on a modest Windows PC: 540 s for a small sketch and over 900 s
+# for a 1.5 MB Wi-Fi + Bluetooth sketch from the installed IDE. Later builds reuse the cache.
+COMPILE_TIMEOUT = 1800
 # ESP32 flash layouts offered by the core ("PartitionScheme" board option). "default" passes nothing.
 ESP_PARTITIONS = ("default", "huge_app", "min_spiffs", "no_ota")
 

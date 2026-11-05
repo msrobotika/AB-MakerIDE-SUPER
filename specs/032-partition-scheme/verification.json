@@ -50,16 +50,26 @@
         "docs/evidence/partition-scheme/results.json",
         "docs/evidence/compile-build-cache/results.json"
       ]
+    },
+    {
+      "id": "FR-006",
+      "result": "passed",
+      "notes": "COMPILE_TIMEOUT = 1800 tras el corte a 900 s medido con el instalador de prueba en el PC del autor; la prueba exige >= 1800.",
+      "evidence": [
+        "ab_makeride/jobs.py",
+        "tests/test_upload_controls.py",
+        "docs/evidence/partition-scheme/results.json"
+      ]
     }
   ],
   "changed_files": {
-    "ab_makeride/jobs.py": "b462ad0f5734f575d108881c8c17cb808fe723b5fe45acff836a717ee5398b7e",
+    "ab_makeride/jobs.py": "1366e7ace3fe01d5d487b7ca6642c2d02be157ce817859879312092b80ca77ef",
     "server.py": "bfd709eb31574757bf1890561c79f4c8c3c677d16f94cbcc30f507fd2770a0c8",
     "frontend/workspace.js": "1b91529139458b350ab67707e1a092fb09021751dba904a48fad74d1fa4bb1ab",
     "frontend/build.js": "ca87e1b33276d16ebfa29b215994f0cfe3d637cb194ca07a8be4244b1d9c6d20",
     "frontend/editor.js": "617994cb64175d4c26a224193afc4caf0ea8c36da20d0a6dba44409e516e7590",
-    "tests/test_upload_controls.py": "e6cb7be072785a2dc52ceb04fc6af892d75a0fd2e75641a05e3371ce71a877c8",
-    "docs/evidence/partition-scheme/results.json": "9c72b0b1c2bb24debc1e154d09131429c2bed7c8b1be5e512f147928a92b2cde",
+    "tests/test_upload_controls.py": "190c9e97066d50899cd27d4375ced70f7378d5305b7171a7589857197e90bbf4",
+    "docs/evidence/partition-scheme/results.json": "b2e2316b6c378dc6e2183402c7b4128e8f9881ecd03d00d067e49797e4d94f28",
     "docs/evidence/compile-build-cache/results.json": "35fed74c16bb078034a923d9a56c33badfcb7dcb4ede373c474af7ad664ae548"
   }
 }
