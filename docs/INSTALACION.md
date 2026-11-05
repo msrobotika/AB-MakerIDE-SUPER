@@ -6,15 +6,15 @@ El arranque también configura UTF-8 para evitar que una consola/redirección cp
 
 ## Descargas actuales
 
-**[Descargar instalador Windows x64 TEST (.exe)](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/download/windows-test-dev-025dd26e85/AB-MakerIDE-SUPER-Windows-x64-dev-025dd26e85-Setup.exe)** — Python integrado, instalación para usuario actual, pruebas automáticas de instalación, arranque HTTP y desinstalación superadas en el commit `025dd26e85d790640f5593b0ffd223267cef8f22`. No hay firma Authenticode ni pruebas físicas nuevas del exportador; puede aparecer SmartScreen.
+**[Descargar instalador Windows x64 TEST (.exe)](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/download/windows-test-dev-6e17539fc0/AB-MakerIDE-SUPER-Windows-x64-dev-6e17539fc0-Setup.exe)** — Python integrado, instalación para usuario actual, pruebas automáticas de instalación, arranque HTTP y desinstalación superadas en el commit `6e17539fc0a63ac6299b37b8226fce3d0a1876fe`. No hay firma Authenticode ni pruebas físicas nuevas del exportador; puede aparecer SmartScreen.
 
 **[Descargar ZIP portátil RC4 histórico](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/download/v1.0.0-rc.4/AB-MakerIDE-SUPER-1.0.0-rc.4-IA-actualizada.zip)** — requiere Python 3.10+ y `INICIAR_WINDOWS.bat`; mantiene la auditoría #11 pendiente. **[Descargar código fuente actualizado main.zip](https://github.com/msrobotika/AB-MakerIDE-SUPER/archive/refs/heads/main.zip)** — copia mutable para desarrollo, no instalador.
 
-[Elegir edición y consultar diferencias](DESCARGAS_Y_VERSIONES.md) · [Release instalador Windows TEST](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/tag/windows-test-dev-025dd26e85) · [Manual técnico del instalador](../installer/README.md).
+[Elegir edición y consultar diferencias](DESCARGAS_Y_VERSIONES.md) · [Release instalador Windows TEST](https://github.com/msrobotika/AB-MakerIDE-SUPER/releases/tag/windows-test-dev-6e17539fc0) · [Manual técnico del instalador](../installer/README.md).
 
 ## Usar el instalador Windows TEST
 
-1. Descarga `AB-MakerIDE-SUPER-Windows-x64-dev-025dd26e85-Setup.exe` desde el enlace directo y ejecútalo.
+1. Descarga `AB-MakerIDE-SUPER-Windows-x64-dev-6e17539fc0-Setup.exe` desde el enlace directo y ejecútalo.
 2. Sigue el asistente; no necesitas Python instalado ni permisos de administrador. Abre **AB MakerIDE SUPER** desde Inicio.
 3. Mantén la consola de diagnóstico abierta mientras el servidor del IDE está en uso. El navegador abre la interfaz local en `http://127.0.0.1:8770`.
 4. Instala Arduino CLI, el núcleo de la placa y bibliotecas externas solo si necesitas compilar o grabar firmware Arduino; las cuentas/agentes IA son opcionales y externos.

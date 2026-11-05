@@ -1,6 +1,6 @@
 # Documentación vigente · AB MakerIDE SUPER
 
-Hay un **instalador Windows TEST** de la revisión de desarrollo `025dd26e85` y una **RC4 histórica portátil**. Ninguna es una versión estable. Antes de instalar consulta el [README del proyecto](../README.md) y [guía de instalación](INSTALACION.md). No se consideran estables las funciones pendientes de validación física.
+Hay un **instalador Windows TEST** de la revisión de desarrollo `6e17539fc0` y una **RC4 histórica portátil**. Ninguna es una versión estable. Antes de instalar consulta el [README del proyecto](../README.md) y [guía de instalación](INSTALACION.md). No se consideran estables las funciones pendientes de validación física.
 
 ## Documentación activa
 

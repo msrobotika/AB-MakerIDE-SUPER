@@ -18,6 +18,10 @@ compilarlo. Preparado con asistencia de IA (Claude Code). No publica versiones n
 - **FR-006**: La primera compilación en frío de un proyecto grande (AstroCYD MS con Huge APP)
   termina en el PC del autor: el límite de compilación pasa de 900 s a 1800 s.
 
+- **FR-007**: Tras la publicación aprobada de la pre-release TEST `windows-test-dev-6e17539fc0`, los
+  README ES/EN, la guía de descargas y de instalación (y la prueba que las vigila) apuntan a ese
+  instalador; la TEST anterior se conserva.
+
 Diagnóstico de FR-006: con el instalador de prueba de esta rama (dev-c3ce5c3293) en el PC del autor,
 la compilación en frío de AstroCYD con Huge APP se cortó a los 900 s; desde el servidor de la rama
 había tardado 859 s. El margen de 900 s era insuficiente.

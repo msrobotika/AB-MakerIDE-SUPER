@@ -24,9 +24,9 @@
 - Los artefactos CI no son automáticamente Releases públicas. La CI de comprobaciones verifica; el flujo del instalador tiene una vía de publicación explícita. No activarla mediante una actualización documental.
 - Incidencias: issues reproducibles; mejoras: ramas con PR; experimentos: documentación interna. Nunca anunciar pruebas controladas como hardware físico verificado.
 
-## Inventario público de Releases (30/10/2026)
+## Inventario público de Releases (05/11/2026)
 
-Se conservan la RC4 histórica `v1.0.0-rc.4` y el instalador de pruebas `windows-test-dev-025dd26e85`. Ninguno es estable. Véase [descargas y versiones](DESCARGAS_Y_VERSIONES.md). Esta actualización documental no crea ni modifica artefactos.
+Se conservan la RC4 histórica `v1.0.0-rc.4` y los instaladores de pruebas `windows-test-dev-025dd26e85` (anterior) y `windows-test-dev-6e17539fc0` (vigente, con el selector de esquema de particiones ESP32). Ninguno es estable. Véase [descargas y versiones](DESCARGAS_Y_VERSIONES.md). Esta actualización documental no crea ni modifica artefactos.
 
 El ZIP de RC4 se creó antes de integrar las nuevas atribuciones de terceros. Su contenido no puede acreditarse desde la rama `main`. [Auditoría de la distribución pendiente](AUDITORIA_DISTRIBUCION_RC4.md) · [bloqueante #11](https://github.com/msrobotika/AB-MakerIDE-SUPER/issues/11). Ningún cambio documental constituye una verificación del ZIP antiguo.
 
