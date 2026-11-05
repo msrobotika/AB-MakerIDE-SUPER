@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-03",
+  "base": "ecc9aa3",
+  "symptom": "IDE rc.4 instalado en Windows 10 (PC del autor): Compilar el sketch Reloj Despertador MS para esp32:esp32:esp32 falló dos veces con 'Tiempo límite de 480 s agotado'. arduino-cli compile en frío fuera del IDE tardó 539 s.",
+  "cause": "Cada trabajo compilaba en una carpeta temporal nueva sin --build-path: arduino-cli recompilaba núcleo y librerías desde cero cada vez, y el límite era 480 s.",
+  "after_fix": {
+    "server": "launch.py de esta rama, API /api/jobs/start, mismo sketch y FQBN; upload a COM4 921600 con --verify (CYD real)",
+    "compile_cold_s": 561,
+    "upload_cold_s": 593,
+    "compile_cached_s": 42,
+    "upload_cached_s": 88,
+    "all_success": true
+  },
+  "unit_tests": "python -m unittest discover -s tests -p 'test_*.py': 339 OK (5 skipped)",
+  "not_checked": "No se ha generado ni probado un instalador nuevo; la descarga TEST rc.4 sigue con el comportamiento anterior. Sin grabación de placa en esta medición.",
+  "second_issue": "Primera versión: Compilar y Compilar y grabar compartían caché; las opciones de placa de la grabación (UploadSpeed) hacían que arduino-cli la descartara y alternar botones recompilaba en frío (586 s observados). Ahora la clave incluye las opciones."
+}

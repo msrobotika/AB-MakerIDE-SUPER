@@ -1217,6 +1217,7 @@ class IDEHandler(BaseHTTPRequestHandler):
                     port,
                     upload_speed=d.get("upload_speed", 115200),
                     retry_slow=d.get("retry_slow", False),
+                    partition_scheme=d.get("partition_scheme", "default"),
                     request_id=d.get("request_id"),
                     project_files=project_files,
                     agent_project_id=project_id,

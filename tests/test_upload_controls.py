@@ -63,6 +63,92 @@ class UploadOptions(unittest.TestCase):
         self.assertFalse(result["flash_verified"])
         self.assertFalse(result["runtime_observed"])
 
+    def test_partition_scheme_reaches_compile_upload_and_slow_retry(self):
+        m = jobs.JobManager(threading.Lock())
+        calls = []
+
+        def fake(job, args, timeout):
+            calls.append(args)
+            if args[1] == "upload" and len(calls) == 2:
+                job.emit("Failed to connect to ESP32")
+                return 2  # fuerza el reintento a 115200
+            return 0
+
+        with patch.object(m, "_run", fake):
+            jid = m.start(
+                "x",
+                "esp32:esp32:esp32",
+                "COM4",
+                upload_speed=921600,
+                retry_slow=True,
+                partition_scheme="huge_app",
+            )["job_id"]
+            completed(m, jid)
+        self.assertEqual(len(calls), 3)
+        for args in calls:
+            self.assertIn("PartitionScheme=huge_app", args)
+        self.assertIn("UploadSpeed=115200", calls[-1])
+        calls.clear()
+        with patch.object(m, "_run", fake):
+            completed(m, m.start("x", "esp32:esp32:esp32", partition_scheme="huge_app")["job_id"])
+        self.assertEqual(
+            calls[0][calls[0].index("--board-options") + 1], "PartitionScheme=huge_app"
+        )
+        calls.clear()
+        with patch.object(m, "_run", fake):
+            completed(m, m.start("x", "esp32:esp32:esp32")["job_id"])
+        self.assertNotIn("--board-options", calls[0])  # por defecto no cambia nada
+
+    def test_partition_scheme_validated(self):
+        m = jobs.JobManager(threading.Lock())
+        for bad in ("huge", "huge_app,UploadSpeed=1", None, 3):
+            with self.subTest(bad=bad), self.assertRaises(ValueError):
+                m.start("x", "esp32:esp32:esp32", partition_scheme=bad)
+        with self.assertRaises(ValueError):
+            m.start("x", "arduino:avr:uno", partition_scheme="huge_app")
+
+    def test_compiles_reuse_build_cache_per_board_and_allow_slow_cold_builds(self):
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as data:
+            m = jobs.JobManager(threading.Lock(), Path(data) / "BuildSessions")
+            calls = []
+
+            def fake(job, args, timeout):
+                sketch = Path(args[-1])
+                calls.append((args, timeout, sorted(p.name for p in sketch.iterdir())))
+                return 0
+
+            with patch.object(m, "_run", fake):
+                runs = (
+                    ("void setup(){} void loop(){}", "esp32:esp32:esp32", None, {"extra.h": b"x"}),
+                    ("// v2", "esp32:esp32:esp32", None, {}),
+                    ("x", "arduino:avr:uno", None, {}),
+                    ("x", "esp32:esp32:esp32", "COM4", {}),
+                    ("y", "esp32:esp32:esp32", "COM4", {}),
+                )
+                for code, fqbn, port, files in runs:
+                    kw = {"upload_speed": 921600} if port else {}
+                    jid = m.start(code, fqbn, port, project_files=files, **kw)["job_id"]
+                    completed(m, jid)
+        compiles = [c for c in calls if c[0][1] == "compile"]
+        (a1, t1, f1), (a2, _, f2), (a3, _, _), (u1, _, _), (u2, _, _) = compiles
+
+        def path(a):
+            return a[a.index("--build-path") + 1]
+
+        self.assertEqual(path(a1), path(a2))  # same board: arduino-cli can reuse its cache
+        self.assertEqual(a1[-1], a2[-1])  # and the sketch path, which is part of that cache key
+        self.assertNotEqual(path(a1), path(a3))  # another board does not overwrite it
+        # Upload adds board options, which would wipe the compile-only cache if shared.
+        self.assertNotEqual(path(a1), path(u1))
+        self.assertEqual(path(u1), path(u2))
+        self.assertEqual(f1, ["extra.h", "sketch.ino"])
+        self.assertEqual(f2, ["sketch.ino"])  # files from the previous project are removed
+        self.assertGreaterEqual(
+            t1, 1800
+        )  # una compilación en frío con Wi-Fi y Bluetooth supera 900 s
+
     def test_retry_only_on_recoverable_transport_error_and_opt_in(self):
         for enabled in (False, True):
             m = jobs.JobManager(threading.Lock())

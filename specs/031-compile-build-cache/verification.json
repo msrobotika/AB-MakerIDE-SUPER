@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "convergence": "converged",
+  "requirements": [
+    {
+      "id": "FR-001",
+      "result": "passed",
+      "notes": "Misma carpeta --build-path y ruta del sketch por FQBN y opciones; 2.ª vuelta real: Compilar 42 s, Compilar y grabar 88 s.",
+      "evidence": [
+        "ab_makeride/jobs.py",
+        "tests/test_upload_controls.py",
+        "docs/evidence/compile-build-cache/results.json"
+      ]
+    },
+    {
+      "id": "FR-002",
+      "result": "passed",
+      "notes": "La carpeta sketch/ se vacía en cada trabajo; la prueba comprueba que extra.h no pasa al proyecto siguiente.",
+      "evidence": [
+        "ab_makeride/jobs.py",
+        "tests/test_upload_controls.py"
+      ]
+    },
+    {
+      "id": "FR-003",
+      "result": "passed",
+      "notes": "COMPILE_TIMEOUT = 900; compilaciones en frío reales de 561 s y 593 s terminadas con éxito.",
+      "evidence": [
+        "ab_makeride/jobs.py",
+        "docs/evidence/compile-build-cache/results.json"
+      ]
+    },
+    {
+      "id": "FR-004",
+      "result": "passed",
+      "notes": "Clave por hash del FQBN (la prueba compara ESP32 y Uno) y plain_directory rechaza enlaces.",
+      "evidence": [
+        "ab_makeride/jobs.py",
+        "tests/test_upload_controls.py"
+      ]
+    },
+    {
+      "id": "FR-005",
+      "result": "passed",
+      "notes": "La clave incluye --board-options; la prueba exige cachés distintas para compilar y grabar e iguales entre dos grabaciones.",
+      "evidence": [
+        "ab_makeride/jobs.py",
+        "tests/test_upload_controls.py",
+        "docs/evidence/compile-build-cache/results.json"
+      ]
+    }
+  ],
+  "changed_files": {
+    "ab_makeride/jobs.py": "d272057c0da099b9eb2756ee5bb55d76c2577a5710ab0e950de0dcf13e5e8b80",
+    "tests/test_upload_controls.py": "25f2cc536e6de2999d0f61b1f8c52525e9252244295b51aa45b9073205347578",
+    "docs/evidence/compile-build-cache/results.json": "35fed74c16bb078034a923d9a56c33badfcb7dcb4ede373c474af7ad664ae548"
+  }
+}

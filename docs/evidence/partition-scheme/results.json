@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-05",
+  "base": "f36123c",
+  "symptom": "AstroCYD MS (catálogo AB-MakerIDE-Projects) con arduino-cli compile --fqbn esp32:esp32:esp32 (lo único que aceptaba el IDE): 'text section exceeds available space in board'. Programa de 1 520 667 bytes frente a 1 310 720 del esquema por defecto.",
+  "after_change": {
+    "server": "server.py de esta rama, API /api/jobs/start con partition_scheme=huge_app; CYD real ESP32-D0WD-V3 en COM4",
+    "compile_cold_s": 859,
+    "upload_cold_s": 902,
+    "compile_result": "El Sketch usa 1520667 bytes (48%). El máximo es 3145728 bytes.",
+    "upload_result": "Wrote 1520832 bytes … Hash of data verified.",
+    "board_boot": "MSR_ASTRO_BOOT selftest=OK; Wi-Fi, nubes y Kp descargados (monitor serie del IDE)",
+    "ui_walkthrough": "Chromium (Playwright) con la interfaz de la rama: selector Huge APP en el panel de la placa, diálogo 'Particiones: huge_app', compilación con caché y grabación verificada.",
+    "all_success": true
+  },
+  "installer_test_c3ce5c3293": {
+    "where": "PC del autor (Windows 10), instalador del CI AB-MakerIDE-SUPER-Windows-x64-dev-c3ce5c3293-Setup.exe, SHA-256 c0fbfb855198b09387b0955aaaf27cb2f429112ec527e30a2d847a0a2e1c59aa, tras desinstalar dev-025dd26e85",
+    "install": "Instalación silenciosa exit 0; --check ok=true; HTTP en 8770; la interfaz sirve el selector ESQUEMA DE PARTICIONES ESP32",
+    "compile_cold": "AstroCYD MS con Huge APP: cortado por 'Tiempo límite de 900 s agotado'",
+    "decision": "COMPILE_TIMEOUT 900 -> 1800 s (FR-006)"
+  },
+  "unit_tests": "python -m unittest discover -s tests: 341 OK (5 skipped)",
+  "not_checked": "Instalador sin firma digital. Solo se ha probado en el PC del autor (Windows 10) y en el runner Windows del CI.",
+  "installer_test_08467ee6ea": {
+    "where": "PC del autor, instalador del CI AB-MakerIDE-SUPER-Windows-x64-dev-08467ee6ea-Setup.exe, SHA-256 c543fdafeef86e26028d7ac4c3bce63fe3844060118a5994279de08eae75b707, instalado encima de dev-c3ce5c3293 y con la carpeta BuildCache borrada",
+    "install": "Instalación silenciosa exit 0",
+    "compile_cold_s": 859,
+    "compile_result": "El Sketch usa 1520667 bytes (48%).",
+    "upload_cold_s": 908,
+    "upload_result": "Wrote 1520832 bytes … Hash of data verified. (CYD real en COM4)",
+    "note": "La grabación en frío también habría superado el antiguo límite de 900 s."
+  }
+}

@@ -10,6 +10,7 @@ import subprocess
 import tempfile
 import threading
 import time
+import shutil
 import uuid
 import json
 import logging
@@ -136,6 +137,20 @@ class Job:
             )
 
 
+# Cold ESP32 builds measured on a modest Windows PC: 540 s for a small sketch and over 900 s
+# for a 1.5 MB Wi-Fi + Bluetooth sketch from the installed IDE. Later builds reuse the cache.
+COMPILE_TIMEOUT = 1800
+# ESP32 flash layouts offered by the core ("PartitionScheme" board option). "default" passes nothing.
+ESP_PARTITIONS = ("default", "huge_app", "min_spiffs", "no_ota")
+
+
+def esp_board_options(port: str | None, upload_speed: int, partition_scheme: str) -> list[str]:
+    opts = ["--board-options", f"UploadSpeed={upload_speed}"] if port else []
+    if partition_scheme != "default":
+        opts += ["--board-options", f"PartitionScheme={partition_scheme}"]
+    return opts
+
+
 class JobManager:
     def __init__(self, hardware_lock: threading.Lock, session_root: Path | None = None):
         self._guard = threading.Lock()
@@ -151,6 +166,7 @@ class JobManager:
         *,
         upload_speed: int = 115200,
         retry_slow: bool = False,
+        partition_scheme: str = "default",
         request_id: str | None = None,
         project_files: dict | None = None,
         agent_project_id: str = "",
@@ -187,6 +203,10 @@ class JobManager:
             raise ValueError("La opción de reintento debe ser booleana.")
         if port and not fqbn.startswith("esp32:esp32:") and (upload_speed != 115200 or retry_slow):
             raise ValueError("Ajustes de velocidad específicos de ESP32. Selecciona un ESP32.")
+        if partition_scheme not in ESP_PARTITIONS:
+            raise ValueError("Esquema de particiones no permitido.")
+        if partition_scheme != "default" and not fqbn.startswith("esp32:esp32:"):
+            raise ValueError("El esquema de particiones solo existe en placas ESP32.")
         if not self._hardware_lock.acquire(blocking=False):
             raise ValueError("Hay otra operación de hardware activa.")
         try:
@@ -217,7 +237,7 @@ class JobManager:
             threading.Thread(
                 target=self._worker,
                 args=(job, code, fqbn, port, upload_speed, retry_slow),
-                kwargs={"project_files": project_files},
+                kwargs={"project_files": project_files, "partition_scheme": partition_scheme},
                 daemon=True,
             ).start()
             return {"ok": True, "job_id": job.id}
@@ -279,6 +299,12 @@ class JobManager:
             except OSError:
                 pass
 
+    def _build_cache(self, target: str) -> Path | None:
+        if self.root is None:
+            return None
+        key = hashlib.sha256(target.encode("utf-8")).hexdigest()[:16]
+        return plain_directory(self.root.parent / "BuildCache" / key, create=True)
+
     def _run(self, job: Job, args: list[str], timeout: int) -> int:
         job.emit("Ejecutando: " + " ".join(args[:4]) + " …")
         flags = getattr(subprocess, "CREATE_NO_WINDOW", 0)
@@ -335,11 +361,20 @@ class JobManager:
         retry_slow: bool = False,
         *,
         project_files: dict | None = None,
+        partition_scheme: str = "default",
     ):
         try:
             with tempfile.TemporaryDirectory(prefix="ab-makeride-") as temp:
                 root = Path(temp)
-                sketch = root / "sketch"
+                is_esp = fqbn.startswith("esp32:esp32:")
+                opts = esp_board_options(port, upload_speed, partition_scheme) if is_esp else []
+                # Same sketch and build folders per board and options, so arduino-cli reuses the
+                # compiled core and libraries instead of rebuilding everything (minutes on a slow
+                # PC). Any change of board options makes arduino-cli start over, hence the key.
+                work = self._build_cache(" ".join([fqbn, *opts])) or root
+                sketch = work / "sketch"
+                if sketch.exists():
+                    shutil.rmtree(sketch)
                 sketch.mkdir()
                 for name, data in (project_files or {}).items():
                     if name == "sketch.ino":
@@ -352,8 +387,6 @@ class JobManager:
                 build.mkdir()
                 job.stage = "compilación"
                 job.emit("Compilación real iniciada · porcentaje no disponible")
-                is_esp = fqbn.startswith("esp32:esp32:")
-                opts = ["--board-options", f"UploadSpeed={upload_speed}"] if port and is_esp else []
                 executable = arduino_cli() or "arduino-cli"
                 rc = self._run(
                     job,
@@ -364,11 +397,13 @@ class JobManager:
                         fqbn,
                         *opts,
                         "--no-color",
+                        "--build-path",
+                        str(work / "cache"),
                         "--output-dir",
                         str(build),
                         str(sketch),
                     ],
-                    480,
+                    COMPILE_TIMEOUT,
                 )
                 job.exit_code = rc
                 if job.cancelled or rc != 0:
@@ -444,8 +479,7 @@ class JobManager:
                                     port,
                                     "--fqbn",
                                     fqbn,
-                                    "--board-options",
-                                    "UploadSpeed=115200",
+                                    *esp_board_options(port, 115200, partition_scheme),
                                     "--no-color",
                                     "--input-dir",
                                     str(build),
